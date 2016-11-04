@@ -26,20 +26,22 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     use mod_physvar
     use mod_sppt, only: mu, gen_sppt
     use mod_tsteps, only: sppt_on
+    use mod_rp_utils
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    complex, dimension(mx,nx,nlev) :: vor1, div1, t1, q1, phi1
-    complex, dimension(mx,nx) :: psl1, ucos, vcos
+    type(rpe_complex_var), dimension(mx,nx,nlev) :: vor1, div1, t1, q1, phi1
+    type(rpe_complex_var), dimension(mx,nx) :: psl1, ucos, vcos
 
-    real, dimension(ngp,nlev) :: utend, vtend, ttend, qtend
-    real, dimension(ngp,nlev) :: utend_dyn, vtend_dyn, ttend_dyn, qtend_dyn
+    type(rpe_var), dimension(ngp,nlev) :: utend, vtend, ttend, qtend
+    type(rpe_var), dimension(ngp,nlev) :: utend_dyn, vtend_dyn, ttend_dyn, qtend_dyn
 
     integer :: iptop(ngp), icltop(ngp,2), icnv(ngp), iitest=0, j, k
-    real, dimension(ngp) :: rps, gse
-    real :: sppt(ngp,kx)
+    type(rpe_var), dimension(ngp) :: rps, gse
+    type(rpe_var) :: sppt(ngp,kx)
 
     ! Keep a copy of the original (dynamics only) tendencies
     utend_dyn = utend
@@ -52,18 +54,18 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     if (iitest.eq.1) print *, ' 1.1 in phypar'
 
     do k=1,nlev
-      call uvspec(vor1(1,1,k),div1(1,1,k),ucos,vcos)
-      call grid(ucos,ug1(1,k),2)
-      call grid(vcos,vg1(1,k),2)
+      call uvspec(upack2(vor1(:,:,k)),upack2(div1(:,:,k)),upack2(ucos),upack2(vcos))
+      call grid(upack1(ucos),ug1(1,k),2)
+      call grid(upack1(vcos),vg1(1,k),2)
     end do
 
     do k=1,nlev
-      call grid(t1(1,1,k),  tg1(1,k),  1)
-      call grid(q1(1,1,k),  qg1(1,k),  1)
-      call grid(phi1(1,1,k),phig1(1,k),1)
+      call grid(upack1(t1(:,:,k)),  tg1(1,k),  1)
+      call grid(upack1(q1(:,:,k)),  qg1(1,k),  1)
+      call grid(upack1(phi1(:,:,k)),phig1(1,k),1)
     end do
 
-    call grid(psl1,pslg1,1)
+    call grid(upack1(psl1),pslg1,1)
 
     ! Remove negative humidity values
     !call qneg (qg1)

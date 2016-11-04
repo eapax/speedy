@@ -1,5 +1,6 @@
 program agcm_main
-    use mod_tsteps, only: ndaysl, ihout, nmonts, sixhrrun
+    use mod_tsteps, only: ndaysl, ihout, nmonts
+    use rp_emulator
 
     implicit none
 
@@ -8,6 +9,11 @@ program agcm_main
     ! experiment identifier
     character(len=3) :: cexp = 'exp'
     integer :: jday, ndays
+
+    ! Setup reduced precision emulator for half precision
+    RPE_DEFAULT_SBITS = 10
+    RPE_IEEE_HALF = .true.
+    RPE_ACTIVE = .false.
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init

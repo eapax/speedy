@@ -314,15 +314,16 @@ subroutine ftland (stl,phi0,phis0,fmaskl)
     use mod_dyncon0, only: gamma
     use mod_dyncon1, only: gcos, grav
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon = ix, nlat = il
 
-    real, dimension(nlon, nlat), intent(inout) :: stl, phi0, phis0, fmaskl
-    real :: stl2(nlon,nlat), sumt, sumw
+    type(rpe_var), dimension(nlon, nlat), intent(inout) :: stl, phi0, phis0, fmaskl
+    type(rpe_var) :: stl2(nlon,nlat), sumt, sumw
     integer :: nl8, nlat1, nlat2, i, idtr, itr, j, jband, jfil
-    real :: gam
+    type(rpe_var) :: gam
 
     nl8 = nlat/8
     gam = 0.001*gamma/grav
@@ -382,12 +383,13 @@ subroutine truncg (itr,fg1,fg2)
     ! Output  : fg2 : filtered grid-point field
 
     USE mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: itr
 
-    real, dimension(ix,il), intent(inout) :: fg1 (ix,il), fg2(ix,il)
+    type(rpe_var), dimension(ix,il), intent(inout) :: fg1 (ix,il), fg2(ix,il)
     complex :: fsp(mx,nx), zero 
     integer :: n, m, itwn
 

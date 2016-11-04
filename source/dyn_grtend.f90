@@ -19,6 +19,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     USE mod_dynvar
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
+    use rp_emulator
 
     implicit none
 
@@ -33,23 +34,24 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     !                              -- Isaac
     !************
 
-    complex, dimension(mx,nx,kx), intent(inout) :: vordt, divdt, tdt
-    complex, intent(inout) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
+    type(rpe_complex_var), dimension(mx,nx,kx), intent(inout) :: vordt, divdt, tdt
+    type(rpe_complex_var), intent(inout) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
     integer, intent(in) :: j1, j2
 
-    complex :: dumc(mx,nx,3), zero
+    type(rpe_complex_var) :: dumc(mx,nx,3), zero
 
-    real, dimension(ix,il,kx) :: utend, vtend, ttend
-    real :: trtend(ix,il,kx,ntr)
+    type(rpe_var), dimension(ix,il,kx) :: utend, vtend, ttend
+    type(rpe_var) :: trtend(ix,il,kx,ntr), half
 
-    real, dimension(ix,il,kx) :: ug, vg, tg, vorg, divg, tgg, puv
-    real, dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
-    real :: trg(ix,il,kx,ntr), sigdt(ix,il,kxp)
-    real :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
+    type(rpe_var), dimension(ix,il,kx) :: ug, vg, tg, vorg, divg, tgg, puv
+    type(rpe_var), dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
+    type(rpe_var) :: trg(ix,il,kx,ntr), sigdt(ix,il,kxp)
+    type(rpe_var) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
 
     integer :: iitest = 0, k, i, itr, j
 
     zero = (0.,0.)
+    half = 0.5
 
     if (iitest.eq.1) print*,'inside GRTEND'
 
@@ -240,7 +242,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         !  and add div(vT) to spectral t tendency
         do j=1,il
             do i=1,ix
-                dumr(i,j,1)=0.5*(ug(i,j,k)*ug(i,j,k)+vg(i,j,k)*vg(i,j,k))
+                dumr(i,j,1)=half*(ug(i,j,k)*ug(i,j,k)+vg(i,j,k)*vg(i,j,k))
                 dumr(i,j,2)=-ug(i,j,k)*tgg(i,j,k)
                 dumr(i,j,3)=-vg(i,j,k)*tgg(i,j,k)
             end do

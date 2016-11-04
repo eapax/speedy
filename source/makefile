@@ -9,7 +9,7 @@ COMPILE=gfortran
 ###COMOTT1=-dalign -fast -r8
 #COMOTT1=-Ofast -mips4 -IPA -r8
 # COMOTT1=  -fast -O3 -r8
- COMOTT1=  -Ofast -fdefault-real-8
+ COMOTT1=  -Ofast -fdefault-real-8 -g
 ### COMOTT1=  -fast  
 
 # COMCONV= -byteswapio 
@@ -60,6 +60,7 @@ FILES= \
 	   mod_physvar.o \
 	   mod_radcon.o \
 	   mod_randfor.o \
+	   mod_rp_utils.o \
 	   mod_sflcon.o \
 	   mod_spectral.o \
 	   mod_sppt.o \
@@ -99,13 +100,13 @@ FILES= \
 .SUFFIXES: .f .f90 .o
 
 .f90.o:
-	$(COMPILE) $(COMCONV) $(COMOTT1) -c $<
+	$(COMPILE) $(COMCONV) $(COMOTT1) -c $< -I../rpe/modules
 
 .f.o:
 	$(COMPILE) $(COMCONV) $(COMOTT1) -c $<
 
 imp.exe: $(FILES)  at_gcm.o
-	$(COMPILE) $(COMCONV) $(COMOTT1) $(FILES) at_gcm.o -o imp.exe $(COMLIB1)
+	$(COMPILE) $(COMCONV) $(COMOTT1) $(FILES) at_gcm.o -o imp.exe $(COMLIB1) -lrpe -L../rpe/lib
 
 .PHONY: clean
 clean:
@@ -171,6 +172,7 @@ mod_physcon.o          : mod_physcon.f90 mod_atparam.o
 mod_physvar.o          : mod_physvar.f90 mod_atparam.o
 mod_radcon.o           : mod_radcon.f90 mod_atparam.o
 mod_randfor.o          : mod_randfor.f90 mod_atparam.o
+mod_rp_utils.o         : mod_rp_utils.f90
 mod_sflcon.o           : mod_sflcon.f90 mod_atparam.o
 mod_spectral.o         : mod_spectral.f90 mod_atparam.o
 mod_sppt.o             : mod_atparam.o mod_tsteps.o mod_dyncon1.o mod_spectral.o
@@ -183,8 +185,8 @@ mod_vdicon.o           : mod_vdicon.f90
 phy_convmf.o           : phy_convmf.f90 mod_cnvcon.o mod_atparam.o mod_physcon.o
 phy_lscond.o           : phy_lscond.f90 mod_lsccon.o mod_atparam.o mod_physcon.o
 phy_phypar.o           : phy_phypar.f90 mod_cpl_flags.o mod_lflags.o mod_atparam.o mod_physcon.o mod_randfor.o\
-					     mod_surfcon.o mod_var_land.o mod_cli_sea.o mod_var_sea.o mod_physvar.o mod_sppt.o\
-                         mod_tsteps.o
+					     mod_surfcon.o mod_var_land.o mod_cli_sea.o mod_var_sea.o mod_physvar.o mod_rp_utils.o\
+						 mod_sppt.o mod_tsteps.o
 phy_radiat.o           : phy_radiat.f90 mod_atparam.o mod_physcon.o mod_radcon.o
 phy_shtorh.o           : phy_shtorh.f90
 phy_suflux.o           : phy_suflux.f90 mod_atparam.o mod_sflcon.o mod_physcon.o mod_radcon.o

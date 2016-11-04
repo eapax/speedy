@@ -351,12 +351,13 @@ end
 subroutine uvspec(vorm,divm,ucosm,vcosm)
     use mod_atparam
     use mod_spectral, only: uvdx, uvdyp, uvdym
+    use rp_emulator
 
     !include "param1spec.h"
                                                         
-    real, dimension(2,mx,nx), intent(in) :: vorm,divm
-    real, dimension(2,mx,nx), intent(inout) :: ucosm,vcosm
-    real, dimension(2,mx,nx) :: zc,zp
+    type(rpe_var), dimension(2,mx,nx), intent(in) :: vorm,divm
+    type(rpe_var), dimension(2,mx,nx), intent(inout) :: ucosm,vcosm
+    type(rpe_var), dimension(2,mx,nx) :: zc,zp
 
     integer :: k, n, m
 
@@ -388,27 +389,30 @@ end
 !*******************************************************************
 subroutine grid(vorm,vorg,kcos)
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, intent(inout) :: vorg(ix,il), vorm(mx2,nx)
+    type(rpe_var), intent(in) :: vorm(mx2,nx)
+    type(rpe_var), intent(inout) :: vorg(ix,il)
     integer, intent(in) :: kcos
-    real :: varm(mx2,il)
+    type(rpe_var) :: varm(mx2,il)
     call gridy(vorm,varm)
     call gridx(varm,vorg,kcos)
 end
 !*********************************************************************
 subroutine spec(vorg,vorm)
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, intent(inout) :: vorg(ix,il), vorm(mx2,nx)
-    real :: varm(mx2,il)
+    type(rpe_var), intent(inout) :: vorg(ix,il), vorm(mx2,nx)
+    type(rpe_var) :: varm(mx2,il)
     call specx(vorg,varm)
     call specy(varm,vorm)
 end
@@ -416,17 +420,18 @@ end
 subroutine vdspec(ug,vg,vorm,divm,kcos)
     use mod_atparam
     use mod_spectral, only: cosgr, cosgr2
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, intent(in) :: ug(ix,il), vg(ix,il)
-    real, intent(inout) :: vorm(mx2,nx), divm(mx2,nx)
+    type(rpe_var), intent(in) :: ug(ix,il), vg(ix,il)
+    type(rpe_var), intent(inout) :: vorm(mx2,nx), divm(mx2,nx)
     integer, intent(in) :: kcos
     integer :: i, j
-    real :: ug1(ix,il), vg1(ix,il), um(mx2,il), vm(mx2,il)
-    real :: dumc1(mx2,nx), dumc2(mx2,nx)
+    type(rpe_var) :: ug1(ix,il), vg1(ix,il), um(mx2,il), vm(mx2,il)
+    type(rpe_var) :: dumc1(mx2,nx), dumc2(mx2,nx)
 
     if (kcos.eq.2) then
         do j=1,il
@@ -454,14 +459,15 @@ end
 subroutine gridy(v,varm)
     use mod_atparam
     use mod_spectral, only: cpol, nsh2
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, intent(in) :: v(mx2,nx)
-    real, intent(inout) :: varm(mx2,il)
-    real :: vm1(mx2),vm2(mx2)
+    type(rpe_var), intent(in) :: v(mx2,nx)
+    type(rpe_var), intent(inout) :: varm(mx2,il)
+    type(rpe_var) :: vm1(mx2),vm2(mx2)
 
     integer :: j, j1, m, n
 
@@ -497,14 +503,15 @@ end
 subroutine specy(varm,vorm)
     use mod_atparam
     use mod_spectral, only: wt, cpol, nsh2
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, intent(in) :: varm(mx2,il)
-    real, intent(inout) :: vorm(mx2,nx)
-    real :: svarm(mx2,iy), dvarm(mx2,iy)
+    type(rpe_var), intent(in) :: varm(mx2,il)
+    type(rpe_var), intent(inout) :: vorm(mx2,nx)
+    type(rpe_var) :: svarm(mx2,iy), dvarm(mx2,iy)
 
     integer :: j, j1, m, n
 
