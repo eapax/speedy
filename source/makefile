@@ -9,7 +9,7 @@ COMPILE=gfortran
 ###COMOTT1=-dalign -fast -r8
 #COMOTT1=-Ofast -mips4 -IPA -r8
 # COMOTT1=  -fast -O3 -r8
- COMOTT1=  -Ofast -fdefault-real-8 -g
+ COMOTT1=  -fdefault-real-8 -g
 ### COMOTT1=  -fast  
 
 # COMCONV= -byteswapio 
@@ -205,5 +205,5 @@ ppo_dmout.o            : ppo_dmout.f90 mod_tsteps.o mod_atparam.o mod_tmean.o
 #sea_init.o             : sea_init.f 
 #send_to_coupler.o      : send_to_coupler.f
 spe_matinv.o           : spe_matinv.f90
-spe_spectral.o         : spe_spectral.f90 mod_atparam.o mod_spectral.o
+spe_spectral.o         : spe_spectral.f90 mod_atparam.o mod_spectral.o mod_rp_utils.o
 spe_subfft_fftpack.o   : spe_subfft_fftpack.f90 mod_atparam.o mod_spectral.o mod_fft.o
