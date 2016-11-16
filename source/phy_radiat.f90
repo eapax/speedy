@@ -13,14 +13,15 @@ subroutine sol_oz(tyear)
     use mod_atparam
     use mod_physcon, only: slat, clat
     use mod_radcon, only: solc, epssw, fsol, ozone, ozupp, zenit, stratz
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, intent(in) :: tyear
-    real :: topsr(nlat), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
-    real :: nzen, rzen, szen
+    type(rpe_var), intent(in) :: tyear
+    type(rpe_var) :: topsr(nlat), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
+    type(rpe_var) :: nzen, rzen, szen
     integer :: i, j, j0
 
     ! alpha = year phase ( 0 - 2pi, 0 = winter solstice = 22dec.h00 )
@@ -76,17 +77,18 @@ end
 
 subroutine solar(tyear,csol,nlat,clat,slat,topsr)
     ! Average daily flux of solar radiation, from Hartmann (1994)
+    use rp_emulator
 
     implicit none
 
-    real, intent(in) :: tyear, csol
+    type(rpe_var), intent(in) :: tyear, csol
     integer, intent(in) :: nlat
-    real, dimension(nlat), intent(in) :: clat, slat
-    real, intent(inout) :: topsr(nlat)
+    type(rpe_var), dimension(nlat), intent(in) :: clat, slat
+    type(rpe_var), intent(inout) :: topsr(nlat)
 
     integer :: j
-    real :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, h0, alpha, pigr, sa1
-    real :: sa2, sa3, sdecl, sh0, tdecl
+    type(rpe_var) :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, h0, alpha, pigr, sa1
+    type(rpe_var) :: sa2, sa3, sdecl, sh0, tdecl
 
     ! 1. Compute declination angle and Earth-Sun distance factor
     pigr  = 2.*asin(1.)
@@ -139,19 +141,20 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
     use mod_atparam
     use mod_radcon, only: rhcl1, rhcl2, qacl, wpcl, pmaxcl, clsmax, clsminl,&
         & gse_s0, gse_s1, albcl, qcloud
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
     integer :: iptop(ngp)
-    real, intent(in) :: qa(ngp,nlev), rh(ngp,nlev), precnv(ngp), precls(ngp), gse(ngp),&
+    type(rpe_var), intent(in) :: qa(ngp,nlev), rh(ngp,nlev), precnv(ngp), precls(ngp), gse(ngp),&
         & fmask(ngp)
-    real, intent(inout) :: cloudc(ngp), clstr(ngp)
+    type(rpe_var), intent(inout) :: cloudc(ngp), clstr(ngp)
     integer, intent(inout) :: icltop(ngp)
 
     integer :: inew, j, k, nl1, nlp
-    real :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, rgse, rrcl
+    type(rpe_var) :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, rgse, rrcl
       
     nl1  = nlev-1
     nlp  = nlev+1
@@ -251,18 +254,19 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
     use mod_atparam
     use mod_physcon, only: sig, dsig
     use mod_radcon
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
     integer, intent(in) :: icltop(ngp)
-    real, intent(in) :: psa(ngp), qa(ngp,nlev), cloudc(ngp), clstr(ngp)
-    real, intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,nlev)
+    type(rpe_var), intent(in) :: psa(ngp), qa(ngp,nlev), cloudc(ngp), clstr(ngp)
+    type(rpe_var), intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,nlev)
 
     integer :: j, k, nl1
-    real :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
-    real :: fband1, fband2
+    type(rpe_var) :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
+    type(rpe_var) :: fband1, fband2
 
     nl1 = nlev-1
 
@@ -459,6 +463,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     use mod_atparam
     use mod_physcon, only: sbc, dsig, wvi
     use mod_radcon, only: epslw, emisfc, fband, tau2, st4a, stratc, flux
+    use rp_emulator
 
     implicit none
 
@@ -468,13 +473,13 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     ! Number of radiation bands with tau < 1
     integer, parameter :: nband=4
 
-    real, intent(in) :: ta(ngp,nlev), ts(ngp)
-    real, intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), fsfc(ngp)
-    real, intent(inout) :: dfabs(ngp,nlev)
+    type(rpe_var), intent(in) :: ta(ngp,nlev), ts(ngp)
+    type(rpe_var), intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), fsfc(ngp)
+    type(rpe_var), intent(inout) :: dfabs(ngp,nlev)
 
     integer :: j, jb, k, nl1
-    real :: anis, anish, brad, corlw, corlw1, corlw2, emis, eps1, esbc, refsfc
-    real :: st3a, tsq
+    type(rpe_var) :: anis, anish, brad, corlw, corlw1, corlw2, emis, eps1, esbc, refsfc
+    type(rpe_var) :: st3a, tsq
 
     nl1=nlev-1
 
@@ -664,13 +669,14 @@ subroutine radset
 
     use mod_atparam
     use mod_radcon, only: epslw, fband
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
     integer :: jb, jtemp
-    real :: eps1
+    type(rpe_var) :: eps1
 
     eps1=1.-epslw
 

@@ -1,5 +1,6 @@
 module mod_cli_sea
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -8,29 +9,29 @@ module mod_cli_sea
 
     ! Sea masks
     ! Fraction of sea
-    real :: fmask_s(ix,il)
+    type(rpe_var) :: fmask_s(ix,il)
 
     ! Binary sea mask
-    real :: bmask_s(ix,il)
+    type(rpe_var) :: bmask_s(ix,il)
 
     ! Grid latitudes
-    real :: deglat_s(il)
+    type(rpe_var) :: deglat_s(il)
 
     ! Monthly-mean climatological fields over sea
     ! Sea/ice surface temperature
-    real :: sst12(ix,il,12)
+    type(rpe_var) :: sst12(ix,il,12)
 
     ! Sea ice fraction
-    real :: sice12(ix,il,12)
+    type(rpe_var) :: sice12(ix,il,12)
 
     ! SST anomaly fields
     ! SST anomaly in 3 consecutive months
-    real :: sstan3(ix,il,3)
+    type(rpe_var) :: sstan3(ix,il,3)
 
     ! Climatological fields from model output
     ! Annual-mean heat flux into sea sfc.
-    real :: hfseacl(ix,il)
+    type(rpe_var) :: hfseacl(ix,il)
 
     ! Ocean model SST climatology
-    real :: sstom12(ix,il,12)
+    type(rpe_var) :: sstom12(ix,il,12)
 end module

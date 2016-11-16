@@ -11,12 +11,13 @@ subroutine restart(jday)
     use mod_atparam
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ndaytot, ihour
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: jday
     integer :: jrec
-    real :: adummy
+    type(rpe_var) :: adummy
 
     if (jday.eq.0) then
         100 CONTINUE

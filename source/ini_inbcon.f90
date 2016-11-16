@@ -12,10 +12,11 @@ subroutine inbcon(grav0,radlat)
     use mod_surfcon
     use mod_cli_land
     use mod_cli_sea
+    use rp_emulator
  	  							
     implicit none
 
-    real, intent(in) :: grav0, radlat(il)
+    type(rpe_var), intent(in) :: grav0, radlat(il)
     integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
 
     real*4 :: r4inp(nlon,nlat), dummy4
@@ -23,7 +24,7 @@ subroutine inbcon(grav0,radlat)
     real   :: veg(nlon,nlat), swl1(nlon,nlat), swl2(nlon,nlat)
 
     integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec
-    real :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
+    type(rpe_var) :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
 
     ! Set threshold for land-sea mask definition
     ! (ie minimum fraction of either land or sea)
@@ -282,12 +283,14 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     ! Aux. routine forchk: Check consistency of sfc fields with land-sea mask 
     ! and set undefined values to a constant (to avoid over/underflow)
 
+    use rp_emulator
+
     implicit none
 
-    real, intent(in) :: fmask(ngp)
-    real, intent(inout) :: field(ngp,nf)
+    type(rpe_var), intent(in) :: fmask(ngp)
+    type(rpe_var), intent(inout) :: field(ngp,nf)
     integer, intent(in) :: ngp, nf
-    real, intent(in) :: fmin, fmax, fset
+    type(rpe_var), intent(in) :: fmin, fmax, fset
 
     integer :: jf, jgp, nfault
 
@@ -390,7 +393,7 @@ subroutine truncg (itr,fg1,fg2)
     integer, intent(in) :: itr
 
     type(rpe_var), dimension(ix,il), intent(inout) :: fg1 (ix,il), fg2(ix,il)
-    complex :: fsp(mx,nx), zero 
+    type(rpe_complex_var) :: fsp(mx,nx), zero 
     integer :: n, m, itwn
 
     print *, 'Filter applied at wavenumber ', itr
@@ -465,12 +468,13 @@ subroutine load_boundary_file(ioflag,iunit,fld,offset)
     ! if ioflag = 2 : write field on from unit=iunit
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
     integer, intent(in) :: ioflag, iunit, offset
-    real     :: fld(nlon,nlat)
+    type(rpe_var)     :: fld(nlon,nlat)
     real(4) :: inp(nlon,nlat)
     integer :: i
 

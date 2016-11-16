@@ -1,6 +1,8 @@
 !> @brief
 !> Length of the integration and time stepping constants.
 module mod_tsteps
+    use rp_emulator
+
     implicit none
 
     private
@@ -81,5 +83,5 @@ module mod_tsteps
     real, parameter :: wil = 0.53
 
     ! Coefficient for semi-implicit computations
-    real :: alph
+    type(rpe_var) :: alph
 end module

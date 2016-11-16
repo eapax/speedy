@@ -9,12 +9,13 @@ subroutine geop(jj)
     use mod_atparam
     use mod_dynvar
     use mod_dyncon1, only: xgeop1, xgeop2, hsg, fsg
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: jj
     integer :: k
-    real :: corf
+    type(rpe_var) :: corf
 
     ! 1. Bottom layer (integration over half a layer)
     phi(:,:,kx) = phis + xgeop1(kx) * t(:,:,kx,jj)

@@ -1,5 +1,6 @@
 module mod_radcon
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -97,7 +98,7 @@ module mod_radcon
 
     ! Time-invariant fields (initial. in radset)
     ! fband  = energy fraction emitted in each LW band = f(T)
-    real :: fband(100:400,4)
+    type(rpe_var) :: fband(100:400,4)
 
     ! Zonally-averaged fields for SW/LW scheme (updated in sol_oz)
     ! fsol   = flux of incoming solar radiation
@@ -105,23 +106,23 @@ module mod_radcon
     ! ozupp  = flux absorbed by ozone (upper stratos.)
     ! zenit  = optical depth ratio (function of solar zenith angle)
     ! stratz = stratospheric correction for polar night
-    real, dimension(ix*il) :: fsol, ozone, ozupp, zenit, stratz
+    type(rpe_var), dimension(ix*il) :: fsol, ozone, ozupp, zenit, stratz
 
     ! Radiative properties of the surface (updated in fordate)
     ! alb_l  = daily-mean albedo over land (bare-land + snow)
     ! alb_s  = daily-mean albedo over sea  (open sea + sea ice)
     ! albsfc = combined surface albedo (land + sea)
     ! snowc  = effective snow cover (fraction)
-    real, dimension(ix*il) :: alb_l, alb_s, albsfc, snowc
+    type(rpe_var), dimension(ix*il) :: alb_l, alb_s, albsfc, snowc
 
     ! Transmissivity and blackbody rad. (updated in radsw/radlw)
     ! tau2   = transmissivity of atmospheric layers
     ! st4a   = blackbody emission from full and half atmospheric levels
     ! stratc = stratospheric correction term 
     ! flux   = radiative flux in different spectral bands
-    real :: tau2(ix*il,kx,4), st4a(ix*il,kx,2), stratc(ix*il,2), flux(ix*il,4)
+    type(rpe_var) :: tau2(ix*il,kx,4), st4a(ix*il,kx,2), stratc(ix*il,2), flux(ix*il,4)
 
     ! Radiative properties of clouds (updated in cloud)
     ! qcloud = Equivalent specific humidity of clouds 
-    real, dimension(ix*il) :: qcloud, irhtop
+    type(rpe_var), dimension(ix*il) :: qcloud, irhtop
 end module

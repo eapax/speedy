@@ -1,5 +1,6 @@
 module mod_cplcon_sea
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -8,16 +9,16 @@ module mod_cplcon_sea
 
     ! Constant parameters and fields in sea/ice model
     ! 1./heat_capacity (sea)
-    real :: rhcaps(ix,il)
+    type(rpe_var) :: rhcaps(ix,il)
 
     ! 1./heat_capacity (ice)
-    real :: rhcapi(ix,il)
+    type(rpe_var) :: rhcapi(ix,il)
 
     ! 1./dissip_time (sea)
-    real :: cdsea(ix,il)
+    type(rpe_var) :: cdsea(ix,il)
 
     ! 1./dissip_time (ice)
-    real :: cdice(ix,il)
+    type(rpe_var) :: cdice(ix,il)
 
     ! Heat flux coef. at sea/ice int.
     real :: beta = 1.0

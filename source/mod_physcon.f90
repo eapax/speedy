@@ -1,5 +1,6 @@
 module mod_physcon
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -40,7 +41,7 @@ module mod_physcon
     !    wvi    = weights for vertical interpolation
     !    slat   = sin(lat)
     !    clat   = cos(lat)
-    real, dimension(kx) :: sig, sigl, dsig, pout, grdsig, grdscp
-    real :: wvi(kx,2), sigh(0:kx)
-    real, dimension(il) :: slat, clat
+    type(rpe_var), dimension(kx) :: sig, sigl, dsig, pout, grdsig, grdscp
+    type(rpe_var) :: wvi(kx,2), sigh(0:kx)
+    type(rpe_var), dimension(il) :: slat, clat
 end module

@@ -11,6 +11,7 @@ subroutine tmout(imode)
     use mod_atparam
     use mod_tmean
     use mod_physcon, only: p0, pout
+    use rp_emulator
 
     implicit none
 
@@ -19,9 +20,9 @@ subroutine tmout(imode)
     integer, intent(in) :: imode
 
     ! Fields used to compute omega, psi and chi
-    complex :: vorsp(mx,nx), divsp(mx,nx), psisp(mx,nx)
+    type(rpe_complex_var) :: vorsp(mx,nx), divsp(mx,nx), psisp(mx,nx)
 
-    real :: div3d(ngp,nlev), dpr2, fmean
+    type(rpe_var) :: div3d(ngp,nlev), dpr2, fmean
     real*4 :: r4out(ngp)
 
     integer :: iitest=1, k, n, nuv, nv, nvt
@@ -37,7 +38,7 @@ subroutine tmout(imode)
     save2d_1(:,:) = save2d_1(:,:)*fmean
 
     ! Fields saved at every step (fluxes)
-    fmean = fmean/real(nstppr)
+    fmean = fmean/rpe_literal(nstppr)
 
     save2d_2(:,:) = save2d_2(:,:)*fmean
 

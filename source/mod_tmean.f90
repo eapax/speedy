@@ -1,5 +1,6 @@
 module mod_tmean
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -33,13 +34,13 @@ module mod_tmean
 
     ! Arrays for the computation of time-means
     ! (initial./used by tmout, updated in tminc and dmflux)
-    real :: save3d  (ix*il,kx,ns3d)     ! 3-D fields saved every post-proc. step
-    real :: save2d_1(ix*il,ns2d_1)        ! 2-D fields saved every post-proc. step
-    real :: save2d_2(ix*il,ns2d_2)        ! 2-D fields saved every step (fluxes)
-    real :: rnsave                      ! post-processing counter
+    type(rpe_var) :: save3d  (ix*il,kx,ns3d)     ! 3-D fields saved every post-proc. step
+    type(rpe_var) :: save2d_1(ix*il,ns2d_1)        ! 2-D fields saved every post-proc. step
+    type(rpe_var) :: save2d_2(ix*il,ns2d_2)        ! 2-D fields saved every step (fluxes)
+    type(rpe_var) :: rnsave                      ! post-processing counter
 
     ! Arrays for the computation of daily-means
     ! (initial./used by DMOUT, updated in TMINC and DMFLUX)
-    real :: save2d_d1(ix*il,ns2d_d1)     ! Daily output saved every post-proc step
-    real :: save2d_d2(ix*il,ns2d_d2)     ! Daily output saved every step (fluxes)
+    type(rpe_var) :: save2d_d1(ix*il,ns2d_d1)     ! Daily output saved every post-proc step
+    type(rpe_var) :: save2d_d2(ix*il,ns2d_d2)     ! Daily output saved every step (fluxes)
 end module

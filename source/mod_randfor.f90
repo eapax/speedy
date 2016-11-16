@@ -1,5 +1,6 @@
 module mod_randfor
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -7,5 +8,5 @@ module mod_randfor
     public randfh, randfv
 
     ! Random diabatic forcing (initial. in INIRDF, modified by XS_RDF))
-    real :: randfh(ix,il,2), randfv(il,kx,2)
+    type(rpe_var) :: randfh(ix,il,2), randfv(il,kx,2)
 end module

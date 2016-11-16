@@ -17,6 +17,7 @@ subroutine dmflux(iadd)
     use mod_physvar
     use mod_radcon, only: albsea, albice, emisfc
     use mod_date, only: ihour
+    use rp_emulator
 
     implicit none
 
@@ -25,9 +26,9 @@ subroutine dmflux(iadd)
     integer, intent(in) :: iadd
     integer :: j
 
-    real :: prec(ngp), difice(ngp)
+    type(rpe_var) :: prec(ngp), difice(ngp)
 
-    real :: fland(ngp), esbc, rstep1, rstep2, rsteps, sstfr, sstfr4
+    type(rpe_var) :: fland(ngp), esbc, rstep1, rstep2, rsteps, sstfr, sstfr4
 
     fland = reshape(fmask1,(/ngp/))
 
@@ -78,7 +79,7 @@ subroutine dmflux(iadd)
         return
     end if
 
-    rsteps = 1./real(nsteps)
+    rsteps = 1./rpe_literal(nsteps)
     rstep1 = rsteps*0.001
     rstep2 = rsteps*alhc
 

@@ -15,12 +15,13 @@ subroutine invars
     use mod_dyncon1, only: grav, rgas, fsg
     use mod_surfcon, only: phi0, phis0
     use mod_date, only: iyear, imonth, iday, ihour
+    use rp_emulator
 
     implicit none
 
-    complex :: zero, ccon, surfs(mx,nx)
-    real :: surfg(ix,il)
-    real :: gam1, esref, factk, gam2, qexp, qref, rgam, rgamr, rlog0, tref, ttop
+    type(rpe_complex_var) :: zero, ccon, surfs(mx,nx)
+    type(rpe_var) :: surfg(ix,il)
+    type(rpe_var) :: gam1, esref, factk, gam2, qexp, qref, rgam, rgamr, rlog0, tref, ttop
     integer :: i, j, k
 
     gam1 = gamma/(1000.*grav)

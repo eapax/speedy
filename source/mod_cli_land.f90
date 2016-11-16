@@ -1,5 +1,6 @@
 module mod_cli_land
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -8,18 +9,18 @@ module mod_cli_land
 
     ! Land masks
     ! Fraction of land
-    real :: fmask_l(ix,il)
+    type(rpe_var) :: fmask_l(ix,il)
 
     ! Binary land mask
-    real :: bmask_l(ix,il)
+    type(rpe_var) :: bmask_l(ix,il)
 
     ! Monthly-mean climatological fields over land
     ! Land surface temperature
-    real :: stl12(ix,il,12)
+    type(rpe_var) :: stl12(ix,il,12)
 
     ! Snow depth (water equiv.)
-    real :: snowd12(ix,il,12)
+    type(rpe_var) :: snowd12(ix,il,12)
 
     ! Soil water availabilityend module
-    real :: soilw12(ix,il,12)
+    type(rpe_var) :: soilw12(ix,il,12)
 end module

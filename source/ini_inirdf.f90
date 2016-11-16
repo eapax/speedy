@@ -7,16 +7,17 @@ subroutine inirdf(indrdf)
     use mod_atparam
     use mod_physcon, only: slat
     use mod_randfor, only: randfh
+    use rp_emulator
 
     implicit none
 
-    real, external :: ran1
+    type(rpe_var), external :: ran1
 
     integer, intent(in) :: indrdf
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real :: redgrd(0:36,0:18), randf2(nlon,nlat), rnlon(0:18), colat(nlat)
-    real :: ampl, flat1, flat2, fran, freq0, rdeg, rlon
+    type(rpe_var) :: redgrd(0:36,0:18), randf2(nlon,nlat), rnlon(0:18), colat(nlat)
+    type(rpe_var) :: ampl, flat1, flat2, fran, freq0, rdeg, rlon
     integer :: i, iseed, j, jlat, jlat1, jlat2, jlon, jlon1, nf, ntrfor
 
     integer :: nlonrg(0:18) = (/ 1,  6, 12, 18, 24, 28, 32, 34, 36, 36,&
@@ -96,15 +97,17 @@ subroutine gausts(nt,av,sd,ac,ndis,iseed,ts)
     !  Uses function ran1 to generate uniform deviates from seed (iseed)
     !  Adapted from Numerical Recipes, Chapter 7.2 
 
+    use rp_emulator
+
     implicit none
 
-    real, external :: ran1
+    type(rpe_var), external :: ran1
 
     integer, intent(in) :: nt, ndis, iseed
-    real, intent(in) :: av, sd, ac
-    real, intent(inout) :: ts(nt)
+    type(rpe_var), intent(in) :: av, sd, ac
+    type(rpe_var), intent(inout) :: ts(nt)
     integer :: j, nt2, j2, jd
-    real :: v1, v2, rsq, fact, sd2
+    type(rpe_var) :: v1, v2, rsq, fact, sd2
 
     rsq = 2.0
 
@@ -148,6 +151,8 @@ function ran1(idum)
     !   Set IDUM to any negative value to (re)initialize the sequence
     !   From Numerical Recipes, Chapter 7.1 
 
+    use rp_emulator
+
     implicit none
 
     integer :: idum
@@ -155,7 +160,7 @@ function ran1(idum)
     real, parameter :: rm=1./im
     integer, save :: iy = -1
     integer :: j
-    real :: ran1
+    type(rpe_var) :: ran1
 
     integer, save :: ir(97) = 0.0
 

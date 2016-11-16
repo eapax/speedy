@@ -21,19 +21,20 @@ subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv,utenvd,vtenvd,ttenvd,qtenvd)
     use mod_atparam
     use mod_vdicon
     use mod_physcon, only: cp, alhc, sig, sigh, dsig
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, dimension(ngp,nlev), intent(in) :: ua, va, se, rh, qa, qsat, phi
+    type(rpe_var), dimension(ngp,nlev), intent(in) :: ua, va, se, rh, qa, qsat, phi
     integer, intent(in) :: icnv(ngp)
-    real, dimension(ngp,nlev), intent(inout) :: utenvd, vtenvd, ttenvd, qtenvd
+    type(rpe_var), dimension(ngp,nlev), intent(inout) :: utenvd, vtenvd, ttenvd, qtenvd
 
     integer :: nl1, j, k, k1
-    real :: cshc, cvdi, fshcq, fshcse, fvdiq, fvdise, drh0, fvdiq2, dmse, drh
-    real :: fluxse, fluxq, fcnv, se0
-    real, dimension(nlev) :: rsig, rsig1
+    type(rpe_var) :: cshc, cvdi, fshcq, fshcse, fvdiq, fvdise, drh0, fvdiq2, dmse, drh
+    type(rpe_var) :: fluxse, fluxq, fcnv, se0
+    type(rpe_var), dimension(nlev) :: rsig, rsig1
 
     ! 1. Initalization
 

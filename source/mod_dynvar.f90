@@ -3,6 +3,7 @@
 !> Initialised in invars.
 module mod_dynvar
     use mod_atparam
+	use rp_emulator
 
     implicit none
 
@@ -12,24 +13,24 @@ module mod_dynvar
 
     ! Prognostic spectral variables (updated in step)
     ! Vorticity
-    complex :: vor(MX,NX,KX,2)
+    type(rpe_complex_var) :: vor(MX,NX,KX,2)
 
     ! Divergence 
-    complex :: div(MX,NX,KX,2)
+    type(rpe_complex_var) :: div(MX,NX,KX,2)
 
     ! Absolute temperature
-    complex :: t(MX,NX,KX,2)
+    type(rpe_complex_var) :: t(MX,NX,KX,2)
 
     ! Log of (norm.) sfc pressure (p_s/p0)
-    complex :: PS(MX,NX,2)
+    type(rpe_complex_var) :: PS(MX,NX,2)
 
     ! Tracers (tr.1: spec. humidity in g/kg)
-    complex :: TR(MX,NX,KX,2,NTR)
+    type(rpe_complex_var) :: TR(MX,NX,KX,2,NTR)
 
     ! Geopotential (updated in geop)
     ! Atmos. geopotential
-    complex :: PHI(MX,NX,KX)
+    type(rpe_complex_var) :: PHI(MX,NX,KX)
 
     ! Surface geopotential
-    complex :: PHIS(MX,NX)
+    type(rpe_complex_var) :: PHIS(MX,NX)
 end module

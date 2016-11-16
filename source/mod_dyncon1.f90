@@ -1,5 +1,6 @@
 module mod_dyncon1
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -20,11 +21,11 @@ module mod_dyncon1
     real, parameter :: g  = grav
 
     ! Vertical level parameters (initial. in indyns)
-    real :: hsg(kxp), dhs(kx), fsg(kx), dhsr(kx), fsgr(kx)
+    type(rpe_var) :: hsg(kxp), dhs(kx), fsg(kx), dhsr(kx), fsgr(kx)
 
     ! Functions of lat. and lon. (initial. in indyns)
-    real :: radang(il), gsin(il), gcos(il), coriol(il)
+    type(rpe_var) :: radang(il), gsin(il), gcos(il), coriol(il)
 
     ! Constants for hydrostatic eq. (initial. in indyns)
-    real :: xgeop1(kx), xgeop2(kx)
+    type(rpe_var) :: xgeop1(kx), xgeop2(kx)
 end module

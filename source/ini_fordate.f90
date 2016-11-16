@@ -20,18 +20,19 @@ subroutine fordate(imode)
     use mod_var_sea, only: sstcl_ob, sst_am, sice_am
     use mod_radcon, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
         & alb_l, alb_s, albsfc
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon * nlat
 
     integer, intent(in) :: imode
-    real, dimension(nlon, nlat) :: corh, tsfc, tref, psfc, qsfc, qref
-    real :: gamlat(nlat)
+    type(rpe_var), dimension(nlon, nlat) :: corh, tsfc, tref, psfc, qsfc, qref
+    type(rpe_var) :: gamlat(nlat)
 
-    real :: fland(ngp), alb_0(ngp)
+    type(rpe_var) :: fland(ngp), alb_0(ngp)
 
-    real :: del_co2, dummy, pexp
+    type(rpe_var) :: del_co2, dummy, pexp
     integer :: i, j, ij, iitest = 0, iyear_ref
 
     fland = reshape(fmask_l, (/ngp/))
@@ -117,14 +118,15 @@ subroutine setgam(tyear,gamlat)
     use mod_dyncon0, only: gamma
     use mod_atparam
     use mod_physcon, only: gg
+    use rp_emulator
 
     implicit none
 
-    real, intent(in) :: tyear
+    type(rpe_var), intent(in) :: tyear
     integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon * nlat
     integer :: j
                                             
-    real, intent(inout) :: gamlat(nlat)
+    type(rpe_var), intent(inout) :: gamlat(nlat)
 
     gamlat(1) = gamma/(1000. * gg)
     do j = 2, nlat
@@ -136,11 +138,12 @@ subroutine outest(iunit,fout)
     ! aux. routine outest : write one field on a test output file 
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: iunit
-    real, intent(in) :: fout(ix, il)
+    type(rpe_var), intent(in) :: fout(ix, il)
     integer :: i, j
 
     real*4 :: r4out(ix,il)

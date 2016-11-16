@@ -235,15 +235,16 @@ subroutine xs_rdf(tt1,tt2,ivm)
     use mod_atparam
     use mod_physcon, only: sig
     use mod_randfor, only: randfv
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, dimension(nlon,nlat,nlev), intent(in) :: tt1, tt2
+    type(rpe_var), dimension(nlon,nlat,nlev), intent(in) :: tt1, tt2
     integer, intent(in) :: ivm
 
-    real :: rand1(0:nlat+1), pigr2, rnlon, rnsig
+    type(rpe_var) :: rand1(0:nlat+1), pigr2, rnlon, rnsig
     integer :: i, j, k, nsmooth
 
     rnlon = 1./float(nlon)
@@ -291,12 +292,13 @@ subroutine setrdf(tt_rdf)
 
     use mod_atparam
     use mod_randfor
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real :: tt_rdf(nlon,nlat,nlev)
+    type(rpe_var) :: tt_rdf(nlon,nlat,nlev)
     integer :: i, j, k
 
     do k=1,nlev

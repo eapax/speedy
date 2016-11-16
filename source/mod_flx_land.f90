@@ -1,5 +1,6 @@
 module mod_flx_land
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -9,32 +10,32 @@ module mod_flx_land
 
     ! Fluxes at land surface (all downward, except evaporation)
     ! Precipitation (land)
-    real :: prec_l(ix*il)
+    type(rpe_var) :: prec_l(ix*il)
 
     ! Snowfall (land)
-    real :: snowf_l(ix*il)
+    type(rpe_var) :: snowf_l(ix*il)
 
     ! Evaporation (land)
-    real :: evap_l(ix*il)
+    type(rpe_var) :: evap_l(ix*il)
 
     ! u-wind stress (land)
-    real :: ustr_l(ix*il)
+    type(rpe_var) :: ustr_l(ix*il)
 
     ! v-wind stress (land)
-    real :: vstr_l(ix*il)
+    type(rpe_var) :: vstr_l(ix*il)
 
     ! Sfc short-wave radiation (land)
-    real :: ssr_l(ix*il)
+    type(rpe_var) :: ssr_l(ix*il)
 
     ! Sfc long-wave radiation (land)
-    real :: slr_l(ix*il)
+    type(rpe_var) :: slr_l(ix*il)
 
     ! Sensible heat flux (land)
-    real :: shf_l(ix*il)
+    type(rpe_var) :: shf_l(ix*il)
 
     ! Latent heat flux (land)
-    real :: ehf_l(ix*il)
+    type(rpe_var) :: ehf_l(ix*il)
 
     ! Net heat flux into land sfc.end module
-    real :: hflux_l(ix*il)
+    type(rpe_var) :: hflux_l(ix*il)
 end module

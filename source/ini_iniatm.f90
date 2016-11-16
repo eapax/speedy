@@ -8,11 +8,12 @@ subroutine ini_atm(cexp)
     use mod_dyncon1, only: grav, hsg, fsg, radang
     use mod_tmean
     use mod_date, only: ndaytot
+    use rp_emulator
 
     implicit none
 
     character(len=3) :: cexp        ! experiment identifier
-    real :: ppl(kx)            ! post-processing levels (hpa/1000)
+    type(rpe_var) :: ppl(kx)            ! post-processing levels (hpa/1000)
     integer :: iitest = 1, is3d = 1, k, nddm, ndm, ndtm, ntm
 
     ! 1. initialize ffts
@@ -112,14 +113,18 @@ subroutine ini_atm(cexp)
             ! function prlev (siglev)
             ! purpose : select the closest standard pressure level for post-proc.
             ! input :   siglev = sigma level
+            use rp_emulator
+
             implicit none
         
-            real, intent(in) :: siglev
-            real :: plev(14) = (/ 0.925, 0.850, 0.775, 0.700, 0.600, 0.500, 0.400,&
-                & 0.300, 0.250, 0.200, 0.150, 0.100, 0.050, 0.030 /)
-            real :: prlev, dif, adif
+            type(rpe_var), intent(in) :: siglev
+            type(rpe_var) :: plev(14)
+            type(rpe_var) :: prlev, dif, adif
             integer :: k
-        
+
+            plev = (/ 0.925, 0.850, 0.775, 0.700, 0.600, 0.500, 0.400,&
+                & 0.300, 0.250, 0.200, 0.150, 0.100, 0.050, 0.030 /)
+
             dif = 1.0 - siglev
         
             prlev = 1.0

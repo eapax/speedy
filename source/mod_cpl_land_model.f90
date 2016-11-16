@@ -1,20 +1,21 @@
 module mod_cpl_land_model
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     ! 1./heat_capacity (land)
-    real :: rhcapl(ix,il)           
+    type(rpe_var) :: rhcapl(ix,il)           
 
     ! 1./dissip_time (land)
-    real :: cdland(ix,il)           
+    type(rpe_var) :: cdland(ix,il)           
 
     ! Input and output land variables exchanged by coupler
     ! Land model input variables
-    real :: vland_input(ix*il,4)            
+    type(rpe_var) :: vland_input(ix*il,4)            
 
     ! Land model output variables
-    real :: vland_output(ix*il,2)           
+    type(rpe_var) :: vland_output(ix*il,2)           
 
     contains
         subroutine land_model_init(fmask_l,alb0) 
@@ -25,14 +26,14 @@ module mod_cpl_land_model
             
             ! Input variables
             ! Land mask (fraction of land)
-            real, intent(in) :: fmask_l(ix,il)            
+            type(rpe_var), intent(in) :: fmask_l(ix,il)            
             ! Annual-mean albedo
-            real, intent(in) :: alb0(ix,il)            
+            type(rpe_var), intent(in) :: alb0(ix,il)            
         
             ! Auxiliary variables
             integer :: i, j
-            real :: dmask(ix,il)           ! domain mask
-            real :: depth_soil, depth_lice, tdland, hcapl, hcapli, flandmin
+            type(rpe_var) :: dmask(ix,il)           ! domain mask
+            type(rpe_var) :: depth_soil, depth_lice, tdland, hcapl, hcapli, flandmin
         
             ! 1. Set heat capacities and dissipation times for 
             !    soil and ice-sheet layers 
@@ -90,16 +91,16 @@ module mod_cpl_land_model
             !real vland_input(ix,il,3), vland_output(ix,il,2)
         
             ! Input variables:
-            real :: stl0(ix*il)    ! land temp. at initial time
-            real :: hfland(ix*il)    ! land sfc. heat flux between t0 and t1
-            real :: stlcl1(ix*il)    ! clim. land temp. at final time 
+            type(rpe_var) :: stl0(ix*il)    ! land temp. at initial time
+            type(rpe_var) :: hfland(ix*il)    ! land sfc. heat flux between t0 and t1
+            type(rpe_var) :: stlcl1(ix*il)    ! clim. land temp. at final time 
         
             ! Output variables
-            real :: stl1(ix*il)     ! land temp. at final time
+            type(rpe_var) :: stl1(ix*il)     ! land temp. at final time
         
             ! Auxiliary variables
-            real :: hflux(ix*il)   ! net sfc. heat flux
-            real :: tanom(ix*il)   ! sfc. temperature anomaly
+            type(rpe_var) :: hflux(ix*il)   ! net sfc. heat flux
+            type(rpe_var) :: tanom(ix*il)   ! sfc. temperature anomaly
 
             ! Initialise variables
             stl0 = vland_input(:,1)

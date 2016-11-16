@@ -5,11 +5,12 @@ subroutine stepone
     !           and perform initial time step
 
     use mod_tsteps, only: delt, delt2, alph, rob, wil, istart
+    use rp_emulator
 
     implicit none
 
     integer :: iitest = 1
-    real :: delth
+    type(rpe_var) :: delth
 
     if (iitest == 1) print *, ' instep: initial time step'
 

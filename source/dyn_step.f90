@@ -24,16 +24,17 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     use mod_atparam
     use mod_dynvar
     use mod_hdifcon
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: j1, j2
-    real, intent(in) :: dt, alph, rob, wil
-    complex, dimension(mx,nx,kx) ::  ordt, divdt, tdt, vordt
-    complex :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
-    real :: eps, sdrag
+    type(rpe_var), intent(in) :: dt, alph, rob, wil
+    type(rpe_complex_var), dimension(mx,nx,kx) ::  ordt, divdt, tdt, vordt
+    type(rpe_complex_var) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
+    type(rpe_var) :: eps, sdrag
 
-    complex :: ctmp(mx,nx,kx)
+    type(rpe_complex_var) :: ctmp(mx,nx,kx)
 
     integer :: iitest = 0, n, itr, k, m
 
@@ -134,13 +135,14 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
     !             using damping coefficients DMP and DMP1
 
     USE mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: nlev
-    complex, intent(in) :: field(mxnx,kx)
-    complex, intent(inout) :: fdt(mxnx,kx)
-    real, intent(in) :: dmp(mxnx), dmp1(mxnx)
+    type(rpe_complex_var), intent(in) :: field(mxnx,kx)
+    type(rpe_complex_var), intent(inout) :: fdt(mxnx,kx)
+    type(rpe_var), intent(in) :: dmp(mxnx), dmp1(mxnx)
     integer :: k, m
 
     do k=1,nlev
@@ -156,15 +158,16 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     !            using tendency fdt
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: j1, nlev
-    real, intent(in) :: dt, eps, wil
-    complex, intent(in) :: fdt(mxnx,nlev)
-    complex, intent(inout) :: field(mxnx,nlev,2)
-    real :: eps2
-    complex :: fnew(mxnx)
+    type(rpe_var), intent(in) :: dt, eps, wil
+    type(rpe_complex_var), intent(in) :: fdt(mxnx,nlev)
+    type(rpe_complex_var), intent(inout) :: field(mxnx,nlev,2)
+    type(rpe_var) :: eps2
+    type(rpe_complex_var) :: fnew(mxnx)
     integer :: k, m
 
     eps2 = 1.-2.*eps
@@ -180,11 +183,11 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
         do m=1,mxnx
             fnew (m)     = field(m,k,1) + dt*fdt(m,k)
             field(m,k,1) = field(m,k,j1) +  wil*eps*(field(m,k,1)&
-                & -2*field(m,k,j1)+fnew(m))
+                & -2.0*field(m,k,j1)+fnew(m))
 
             ! and here comes Williams' innovation to the filter
             field(m,k,2) = fnew(m)-(1-wil)*eps*(field(m,k,1)&
-                &-2*field(m,k,j1)+fnew(m))
+                &-2.0*field(m,k,j1)+fnew(m))
         enddo
     enddo
 end
@@ -199,13 +202,14 @@ subroutine cgrate(vor,div,vordt,divdt)
     !            DIVDT  = time derivative of DIV
     
     USE mod_atparam
+    use rp_emulator
 
     implicit none
 
-    complex, dimension(mx,nx,kx), intent(in) :: vor, div
-    complex, dimension(mx,nx,kx), intent(inout) :: vordt, divdt
-    complex :: temp(mx,nx)
-    real :: cdamp, grate, grmax, rnorm
+    type(rpe_complex_var), dimension(mx,nx,kx), intent(in) :: vor, div
+    type(rpe_complex_var), dimension(mx,nx,kx), intent(inout) :: vordt, divdt
+    type(rpe_complex_var) :: temp(mx,nx)
+    type(rpe_var) :: cdamp, grate, grmax, rnorm
     integer :: k, m, n
 
     grmax=0.2/(86400.*2.)
@@ -220,8 +224,8 @@ subroutine cgrate(vor,div,vordt,divdt)
 
         do n=1,nx
             do m=2,mx
-                grate=grate-real(vordt(m,n,k)*conjg(temp(m,n)))
-                rnorm=rnorm-real(  vor(m,n,k)*conjg(temp(m,n)))
+                grate=grate-realpart(vordt(m,n,k)*conjg(temp(m,n)))
+                rnorm=rnorm-realpart(  vor(m,n,k)*conjg(temp(m,n)))
             enddo
         enddo
 
@@ -252,8 +256,8 @@ subroutine cgrate(vor,div,vordt,divdt)
 
         do n=1,nx
             do m=2,mx
-                grate=grate-real(divdt(m,n,k)*conjg(temp(m,n)))
-                rnorm=rnorm-real(  div(m,n,k)*conjg(temp(m,n)))
+                grate=grate-realpart(divdt(m,n,k)*conjg(temp(m,n)))
+                rnorm=rnorm-realpart(  div(m,n,k)*conjg(temp(m,n)))
             enddo
         enddo
 

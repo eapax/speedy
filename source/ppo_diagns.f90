@@ -9,6 +9,7 @@ subroutine diagns(jj,istep)
     use mod_tsteps, only: nstdia, nstppr, nstout, ihout
     use mod_atparam
     use mod_dynvar
+    use rp_emulator
 
     implicit none
 
@@ -16,8 +17,8 @@ subroutine diagns(jj,istep)
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
     integer :: k, m, n, kk
-    complex :: temp(mx,nx)
-    real :: diag(kx,3), sqhalf
+    type(rpe_complex_var) :: temp(mx,nx)
+    type(rpe_var) :: diag(kx,3), sqhalf
 
     ! 1. Get global-mean temperature and compute eddy kinetic energy 
     sqhalf = sqrt(0.5)
@@ -25,13 +26,13 @@ subroutine diagns(jj,istep)
     do k=1,kx
         diag(k,1)=0.
         diag(k,2)=0.
-        diag(k,3)=sqhalf*real(t(1,1,k,jj))
+        diag(k,3)=sqhalf*realpart(t(1,1,k,jj))
 
         call invlap(vor(1,1,k,jj),temp)
 
         do m=2,mx
             do n=1,nx
-                diag(k,1)=diag(k,1)-real(temp(m,n)*conjg(vor(m,n,k,jj)))
+                diag(k,1)=diag(k,1)-realpart(temp(m,n)*conjg(vor(m,n,k,jj)))
             end do
         end do
 
@@ -39,7 +40,7 @@ subroutine diagns(jj,istep)
 
         do m=2,mx
             do n=1,nx
-                diag(k,2)=diag(k,2)-real(temp(m,n)*conjg(div(m,n,k,jj)))
+                diag(k,2)=diag(k,2)-realpart(temp(m,n)*conjg(div(m,n,k,jj)))
             end do
         end do
     end do

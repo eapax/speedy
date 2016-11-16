@@ -1,5 +1,6 @@
 module mod_physvar
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -18,13 +19,13 @@ module mod_physvar
     ! qg1    = specific humidity (g/kg)
     ! phig1  = geopotential
     ! pslg1  = log. of surface pressure
-    real, dimension(ix*il,kx) :: ug1, vg1, tg1, qg1, phig1
-    real :: pslg1(ix*il)
+    type(rpe_var), dimension(ix*il,kx) :: ug1, vg1, tg1, qg1, phig1
+    type(rpe_var) :: pslg1(ix*il)
 
     ! se     = dry static energy
     ! rh     = relative humidity
     ! qsat   = saturation specific humidity (g/kg)
-    real, dimension(ix*il,kx) :: se, rh, qsat
+    type(rpe_var), dimension(ix*il,kx) :: se, rh, qsat
 
     ! psg    = surface pressure
     ! ts     = surface temperature
@@ -37,7 +38,7 @@ module mod_physvar
     ! clstr  = stratiform cloud cover (fraction)
     ! cltop  = norm. pressure at cloud top
     ! prtop  = top of precipitation (level index)
-    real, dimension(ix*il) :: psg, ts, tskin, u0, v0, t0, q0, cloudc, clstr,&
+    type(rpe_var), dimension(ix*il) :: psg, ts, tskin, u0, v0, t0, q0, cloudc, clstr,&
         & cltop, prtop
 
     ! tt_cnv  =  temperature tendency due to convection
@@ -50,7 +51,7 @@ module mod_physvar
     ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
     ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
     ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
-    real, dimension(ix*il,kx) :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, tt_rsw,&
+    type(rpe_var), dimension(ix*il,kx) :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, tt_rsw,&
         & tt_rlw, ut_pbl, vt_pbl, tt_pbl, qt_pbl
 
     ! precnv = convective precipitation  [g/(m^2 s)], total
@@ -71,7 +72,7 @@ module mod_physvar
     ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
     ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
     ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
-    real, dimension(ix*il) :: precnv, precls, snowcv, snowls, cbmf, tsr, ssrd,&
+    type(rpe_var), dimension(ix*il) :: precnv, precls, snowcv, snowls, cbmf, tsr, ssrd,&
         & ssr, slrd, slr, olr
-    real, dimension(ix*il,3) :: slru, ustr, vstr, shf, evap, hfluxn
+    type(rpe_var), dimension(ix*il,3) :: slru, ustr, vstr, shf, evap, hfluxn
 end module

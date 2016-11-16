@@ -18,19 +18,20 @@ subroutine tminc
     use mod_var_sea, only: sst_am, sstan_am, sst_om, ssti_om
     use mod_physvar
     use mod_radcon, only: albsfc
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real :: adsave(ngp,6), phisg(ngp), pmsl(ngp), qsatpl(ngp), st0(ngp)
+    type(rpe_var) :: adsave(ngp,6), phisg(ngp), pmsl(ngp), qsatpl(ngp), st0(ngp)
 
     ! Fields for vertical interpolation
     integer :: k0(ngp), iitest, nv, nvt, nuv, n0, n, kmid, klow, kj1, j, k, kj
     integer :: khigh
-    real :: w0(ngp), zout(ngp), zinp(nlev), rdzinp(nlev)
-    real :: rg, rdr2, gam0, rgam, zmin, tsg, wref, tref, textr, rrgam, plog
-    real :: phi1, phi2, fwind, aref
+    type(rpe_var) :: w0(ngp), zout(ngp), zinp(nlev), rdzinp(nlev)
+    type(rpe_var) :: rg, rdr2, gam0, rgam, zmin, tsg, wref, tref, textr, rrgam, plog
+    type(rpe_var) :: phi1, phi2, fwind, aref
 
     phisg = reshape(phis0, (/ngp/))
 
@@ -272,11 +273,13 @@ subroutine tminc
 end
 
 subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
+    use rp_emulator
+
     implicit none
 
-    real, intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
+    type(rpe_var), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
     integer, intent(in) :: ngp, nlev
-    real, intent(inout) :: w0(ngp)
+    type(rpe_var), intent(inout) :: w0(ngp)
     integer, intent(inout) :: k0(ngp)
     integer :: j, k
  
@@ -298,12 +301,14 @@ subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
 end
 
 subroutine verint(f2d,f3d,ngp,nlev,k0,w0)
+    use rp_emulator
+
     implicit none
 
     ! *** 1. Perform vertical interpolation 
     integer, intent(in) :: ngp, nlev, k0(ngp)
-    real, intent(in) :: f3d(ngp,nlev), w0(ngp)
-    real, intent(inout) :: f2d(ngp)
+    type(rpe_var), intent(in) :: f3d(ngp,nlev), w0(ngp)
+    type(rpe_var), intent(inout) :: f2d(ngp)
     integer :: j
 
     do j=1,ngp
@@ -312,12 +317,14 @@ subroutine verint(f2d,f3d,ngp,nlev,k0,w0)
 end
 
 subroutine add1f(fsave,fadd,ngp,nf,ifact)
+    use rp_emulator
+
     implicit none
 
     ! *** Add one field to storage array 
-    real, intent(in) :: fadd(ngp)
+    type(rpe_var), intent(in) :: fadd(ngp)
     integer, intent(in) :: ngp, ifact
-    real, intent(inout) :: fsave(ngp,*)
+    type(rpe_var), intent(inout) :: fsave(ngp,*)
     integer, intent(inout) :: nf
     integer :: j
 
@@ -335,14 +342,16 @@ subroutine add1f(fsave,fadd,ngp,nf,ifact)
 end
 
 subroutine maskout(finp,fout,fmask,ngp)
+    use rp_emulator
+
     implicit none
 
     ! *** Set undefined values according to binary land-sea mask
-    real, intent(in) :: finp(ngp), fmask(ngp) 
+    type(rpe_var), intent(in) :: finp(ngp), fmask(ngp) 
     integer, intent(in) :: ngp
-    real, intent(inout) :: fout(ngp)
+    type(rpe_var), intent(inout) :: fout(ngp)
     integer :: j
-    real :: xundef
+    type(rpe_var) :: xundef
 
     xundef = 9.999e+19
 

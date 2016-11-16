@@ -20,22 +20,23 @@ subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
     use mod_lsccon
     use mod_atparam
     use mod_physcon, only: p0, gg, cp, alhc, alhs, sig, dsig
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, intent(in) :: psa(ngp), qa(ngp,nlev), qsat(ngp,nlev)
+    type(rpe_var), intent(in) :: psa(ngp), qa(ngp,nlev), qsat(ngp,nlev)
 
     integer, intent(inout) :: itop(ngp)
-    real, intent(inout) :: precls(ngp), dtlsc(ngp,nlev), dqlsc(ngp,nlev)
+    type(rpe_var), intent(inout) :: precls(ngp), dtlsc(ngp,nlev), dqlsc(ngp,nlev)
     !fk#if defined(KNMI)
-    !fkreal, intent(in) :: ts(ngp)
-    !fkreal, intent(inout) :: snowls(ngp)
+    !fktype(rpe_var), intent(in) :: ts(ngp)
+    !fktype(rpe_var), intent(inout) :: snowls(ngp)
     !fk#endif
 
     integer :: j, k
-    real :: psa2(ngp), dqa, dqmax, pfact, prg, qsmax, rhref, rtlsc, sig2, tfact
+    type(rpe_var) :: psa2(ngp), dqa, dqmax, pfact, prg, qsmax, rhref, rtlsc, sig2, tfact
 
     ! 1. Initialization
     qsmax = 10.

@@ -3,17 +3,19 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
     !  Aux. routine setctl : write descriptor (.ctl) output file 
     !
 
+    use rp_emulator
+
     implicit none
 
     integer, intent(in) :: iunit, nlon, nlat, nlev, ntm, ndtm, i3d, n3d, n2d_1,&
         & n2d_2, iyear0, imont0
-    real, intent(in) :: rlat(nlat), rlev(nlev)
+    type(rpe_var), intent(in) :: rlat(nlat), rlev(nlev)
     character(len=80) :: line(10), ln3d(30), ln2d_1(20), ln2d_2(15)
     character(len=4)  :: lmon(12), name
     character(len=3)  :: norun
     character(len=11) :: ctlname
     integer :: ilev(30), j, jline, k
-    real :: c1
+    type(rpe_var) :: c1
  
     ! 1. Initialization
     lmon = (/'1jan','1feb','1mar','1apr','1may','1jun',&
@@ -167,18 +169,20 @@ subroutine setctl_d(iunit,nlon,nlat,nlev,ntm,ndtm,n2d_1,n2d_2,rlat,rlev,name,&
         & norun,iyear0,imont0)
     !  Aux. routine setctl_d : write descriptor (.ctl) output file 
 
+    use rp_emulator
+
     implicit none
 
     integer, intent(in) :: iunit, nlon, nlat, nlev, ntm, ndtm, n2d_1, n2d_2,&
         & iyear0, imont0
-    real, intent(in) :: rlat(nlat), rlev(nlev)
+    type(rpe_var), intent(in) :: rlat(nlat), rlev(nlev)
     character(len=80) :: line(10), ln2d_1(10), ln2d_2(10)
     character(len=4)  :: lmon(12)
     character(len=5)  :: name
     character(len=3)  :: norun
     character(len=12) :: ctlname
     integer :: ilev(30), ncount, j, jline, k
-    real :: c1
+    type(rpe_var) :: c1
  
     ! 1. Initialization
     lmon  = (/'1jan','1feb','1mar','1apr','1may','1jun',&

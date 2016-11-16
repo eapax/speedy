@@ -16,12 +16,14 @@ subroutine shtorh(imode,ngp,ta,ps,sig,qa,rh,qsat)
     !          qa     : specific humidity in g/kg [if imode < 0]
     !      
 
+    use rp_emulator
+
     implicit none
 
     integer, intent(in) :: imode, ngp
-    real, intent(in) :: ta(ngp), ps(*), sig
-    real :: qsat(ngp), e0, c1, c2, t0, t1, t2
-    real, intent(inout) :: qa(ngp), rh(ngp)
+    type(rpe_var), intent(in) :: ta(ngp), ps(*), sig
+    type(rpe_var) :: qsat(ngp), e0, c1, c2, t0, t1, t2
+    type(rpe_var), intent(inout) :: qa(ngp), rh(ngp)
 
     integer :: j
 
@@ -67,13 +69,15 @@ end
 subroutine zmeddy(nlon,nlat,ff,zm,eddy)
     ! Decompose a field into zonal-mean and eddy component
 
+    use rp_emulator
+
     implicit none
 
     integer, intent(in) :: nlon, nlat
-    real, intent(in) :: ff(nlon,nlat)
-    real, intent(inout) :: zm(nlat), eddy(nlon,nlat)
+    type(rpe_var), intent(in) :: ff(nlon,nlat)
+    type(rpe_var), intent(inout) :: zm(nlat), eddy(nlon,nlat)
     integer :: i, j
-    real :: rnlon
+    type(rpe_var) :: rnlon
 
     rnlon=1./nlon
 

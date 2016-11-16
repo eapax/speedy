@@ -9,6 +9,7 @@ subroutine dmout(imode)
     use mod_tsteps, only: nsteps, nstppr, idout
     use mod_atparam
     use mod_tmean, only: ns2d_d1, ns2d_d2, save2d_d1, save2d_d2
+    use rp_emulator
 
     implicit none
 
@@ -23,12 +24,12 @@ subroutine dmout(imode)
     if (imode /= 0) then
         ! 1. Divide the accumulated fields to get the means
         ! Fields saved at post-processing steps
-        fmean = real(nstppr)/real(nsteps)
+        fmean = rpe_literal(nstppr)/rpe_literal(nsteps)
     
         save2d_d1(:,:) = save2d_d1(:,:)*fmean
     
         ! Fields saved at every step (fluxes)
-        fmean = 1./real(nsteps)
+        fmean = 1./rpe_literal(nsteps)
     
         save2d_d2(:,:) = save2d_d2(:,:)*fmean
     

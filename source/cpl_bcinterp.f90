@@ -1,13 +1,15 @@
 subroutine forint(ngp,imon,fmon,for12,for1)  
     ! Aux. routine FORINT : linear interpolation of monthly-mean forcing
 
+    use rp_emulator
+
     implicit none
 
     integer, intent(in) :: ngp, imon
-    real, intent(in) :: fmon, for12(ngp,*)
-    real, intent(inout) :: for1(ngp)
+    type(rpe_var), intent(in) :: fmon, for12(ngp,*)
+    type(rpe_var), intent(inout) :: for1(ngp)
     integer :: imon2
-    real :: wmon
+    type(rpe_var) :: wmon
 
     if (fmon.le.0.5) then
         imon2 = imon-1
@@ -26,13 +28,15 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     ! Aux. routine FORIN5 : non-linear, mean-conserving interpolation 
     !                       of monthly-mean forcing fields
 
+    use rp_emulator
+
     implicit none
 
     integer, intent(in) :: ngp, imon
-    real, intent(in) :: fmon, for12(ngp,12)
-    real, intent(inout) :: for1(ngp)
+    type(rpe_var), intent(in) :: fmon, for12(ngp,12)
+    type(rpe_var), intent(inout) :: for1(ngp)
     integer :: im1, im2, ip1, ip2
-    real :: c0, t0, t1, t2, t3, wm1, wm2, w0, wp1, wp2
+    type(rpe_var) :: c0, t0, t1, t2, t3, wm1, wm2, w0, wp1, wp2
 
     im2 = imon-2
     im1 = imon-1

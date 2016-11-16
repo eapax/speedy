@@ -8,12 +8,14 @@ subroutine gaussl(x,w,m)
     !      x(m) = sin(gaussian latitude) 
     !      w(m) = weights in gaussian quadrature (sum should equal 1.0)
 
+    use rp_emulator
+
     implicit none
 
-    real, intent(inout) :: x(m),w(m)
+    type(rpe_var), intent(inout) :: x(m),w(m)
     integer, intent(in) :: m
-    double precision :: z,z1,p1,p2,p3,pp
-    double precision, parameter :: eps=3.d-14
+    real :: z,z1,p1,p2,p3,pp
+    real, parameter :: eps=3.d-14
     integer :: n, j, i
 
     n = 2*m
@@ -38,20 +40,21 @@ subroutine gaussl(x,w,m)
         end do
 
         x(i)=z
-        w(i)=2.d0/((1.d0-z*z)*pp*pp)
+        w(i)=2.0/((1.0-z*z)*pp*pp)
     end do
 end
 !****************************************************************
 subroutine parmtr(a)
     use mod_atparam
     use mod_spectral
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, intent(in) :: a
-    real :: am1, am2, cosqr, el1, ell2, emm2
+    type(rpe_var), intent(in) :: a
+    type(rpe_var) :: am1, am2, cosqr, el1, ell2, emm2
 
     integer :: j, jj, m, m1, m2, n
 
@@ -196,6 +199,7 @@ subroutine lgndre(j)
 
     use mod_atparam
     use mod_spectral, only: sia, coa, sqrhlf, consq, repsi, epsi, poly
+    use rp_emulator
 
     implicit none
 
@@ -204,7 +208,7 @@ subroutine lgndre(j)
     real, parameter :: small = 1.e-30
 
     integer :: m, n, mm2
-    real :: alp(mxp,nx), x, y
+    type(rpe_var) :: alp(mxp,nx), x, y
     y = coa(j)
     x = sia(j)
 
@@ -244,23 +248,25 @@ end
 subroutine lap(strm,vorm)
     use mod_atparam
     use mod_spectral, only: el2
+    use rp_emulator
 
     implicit none
 
 
-    complex, intent(in) :: strm(mx,nx)
-    complex, intent(inout) :: vorm(mx,nx)
+    type(rpe_complex_var), intent(in) :: strm(mx,nx)
+    type(rpe_complex_var), intent(inout) :: vorm(mx,nx)
     vorm = -strm * el2
 end
 !*******************************************************************
 subroutine invlap(vorm,strm)
     use mod_atparam
     use mod_spectral, only: elm2
+    use rp_emulator
 
     ! include "param1spec.h"
 
-    complex, intent(in) :: vorm(mx,nx)
-    complex, intent(inout) :: strm(mx,nx)
+    type(rpe_complex_var), intent(in) :: vorm(mx,nx)
+    type(rpe_complex_var), intent(inout) :: strm(mx,nx)
     strm = -vorm * elm2
 
     !do m=1,mxnx
@@ -271,13 +277,14 @@ end
 subroutine grad(psi,psdx,psdy)
     use mod_atparam
     use mod_spectral, only: gradx, gradyp, gradym
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    real, dimension(2,mx,nx), intent(inout) :: psi
-    real, dimension(2,mx,nx), intent(inout) :: psdx, psdy
+    type(rpe_var), dimension(2,mx,nx), intent(inout) :: psi
+    type(rpe_var), dimension(2,mx,nx), intent(inout) :: psdx, psdy
 
     integer :: k, n, m
 
@@ -307,14 +314,15 @@ end
 subroutine vds(ucosm,vcosm,vorm,divm)
     use mod_atparam
     use mod_spectral, only: gradx, vddyp, vddym
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
                                                         
-    real, dimension(2,mx,nx) :: ucosm, vcosm
-    real, dimension(2,mx,nx), intent(inout) :: vorm, divm
-    real, dimension(2,mx,nx) :: zc, zp
+    type(rpe_var), dimension(2,mx,nx) :: ucosm, vcosm
+    type(rpe_var), dimension(2,mx,nx), intent(inout) :: vorm, divm
+    type(rpe_var), dimension(2,mx,nx) :: zc, zp
     
     integer :: n, m, k
 
@@ -547,12 +555,13 @@ end
 subroutine trunct(vor)
     use mod_atparam
     use mod_spectral, only: trfilt
+    use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    complex, intent(inout) :: vor(mx,nx)
+    type(rpe_complex_var), intent(inout) :: vor(mx,nx)
 
     vor = vor * trfilt
 end

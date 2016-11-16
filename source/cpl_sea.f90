@@ -7,6 +7,7 @@ subroutine ini_sea(istart)
     use mod_atparam
     use mod_cli_sea, only: deglat_s
     use mod_var_sea
+    use rp_emulator
 
     implicit none
 
@@ -21,7 +22,7 @@ subroutine ini_sea(istart)
     tice_om(:) = ticecl_ob(:)     ! sea ice temperature
     sice_om(:) = sicecl_ob(:)     ! sea ice fraction
 
-    if (icsea.le.0) sst_om(:) = 0.
+    if (icsea.le.0) sst_om(:) = 0.0
 
     ! 3. Compute additional sea/ice variables
     wsst_ob(:) = 0.
@@ -41,16 +42,17 @@ subroutine atm2sea(jday)
     use mod_cli_sea, only: fmask_s, sst12, sice12, sstan3, hfseacl, sstom12
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: jday
     integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
-    real :: fmasks(ngp)                  ! sea fraction
-    real :: hfyearm(ngp)                 ! annual mean heat flux into the ocean
+    type(rpe_var) :: fmasks(ngp)                  ! sea fraction
+    type(rpe_var) :: hfyearm(ngp)                 ! annual mean heat flux into the ocean
     integer :: j
-    real :: sstcl0, sstfr
+    type(rpe_var) :: sstcl0, sstfr
 
     ! 1. Interpolate climatological fields and obs. SST anomaly
     !    to actual date
@@ -125,6 +127,7 @@ subroutine sea2atm(jday)
     use mod_atparam
     use mod_cplvar_sea, only: vsea_output
     use mod_var_sea
+    use rp_emulator
 
     implicit none
 
@@ -191,14 +194,15 @@ subroutine rest_sea(imode)
     use mod_cpl_flags, only: icsea, icice
     use mod_atparam
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: imode
     integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
-    real :: sst_c(ngp)              ! sst corrected for sea-ice values
-    real :: sstfr
+    type(rpe_var) :: sst_c(ngp)              ! sst corrected for sea-ice values
+    type(rpe_var) :: sstfr
 
     if (imode.eq.0) then
         read (3)  sst_om(:)       ! sst 
@@ -235,12 +239,13 @@ subroutine obs_ssta
     use mod_cli_sea, only: sstan3, bmask_s
     use mod_date, only: imonth
     use mod_tsteps, only: iyear0, issty0
+    use rp_emulator
 
     implicit none
  
     integer :: i, j, next_month
     integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
-    real   :: inp(nlon,nlat)
+    type(rpe_var)   :: inp(nlon,nlat)
 
     sstan3(:,:,1) = sstan3(:,:,2)
     sstan3(:,:,2) = sstan3(:,:,3)

@@ -39,31 +39,32 @@ subroutine suflux (psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav,ssrd,slrd,&
     use mod_sflcon
     use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
     use mod_radcon, only: emisfc, alb_l, alb_s, snowc
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, dimension(ngp,nlev), intent(in) :: ua, va, ta, qa, rh, phi
-    real, dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, swav, ssrd,&
+    type(rpe_var), dimension(ngp,nlev), intent(in) :: ua, va, ta, qa, rh, phi
+    type(rpe_var), dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, swav, ssrd,&
         & slrd
 
-    real, dimension(ngp,3), intent(inout) :: ustr, vstr, shf, evap, slru
-    real, intent(inout) :: hfluxn(ngp,2)
-    real, dimension(ngp), intent(inout) :: tsfc, tskin, u0, v0, t0, q0
+    type(rpe_var), dimension(ngp,3), intent(inout) :: ustr, vstr, shf, evap, slru
+    type(rpe_var), intent(inout) :: hfluxn(ngp,2)
+    type(rpe_var), dimension(ngp), intent(inout) :: tsfc, tskin, u0, v0, t0, q0
 									
     integer :: j, j0, jlat, ks, nl1
-    real, dimension(ngp,2), save :: t1, q1
-    real, dimension(ngp,2) :: t2, qsat0
-    real, save :: denvvs(ngp,0:2)
-    real :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, chlcp
-    real :: chscp, dhfdt, dlambda, dt1, dthl, dths, esbc, esbc4, ghum0, gtemp0
-    real :: prd, qdummy, rcp, rdphi0, rdth, rdummy, sqclat, tsk3, vg2
+    type(rpe_var), dimension(ngp,2), save :: t1, q1
+    type(rpe_var), dimension(ngp,2) :: t2, qsat0
+    type(rpe_var), save :: denvvs(ngp,0:2)
+    type(rpe_var) :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, chlcp
+    type(rpe_var) :: chscp, dhfdt, dlambda, dt1, dthl, dths, esbc, esbc4, ghum0, gtemp0
+    type(rpe_var) :: prd, qdummy, rcp, rdphi0, rdth, rdummy, sqclat, tsk3, vg2
 
     logical lscasym, lscdrag, lskineb
     logical lfluxland
 
-    real :: psa(ngp)
+    type(rpe_var) :: psa(ngp)
 
     lscasym = .true.   ! true : use an asymmetric stability coefficient
     lscdrag = .true.   ! true : use stability coef. to compute drag over sea
@@ -365,14 +366,15 @@ subroutine sflset(phi0)
     use mod_atparam
     use mod_sflcon
     use mod_physcon, only: gg
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, intent(in) :: phi0(ngp)
+    type(rpe_var), intent(in) :: phi0(ngp)
     integer :: j
-    real :: rhdrag
+    type(rpe_var) :: rhdrag
 
     rhdrag = 1./(gg*hdrag)
 

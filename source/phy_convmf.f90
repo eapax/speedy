@@ -22,23 +22,24 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
     use mod_cnvcon
     use mod_atparam
     use mod_physcon, only: p0, gg, alhc, alhs, sig, dsig, wvi
+    use rp_emulator
 
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real, intent(in) :: psa(ngp), se(ngp,nlev), qa(ngp,nlev), qsat(ngp,nlev)
+    type(rpe_var), intent(in) :: psa(ngp), se(ngp,nlev), qa(ngp,nlev), qsat(ngp,nlev)
 
     integer, intent(inout) :: itop(ngp)
-    real, intent(inout) :: cbmf(ngp), precnv(ngp), dfse(ngp,nlev), dfqa(ngp,nlev)
+    type(rpe_var), intent(inout) :: cbmf(ngp), precnv(ngp), dfse(ngp,nlev), dfqa(ngp,nlev)
     !fk#if defined(KNMI)
-    !fkreal :: ts(ngp),snowcv(ngp)
+    !fktype(rpe_var) :: ts(ngp),snowcv(ngp)
     !fk#endif
 
     integer :: j, k, k1, ktop1, ktop2, nl1, nlp
-    real :: mss(ngp,2:nlev), mse0, mse1, mss0, mss2, msthr, qdif(ngp)
-    real :: entr(2:nlev-1), delq, enmass, fdq, fds, fm0, fmass, fpsa, fqmax
-    real :: fsq, fuq, fus, qb, qmax, qsatb, qthr0, qthr1, rdps, rlhc, sb, sentr
+    type(rpe_var) :: mss(ngp,2:nlev), mse0, mse1, mss0, mss2, msthr, qdif(ngp)
+    type(rpe_var) :: entr(2:nlev-1), delq, enmass, fdq, fds, fm0, fmass, fpsa, fqmax
+    type(rpe_var) :: fsq, fuq, fus, qb, qmax, qsatb, qthr0, qthr1, rdps, rlhc, sb, sentr
     logical :: lqthr
 
     ! 1. Initialization of output and workspace arrays

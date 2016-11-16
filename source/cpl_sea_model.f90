@@ -6,31 +6,32 @@ subroutine sea_model_init(fmask_s,rlat)
 
     use mod_atparam
     use mod_cplcon_sea
+    use rp_emulator
 
     implicit none
 							
     integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
     ! Input variables
-    real fmask_s(nlon,nlat)            ! sea mask (fraction of sea)
-    real rlat(nlat)                    ! latitudes in degrees
+    type(rpe_var) :: fmask_s(nlon,nlat)            ! sea mask (fraction of sea)
+    type(rpe_var) :: rlat(nlat)                    ! latitudes in degrees
 
     ! Auxiliary variables
 
     ! Domain mask
-    real :: dmask(nlon,nlat)              
+    type(rpe_var) :: dmask(nlon,nlat)              
 
     ! Domain flags
     logical :: l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian            
 
     ! Heat capacity of mixed-l
-    real :: hcaps(nlat)
+    type(rpe_var) :: hcaps(nlat)
 
     ! Heat capacity of sea-ice
-    real :: hcapi(nlat)                      
+    type(rpe_var) :: hcapi(nlat)                      
 
     integer :: i, j
-    real :: coslat, crad
+    type(rpe_var) :: coslat, crad
 
     ! 1. Set geographical domain, heat capacities and dissipation times
     !    for sea (mixed layer) and sea-ice 
@@ -55,7 +56,7 @@ subroutine sea_model_init(fmask_s,rlat)
     real :: fseamin = 1./3.
 
     ! Dissipation time (days) for sea-ice temp. anomalies
-    real :: tdice
+    type(rpe_var) :: tdice
 
     ! Geographical domain
     ! note : more than one regional domain may be set .true.
@@ -122,6 +123,7 @@ subroutine sea_model
     use mod_atparam
     use mod_cplcon_sea
     use mod_cplvar_sea
+    use rp_emulator
 
     implicit none
 
@@ -130,27 +132,27 @@ subroutine sea_model
     !real vsea_input(nlon,nlat,8), vsea_output(nlon,nlat,3)
 
     ! Input variables:
-    real ::  sst0(nlon,nlat)     ! SST at initial time
-    real :: tice0(nlon,nlat)     ! sea ice temp. at initial time
-    real :: sice0(nlon,nlat)     ! sea ice fraction at initial time
-    real :: hfsea(nlon,nlat)     ! sea+ice  sfc. heat flux between t0 and t1
-    real :: hfice(nlon,nlat)     ! ice-only sfc. heat flux between t0 and t1
+    type(rpe_var) ::  sst0(nlon,nlat)     ! SST at initial time
+    type(rpe_var) :: tice0(nlon,nlat)     ! sea ice temp. at initial time
+    type(rpe_var) :: sice0(nlon,nlat)     ! sea ice fraction at initial time
+    type(rpe_var) :: hfsea(nlon,nlat)     ! sea+ice  sfc. heat flux between t0 and t1
+    type(rpe_var) :: hfice(nlon,nlat)     ! ice-only sfc. heat flux between t0 and t1
 
-    real ::  sstcl1(nlon,nlat)   ! clim. SST at final time 
-    real :: ticecl1(nlon,nlat)   ! clim. sea ice temp. at final time
-    real :: hfseacl(nlon,nlat)   ! clim. heat flux due to advection/upwelling
+    type(rpe_var) ::  sstcl1(nlon,nlat)   ! clim. SST at final time 
+    type(rpe_var) :: ticecl1(nlon,nlat)   ! clim. sea ice temp. at final time
+    type(rpe_var) :: hfseacl(nlon,nlat)   ! clim. heat flux due to advection/upwelling
 
     ! Output variables
-    real ::  sst1(nlon,nlat)     ! SST at final time
-    real :: tice1(nlon,nlat)     ! sea ice temp. at final time 
-    real :: sice1(nlon,nlat)     ! sea ice fraction at final time 
+    type(rpe_var) ::  sst1(nlon,nlat)     ! SST at final time
+    type(rpe_var) :: tice1(nlon,nlat)     ! sea ice temp. at final time 
+    type(rpe_var) :: sice1(nlon,nlat)     ! sea ice fraction at final time 
 
     ! Auxiliary variables
-    real :: hflux(nlon,nlat)   ! net sfc. heat flux
-    real :: tanom(nlon,nlat)   ! sfc. temperature anomaly
-    real :: cdis(nlon,nlat)    ! dissipation ceofficient
+    type(rpe_var) :: hflux(nlon,nlat)   ! net sfc. heat flux
+    type(rpe_var) :: tanom(nlon,nlat)   ! sfc. temperature anomaly
+    type(rpe_var) :: cdis(nlon,nlat)    ! dissipation ceofficient
 
-    real :: anom0, sstfr
+    type(rpe_var) :: anom0, sstfr
 
     sst0 = reshape(vsea_input(:,1), (/nlon, nlat/))
     tice0 = reshape(vsea_input(:,2), (/nlon, nlat/))
@@ -211,6 +213,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
     ! Purpose : Definition of ocean domains
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -219,13 +222,13 @@ subroutine sea_domain(cdomain,rlat,dmask)
     ! Input variables
 
     character(len=6), intent(in) :: cdomain           ! domain name
-    real, intent(in) :: rlat(nlat)               ! latitudes in degrees
+    type(rpe_var), intent(in) :: rlat(nlat)               ! latitudes in degrees
 
     ! Output variables (initialized by calling routine) 
-    real, intent(inout) :: dmask(nlon,nlat)         ! domain mask 
+    type(rpe_var), intent(inout) :: dmask(nlon,nlat)         ! domain mask 
 
     integer :: i, j
-    real :: arlat, dlon, rlon, rlonw, wlat
+    type(rpe_var) :: arlat, dlon, rlon, rlonw, wlat
 
     print *, 'sea domain : ', cdomain
 
