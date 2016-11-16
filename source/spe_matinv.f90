@@ -6,7 +6,7 @@ subroutine ludcmp(a,n,np,indx,d)
     type(rpe_var), intent(inout) :: a(np,np), d
     integer, intent(inout) :: indx(n)
     integer, intent(in) :: n, np
-    integer, parameter :: nmax = 100, tinest = 1.0e-20
+    integer, parameter :: nmax = 100, tiniest = 1.0e-20
     integer :: i, j, k, imax
     type(rpe_var) :: vv(nmax), aamax, dum, accum
 
@@ -62,7 +62,7 @@ subroutine ludcmp(a,n,np,indx,d)
 
         indx(j)=imax
         if(j.ne.n) then
-            if(a(j,j).eq.0) a(j,j)=tinest
+            if(a(j,j).eq.0) a(j,j)=tiniest
             dum=1./a(j,j)
             do i=j+1,n
                 a(i,j)=a(i,j)*dum
@@ -70,7 +70,7 @@ subroutine ludcmp(a,n,np,indx,d)
         end if
     end do
 
-    if(a(n,n).eq.0.) a(n,n)=tinest
+    if(a(n,n).eq.0.) a(n,n)=tiniest
 end
 
 subroutine lubksb(a,n,np,indx,b)
