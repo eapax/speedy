@@ -136,7 +136,7 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
             write (iunit,1000) line(jline)
         end do
  
-        write (iunit,1010) line(6)(1:20), (c1*rlat(j),j=1,nlat)
+        write (iunit,1010) line(6)(1:20), (c1*rlat(j)%val,j=1,nlat)
         write (iunit,1020) line(7)(1:20), (ilev(k),k=nlev,1,-1)
  
         do jline=8,9
@@ -251,7 +251,7 @@ subroutine setctl_d(iunit,nlon,nlat,nlev,ntm,ndtm,n2d_1,n2d_2,rlat,rlev,name,&
             write (iunit,1000) line(jline)
         end do
 
-        write (iunit,1010) line(6)(1:20), (c1*rlat(j),j=1,nlat)
+        write (iunit,1010) line(6)(1:20), (c1*rlat(j)%val,j=1,nlat)
         write (iunit,1020) line(7)(1:20), (ilev(k),k=nlev,1,-1)
 
         do jline=8,9
