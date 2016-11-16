@@ -54,18 +54,18 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     if (iitest.eq.1) print *, ' 1.1 in phypar'
 
     do k=1,nlev
-      call uvspec(upack2(vor1(:,:,k)),upack2(div1(:,:,k)),upack2(ucos),upack2(vcos))
-      call grid(upack1(ucos),ug1(1,k),2)
-      call grid(upack1(vcos),vg1(1,k),2)
+      call uvspec(vor1(:,:,k),div1(:,:,k),ucos,vcos)
+      call grid(ucos,ug1(1,k),2)
+      call grid(vcos,vg1(1,k),2)
     end do
 
     do k=1,nlev
-      call grid(upack1(t1(:,:,k)),  tg1(1,k),  1)
-      call grid(upack1(q1(:,:,k)),  qg1(1,k),  1)
-      call grid(upack1(phi1(:,:,k)),phig1(1,k),1)
+      call grid(t1(:,:,k),  tg1(1,k),  1)
+      call grid(q1(:,:,k),  qg1(1,k),  1)
+      call grid(phi1(:,:,k),phig1(1,k),1)
     end do
 
-    call grid(upack1(psl1),pslg1,1)
+    call grid(psl1,pslg1,1)
 
     ! Remove negative humidity values
     !call qneg (qg1)

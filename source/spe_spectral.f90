@@ -359,15 +359,20 @@ end
 subroutine uvspec(vorm,divm,ucosm,vcosm)
     use mod_atparam
     use mod_spectral, only: uvdx, uvdyp, uvdym
+    use mod_rp_utils
     use rp_emulator
 
     !include "param1spec.h"
                                                         
     type(rpe_var), dimension(2,mx,nx), intent(in) :: vorm,divm
-    type(rpe_var), dimension(2,mx,nx), intent(inout) :: ucosm,vcosm
+    type(rpe_complex_var), dimension(mx,nx), intent(inout) :: ucosm, vcosm
+    type(rpe_var), dimension(2,mx,nx) :: ucosm_r, vcosm_r
     type(rpe_var), dimension(2,mx,nx) :: zc,zp
 
     integer :: k, n, m
+
+    ucosm_r = upack2(ucosm)
+    vcosm_r = upack2(vcosm)
 
     zp(2,:,:) =  uvdx*vorm(1,:,:)
     zp(1,:,:) = -uvdx*vorm(2,:,:)
@@ -376,53 +381,65 @@ subroutine uvspec(vorm,divm,ucosm,vcosm)
    
     do k=1,2
         do m=1,mx
-            ucosm(k,m,1)=zc(k,m,1)-uvdyp(m,1)*vorm(k,m,2)
-            ucosm(k,m,nx)=uvdym(m,nx)*vorm(k,m,ntrun1)
-            vcosm(k,m,1)=zp(k,m,1)+uvdyp(m,1)*divm(k,m,2)
-            vcosm(k,m,nx)=-uvdym(m,nx)*divm(k,m,ntrun1)
+            ucosm_r(k,m,1)=zc(k,m,1)-uvdyp(m,1)*vorm(k,m,2)
+            ucosm_r(k,m,nx)=uvdym(m,nx)*vorm(k,m,ntrun1)
+            vcosm_r(k,m,1)=zp(k,m,1)+uvdyp(m,1)*divm(k,m,2)
+            vcosm_r(k,m,nx)=-uvdym(m,nx)*divm(k,m,ntrun1)
         end do
     end do
 
     do k=1,2
         do n=2,ntrun1
             do m=1,mx
-              vcosm(k,m,n)=-uvdym(m,n)*divm(k,m,n-1)+uvdyp(m,n)*&
+              vcosm_r(k,m,n)=-uvdym(m,n)*divm(k,m,n-1)+uvdyp(m,n)*&
                   & divm(k,m,n+1)+zp(k,m,n)  
-              ucosm(k,m,n)= uvdym(m,n)*vorm(k,m,n-1)-uvdyp(m,n)*&
+              ucosm_r(k,m,n)= uvdym(m,n)*vorm(k,m,n-1)-uvdyp(m,n)*&
                   & vorm(k,m,n+1)+zc(k,m,n)
             end do
         end do
     end do
+
+    ucosm = pack2(ucosm_r)
+    vcosm = pack2(vcosm_r)
 end
 !*******************************************************************
 subroutine grid(vorm,vorg,kcos)
     use mod_atparam
+    use mod_rp_utils
     use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    type(rpe_var), intent(in) :: vorm(mx2,nx)
+    type(rpe_complex_var), intent(in) :: vorm(mx,nx)
+    type(rpe_var) :: vorm_r(mx2,nx)
     type(rpe_var), intent(inout) :: vorg(ix,il)
     integer, intent(in) :: kcos
     type(rpe_var) :: varm(mx2,il)
-    call gridy(vorm,varm)
+
+    vorm_r = upack1(vorm)
+    call gridy(vorm_r,varm)
     call gridx(varm,vorg,kcos)
 end
 !*********************************************************************
 subroutine spec(vorg,vorm)
     use mod_atparam
+    use mod_rp_utils
     use rp_emulator
 
     implicit none
 
     !include "param1spec.h"
 
-    type(rpe_var), intent(inout) :: vorg(ix,il), vorm(mx2,nx)
-    type(rpe_var) :: varm(mx2,il)
+    type(rpe_complex_var), intent(inout) :: vorm(mx,nx)
+    type(rpe_var), intent(inout) :: vorg(ix,il)
+    type(rpe_var) :: vorm_r(mx2,nx), varm(mx2,il)
+
+    vorm_r = upack1(vorm)
     call specx(vorg,varm)
-    call specy(varm,vorm)
+    call specy(varm,vorm_r)
+    vorm = pack1(vorm_r)
 end
 !*********************************************************************
 subroutine vdspec(ug,vg,vorm,divm,kcos)
