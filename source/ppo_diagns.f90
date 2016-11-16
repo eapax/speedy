@@ -18,7 +18,7 @@ subroutine diagns(jj,istep)
 
     integer :: k, m, n, kk
     type(rpe_complex_var) :: temp(mx,nx)
-    type(rpe_var) :: diag(kx,3), sqhalf
+    real :: diag(kx,3), sqhalf
 
     ! 1. Get global-mean temperature and compute eddy kinetic energy 
     sqhalf = sqrt(0.5)
