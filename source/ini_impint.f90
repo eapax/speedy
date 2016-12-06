@@ -24,6 +24,7 @@ subroutine impint(dt,alph)
     use mod_dyncon2
     use mod_hdifcon, only: dmp, dmpd, dmps, dmp1, dmp1d, dmp1s
     use rp_emulator
+    use mod_prec
 
     implicit none
 	  								
@@ -46,7 +47,7 @@ subroutine impint(dt,alph)
     rgam = rgas*gamma/(1000.*grav)
 
     do k=1,kx
-        tref(k)=288.*max(0.2,fsg(k))**rgam
+        tref(k)=288.*max(0.2_dp,fsg(k))**rgam
         print *, '  tref = ', tref(k)
         tref1(k)=rgas*tref(k)
         tref2(k)=akap*tref(k)

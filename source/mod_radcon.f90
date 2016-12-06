@@ -1,6 +1,7 @@
 module mod_radcon
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -65,10 +66,10 @@ module mod_radcon
     real :: rhcl2  =  1.00
     real :: qacl   =  0.20
     real :: wpcl   =  0.2
-    real :: pmaxcl = 10.0
+    real(dp) :: pmaxcl = 10.0
 
     real :: clsmax  = 0.60!0.50
-    real :: clsminl = 0.15
+    real(dp) :: clsminl = 0.15
     real :: gse_s0  = 0.25
     real :: gse_s1  = 0.40
 
@@ -85,7 +86,7 @@ module mod_radcon
     real :: abswv2 = 15.000
 
     real :: abscl1 =  0.015
-    real :: abscl2 =  0.15
+    real(dp) :: abscl2 =  0.15
 
     real :: ablwin =  0.3
     real :: ablco2 =  6.0!5.0

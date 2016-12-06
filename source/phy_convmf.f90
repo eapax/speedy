@@ -23,6 +23,7 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
     use mod_atparam
     use mod_physcon, only: p0, gg, alhc, alhs, sig, dsig, wvi
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -81,7 +82,7 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
     ! Entrainment profile (up to sigma = 0.5)
     sentr=0.
     do k=2,nl1
-        entr(k)=(max(0.,sig(k)-0.5))**2
+        entr(k)=(max(0.0_dp,sig(k)-0.5))**2
         sentr=sentr+entr(k)
     end do
 
@@ -158,7 +159,7 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
     
         ! Cloud-base mass flux, computed to satisfy:
         ! fmass*(qmax-qb)*(g/dp)=qdif/trcnv
-        fpsa=psa(j)*min(1.,(psa(j)-psmin)*rdps)
+        fpsa=psa(j)*min(1.0_dp,(psa(j)-psmin)*rdps)
         fmass=fm0*fpsa*min(fqmax,qdif(j)/(qmax-qb))
         cbmf(j)=fmass
     
@@ -216,7 +217,7 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
         qsatb=qsat(j,k)+wvi(k,2)*(qsat(j,k+1)-qsat(j,k))
 
         !fk#if !defined(KNMI)
-        precnv(j)=max(fuq-fmass*qsatb,0.0)
+        precnv(j)=max(fuq-fmass*qsatb,0.0_dp)
     
         ! Net flux of dry static energy and moisture
         dfse(j,k)=fus-fds+alhc*precnv(j)

@@ -43,6 +43,7 @@ subroutine atm2sea(jday)
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -83,13 +84,13 @@ subroutine atm2sea(jday)
         sstcl0 = sstcl_ob(j)
 
         if (sstcl_ob(j).gt.sstfr) then
-            sicecl_ob(j) = min(0.5,sicecl_ob(j))
+            sicecl_ob(j) = min(0.5_dp,sicecl_ob(j))
             ticecl_ob(j) = sstfr
             if (sicecl_ob(j).gt.0.) then
                 sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/(1.-sicecl_ob(j))
             end if
         else
-            sicecl_ob(j) = max(0.5,sicecl_ob(j))
+            sicecl_ob(j) = max(0.5_dp,sicecl_ob(j))
             ticecl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/sicecl_ob(j)
             !ticecl_ob(j) = sstcl_ob(j)
             sstcl_ob(j)  = sstfr

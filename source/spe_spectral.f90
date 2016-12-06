@@ -9,6 +9,7 @@ subroutine gaussl(x,w,m)
     !      w(m) = weights in gaussian quadrature (sum should equal 1.0)
 
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -23,18 +24,18 @@ subroutine gaussl(x,w,m)
     z1 = 2.0
 
     do i=1,m
-        z=cos(3.141592654d0*(i-.25d0)/(n+.5d0))
+        z=cos(3.141592654_dp*(i-.25_dp)/(n+.5_dp))
         do while (abs(z-z1).gt.eps)
-            p1=1.d0
-            p2=0.d0
+            p1=1._dp
+            p2=0._dp
     
             do j=1,n
               p3=p2
               p2=p1
-              p1=((2.d0*j-1.d0)*z*p2-(j-1.d0)*p3)/j
+              p1=((2._dp*j-1._dp)*z*p2-(j-1._dp)*p3)/j
             end do
     
-            pp=n*(z*p1-p2)/(z*z-1.d0)
+            pp=n*(z*p1-p2)/(z*z-1._dp)
             z1=z
             z=z1-p1/pp
         end do

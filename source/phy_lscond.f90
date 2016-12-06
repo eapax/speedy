@@ -64,7 +64,7 @@ subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
     do k=2,nlev
         sig2=sig(k)*sig(k)
         rhref = rhlsc+drhlsc*(sig2-1.)
-        if (k.eq.nlev) rhref = max(rhref,rhblsc)
+        if (k.eq.nlev) rhref = max(rhref,rpe_literal(rhblsc))
         dqmax = qsmax*sig2*rtlsc
 
         do j=1,ngp

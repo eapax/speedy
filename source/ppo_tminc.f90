@@ -19,6 +19,7 @@ subroutine tminc
     use mod_physvar
     use mod_radcon, only: albsfc
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -62,7 +63,7 @@ subroutine tminc
 
     ! Mean-sea-level pressure
     do j=1,ngp
-        tsg=0.5*(t0(j)+max(255.,min(295.,t0(j))))
+        tsg=0.5*(t0(j)+max(255.0_dp,min(295.0_dp,t0(j))))
         pmsl(j)=psg(j)*(1.+gam0*phisg(j)/tsg)**rrgam
     end do
 
@@ -155,7 +156,7 @@ subroutine tminc
         ! Geopotential (computed from the closest levels 
         ! using the hydrostatic equation)
         do j=1,ngp
-            w0(j)=max(w0(j),0.)
+            w0(j)=max(w0(j),0.0_dp)
         end do
 
         if (lppres) then

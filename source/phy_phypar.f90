@@ -28,6 +28,7 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     use mod_tsteps, only: sppt_on
     use mod_rp_utils
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -81,7 +82,7 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     do k=1,nlev
         do j=1,ngp
             ! Remove when qneg is implemented
-	        qg1(j,k)=max(qg1(j,k),0.)
+	        qg1(j,k)=max(qg1(j,k),0.0_dp)
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
     end do

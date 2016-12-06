@@ -13,6 +13,7 @@ subroutine inbcon(grav0,radlat)
     use mod_cli_land
     use mod_cli_sea
     use rp_emulator
+    use mod_prec
  	  							
     implicit none
 
@@ -110,7 +111,7 @@ subroutine inbcon(grav0,radlat)
     call load_boundary_file(1,20,inp,4)
 
     ! Combine high and low vegetation fractions
-    veg = max(0.,veg+0.8*inp)
+    veg = max(0.0_dp,veg+0.8_dp*inp)
 
     ! Read soil moisture
     sdep1 = 70.
@@ -128,7 +129,7 @@ subroutine inbcon(grav0,radlat)
         do j = 1,nlat
             do i = 1,nlon
                 swroot = idep2*swl2(i,j)
-                inp(i,j) = min(1.,rsw*(swl1(i,j)+veg(i,j)*max(0.,swroot-swwil2)))		
+                inp(i,j) = min(1.0_dp,rsw*(swl1(i,j)+veg(i,j)*max(0.0_dp,swroot-swwil2)))		
             end do
         end do
 
@@ -290,7 +291,7 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     type(rpe_var), intent(in) :: fmask(ngp)
     type(rpe_var), intent(inout) :: field(ngp,nf)
     integer, intent(in) :: ngp, nf
-    type(rpe_var), intent(in) :: fmin, fmax, fset
+    real, intent(in) :: fmin, fmax, fset
 
     integer :: jf, jgp, nfault
 

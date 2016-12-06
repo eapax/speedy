@@ -1,5 +1,6 @@
 module mod_sflcon
     use mod_atparam
+    use mod_prec
 
     implicit none
 
@@ -40,7 +41,7 @@ module mod_sflcon
     real :: ctday = 1.0e-2
 
     ! Potential temp. gradient for stability correction
-    real :: dtheta = 3.0
+    real(dp) :: dtheta = 3.0
 
     ! Amplitude of stability correction (fraction)
     real :: fstab = 0.67

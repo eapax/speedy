@@ -7,6 +7,7 @@ subroutine sea_model_init(fmask_s,rlat)
     use mod_atparam
     use mod_cplcon_sea
     use rp_emulator
+    use mod_prec
 
     implicit none
 							
@@ -214,6 +215,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
 
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -285,7 +287,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
             if (arlat.lt.25.0) then
                 wlat = 1.
                 if (arlat.gt.15.0) wlat = (0.1*(25.-arlat))**2
-                rlonw = 300.-2*max(rlat(j),0.)
+                rlonw = 300.-2*max(rlat(j),0.0_dp)
                 do i=1,nlon
                     rlon = (i-1)*dlon
                     if (rlon.gt.165.0.and.rlon.lt.rlonw) then

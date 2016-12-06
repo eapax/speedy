@@ -40,6 +40,7 @@ subroutine suflux (psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav,ssrd,slrd,&
     use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
     use mod_radcon, only: emisfc, alb_l, alb_s, snowc
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -201,7 +202,7 @@ subroutine suflux (psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav,ssrd,slrd,&
 
         do j=1,ngp
             !evap(j,1) = chl*denvvs(j,1)*swav(j)*max(0.,qsat0(j,1)-q1(j,1))
-            evap(j,1) = chl*denvvs(j,1)*max(0.,swav(j)*qsat0(j,1)-q1(j,1))
+            evap(j,1) = chl*denvvs(j,1)*max(0.0_dp,swav(j)*qsat0(j,1)-q1(j,1))
         end do
 
         ! 3. Compute land-surface energy balance;
@@ -367,6 +368,7 @@ subroutine sflset(phi0)
     use mod_sflcon
     use mod_physcon, only: gg
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -379,6 +381,6 @@ subroutine sflset(phi0)
     rhdrag = 1./(gg*hdrag)
 
     do j=1,ngp
-        forog(j)=1.+fhdrag*(1.-exp(-max(phi0(j),0.)*rhdrag))
+        forog(j)=1.+fhdrag*(1.-exp(-max(phi0(j),0.0_dp)*rhdrag))
     end do
 end

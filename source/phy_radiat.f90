@@ -14,6 +14,7 @@ subroutine sol_oz(tyear)
     use mod_physcon, only: slat, clat
     use mod_radcon, only: solc, epssw, fsol, ozone, ozupp, zenit, stratz
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -29,7 +30,7 @@ subroutine sol_oz(tyear)
     dalpha=0.
     !DALPHA=ASIN(0.5)
 
-    coz1= 1.0*max(0.,cos(alpha-dalpha))
+    coz1= 1.0*max(0.0_dp,cos(alpha-dalpha))
     coz2= 1.8
 
     azen=1.0
@@ -63,7 +64,7 @@ subroutine sol_oz(tyear)
         ozone(j0)=fsol(j0)*ozone(j0)*zenit(j0)
 
         ! Polar night cooling in the stratosphere
-        stratz(j0)=max(fs0-fsol(j0),0.)
+        stratz(j0)=max(fs0-fsol(j0),0.0_dp)
 
         do i=1,nlon-1
             fsol  (i+j0) = fsol  (j0)
@@ -78,10 +79,12 @@ end
 subroutine solar(tyear,csol,nlat,clat,slat,topsr)
     ! Average daily flux of solar radiation, from Hartmann (1994)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
-    type(rpe_var), intent(in) :: tyear, csol
+    type(rpe_var), intent(in) :: tyear
+    real, intent(in) :: csol
     integer, intent(in) :: nlat
     type(rpe_var), dimension(nlat), intent(in) :: clat, slat
     type(rpe_var), intent(inout) :: topsr(nlat)
@@ -114,7 +117,7 @@ subroutine solar(tyear,csol,nlat,clat,slat,topsr)
     csolp=csol/pigr
 
     do j=1,nlat
-        ch0 = min(1.,max(-1.,-tdecl*slat(j)/clat(j)))
+        ch0 = min(1.0_dp,max(-1.0_dp,-tdecl*slat(j)/clat(j)))
         h0  = acos(ch0)
         sh0 = sin(h0)
 
@@ -142,6 +145,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
     use mod_radcon, only: rhcl1, rhcl2, qacl, wpcl, pmaxcl, clsmax, clsminl,&
         & gse_s0, gse_s1, albcl, qcloud
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -190,9 +194,9 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
     end do
 
     do j=1,ngp
-        cl1 = min(1.,cloudc(j)*rrcl)
+        cl1 = min(1.0_dp,cloudc(j)*rrcl)
         pr1 = min(pmaxcl,86.4*(precnv(j)+precls(j)))
-        cloudc(j) = min(1.,wpcl*sqrt(pr1)+cl1*cl1)
+        cloudc(j) = min(1.0_dp,wpcl*sqrt(pr1)+cl1*cl1)
         icltop(j) = min(iptop(j),icltop(j))
     end do
 
@@ -213,8 +217,8 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
 
         do j=1,ngp
             ! Stratocumulus clouds over sea
-            fstab    = max(0.,min(1.,rgse*(gse(j)-gse_s0)))
-            clstr(j) = fstab*max(clsmax-clfact*cloudc(j),0.)
+            fstab    = max(0.0_dp,min(1.0_dp,rgse*(gse(j)-gse_s0)))
+            clstr(j) = fstab*max(clsmax-clfact*cloudc(j),0.0_dp)
             ! Stratocumulus clouds over land
             clstrl   = max(clstr(j),clsminl)*rh(j,nlev)
             clstr(j) = clstr(j)+fmask(j)*(clstrl-clstr(j))
@@ -226,7 +230,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
  
         do j=1,ngp
             ! stratocumulus clouds over sea
-            clstr(j) = max(clsmax-cloudc(j),0.)
+            clstr(j) = max(clsmax-cloudc(j),0.0_dp)
             ! rescale for consistency with previous albedo values
             clstr(j) = clstr(j)*albcor
             ! correction for aerosols over land
@@ -464,6 +468,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     use mod_physcon, only: sbc, dsig, wvi
     use mod_radcon, only: epslw, emisfc, fband, tau2, st4a, stratc, flux
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -511,12 +516,12 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
 
     do k=3,nl1
         do j=1,ngp
-            st4a(j,k,2)=anish*max(st4a(j,k,1)-st4a(j,k-1,1),0.)
+            st4a(j,k,2)=anish*max(st4a(j,k,1)-st4a(j,k-1,1),0.0_dp)
         end do
     end do
 
     do j=1,ngp
-        st4a(j,nlev,2)=anis*max(ta(j,nlev)-st4a(j,nl1,1),0.)
+        st4a(j,nlev,2)=anis*max(ta(j,nlev)-st4a(j,nl1,1),0.0_dp)
     end do
 
     ! Blackbody emission in the stratosphere
