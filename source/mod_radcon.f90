@@ -56,46 +56,46 @@ module mod_radcon
     ! ablcl1 = abs. of "thick" clouds in window band (below cloud top) 
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
 
-    real :: solc = 342.0
+    real(dp) :: solc = 342.0
 
-    real :: albsea = 0.07
-    real :: albice = 0.60!0.75
-    real :: albsn  = 0.60
+    real(dp) :: albsea = 0.07
+    real(dp) :: albice = 0.60!0.75
+    real(dp) :: albsn  = 0.60
 
-    real :: rhcl1  =  0.30
-    real :: rhcl2  =  1.00
-    real :: qacl   =  0.20
-    real :: wpcl   =  0.2
+    real(dp) :: rhcl1  =  0.30
+    real(dp) :: rhcl2  =  1.00
+    real(dp) :: qacl   =  0.20
+    real(dp) :: wpcl   =  0.2
     real(dp) :: pmaxcl = 10.0
 
-    real :: clsmax  = 0.60!0.50
+    real(dp) :: clsmax  = 0.60!0.50
     real(dp) :: clsminl = 0.15
-    real :: gse_s0  = 0.25
-    real :: gse_s1  = 0.40
+    real(dp) :: gse_s0  = 0.25
+    real(dp) :: gse_s1  = 0.40
 
-    real :: albcl  =  0.43
-    real :: albcls =  0.50
+    real(dp) :: albcl  =  0.43
+    real(dp) :: albcls =  0.50
 
-    real :: epssw  =  0.020!0.025
-    real :: epslw  =  0.05
-    real :: emisfc =  0.98
+    real(dp) :: epssw  =  0.020!0.025
+    real(dp) :: epslw  =  0.05
+    real(dp) :: emisfc =  0.98
 
-    real :: absdry =  0.033
-    real :: absaer =  0.033
-    real :: abswv1 =  0.022
-    real :: abswv2 = 15.000
+    real(dp) :: absdry =  0.033
+    real(dp) :: absaer =  0.033
+    real(dp) :: abswv1 =  0.022
+    real(dp) :: abswv2 = 15.000
 
-    real :: abscl1 =  0.015
+    real(dp) :: abscl1 =  0.015
     real(dp) :: abscl2 =  0.15
 
-    real :: ablwin =  0.3
-    real :: ablco2 =  6.0!5.0
-    real :: ablwv1 =  0.7
-    real :: ablwv2 = 50.0
+    real(dp) :: ablwin =  0.3
+    real(dp) :: ablco2 =  6.0!5.0
+    real(dp) :: ablwv1 =  0.7
+    real(dp) :: ablwv2 = 50.0
 
-    real :: ablcl1 = 12.0
-    real :: ablcl2 =  0.6
-    real :: ablco2_ref
+    real(dp) :: ablcl1 = 12.0
+    real(dp) :: ablcl2 =  0.6
+    real(dp) :: ablco2_ref
 
     ! Time-invariant fields (initial. in radset)
     ! fband  = energy fraction emitted in each LW band = f(T)

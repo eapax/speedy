@@ -1,6 +1,7 @@
 module mod_surfcon
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -12,7 +13,7 @@ module mod_surfcon
     type(rpe_var) :: fmask(ix,il)
     ! Model-defined land fraction
     type(rpe_var) :: fmask1(ix,il)
-									
+
     ! Time invariant surface fields 
     ! (initial. in INBCON, phis0 initial. in INVARS)
     ! Unfiltered surface geopotential
@@ -26,11 +27,11 @@ module mod_surfcon
 
     ! Soil moisture parameters
     ! Soil wetness at field capacity (volume fraction)
-    real :: swcap = 0.30 
+    real(dp) :: swcap = 0.30
 
     ! Soil wetness at wilting point  (volume fraction)
-    real :: swwil = 0.17
+    real(dp) :: swwil = 0.17
 
     ! Snow depth (mm water) corresponding to snow cover = 1
-    real :: sd2sc = 60.0
+    real(dp) :: sd2sc = 60.0
 end module

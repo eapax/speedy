@@ -10,7 +10,7 @@ subroutine sea_model_init(fmask_s,rlat)
     use mod_prec
 
     implicit none
-							
+
     integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
     ! Input variables
@@ -40,21 +40,21 @@ subroutine sea_model_init(fmask_s,rlat)
     ! Model parameters (default values)
 
     ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
-    real :: depth_ml = 60.               ! High-latitude depth
-    real :: dept0_ml = 40.               ! Minimum depth (tropics)
+    real(dp) :: depth_ml = 60.               ! High-latitude depth
+    real(dp) :: dept0_ml = 40.               ! Minimum depth (tropics)
 
     ! sea-ice depth : d + (d0-d)*(cos_lat)^2
-    real :: depth_ice = 2.5              ! High-latitude depth
-    real :: dept0_ice = 1.5              ! Minimum depth 
+    real(dp) :: depth_ice = 2.5              ! High-latitude depth
+    real(dp) :: dept0_ice = 1.5              ! Minimum depth 
 
     ! Dissipation time (days) for sea-surface temp. anomalies
-    real :: tdsst  = 90.
+    real(dp) :: tdsst  = 90.
 
     ! Dissipation time (days) for sea-ice temp. anomalies
-    real :: dice = 30.
+    real(dp) :: dice = 30.
 
     ! Minimum fraction of sea for the definition of anomalies
-    real :: fseamin = 1./3.
+    real(dp) :: fseamin = 1./3.
 
     ! Dissipation time (days) for sea-ice temp. anomalies
     type(rpe_var) :: tdice

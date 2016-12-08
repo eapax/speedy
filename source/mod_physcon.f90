@@ -1,6 +1,7 @@
 module mod_physcon
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -10,25 +11,25 @@ module mod_physcon
 
     ! Physical constants
     ! Reference pressure
-    real, parameter :: p0 = 1.e+5
+    real(dp), parameter :: p0 = 1.e+5
 
     ! Gravity accel.
-    real, parameter :: gg = 9.81
+    real(dp), parameter :: gg = 9.81
 
     ! Gas constant for dry air
-    real, parameter :: rd = 287.
+    real(dp), parameter :: rd = 287.
 
     ! Specific heat at constant pressure
-    real, parameter :: cp = 1004.
+    real(dp), parameter :: cp = 1004.
 
     ! Latent heat of condensation, in J/g for consistency with spec.hum. in g/Kg
-    real, parameter :: alhc = 2501.0
+    real(dp), parameter :: alhc = 2501.0
 
     ! Latent heat of sublimation
-    real, parameter :: alhs = 2801.0
+    real(dp), parameter :: alhs = 2801.0
 
     ! Stefan-Boltzmann constant
-    real, parameter :: sbc = 5.67e-8
+    real(dp), parameter :: sbc = 5.67e-8
 
     !   Functions of sigma and latitude (initial. in INPHYS)
     !    sig    = full-level sigma 

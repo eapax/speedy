@@ -1,4 +1,6 @@
 module mod_date
+    use mod_prec
+
     implicit none
 
     private
@@ -8,7 +10,7 @@ module mod_date
 
     ! Date and time variables (updated in NEWDATE)
     integer :: iyear, imonth, iday, imont1, ihour
-    real :: tmonth, tyear
+    real(dp) :: tmonth, tyear
 
     ! Calendar set-up (initialized in NEWDATE)
     integer :: ndaycal(12,2), ndaytot

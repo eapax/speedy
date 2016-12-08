@@ -4,6 +4,7 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
     !
 
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -15,7 +16,7 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
     character(len=3)  :: norun
     character(len=11) :: ctlname
     integer :: ilev(30), j, jline, k
-    real :: c1
+    real(dp) :: c1
  
     ! 1. Initialization
     lmon = (/'1jan','1feb','1mar','1apr','1may','1jun',&
@@ -170,6 +171,7 @@ subroutine setctl_d(iunit,nlon,nlat,nlev,ntm,ndtm,n2d_1,n2d_2,rlat,rlev,name,&
     !  Aux. routine setctl_d : write descriptor (.ctl) output file 
 
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -182,7 +184,7 @@ subroutine setctl_d(iunit,nlon,nlat,nlev,ntm,ndtm,n2d_1,n2d_2,rlat,rlev,name,&
     character(len=3)  :: norun
     character(len=12) :: ctlname
     integer :: ilev(30), ncount, j, jline, k
-    real :: c1
+    real(dp) :: c1
  
     ! 1. Initialization
     lmon  = (/'1jan','1feb','1mar','1apr','1may','1jun',&

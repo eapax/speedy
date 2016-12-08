@@ -9,13 +9,14 @@ COMPILE=gfortran
 ###COMOTT1=-dalign -fast -r8
 #COMOTT1=-Ofast -mips4 -IPA -r8
 # COMOTT1=  -fast -O3 -r8
- COMOTT1=  -fdefault-real-8 -g
+ COMOTT1= -O2
 ### COMOTT1=  -fast  
 
 # COMCONV= -byteswapio 
  COMCONV= -fconvert=swap
 
 FILES= \
+	   mod_prec.o \
        cpl_bcinterp.o \
        cpl_land.o \
        cpl_main_interface.o \

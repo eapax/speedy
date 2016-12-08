@@ -8,6 +8,7 @@ subroutine inirdf(indrdf)
     use mod_physcon, only: slat
     use mod_randfor, only: randfh
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -52,7 +53,7 @@ subroutine inirdf(indrdf)
     do nf=1,2
         ! 2. Fill reduced grid with normally-distributed random numbers
         do jlat=0,18
-            call gausts(nlonrg(jlat),0.,ampl,0.,0,iseed,redgrd(1,jlat))
+            call gausts(nlonrg(jlat),0.0_dp,ampl,0.0_dp,0,iseed,redgrd(1,jlat))
 
             if (freq0.gt.0.) then
                 do jlon=1,nlonrg(jlat)
@@ -152,12 +153,13 @@ function ran1(idum)
     !   From Numerical Recipes, Chapter 7.1 
 
     use rp_emulator
+    use mod_prec
 
     implicit none
 
     integer :: idum
     integer, parameter :: im=714025, ia=1366, ic=150889
-    real, parameter :: rm=1./im
+    real(dp), parameter :: rm=1./im
     integer, save :: iy = -1
     integer :: j
     type(rpe_var) :: ran1

@@ -84,7 +84,7 @@ subroutine solar(tyear,csol,nlat,clat,slat,topsr)
     implicit none
 
     type(rpe_var), intent(in) :: tyear
-    real, intent(in) :: csol
+    real(dp), intent(in) :: csol
     integer, intent(in) :: nlat
     type(rpe_var), dimension(nlat), intent(in) :: clat, slat
     type(rpe_var), intent(inout) :: topsr(nlat)

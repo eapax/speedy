@@ -2,6 +2,7 @@
 !> Length of the integration and time stepping constants.
 module mod_tsteps
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -71,16 +72,16 @@ module mod_tsteps
     integer :: isst0
     
     ! Time step in seconds
-    real, parameter :: delt = 86400.0 / nsteps
+    real(dp), parameter :: delt = 86400.0 / nsteps
     
     ! 2 * time step in seconds
-    real, parameter :: delt2 = 2 * delt
+    real(dp), parameter :: delt2 = 2 * delt
 
     ! Damping factor in Robert time filter
-    real, parameter :: rob = 0.05
+    real(dp), parameter :: rob = 0.05
 
     ! Parameter of Williams filter
-    real, parameter :: wil = 0.53
+    real(dp), parameter :: wil = 0.53
 
     ! Coefficient for semi-implicit computations
     type(rpe_var) :: alph

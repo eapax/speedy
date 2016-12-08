@@ -20,7 +20,7 @@ subroutine inbcon(grav0,radlat)
     type(rpe_var), intent(in) :: grav0, radlat(il)
     integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
 
-    real*4 :: r4inp(nlon,nlat), dummy4
+    real(sp) :: r4inp(nlon,nlat), dummy4
     real   :: inp(nlon,nlat), phis1(nlon,nlat)
     real   :: veg(nlon,nlat), swl1(nlon,nlat), swl2(nlon,nlat)
 
@@ -285,13 +285,14 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     ! and set undefined values to a constant (to avoid over/underflow)
 
     use rp_emulator
+    use mod_prec
 
     implicit none
 
     type(rpe_var), intent(in) :: fmask(ngp)
     type(rpe_var), intent(inout) :: field(ngp,nf)
     integer, intent(in) :: ngp, nf
-    real, intent(in) :: fmin, fmax, fset
+    real(dp), intent(in) :: fmin, fmax, fset
 
     integer :: jf, jgp, nfault
 

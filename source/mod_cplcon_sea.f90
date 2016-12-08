@@ -1,6 +1,7 @@
 module mod_cplcon_sea
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -21,5 +22,5 @@ module mod_cplcon_sea
     type(rpe_var) :: cdice(ix,il)
 
     ! Heat flux coef. at sea/ice int.
-    real :: beta = 1.0
+    real(dp) :: beta = 1.0
 end module
