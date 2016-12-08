@@ -241,6 +241,7 @@ subroutine obs_ssta
     use mod_date, only: imonth
     use mod_tsteps, only: iyear0, issty0
     use rp_emulator
+    use mod_prec
 
     implicit none
  

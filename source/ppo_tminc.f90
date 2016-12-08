@@ -191,7 +191,7 @@ subroutine tminc
         ! Estimate specific humidity using interpolated rel.hum. and
         ! sat. spec.hum. at interpolated temperature
         if (lppres) then
-            call shtorh(-1,ngp,adsave(1,2),pout(k),-1.,adsave(1,5),adsave(1,6),&
+            call shtorh(-1,ngp,adsave(1,2),pout(k),-1.0_dp,adsave(1,5),adsave(1,6),&
                 & qsatpl)
 
             ! Below the surface, set spec.hum. = near-surface value 

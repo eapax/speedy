@@ -43,7 +43,7 @@ subroutine sol_oz(tyear)
     fs0=6.
 
     ! Solar radiation at the top
-    call solar(tyear,4.*solc,nlat,clat,slat,topsr)
+    call solar(tyear,4.0_dp*solc,nlat,clat,slat,topsr)
 
     do j=1,nlat
         j0=1+nlon*(j-1)

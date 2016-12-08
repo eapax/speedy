@@ -21,6 +21,7 @@ subroutine fordate(imode)
     use mod_radcon, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
         & alb_l, alb_s, albsfc
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -55,7 +56,7 @@ subroutine fordate(imode)
     ! total surface albedo
 
     do j = 1, ngp
-        snowc(j)  = min(1., snowd_am(j)/sd2sc)
+        snowc(j)  = min(1.0_dp, snowd_am(j)/sd2sc)
         alb_l(j)  = alb_0(j) + snowc(j) * (albsn - alb_0(j))
         alb_s(j)  = albsea + sice_am(j) * (albice - albsea)
         albsfc(j) = alb_s(j) + fland(j) * (alb_l(j) - alb_s(j))
@@ -101,8 +102,8 @@ subroutine fordate(imode)
         end do
     end do
 
-    call shtorh(0, ngp, tref,   1., -1., dummy, dummy, qref)
-    call shtorh(0, ngp, tsfc, psfc,  1., dummy, dummy, qsfc)
+    call shtorh(0, ngp, tref,   1.0_dp, -1.0_dp, dummy, dummy, qref)
+    call shtorh(0, ngp, tsfc, psfc, 1.0_dp, dummy, dummy, qsfc)
 
     corh = refrh1 * (qref - qsfc)
 
@@ -119,10 +120,11 @@ subroutine setgam(tyear,gamlat)
     use mod_atparam
     use mod_physcon, only: gg
     use rp_emulator
+    use mod_prec
 
     implicit none
 
-    type(rpe_var), intent(in) :: tyear
+    real(dp), intent(in) :: tyear
     integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon * nlat
     integer :: j
                                             

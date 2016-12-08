@@ -246,7 +246,7 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking sfc heat fluxes'
 
-        call forchk (bmask_s,hfseacl,ix*il,1,-1000.,1000.,0.)
+        call forchk (bmask_s,hfseacl,ix*il,1,-1000.0_dp,1000.0_dp,0.0_dp)
     end if
 
     ! 4.2. Ocean model SST climatology:
@@ -276,7 +276,7 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking ocean model SST'
 
-        call forchk (bmask_s,sstom12,ix*il,12,100.,400.,273.)
+        call forchk (bmask_s,sstom12,ix*il,12,100.0_dp,400.0_dp,273.0_dp)
     end if
 end
 
