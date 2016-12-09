@@ -6,6 +6,7 @@ subroutine stepone
 
     use mod_tsteps, only: delt, delt2, alph, rob, wil, istart
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -16,7 +17,7 @@ subroutine stepone
 
     if (istart == 0 .or. istart == 2) then
 
-      delth = 0.5 * delt
+      delth = 0.5_dp * delt
 
       if (iitest == 1) print *, ' semi-impl. initialization'
       call impint(delth, alph)

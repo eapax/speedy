@@ -9,30 +9,30 @@ module mod_dyncon0
     public gamma, hscale, hshum, refrh1, thd, thdd, thds, tdrs
 
     ! Ref. temperature lapse rate (-dT/dz in deg/km)
-    real(dp), parameter :: gamma = 6.0
+    real(dp), parameter :: gamma = 6.0_dp
 
     ! Ref. scale height for pressure (in km)
-    real(dp), parameter :: hscale = 7.5
+    real(dp), parameter :: hscale = 7.5_dp
 
     ! Ref. scale height for spec. humidity (in km)
-    real(dp), parameter :: hshum = 2.5
+    real(dp), parameter :: hshum = 2.5_dp
 
     ! Ref. relative humidity of near-surface air
-    real(dp), parameter :: refrh1 = 0.7
+    real(dp), parameter :: refrh1 = 0.7_dp
 
     ! Max damping time (in hours) for hor. diffusion (del^6) of temperature and
     ! vorticity
-    real(dp), parameter :: thd = 2.4
+    real(dp), parameter :: thd = 2.4_dp
 
     ! Max damping time (in hours) for hor. diffusion (del^6)
     ! of divergence
-    real(dp), parameter :: thdd = 2.4
+    real(dp), parameter :: thdd = 2.4_dp
 
     ! Max damping time (in hours) for extra diffusion (del^2)
     ! in the stratosphere 
-    real(dp), parameter :: thds = 12.0
+    real(dp), parameter :: thds = 12.0_dp
 
     ! Damping time (in hours) for drag on zonal-mean wind
     ! in the stratosphere 
-    real(dp), parameter :: tdrs = 24.0 * 30.0
+    real(dp), parameter :: tdrs = 24.0_dp * 30.0_dp
 end module

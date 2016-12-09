@@ -12,12 +12,12 @@ module mod_dyncon1
     public xgeop1, xgeop2
 
     ! Physical constants for dynamics
-    real(dp), parameter :: rearth = 6.371e+6
-    real(dp), parameter :: omega  = 7.292e-05
-    real(dp), parameter :: grav   = 9.81
-    real(dp), parameter :: akap   = 2./7.
-    real(dp), parameter :: rgas   = akap*1004.
-    real(dp), parameter :: pi = 4.*atan(1.)
+    real(dp), parameter :: rearth = 6.371d+6
+    real(dp), parameter :: omega  = 7.292d-05
+    real(dp), parameter :: grav   = 9.81_dp
+    real(dp), parameter :: akap   = 2.0_dp/7.0_dp
+    real(dp), parameter :: rgas   = akap*1004.0_dp
+    real(dp), parameter :: pi = 4.0_dp*atan(1.0_dp)
     real(dp), parameter :: a  = rearth
     real(dp), parameter :: g  = grav
 

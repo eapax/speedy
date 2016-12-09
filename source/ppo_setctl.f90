@@ -96,10 +96,10 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
 
     ctlname=name//norun//'.ctl'
     open ( unit=iunit, file=ctlname, form='formatted' )
-        c1=90./asin(1.)
+        c1=90.0_dp/asin(1.0_dp)
 
         do k=1,nlev
-           ilev(k)=nint(1000.*rlev(k))
+           ilev(k)=nint(1000.0_dp*rlev(k))
         end do
  
         ! 2. Insert parameters in strings
@@ -108,7 +108,7 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
         line(2)(43:45)=norun(1:3)
 
         write (line(5)(10:12),'(i3)') nlon
-        write (line(5)(31:40),'(f10.3)') (360./nlon)
+        write (line(5)(31:40),'(f10.3)') (360.0_dp/nlon)
         write (line(6)(10:12),'(i3)') nlat
         write (line(7)(10:12),'(i3)') nlev
 
@@ -227,7 +227,7 @@ subroutine setctl_d(iunit,nlon,nlat,nlev,ntm,ndtm,n2d_1,n2d_2,rlat,rlev,name,&
         c1=90./asin(1.)
  
         do k=1,nlev
-            ilev(k)=nint(1000.*rlev(k))
+            ilev(k)=nint(1000.0_dp*rlev(k))
         end do
  
         ! 2. Insert parameters in strings
@@ -236,7 +236,7 @@ subroutine setctl_d(iunit,nlon,nlat,nlev,ntm,ndtm,n2d_1,n2d_2,rlat,rlev,name,&
         line(2)(39:41)=norun(1:3)
 
         write (line(5)(10:12),'(i3)') nlon
-        write (line(5)(31:40),'(f10.3)') (360./nlon)
+        write (line(5)(31:40),'(f10.3)') (360.0_dp/nlon)
         write (line(6)(10:12),'(i3)') nlat
         write (line(7)(10:12),'(i3)') nlev
 
