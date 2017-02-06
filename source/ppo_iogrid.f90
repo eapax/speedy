@@ -21,6 +21,8 @@ subroutine iogrid(imode)
     use mod_tmean
     use mod_flx_land
     use mod_flx_sea
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -31,16 +33,16 @@ subroutine iogrid(imode)
 !    include "com_anomvar.h"
 
     complex, dimension(mx,nx) :: ucostmp, vcostmp
-    real, dimension(ngp,kx) :: ugr, vgr, tgr, qgr, phigr
-    real :: psgr(ngp)
-    real, dimension(ngp,kx) :: ugr1, vgr1, tgr1, qgr1, phigr1
-    real :: rrgr1(ngp), aref, phi1, phi2, textr, tref
-    real(4), dimension(ngp,kx) :: ugr4, vgr4, tgr4, qgr4, phigr4
-    real(4), dimension(ngp) :: psgr4(ngp), rrgr4(ngp)
+    real(dp), dimension(ngp,kx) :: ugr, vgr, tgr, qgr, phigr
+    real(dp) :: psgr(ngp)
+    real(dp), dimension(ngp,kx) :: ugr1, vgr1, tgr1, qgr1, phigr1
+    real(dp) :: rrgr1(ngp), aref, phi1, phi2, textr, tref
+    real(sp), dimension(ngp,kx) :: ugr4, vgr4, tgr4, qgr4, phigr4
+    real(sp), dimension(ngp) :: psgr4(ngp), rrgr4(ngp)
 
     ! For vertical interpolation !adapted from ppo_tminc.f
     integer :: k0(ngp)
-    real :: w0(ngp), zout(ngp), zinp(nlev), rdzinp(nlev)
+    real(dp) :: w0(ngp), zout(ngp), zinp(nlev), rdzinp(nlev)
 
     ! File names etc.
     character(len=14) :: filename='yyyymmddhh.grd'
