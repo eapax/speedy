@@ -23,6 +23,8 @@ program agcm_main
 
     ! 2. do loop over total no. of integration days
     do jday = 1, ndays
+        !print *, 'RPE_DEFAULT_SBITS = ', RPE_DEFAULT_SBITS
+
         ! 2.2 run atmospheric model for 1 day
         call agcm_1day(jday, cexp)
 
