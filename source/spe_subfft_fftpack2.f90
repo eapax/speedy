@@ -41,6 +41,7 @@ end
 
 subroutine rffti1(n, wa, ifac)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -77,7 +78,7 @@ subroutine rffti1(n, wa, ifac)
   107 if (nl .ne. 1) go to 104
       ifac(1) = n
       ifac(2) = nf
-      tpi = 8.*atan(1.)
+      tpi = 8.0_dp*atan(1.0_dp)
       argh = tpi/n
       is = 0
       nfm1 = nf-1
@@ -93,10 +94,10 @@ subroutine rffti1(n, wa, ifac)
             ld = ld+l1
             i = is
             argld = ld*argh
-            fi = 0.
+            fi = 0.0_dp
             do 108 ii=3,ido,2
                i = i+2
-               fi = fi+1.
+               fi = fi+1.0_dp
                arg = fi*argld
                wa(i-1) = cos(arg)
                wa(i) = sin(arg)
@@ -296,6 +297,7 @@ end
 
 subroutine radb3(ido, l1, cc, ch, wa1, wa2)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -306,8 +308,8 @@ subroutine radb3(ido, l1, cc, ch, wa1, wa2)
     type(rpe_var) :: taur, taui, tr2, cr2, ci3, ti2, ci2, cr3, dr2, dr3, di2, di3
 
     !***FIRST EXECUTABLE STATEMENT  RADB3
-      taur = -.5
-      taui = .5*sqrt(3.)
+      taur = -0.5_dp
+      taui = 0.5_dp*sqrt(3.0_dp)
       do 101 k=1,l1
          tr2 = cc(ido,2,k)+cc(ido,2,k)
          cr2 = cc(1,1,k)+taur*tr2
@@ -368,6 +370,7 @@ end
 
 subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -379,7 +382,7 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
     integer :: i, k, idp2, ic
 
     !***First executable statement  radb4
-      sqrt2 = sqrt(2.)
+      sqrt2 = sqrt(2.0_dp)
       do 101 k=1,l1
          tr1 = cc(1,1,k)-cc(ido,4,k)
          tr2 = cc(1,1,k)+cc(ido,4,k)
@@ -466,6 +469,7 @@ end
 
 subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -478,11 +482,11 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     integer :: i, k, ic, idp2
 
     !***First executable statement  radb5
-      pi = 4.*atan(1.)
-      tr11 = sin(.1*pi)
-      ti11 = sin(.4*pi)
-      tr12 = -sin(.3*pi)
-      ti12 = sin(.2*pi)
+      pi = 4.0_dp*atan(1.0_dp)
+      tr11 = sin(0.1_dp*pi)
+      ti11 = sin(0.4_dp*pi)
+      tr12 = -sin(0.3_dp*pi)
+      ti12 = sin(0.2_dp*pi)
       do 101 k=1,l1
          ti5 = cc(1,3,k)+cc(1,3,k)
          ti4 = cc(1,5,k)+cc(1,5,k)
@@ -587,6 +591,7 @@ end
 
 subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -599,7 +604,7 @@ subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
         & l, lc
 
     !***First executable statement  radbg
-      tpi = 8.*atan(1.)
+      tpi = 8.0_dp*atan(1.0_dp)
       arg = tpi/ip
       dcp = cos(arg)
       dsp = sin(arg)
@@ -656,8 +661,8 @@ subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
   113       continue
   114    continue
   115 continue
-  116 ar1 = 1.
-      ai1 = 0.
+  116 ar1 = 1.0_dp
+      ai1 = 0.0_dp
       do 120 l=2,ipph
          lc = ipp2-l
          ar1h = dcp*ar1-dsp*ai1
@@ -814,6 +819,7 @@ end
 
 subroutine radf3(ido, l1, cc, ch, wa1, wa2)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -824,8 +830,8 @@ subroutine radf3(ido, l1, cc, ch, wa1, wa2)
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf3
-      taur = -.5
-      taui = .5*sqrt(3.)
+      taur = -0.5_dp
+      taui = 0.5_dp*sqrt(3.0_dp)
       do 101 k=1,l1
          cr2 = cc(1,k,2)+cc(1,k,3)
          ch(1,1,k) = cc(1,k,1)+cr2
@@ -884,6 +890,7 @@ end
 
 subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -895,7 +902,7 @@ subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
     integer :: i, k, ic, idp2
 
     !***First executable statement  radf4
-      hsqt2 = .5*sqrt(2.)
+      hsqt2 = 0.5_dp*sqrt(2.0_dp)
       do 101 k=1,l1
          tr1 = cc(1,k,2)+cc(1,k,4)
          tr2 = cc(1,k,1)+cc(1,k,3)
@@ -978,6 +985,7 @@ end
 
 subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -990,11 +998,11 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf5
-      pi = 4.*atan(1.)
-      tr11 = sin(.1*pi)
-      ti11 = sin(.4*pi)
-      tr12 = -sin(.3*pi)
-      ti12 = sin(.2*pi)
+      pi = 4.0_dp*atan(1.0_dp)
+      tr11 = sin(0.1_dp*pi)
+      ti11 = sin(0.4_dp*pi)
+      tr12 = -sin(0.3_dp*pi)
+      ti12 = sin(0.2_dp*pi)
       do 101 k=1,l1
          cr2 = cc(1,k,5)+cc(1,k,2)
          ci5 = cc(1,k,5)-cc(1,k,2)
@@ -1094,6 +1102,7 @@ end
 
 subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -1106,7 +1115,7 @@ subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
         & l, lc
 
     !***First executable statement  radfg
-      tpi = 8.*atan(1.)
+      tpi = 8.0_dp*atan(1.0_dp)
       arg = tpi/ip
       dcp = cos(arg)
       dsp = sin(arg)
@@ -1187,8 +1196,8 @@ subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
   122    continue
   123 continue
 !
-      ar1 = 1.
-      ai1 = 0.
+      ar1 = 1.0_dp
+      ai1 = 0.0_dp
       do 127 l=2,ipph
          lc = ipp2-l
          ar1h = dcp*ar1-dsp*ai1

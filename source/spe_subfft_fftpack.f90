@@ -59,6 +59,7 @@ subroutine specx(vorg,varm)
     use mod_atparam
     use mod_fft
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -76,11 +77,11 @@ subroutine specx(vorg,varm)
         !CALL DFFTF (IX,FVAR,WSAVE)
 
         ! Copy output into spectral field, dividing by no. of long.
-        scale=1./float(ix)
+        scale=1.0_dp/real(ix,dp)
 
         ! Mean value (a(0))
         varm(1,j)=fvar(1)*scale
-        varm(2,j)=0.0
+        varm(2,j)=0.0_dp
 
         do m=3,mx2
             varm(m,j)=fvar(m-1)*scale
