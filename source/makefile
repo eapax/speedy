@@ -9,7 +9,7 @@ COMPILE=gfortran
 ###COMOTT1=-dalign -fast -r8
 #COMOTT1=-Ofast -mips4 -IPA -r8
 # COMOTT1=  -fast -O3 -r8
- COMOTT1= -O2
+ COMOTT1= -O2 -fdefault-real-8 -fdefault-double-8
 ### COMOTT1=  -fast  
 
 # COMCONV= -byteswapio 
