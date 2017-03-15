@@ -26,7 +26,6 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     use mod_physvar
     use mod_sppt, only: mu, gen_sppt
     use mod_tsteps, only: sppt_on
-    use mod_rp_utils
     use rp_emulator
     use mod_prec
 

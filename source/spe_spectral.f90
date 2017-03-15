@@ -362,7 +362,6 @@ end
 subroutine uvspec(vorm,divm,ucosm,vcosm)
     use mod_atparam
     use mod_spectral, only: uvdx, uvdyp, uvdym
-    use mod_rp_utils
     use rp_emulator
 
     !include "param1spec.h"
@@ -401,7 +400,6 @@ end
 !*******************************************************************
 subroutine grid(vorm,vorg,kcos)
     use mod_atparam
-    use mod_rp_utils
     use rp_emulator
 
     implicit none
@@ -419,7 +417,6 @@ end
 !*********************************************************************
 subroutine spec(vorg,vorm)
     use mod_atparam
-    use mod_rp_utils
     use rp_emulator
 
     implicit none
