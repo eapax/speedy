@@ -36,6 +36,7 @@ FILES= \
        ini_inphys.o \
        ini_inirdf.o \
        ini_invars.o \
+	   ini_rp.o \
        ini_stepone.o \
        ini_fordate.o \
 	   mod_atparam.o \
@@ -133,7 +134,7 @@ dyn_sptend.o           : dyn_sptend.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o
 dyn_step.o             : dyn_step.f90 mod_tsteps.o mod_dyncon0.o mod_atparam.o mod_dynvar.o mod_hdifcon.o
 dyn_stloop.o           : dyn_stloop.f90 mod_lflags.o mod_tsteps.o mod_date.o
 #ini_coupler.o          : ini_coupler.f
-ini_agcm_init.o        : ini_agcm_init.f90 mod_cpl_flags.o mod_tsteps.o mod_atparam.o mod_date.o
+ini_agcm_init.o        : ini_agcm_init.f90 mod_cpl_flags.o mod_tsteps.o mod_atparam.o mod_date.o ini_rp.o
 ini_impint.o           : ini_impint.f90 mod_dyncon0.o mod_atparam.o mod_dyncon1.o mod_dyncon2.o mod_hdifcon.o
 ini_indyns.o           : ini_indyns.f90 mod_tsteps.o mod_dyncon0.o mod_atparam.o mod_dyncon1.o mod_hdifcon.o\
 	                     mod_spectral.o
@@ -144,6 +145,8 @@ ini_inphys.o           : ini_inphys.f90 mod_atparam.o mod_physcon.o
 ini_inirdf.o           : ini_inirdf.f90 mod_atparam.o mod_physcon.o mod_randfor.o
 ini_invars.o           : ini_invars.f90 mod_tsteps.o mod_dyncon0.o mod_atparam.o mod_dynvar.o mod_dyncon1.o\
 						 mod_surfcon.o mod_date.o
+ini_rp.o               : mod_cnvcon.o mod_dyncon0.o mod_dyncon1.o mod_lsccon.o mod_physcon.o mod_radcon.o\
+	                     mod_sflcon.o mod_surfcon.o mod_vdicon.o mod_tsteps.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o
 ini_fordate.o          : ini_fordate.f90 mod_dyncon0.o mod_lflags.o mod_atparam.o mod_hdifcon.o mod_physcon.o\
 						 mod_surfcon.o mod_cli_land.o mod_date.o mod_var_land.o mod_cli_sea.o mod_var_sea.o\

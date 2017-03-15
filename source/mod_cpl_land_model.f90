@@ -88,7 +88,6 @@ module mod_cpl_land_model
             !
             ! purpose : integrate slab land-surface model for one day
         							
-            !real vland_input(ix,il,3), vland_output(ix,il,2)
         
             ! Input variables:
             type(rpe_var) :: stl0(ix*il)    ! land temp. at initial time

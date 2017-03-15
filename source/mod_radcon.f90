@@ -15,6 +15,7 @@ module mod_radcon
     public alb_l, alb_s, albsfc, snowc
     public tau2, st4a, stratc, flux
     public qcloud, irhtop
+    public init_radcon
 
     ! Radiation and cloud constants
     
@@ -56,46 +57,46 @@ module mod_radcon
     ! ablcl1 = abs. of "thick" clouds in window band (below cloud top) 
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
 
-    real(dp) :: solc = 342.0
+    real(dp), parameter :: solc_ = 342.0
 
-    real(dp) :: albsea = 0.07
-    real(dp) :: albice = 0.60!0.75
-    real(dp) :: albsn  = 0.60
+    real(dp), parameter :: albsea_ = 0.07
+    real(dp), parameter :: albice_ = 0.60!0.75
+    real(dp), parameter :: albsn_  = 0.60
 
-    real(dp) :: rhcl1  =  0.30
-    real(dp) :: rhcl2  =  1.00
-    real(dp) :: qacl   =  0.20
-    real(dp) :: wpcl   =  0.2
-    real(dp) :: pmaxcl = 10.0
+    real(dp), parameter :: rhcl1_  =  0.30
+    real(dp), parameter :: rhcl2_  =  1.00
+    real(dp), parameter :: qacl_   =  0.20
+    real(dp), parameter :: wpcl_   =  0.2
+    real(dp), parameter :: pmaxcl_ = 10.0
 
-    real(dp) :: clsmax  = 0.60!0.50
-    real(dp) :: clsminl = 0.15
-    real(dp) :: gse_s0  = 0.25
-    real(dp) :: gse_s1  = 0.40
+    real(dp), parameter :: clsmax_  = 0.60!0.50
+    real(dp), parameter :: clsminl_ = 0.15
+    real(dp), parameter :: gse_s0_  = 0.25
+    real(dp), parameter :: gse_s1_  = 0.40
 
-    real(dp) :: albcl  =  0.43
-    real(dp) :: albcls =  0.50
+    real(dp), parameter :: albcl_  =  0.43
+    real(dp), parameter :: albcls_ =  0.50
 
-    real(dp) :: epssw  =  0.020!0.025
-    real(dp) :: epslw  =  0.05
-    real(dp) :: emisfc =  0.98
+    real(dp), parameter :: epssw_  =  0.020!0.025
+    real(dp), parameter :: epslw_  =  0.05
+    real(dp), parameter :: emisfc_ =  0.98
 
-    real(dp) :: absdry =  0.033
-    real(dp) :: absaer =  0.033
-    real(dp) :: abswv1 =  0.022
-    real(dp) :: abswv2 = 15.000
+    real(dp), parameter :: absdry_ =  0.033
+    real(dp), parameter :: absaer_ =  0.033
+    real(dp), parameter :: abswv1_ =  0.022
+    real(dp), parameter :: abswv2_ = 15.000
 
-    real(dp) :: abscl1 =  0.015
-    real(dp) :: abscl2 =  0.15
+    real(dp), parameter :: abscl1_ =  0.015
+    real(dp), parameter :: abscl2_ =  0.15
 
-    real(dp) :: ablwin =  0.3
-    real(dp) :: ablco2 =  6.0!5.0
-    real(dp) :: ablwv1 =  0.7
-    real(dp) :: ablwv2 = 50.0
+    real(dp), parameter :: ablwin_ =  0.3
+    real(dp), parameter :: ablco2_ =  6.0!5.0
+    real(dp), parameter :: ablwv1_ =  0.7
+    real(dp), parameter :: ablwv2_ = 50.0
 
-    real(dp) :: ablcl1 = 12.0
-    real(dp) :: ablcl2 =  0.6
-    real(dp) :: ablco2_ref
+    real(dp), parameter :: ablcl1_ = 12.0
+    real(dp), parameter :: ablcl2_ =  0.6
+    type(rpe_var) :: ablco2_ref
 
     ! Time-invariant fields (initial. in radset)
     ! fband  = energy fraction emitted in each LW band = f(T)
@@ -126,4 +127,70 @@ module mod_radcon
     ! Radiative properties of clouds (updated in cloud)
     ! qcloud = Equivalent specific humidity of clouds 
     type(rpe_var), dimension(ix*il) :: qcloud, irhtop
+
+    ! Reduced precision versions
+    type(rpe_var) :: solc
+    type(rpe_var) :: albsea
+    type(rpe_var) :: albice
+    type(rpe_var) :: albsn
+    type(rpe_var) :: rhcl1
+    type(rpe_var) :: rhcl2
+    type(rpe_var) :: qacl
+    type(rpe_var) :: wpcl
+    type(rpe_var) :: pmaxcl
+    type(rpe_var) :: clsmax
+    type(rpe_var) :: clsminl
+    type(rpe_var) :: gse_s0
+    type(rpe_var) :: gse_s1
+    type(rpe_var) :: albcl
+    type(rpe_var) :: albcls
+    type(rpe_var) :: epssw
+    type(rpe_var) :: epslw
+    type(rpe_var) :: emisfc
+    type(rpe_var) :: absdry
+    type(rpe_var) :: absaer
+    type(rpe_var) :: abswv1
+    type(rpe_var) :: abswv2
+    type(rpe_var) :: abscl1
+    type(rpe_var) :: abscl2
+    type(rpe_var) :: ablwin
+    type(rpe_var) :: ablco2
+    type(rpe_var) :: ablwv1
+    type(rpe_var) :: ablwv2
+    type(rpe_var) :: ablcl1
+    type(rpe_var) :: ablcl2
+
+    contains
+        subroutine init_radcon
+            solc   = solc_
+            albsea = albsea_
+            albice = albice_
+            albsn  = albsn_
+            rhcl1  = rhcl1_
+            rhcl2  = rhcl2_
+            qacl   = qacl_
+            wpcl   = wpcl_
+            pmaxcl = pmaxcl_
+            clsmax = clsmax_
+            clsminl= clsminl_
+            gse_s0 = gse_s0_
+            gse_s1 = gse_s1_
+            albcl  = albcl_
+            albcls = albcls_
+            epssw  = epssw_
+            epslw  = epslw_
+            emisfc = emisfc_
+            absdry = absdry_
+            absaer = absaer_
+            abswv1 = abswv1_
+            abswv2 = abswv2_
+            abscl1 = abscl1_
+            abscl2 = abscl2_
+            ablwin = ablwin_
+            ablco2 = ablco2_
+            ablwv1 = ablwv1_
+            ablwv2 = ablwv2_
+            ablcl1 = ablcl1_
+            ablcl2 = ablcl2_
+        end subroutine
 end module

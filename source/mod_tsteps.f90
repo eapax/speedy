@@ -10,6 +10,7 @@ module mod_tsteps
     public nmonts, ndaysl, nsteps, nstdia, nstppr, nstout, idout, nmonrs, ihout, sixhrrun
     public iseasc, istart, iyear0, imont0, ipout, nstrad, sppt_on, nstrdf, indrdf, issty0
     public isst0, delt, delt2, rob, wil, alph
+    public init_tsteps
 
     ! Integration length in months
     integer :: nmonts = 3
@@ -72,17 +73,31 @@ module mod_tsteps
     integer :: isst0
     
     ! Time step in seconds
-    real(dp), parameter :: delt = 86400.0 / nsteps
+    real(dp), parameter :: delt_ = 86400.0 / nsteps
     
     ! 2 * time step in seconds
-    real(dp), parameter :: delt2 = 2 * delt
+    real(dp), parameter :: delt2_ = 2 * delt_
 
     ! Damping factor in Robert time filter
-    real(dp), parameter :: rob = 0.05
+    real(dp), parameter :: rob_ = 0.05
 
     ! Parameter of Williams filter
-    real(dp), parameter :: wil = 0.53
+    real(dp), parameter :: wil_ = 0.53
 
     ! Coefficient for semi-implicit computations
     type(rpe_var) :: alph
+
+    ! Reduced precision versions
+    type(rpe_var) :: delt
+    type(rpe_var) :: delt2
+    type(rpe_var) :: rob
+    type(rpe_var) :: wil
+
+    contains
+        subroutine init_tsteps
+            delt = delt_
+            delt2 = delt2_
+            rob = rob_
+            wil = wil_
+        end subroutine
 end module

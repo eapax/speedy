@@ -12,12 +12,14 @@ subroutine inphys(hsg,ppl,rlat)
     use mod_atparam
     use mod_physcon
     use rp_emulator
+    use mod_prec
 
     implicit none
 
     integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon*nlat
 
-    type(rpe_var) :: hsg(0:nlev), ppl(nlev), rlat(nlat)  
+    type(rpe_var) :: hsg(0:nlev), rlat(nlat)  
+    real(dp) :: ppl(nlev)
     integer :: j, k
     
     ! 1.2 Functions of sigma and latitude

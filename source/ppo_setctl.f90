@@ -3,14 +3,14 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
     !  Aux. routine setctl : write descriptor (.ctl) output file 
     !
 
-    use rp_emulator
     use mod_prec
 
     implicit none
 
     integer, intent(in) :: iunit, nlon, nlat, nlev, ntm, ndtm, i3d, n3d, n2d_1,&
         & n2d_2, iyear0, imont0
-    type(rpe_var), intent(in) :: rlat(nlat), rlev(nlev)
+    type(rpe_var), intent(in) :: rlat(nlat)
+    real(dp), intent(in) :: rlev(nlev)
     character(len=80) :: line(10), ln3d(30), ln2d_1(20), ln2d_2(15)
     character(len=4)  :: lmon(12), name
     character(len=3)  :: norun

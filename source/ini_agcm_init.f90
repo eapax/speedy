@@ -22,6 +22,9 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
 
     print *, ' hallo from speedy_agcm'
 
+    ! Initialise reduced precision constants
+    call ini_rp
+
     ! 1. set run initial time, duration, time-stepping and coupling options
     read (2,*) istart
 

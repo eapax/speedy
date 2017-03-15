@@ -7,6 +7,7 @@ module mod_surfcon
 
     private
     public fmask, fmask1, phi0, phis0, alb0, swcap, swwil, sd2sc
+    public init_surfcon
 
     ! Land-sea masks (initial. in INBCON)
     ! Original (fractional) land-sea mask
@@ -27,11 +28,23 @@ module mod_surfcon
 
     ! Soil moisture parameters
     ! Soil wetness at field capacity (volume fraction)
-    real(dp) :: swcap = 0.30
+    real(dp), parameter :: swcap_ = 0.30
 
     ! Soil wetness at wilting point  (volume fraction)
-    real(dp) :: swwil = 0.17
+    real(dp), parameter :: swwil_ = 0.17
 
     ! Snow depth (mm water) corresponding to snow cover = 1
-    real(dp) :: sd2sc = 60.0
+    real(dp), parameter :: sd2sc_ = 60.0
+
+    ! Reduced precision versions
+    type(rpe_var) :: swcap
+    type(rpe_var) :: swwil
+    type(rpe_var) :: sd2sc
+
+    contains
+        subroutine init_surfcon
+            swcap = swcap_
+            swwil = swwil_
+            sd2sc = sd2sc_
+        end subroutine
 end module
