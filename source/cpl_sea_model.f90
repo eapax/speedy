@@ -40,24 +40,32 @@ subroutine sea_model_init(fmask_s,rlat)
     ! Model parameters (default values)
 
     ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
-    real(dp) :: depth_ml = 60.               ! High-latitude depth
-    real(dp) :: dept0_ml = 40.               ! Minimum depth (tropics)
+    type(rpe_var) :: depth_ml               ! High-latitude depth
+    type(rpe_var) :: dept0_ml               ! Minimum depth (tropics)
 
     ! sea-ice depth : d + (d0-d)*(cos_lat)^2
-    real(dp) :: depth_ice = 2.5              ! High-latitude depth
-    real(dp) :: dept0_ice = 1.5              ! Minimum depth 
+    type(rpe_var) :: depth_ice              ! High-latitude depth
+    type(rpe_var) :: dept0_ice              ! Minimum depth 
 
     ! Dissipation time (days) for sea-surface temp. anomalies
-    real(dp) :: tdsst  = 90.
+    type(rpe_var) :: tdsst
 
     ! Dissipation time (days) for sea-ice temp. anomalies
-    real(dp) :: dice = 30.
+    type(rpe_var) :: dice
 
     ! Minimum fraction of sea for the definition of anomalies
-    real(dp) :: fseamin = 1./3.
+    type(rpe_var) :: fseamin
 
     ! Dissipation time (days) for sea-ice temp. anomalies
     type(rpe_var) :: tdice
+
+    depth_ml = 60.
+    dept0_ml = 40.
+    depth_ice = 2.5
+    dept0_ice = 1.5
+    tdsst = 90.
+    dice = 30.
+    fseamin = 1./3.
 
     ! Geographical domain
     ! note : more than one regional domain may be set .true.
@@ -129,8 +137,6 @@ subroutine sea_model
     implicit none
 
     integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
-
-    !real vsea_input(nlon,nlat,8), vsea_output(nlon,nlat,3)
 
     ! Input variables:
     type(rpe_var) ::  sst0(nlon,nlat)     ! SST at initial time

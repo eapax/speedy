@@ -77,7 +77,7 @@ subroutine specx(vorg,varm)
         !CALL DFFTF (IX,FVAR,WSAVE)
 
         ! Copy output into spectral field, dividing by no. of long.
-        scale=1.0_dp/real(ix,dp)
+        scale=1.0_dp/rpe_literal(ix,dp)
 
         ! Mean value (a(0))
         varm(1,j)=fvar(1)*scale
