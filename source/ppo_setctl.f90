@@ -9,7 +9,7 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
 
     integer, intent(in) :: iunit, nlon, nlat, nlev, ntm, ndtm, i3d, n3d, n2d_1,&
         & n2d_2, iyear0, imont0
-    type(rpe_var), intent(in) :: rlat(nlat)
+    real(dp), intent(in) :: rlat(nlat)
     real(dp), intent(in) :: rlev(nlev)
     character(len=80) :: line(10), ln3d(30), ln2d_1(20), ln2d_2(15)
     character(len=4)  :: lmon(12), name
@@ -137,7 +137,7 @@ subroutine setctl(iunit,nlon,nlat,nlev,ntm,ndtm,i3d,n3d,n2d_1,n2d_2,rlat,rlev,&
             write (iunit,1000) line(jline)
         end do
  
-        write (iunit,1010) line(6)(1:20), (c1*rlat(j)%val,j=1,nlat)
+        write (iunit,1010) line(6)(1:20), (c1*rlat(j),j=1,nlat)
         write (iunit,1020) line(7)(1:20), (ilev(k),k=nlev,1,-1)
  
         do jline=8,9

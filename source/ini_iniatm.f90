@@ -9,6 +9,7 @@ subroutine ini_atm(cexp)
     use mod_tmean
     use mod_date, only: ndaytot
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -26,7 +27,7 @@ subroutine ini_atm(cexp)
 
     ! 3. set post-processing levels
     do k = 1, kx
-        ppl(k) = prlev(fsg(k))
+        ppl(k) = prlev(fsg(k)%val)
     end do
 
     ! 4. initialize constants for physical parametrization

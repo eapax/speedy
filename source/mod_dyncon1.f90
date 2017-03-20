@@ -26,7 +26,7 @@ module mod_dyncon1
     type(rpe_var) :: hsg(kxp), dhs(kx), fsg(kx), dhsr(kx), fsgr(kx)
 
     ! Functions of lat. and lon. (initial. in indyns)
-    type(rpe_var) :: radang(il), gsin(il), gcos(il), coriol(il)
+    real(dp) :: radang(il), gsin(il), gcos(il), coriol(il)
 
     ! Constants for hydrostatic eq. (initial. in indyns)
     type(rpe_var) :: xgeop1(kx), xgeop2(kx)

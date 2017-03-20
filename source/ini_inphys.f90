@@ -18,7 +18,8 @@ subroutine inphys(hsg,ppl,rlat)
 
     integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon*nlat
 
-    type(rpe_var) :: hsg(0:nlev), rlat(nlat)  
+    type(rpe_var) :: hsg(0:nlev)
+    real(dp) :: rlat(nlat)
     real(dp) :: ppl(nlev)
     integer :: j, k
     

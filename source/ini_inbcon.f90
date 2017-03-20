@@ -17,7 +17,8 @@ subroutine inbcon(grav0,radlat)
  	  							
     implicit none
 
-    type(rpe_var), intent(in) :: grav0, radlat(il)
+    type(rpe_var), intent(in) :: grav0
+    real(dp), intent(in) :: radlat(il)
     integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
 
     real(sp) :: r4inp(nlon,nlat), dummy4
