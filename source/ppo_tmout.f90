@@ -12,6 +12,7 @@ subroutine tmout(imode)
     use mod_tmean
     use mod_physcon, only: p0, pout
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -20,9 +21,9 @@ subroutine tmout(imode)
     integer, intent(in) :: imode
 
     ! Fields used to compute omega, psi and chi
-    type(rpe_complex_var) :: vorsp(mx,nx), divsp(mx,nx), psisp(mx,nx)
+    complex(dp) :: vorsp(mx,nx), divsp(mx,nx), psisp(mx,nx)
 
-    type(rpe_var) :: div3d(ngp,nlev), dpr2, fmean
+    real(dp) :: div3d(ngp,nlev), dpr2, fmean
     real*4 :: r4out(ngp)
 
     integer :: iitest=1, k, n, nuv, nv, nvt

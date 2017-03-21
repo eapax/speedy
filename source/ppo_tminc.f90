@@ -25,16 +25,16 @@ subroutine tminc
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    type(rpe_var) :: adsave(ngp,6), phisg(ngp), pmsl(ngp), qsatpl(ngp), st0(ngp)
+    real(dp) :: adsave(ngp,6), phisg(ngp), pmsl(ngp), qsatpl(ngp), st0(ngp)
 
     ! Fields for vertical interpolation
     integer :: k0(ngp), iitest, nv, nvt, nuv, n0, n, kmid, klow, kj1, j, k, kj
     integer :: khigh
-    type(rpe_var) :: w0(ngp), zout(ngp), zinp(nlev), rdzinp(nlev)
-    type(rpe_var) :: rg, rdr2, gam0, rgam, zmin, tsg, wref, tref, textr, rrgam, plog
-    type(rpe_var) :: phi1, phi2, fwind, aref
+    real(dp) :: w0(ngp), zout(ngp), zinp(nlev), rdzinp(nlev)
+    real(dp) :: rg, rdr2, gam0, rgam, zmin, tsg, wref, tref, textr, rrgam, plog
+    real(dp) :: phi1, phi2, fwind, aref
 
-    phisg = reshape(phis0, (/ngp/))
+    phisg = reshape(phis0%val, (/ngp/))
 
     ! Level indices for daily-mean storage of upper-air fields
     ! Upper tropos. u, v :
@@ -69,33 +69,33 @@ subroutine tminc
 
     ! 1.2 Increment time-mean arrays
     n0=0
-    call add1f(save2d_1,psg,       ngp,n0,1000)
-    call add1f(save2d_1,pmsl,      ngp,n0,1000)
-    call add1f(save2d_1,ts,        ngp,n0,1)
-    call add1f(save2d_1,tskin,     ngp,n0,1)
-    call add1f(save2d_1,soilw_am,  ngp,n0,100)
-    call add1f(save2d_1,albsfc,    ngp,n0,100)
-    call add1f(save2d_1,u0,        ngp,n0,1)
-    call add1f(save2d_1,v0,        ngp,n0,1)
-    call add1f(save2d_1,t0,        ngp,n0,1)
-    call add1f(save2d_1,rh(1,nlev),ngp,n0,100)
-    call add1f(save2d_1,cloudc,    ngp,n0,100)
-    call add1f(save2d_1,clstr,     ngp,n0,100)
-    call add1f(save2d_1,cltop,     ngp,n0,1000)
-    call add1f(save2d_1,prtop,     ngp,n0,1)
+    call add1f(save2d_1,psg%val,       ngp,n0,1000)
+    call add1f(save2d_1,pmsl,          ngp,n0,1000)
+    call add1f(save2d_1,ts%val,        ngp,n0,1)
+    call add1f(save2d_1,tskin%val,     ngp,n0,1)
+    call add1f(save2d_1,soilw_am%val,  ngp,n0,100)
+    call add1f(save2d_1,albsfc%val,    ngp,n0,100)
+    call add1f(save2d_1,u0%val,        ngp,n0,1)
+    call add1f(save2d_1,v0%val,        ngp,n0,1)
+    call add1f(save2d_1,t0%val,        ngp,n0,1)
+    call add1f(save2d_1,rh(:,nlev)%val,ngp,n0,100)
+    call add1f(save2d_1,cloudc%val,    ngp,n0,100)
+    call add1f(save2d_1,clstr%val,     ngp,n0,100)
+    call add1f(save2d_1,cltop%val,     ngp,n0,1000)
+    call add1f(save2d_1,prtop%val,     ngp,n0,1)
 
     ! Land and sea surface temperatures
-    call maskout(stl_am,st0,bmask_l,ngp)
+    call maskout(stl_am%val,st0,bmask_l%val,ngp)
     call add1f(save2d_1,st0,ngp,n0,1)
-    call maskout(sst_am,st0,bmask_s,ngp)
+    call maskout(sst_am%val,st0,bmask_s%val,ngp)
     call add1f(save2d_1,st0,ngp,n0,1)
     ! Ocean model SST
     !call maskout(sst_om,st0,bmask_s,ngp)
     ! Ocean model SST + T_ice
-    call maskout(ssti_om,st0,bmask_s,ngp)
+    call maskout(ssti_om%val,st0,bmask_s%val,ngp)
     call add1f(save2d_1,st0,ngp,n0,1)
     ! SST anomaly (wrt obs. clim.)
-    call maskout(sstan_am,st0,bmask_s,ngp)
+    call maskout(sstan_am%val,st0,bmask_s%val,ngp)
     call add1f(save2d_1,st0,ngp,n0,1)
 
     ! NB Fluxes of water, energy and momentum are stored 
@@ -138,7 +138,7 @@ subroutine tminc
 
         ! 2.2 Interpolate 3-d fields
         ! Temperature (extrapolated below the lowest level when W0(j)<0)
-        call verint(adsave(1,2),tg1,ngp,kx,k0,w0) 
+        call verint(adsave(1,2),tg1%val,ngp,kx,k0,w0) 
 
         ! Remove extrapolation of temperature inversions 
         ! and correct extrap. values using a reference lapse rate
@@ -170,14 +170,14 @@ subroutine tminc
                 adsave(j,1)=phi1+w0(j)*(phi2-phi1)
             end do
         else
-            call verint(adsave(1,1),phig1,ngp,kx,k0,w0) 
+            call verint(adsave(1,1),phig1%val,ngp,kx,k0,w0) 
         end if
 
         ! Wind and relative humidity 
         ! a) Interpolate above the lowest level
-        call verint(adsave(1,3),ug1,ngp,kx,k0,w0) 
-        call verint(adsave(1,4),vg1,ngp,kx,k0,w0) 
-        call verint(adsave(1,6),rh, ngp,kx,k0,w0) 
+        call verint(adsave(1,3),ug1%val,ngp,kx,k0,w0) 
+        call verint(adsave(1,4),vg1%val,ngp,kx,k0,w0) 
+        call verint(adsave(1,6),rh%val, ngp,kx,k0,w0) 
 
         ! b) Decrease wind speed below the lowest level
         do j=1,ngp
@@ -202,7 +202,7 @@ subroutine tminc
                 end if
             end do
         else
-            call verint(adsave(1,5),qg1,ngp,kx,k0,w0) 
+            call verint(adsave(1,5),qg1%val,ngp,kx,k0,w0) 
         end if
 
         ! Rescale geopotential and rel. humidity
@@ -263,24 +263,24 @@ subroutine tminc
     ! 3. Store diabatic forcing terms on model levels
     if (ns3d3.gt.0) then
         n0=ns3d1+ns3d2
-        call add1f(save3d,tt_lsc,ngp*nlev,n0,1)
-        call add1f(save3d,tt_cnv,ngp*nlev,n0,1)
-        call add1f(save3d,tt_rsw,ngp*nlev,n0,1) 
-        call add1f(save3d,tt_rlw,ngp*nlev,n0,1) 
-        call add1f(save3d,tt_pbl,ngp*nlev,n0,1) 
+        call add1f(save3d,tt_lsc%val,ngp*nlev,n0,1)
+        call add1f(save3d,tt_cnv%val,ngp*nlev,n0,1)
+        call add1f(save3d,tt_rsw%val,ngp*nlev,n0,1) 
+        call add1f(save3d,tt_rlw%val,ngp*nlev,n0,1) 
+        call add1f(save3d,tt_pbl%val,ngp*nlev,n0,1) 
     end if
 
     if (iitest.eq.1) print *, 'end of tminc'
 end
 
 subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
-    use rp_emulator
+    use mod_prec
 
     implicit none
 
-    type(rpe_var), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
+    real(dp), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
     integer, intent(in) :: ngp, nlev
-    type(rpe_var), intent(inout) :: w0(ngp)
+    real(dp), intent(inout) :: w0(ngp)
     integer, intent(inout) :: k0(ngp)
     integer :: j, k
  
@@ -302,14 +302,14 @@ subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
 end
 
 subroutine verint(f2d,f3d,ngp,nlev,k0,w0)
-    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! *** 1. Perform vertical interpolation 
     integer, intent(in) :: ngp, nlev, k0(ngp)
-    type(rpe_var), intent(in) :: f3d(ngp,nlev), w0(ngp)
-    type(rpe_var), intent(inout) :: f2d(ngp)
+    real(dp), intent(in) :: f3d(ngp,nlev), w0(ngp)
+    real(dp), intent(inout) :: f2d(ngp)
     integer :: j
 
     do j=1,ngp
@@ -318,14 +318,14 @@ subroutine verint(f2d,f3d,ngp,nlev,k0,w0)
 end
 
 subroutine add1f(fsave,fadd,ngp,nf,ifact)
-    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! *** Add one field to storage array 
-    type(rpe_var), intent(in) :: fadd(ngp)
+    real(dp), intent(in) :: fadd(ngp)
     integer, intent(in) :: ngp, ifact
-    type(rpe_var), intent(inout) :: fsave(ngp,*)
+    real(dp), intent(inout) :: fsave(ngp,*)
     integer, intent(inout) :: nf
     integer :: j
 
@@ -343,16 +343,16 @@ subroutine add1f(fsave,fadd,ngp,nf,ifact)
 end
 
 subroutine maskout(finp,fout,fmask,ngp)
-    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! *** Set undefined values according to binary land-sea mask
-    type(rpe_var), intent(in) :: finp(ngp), fmask(ngp) 
+    real(dp), intent(in) :: finp(ngp), fmask(ngp) 
     integer, intent(in) :: ngp
-    type(rpe_var), intent(inout) :: fout(ngp)
+    real(dp), intent(inout) :: fout(ngp)
     integer :: j
-    type(rpe_var) :: xundef
+    real(dp) :: xundef
 
     xundef = 9.999e+19
 
