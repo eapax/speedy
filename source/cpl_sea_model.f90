@@ -80,11 +80,11 @@ subroutine sea_model_init(fmask_s,rlat)
     include "cls_insea.h"
 
     ! Heat capacities per m^2 (depth*heat_cap/m^3)
-    crad=asin(1.)/90.
+    crad=asin(1.)/rpe_literal(90.)
     do j=1,nlat
         coslat   = cos(crad*rlat(j))
-        hcaps(j) = 4.18e+6*(depth_ml +(dept0_ml -depth_ml) *coslat**3)
-        hcapi(j) = 1.93e+6*(depth_ice+(dept0_ice-depth_ice)*coslat**2)
+        hcaps(j) = rpe_literal(4.18e+6)*(depth_ml +(dept0_ml -depth_ml) *coslat**rpe_literal(3))
+        hcapi(j) = rpe_literal(1.93e+6)*(depth_ice+(dept0_ice-depth_ice)*coslat**rpe_literal(2))
     end do
 
     ! 3. Compute constant parameters and fields
@@ -104,7 +104,7 @@ subroutine sea_model_init(fmask_s,rlat)
 
     ! Smooth latitudinal boundaries and blank out land points
     do j=2,nlat-1
-        rhcaps(:,j) = 0.25*(dmask(:,j-1)+2*dmask(:,j)+dmask(:,j+1))
+        rhcaps(:,j) = rpe_literal(0.25)*(dmask(:,j-1)+rpe_literal(2)*dmask(:,j)+dmask(:,j+1))
     end do
     dmask(:,2:nlat-1) = rhcaps(:,2:nlat-1)
 
@@ -116,12 +116,12 @@ subroutine sea_model_init(fmask_s,rlat)
 
     ! Set heat capacity and dissipation time over selected domain
     do j=1,nlat
-        rhcaps(:,j) = 86400./hcaps(j)
-        rhcapi(:,j) = 86400./hcapi(j)
+        rhcaps(:,j) = rpe_literal(86400.)/hcaps(j)
+        rhcapi(:,j) = rpe_literal(86400.)/hcapi(j)
     end do
 
-    cdsea = dmask*tdsst/(1.+dmask*tdsst)
-    cdice = dmask*tdice/(1.+dmask*tdice)
+    cdsea = dmask*tdsst/(rpe_literal(1.)+dmask*tdsst)
+    cdice = dmask*tdice/(rpe_literal(1.)+dmask*tdice)
 end
 
 subroutine sea_model 
@@ -170,7 +170,7 @@ subroutine sea_model
     ticecl1 = reshape(vsea_input(:,7), (/nlon, nlat/))
     hfseacl = reshape(vsea_input(:,8), (/nlon, nlat/))
 
-    sstfr = 273.2-1.8       ! SST at freezing point
+    sstfr = rpe_literal(273.2)-rpe_literal(1.8)       ! SST at freezing point
 
     !beta = 1.               ! heat flux coef. at sea-ice bottom
 
@@ -240,7 +240,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
 
     print *, 'sea domain : ', cdomain
 
-    dlon = 360./float(nlon)
+    dlon = rpe_literal(360.)/rpe_literal(nlon)
                                    
     if (cdomain.eq.'northe') then
         do j=1,nlat

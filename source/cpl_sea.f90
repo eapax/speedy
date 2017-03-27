@@ -22,10 +22,10 @@ subroutine ini_sea(istart)
     tice_om(:) = ticecl_ob(:)     ! sea ice temperature
     sice_om(:) = sicecl_ob(:)     ! sea ice fraction
 
-    if (icsea.le.0) sst_om(:) = 0.0
+    if (icsea.le.0) sst_om(:) = rpe_literal(0.0)
 
     ! 3. Compute additional sea/ice variables
-    wsst_ob(:) = 0.
+    wsst_ob(:) = rpe_literal(0.)
     if (icsea.ge.4) call sea_domain('elnino',deglat_s,wsst_ob)
 
     call sea2atm(0)
@@ -78,19 +78,19 @@ subroutine atm2sea(jday)
     ! Adjust climatological fields over sea ice
 
     ! SST at freezing point
-    sstfr = 273.2-1.8
+    sstfr = rpe_literal(273.2)-rpe_literal(1.8)
 
     do j=1,ngp
         sstcl0 = sstcl_ob(j)
 
         if (sstcl_ob(j).gt.sstfr) then
-            sicecl_ob(j) = min(0.5_dp,sicecl_ob(j))
+            sicecl_ob(j) = min(rpe_literal(0.5),sicecl_ob(j))
             ticecl_ob(j) = sstfr
             if (sicecl_ob(j).gt.0.) then
                 sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/(1.-sicecl_ob(j))
             end if
         else
-            sicecl_ob(j) = max(0.5_dp,sicecl_ob(j))
+            sicecl_ob(j) = max(rpe_literal(0.5),sicecl_ob(j))
             ticecl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/sicecl_ob(j)
             !ticecl_ob(j) = sstcl_ob(j)
             sstcl_ob(j)  = sstfr

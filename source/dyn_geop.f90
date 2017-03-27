@@ -29,7 +29,7 @@ subroutine geop(jj)
 
     ! 3. lapse-rate correction in the free troposphere
     do k = 2,kx-1
-        corf=xgeop1(k)*0.5_dp*log(hsg(k+1)/fsg(k))/log(fsg(k+1)/fsg(k-1))
+        corf=xgeop1(k)*rpe_literal(0.5)*log(hsg(k+1)/fsg(k))/log(fsg(k+1)/fsg(k-1))
         phi(1,:,k) = phi(1,:,k) + corf*(t(1,:,k+1,jj) - t(1,:,k-1,jj))
     end do
 end

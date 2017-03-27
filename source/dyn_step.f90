@@ -76,7 +76,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call hordif(kx,ctmp,tdt,dmp,dmp1)
 
     ! 3.2 Stratospheric diffusion and zonal wind damping
-    sdrag = 1./(tdrs*3600.)
+    sdrag = rpe_literal(1.)/(tdrs*rpe_literal(3600.))
     do n = 1,nx
         vordt(1,n,1) = vordt(1,n,1)-sdrag*vor(1,n,1,1)
         divdt(1,n,1) = divdt(1,n,1)-sdrag*div(1,n,1,1)
@@ -166,11 +166,13 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     type(rpe_var), intent(in) :: dt, eps, wil
     type(rpe_complex_var), intent(in) :: fdt(mxnx,nlev)
     type(rpe_complex_var), intent(inout) :: field(mxnx,nlev,2)
-    type(rpe_var) :: eps2
+    type(rpe_var) :: eps2, two
     type(rpe_complex_var) :: fnew(mxnx)
     integer :: k, m
 
-    eps2 = 1.-2.*eps
+    two = 2.0
+
+    eps2 = rpe_literal(1.)-two*eps
 
     if (ix.eq.iy*4) then
         do k=1,nlev
@@ -183,11 +185,11 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
         do m=1,mxnx
             fnew (m)     = field(m,k,1) + dt*fdt(m,k)
             field(m,k,1) = field(m,k,j1) +  wil*eps*(field(m,k,1)&
-                & -2.0*field(m,k,j1)+fnew(m))
+                & -two*field(m,k,j1)+fnew(m))
 
             ! and here comes Williams' innovation to the filter
             field(m,k,2) = fnew(m)-(1-wil)*eps*(field(m,k,1)&
-                &-2.0*field(m,k,j1)+fnew(m))
+                &-two*field(m,k,j1)+fnew(m))
         enddo
     enddo
 end
