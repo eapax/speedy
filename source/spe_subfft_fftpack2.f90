@@ -78,7 +78,7 @@ subroutine rffti1(n, wa, ifac)
   107 if (nl .ne. 1) go to 104
       ifac(1) = n
       ifac(2) = nf
-      tpi = 8.0_dp*atan(1.0_dp)
+      tpi = rpe_literal(8.0_dp)*atan(rpe_literal(1.0_dp))
       argh = tpi/n
       is = 0
       nfm1 = nf-1
@@ -97,7 +97,7 @@ subroutine rffti1(n, wa, ifac)
             fi = 0.0_dp
             do 108 ii=3,ido,2
                i = i+2
-               fi = fi+1.0_dp
+               fi = fi+rpe_literal(1.0_dp)
                arg = fi*argld
                wa(i-1) = cos(arg)
                wa(i) = sin(arg)
@@ -309,7 +309,7 @@ subroutine radb3(ido, l1, cc, ch, wa1, wa2)
 
     !***FIRST EXECUTABLE STATEMENT  RADB3
       taur = -0.5_dp
-      taui = 0.5_dp*sqrt(3.0_dp)
+      taui = rpe_literal(0.5_dp)*sqrt(rpe_literal(3.0_dp))
       do 101 k=1,l1
          tr2 = cc(ido,2,k)+cc(ido,2,k)
          cr2 = cc(1,1,k)+taur*tr2
@@ -382,7 +382,7 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
     integer :: i, k, idp2, ic
 
     !***First executable statement  radb4
-      sqrt2 = sqrt(2.0_dp)
+      sqrt2 = sqrt(rpe_literal(2.0_dp))
       do 101 k=1,l1
          tr1 = cc(1,1,k)-cc(ido,4,k)
          tr2 = cc(1,1,k)+cc(ido,4,k)
@@ -482,11 +482,11 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     integer :: i, k, ic, idp2
 
     !***First executable statement  radb5
-      pi = 4.0_dp*atan(1.0_dp)
-      tr11 = sin(0.1_dp*pi)
-      ti11 = sin(0.4_dp*pi)
-      tr12 = -sin(0.3_dp*pi)
-      ti12 = sin(0.2_dp*pi)
+      pi = rpe_literal(4.0_dp)*atan(rpe_literal(1.0_dp))
+      tr11 = sin(rpe_literal(0.1_dp)*pi)
+      ti11 = sin(rpe_literal(0.4_dp)*pi)
+      tr12 = -sin(rpe_literal(0.3_dp)*pi)
+      ti12 = sin(rpe_literal(0.2_dp)*pi)
       do 101 k=1,l1
          ti5 = cc(1,3,k)+cc(1,3,k)
          ti4 = cc(1,5,k)+cc(1,5,k)
@@ -604,7 +604,7 @@ subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
         & l, lc
 
     !***First executable statement  radbg
-      tpi = 8.0_dp*atan(1.0_dp)
+      tpi = rpe_literal(8.0_dp)*atan(rpe_literal(1.0_dp))
       arg = tpi/ip
       dcp = cos(arg)
       dsp = sin(arg)
@@ -831,7 +831,7 @@ subroutine radf3(ido, l1, cc, ch, wa1, wa2)
 
     !***First executable statement  radf3
       taur = -0.5_dp
-      taui = 0.5_dp*sqrt(3.0_dp)
+      taui = rpe_literal(0.5_dp)*sqrt(rpe_literal(3.0_dp))
       do 101 k=1,l1
          cr2 = cc(1,k,2)+cc(1,k,3)
          ch(1,1,k) = cc(1,k,1)+cr2
@@ -902,7 +902,7 @@ subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
     integer :: i, k, ic, idp2
 
     !***First executable statement  radf4
-      hsqt2 = 0.5_dp*sqrt(2.0_dp)
+      hsqt2 = rpe_literal(0.5_dp)*sqrt(rpe_literal(2.0_dp))
       do 101 k=1,l1
          tr1 = cc(1,k,2)+cc(1,k,4)
          tr2 = cc(1,k,1)+cc(1,k,3)
@@ -998,11 +998,11 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf5
-      pi = 4.0_dp*atan(1.0_dp)
-      tr11 = sin(0.1_dp*pi)
-      ti11 = sin(0.4_dp*pi)
-      tr12 = -sin(0.3_dp*pi)
-      ti12 = sin(0.2_dp*pi)
+      pi = rpe_literal(4.0_dp)*atan(rpe_literal(1.0_dp))
+      tr11 = sin(rpe_literal(0.1_dp)*pi)
+      ti11 = sin(rpe_literal(0.4_dp)*pi)
+      tr12 = -sin(rpe_literal(0.3_dp)*pi)
+      ti12 = sin(rpe_literal(0.2_dp)*pi)
       do 101 k=1,l1
          cr2 = cc(1,k,5)+cc(1,k,2)
          ci5 = cc(1,k,5)-cc(1,k,2)
@@ -1115,7 +1115,7 @@ subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
         & l, lc
 
     !***First executable statement  radfg
-      tpi = 8.0_dp*atan(1.0_dp)
+      tpi = rpe_literal(8.0_dp)*atan(rpe_literal(1.0_dp))
       arg = tpi/ip
       dcp = cos(arg)
       dsp = sin(arg)
