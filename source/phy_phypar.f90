@@ -247,8 +247,8 @@ subroutine xs_rdf(tt1,tt2,ivm)
     type(rpe_var) :: rand1(0:nlat+1), pigr2, rnlon, rnsig
     integer :: i, j, k, nsmooth
 
-    rnlon = 1./float(nlon)
-    pigr2 = 4.*asin(1.)
+    rnlon = rpe_literal(1.)/rpe_literal(nlon)
+    pigr2 = rpe_literal(4.)*asin(rpe_literal(1.))
 
     ! 1. Compute cross sections
     do k=1,nlev
@@ -278,7 +278,7 @@ subroutine xs_rdf(tt1,tt2,ivm)
           rand1(nlat+1) = rand1(nlat-1)
              
           do j=1,nlat
-             randfv(j,k,ivm) = 0.5*rand1(j)+0.25*(rand1(j-1)+rand1(j+1))
+             randfv(j,k,ivm) = rpe_literal(0.5)*rand1(j)+rpe_literal(0.25)*(rand1(j-1)+rand1(j+1))
           end do
         end do
     end do

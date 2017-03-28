@@ -162,7 +162,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
       
     nl1  = nlev-1
     nlp  = nlev+1
-    rrcl = 1./(rhcl2-rhcl1)
+    rrcl = rpe_literal(1.)/(rhcl2-rhcl1)
 
     ! 1.  Cloud cover, defined as the sum of:
     !     - a term proportional to the square-root of precip. rate 
@@ -195,7 +195,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
 
     do j=1,ngp
         cl1 = min(1.0_dp,cloudc(j)*rrcl)
-        pr1 = min(pmaxcl,86.4*(precnv(j)+precls(j)))
+        pr1 = min(pmaxcl,rpe_literal(86.4)*(precnv(j)+precls(j)))
         cloudc(j) = min(1.0_dp,wpcl*sqrt(pr1)+cl1*cl1)
         icltop(j) = min(iptop(j),icltop(j))
     end do
@@ -213,7 +213,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
         !        GSE_S1  = 0.40
 
         clfact = 1.2
-        rgse   = 1./(gse_s1-gse_s0)
+        rgse   = rpe_literal(1.)/(gse_s1-gse_s0)
 
         do j=1,ngp
             ! Stratocumulus clouds over sea
@@ -226,7 +226,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
     else
         clsmax  = 0.3
         clsminl = 0.1
-        albcor  = albcl/0.5
+        albcor  = albcl/rpe_literal(0.5)
  
         do j=1,ngp
             ! stratocumulus clouds over sea
@@ -275,7 +275,7 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
     nl1 = nlev-1
 
     fband2 = 0.05
-    fband1 = 1.-fband2
+    fband1 = rpe_literal(1.)-fband2
 
     ! ALBMINL=0.05
     ! ALBCLS = 0.5
@@ -506,13 +506,13 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
 
     ! Mean temperature in stratospheric layers 
     do j=1,ngp
-        st4a(j,1,2)=0.75*ta(j,1)+0.25* st4a(j,1,1)
-        st4a(j,2,2)=0.50*ta(j,2)+0.25*(st4a(j,1,1)+st4a(j,2,1))
+        st4a(j,1,2)=rpe_literal(0.75)*ta(j,1)+rpe_literal(0.25)* st4a(j,1,1)
+        st4a(j,2,2)=rpe_literal(0.50)*ta(j,2)+rpe_literal(0.25)*(st4a(j,1,1)+st4a(j,2,1))
     end do
 
     ! Temperature gradient in tropospheric layers 
     anis =1.0
-    anish=0.5*anis
+    anish=rpe_literal(0.5)*anis
 
     do k=3,nl1
         do j=1,ngp
@@ -527,7 +527,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     ! Blackbody emission in the stratosphere
     do k=1,2
         do j=1,ngp
-            st4a(j,k,1)=sbc*st4a(j,k,2)**4
+            st4a(j,k,1)=sbc*st4a(j,k,2)**rpe_literal(4)
             st4a(j,k,2)=0.
         end do
     end do
@@ -535,9 +535,9 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     ! Blackbody emission in the troposphere
     do k=3,nlev
         do j=1,ngp
-            st3a=sbc*ta(j,k)**3
+            st3a=sbc*ta(j,k)**rpe_literal(3)
             st4a(j,k,1)=st3a*ta(j,k)
-            st4a(j,k,2)=4.*st3a*st4a(j,k,2)
+            st4a(j,k,2)=rpe_literal(4.)*st3a*st4a(j,k,2)
         end do
     end do
 

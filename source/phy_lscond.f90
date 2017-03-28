@@ -41,7 +41,7 @@ subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
     ! 1. Initialization
     qsmax = 10.
 
-    rtlsc = 1./(trlsc*3600.)
+    rtlsc = rpe_literal(1.)/(trlsc*rpe_literal(3600.))
     tfact = alhc/cp
     !fk#if defined(KNMI)
     !fktfacts= alhs/cp

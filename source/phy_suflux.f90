@@ -75,9 +75,9 @@ subroutine suflux (psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav,ssrd,slrd,&
     !clambsn = 7.       ! Heat conductivity for snow cover = 1
 
     esbc  = emisfc*sbc
-    esbc4 = 4.*esbc
+    esbc4 = rpe_literal(4.)*esbc
 
-    ghum0 = 1.-fhum0
+    ghum0 = rpe_literal(1.)-fhum0
  
     dlambda = clambsn-clambda
 
@@ -89,9 +89,9 @@ subroutine suflux (psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav,ssrd,slrd,&
         v0 = fwind0 * va(:,nlev)
 
         ! 1.2 Temperature
-        gtemp0 = 1.-ftemp0
-        rcp = 1./cp
-        rdphi0 =-1./(rd*288.*sigl(nlev))
+        gtemp0 = rpe_literal(1.)-ftemp0
+        rcp = rpe_literal(1.)/cp
+        rdphi0 =-rpe_literal(1.)/(rd*rpe_literal(288.)*sigl(nlev))
         nl1=nlev-1
 
         do j=1,ngp
@@ -211,7 +211,7 @@ subroutine suflux (psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav,ssrd,slrd,&
         ! 3.1. Emission of lw radiation from the surface
         !      and net heat fluxes into land surface
         do j=1,ngp
-            tsk3        = tskin(j)**3
+            tsk3        = tskin(j)**rpe_literal(3)
             dslr(j)     = esbc4*tsk3
             slru(j,1)   = esbc *tsk3*tskin(j)
             hfluxn(j,1) = ssrd(j)*(1.-alb_l(j))+slrd(j)-&

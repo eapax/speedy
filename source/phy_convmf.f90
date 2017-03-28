@@ -48,8 +48,8 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
     nlp=nlev+1
     fqmax=5.
 
-    fm0=p0*dsig(nlev)/(gg*trcnv*3600)
-    rdps=2./(1.-psmin)
+    fm0=p0*dsig(nlev)/(gg*trcnv*rpe_literal(3600))
+    rdps=rpe_literal(2.)/(rpe_literal(1.)-psmin)
 
     ! Used in exp 566 to 604:
     ! psmin=0.8
@@ -82,7 +82,7 @@ subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
     ! Entrainment profile (up to sigma = 0.5)
     sentr=0.
     do k=2,nl1
-        entr(k)=(max(0.0_dp,sig(k)-0.5))**2
+        entr(k)=(max(0.0_dp,sig(k)-rpe_literal(0.5)))**rpe_literal(2)
         sentr=sentr+entr(k)
     end do
 

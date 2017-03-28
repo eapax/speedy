@@ -46,11 +46,11 @@ subroutine shtorh(imode,ngp,ta,ps,sig,qa,rh,qsat)
 
     if (sig.le.0.0) then
         do j=1,ngp
-            qsat(j)=622.*qsat(j)/(ps(1)-0.378*qsat(j))
+            qsat(j)=rpe_literal(622.)*qsat(j)/(ps(1)-rpe_literal(0.378)*qsat(j))
         end do
     else
         do j=1,ngp
-            qsat(j)=622.*qsat(j)/(sig*ps(j)-0.378*qsat(j))
+            qsat(j)=rpe_literal(622.)*qsat(j)/(sig*ps(j)-rpe_literal(0.378)*qsat(j))
         end do
     end if
 

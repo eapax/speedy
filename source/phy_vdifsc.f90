@@ -33,8 +33,10 @@ subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv,utenvd,vtenvd,ttenvd,qtenvd)
 
     integer :: nl1, j, k, k1
     type(rpe_var) :: cshc, cvdi, fshcq, fshcse, fvdiq, fvdise, drh0, fvdiq2, dmse, drh
-    type(rpe_var) :: fluxse, fluxq, fcnv, se0
+    type(rpe_var) :: fluxse, fluxq, fcnv, se0, one
     type(rpe_var), dimension(nlev) :: rsig, rsig1
+
+    one = 1.0
 
     ! 1. Initalization
 
@@ -43,8 +45,8 @@ subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv,utenvd,vtenvd,ttenvd,qtenvd)
     !      d_T/dt = d_F'(SE)/d_sigma,  d_Q/dt = d_F'(Q)/d_sigma
 
     nl1  = nlev-1
-    cshc = dsig(nlev)/3600.
-    cvdi = (sigh(nl1)-sigh(1))/((nl1-1)*3600.)
+    cshc = dsig(nlev)/rpe_literal(3600.)
+    cvdi = (sigh(nl1)-sigh(1))/((nl1-1)*rpe_literal(3600.))
 
     fshcq  = cshc/trshc
     fshcse = cshc/(trshc*cp)
@@ -53,10 +55,10 @@ subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv,utenvd,vtenvd,ttenvd,qtenvd)
     fvdise = cvdi/(trvds*cp)
 
     do k=1,nl1
-        rsig(k)=1./dsig(k)
-	    rsig1(k)=1./(1.-sigh(k))
+        rsig(k)=one/dsig(k)
+	    rsig1(k)=one/(one-sigh(k))
     end do
-    rsig(nlev)=1./dsig(nlev)
+    rsig(nlev)=one/dsig(nlev)
 
     utenvd = 0.0
     vtenvd = 0.0
