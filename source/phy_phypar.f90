@@ -217,10 +217,10 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
         
         ! The physical contribution to the tendency is *tend - *tend_dyn, where * is u, v, t, q
         do k = 1,kx
-            utend(:,k) = (1 + sppt(:,k)*mu(k)) * (utend(:,k) - utend_dyn(:,k)) + utend_dyn(:,k)
-            vtend(:,k) = (1 + sppt(:,k)*mu(k)) * (vtend(:,k) - vtend_dyn(:,k)) + vtend_dyn(:,k)
-            ttend(:,k) = (1 + sppt(:,k)*mu(k)) * (ttend(:,k) - ttend_dyn(:,k)) + ttend_dyn(:,k)
-            qtend(:,k) = (1 + sppt(:,k)*mu(k)) * (qtend(:,k) - qtend_dyn(:,k)) + qtend_dyn(:,k)
+            utend(:,k) = (rpe_literal(1.0) + sppt(:,k)*rpe_literal(mu(k))) * (utend(:,k) - utend_dyn(:,k)) + utend_dyn(:,k)
+            vtend(:,k) = (rpe_literal(1.0) + sppt(:,k)*rpe_literal(mu(k))) * (vtend(:,k) - vtend_dyn(:,k)) + vtend_dyn(:,k)
+            ttend(:,k) = (rpe_literal(1.0) + sppt(:,k)*rpe_literal(mu(k))) * (ttend(:,k) - ttend_dyn(:,k)) + ttend_dyn(:,k)
+            qtend(:,k) = (rpe_literal(1.0) + sppt(:,k)*rpe_literal(mu(k))) * (qtend(:,k) - qtend_dyn(:,k)) + qtend_dyn(:,k)
         end do
     end if
 end

@@ -9,6 +9,7 @@ module mod_sppt
     use mod_tsteps, only: nsteps
     use mod_dyncon1, only: rearth
     use mod_spectral, only: el2
+    use rp_emulator
 
     implicit none
 
@@ -19,11 +20,11 @@ module mod_sppt
     ! A value of 1 means the tendency is not tapered at that level
     real :: mu(kx) = (/ 1, 1, 1, 1, 1, 1, 1, 1 /)
 
-    complex :: sppt_spec(mx,nx,kx)
+    type(rpe_complex_var) :: sppt_spec(mx,nx,kx)
     logical :: first = .true.
 
     ! Time autocorrelation of spectral AR(1) signals
-    real :: phi
+    type(rpe_var) :: phi
 
     ! Decorrelation time of SPPT perturbation (in hours)
     real, parameter :: time_decorr = 6.0
@@ -35,7 +36,7 @@ module mod_sppt
     real, parameter :: stddev = 0.33
 
     ! Total wavenumber-wise standard deviation of spectral signals
-    real :: sigma(mx,nx,kx)
+    type(rpe_var) :: sigma(mx,nx,kx)
 
     contains
         !> @brief
@@ -44,9 +45,9 @@ module mod_sppt
         !> @return sppt_grid the generated grid point pattern
         function gen_sppt() result(sppt_grid_out)
             integer :: m, n, k
-            real :: sppt_grid(ix,il,kx), sppt_grid_out(ix*il,kx)
-            complex :: eta(mx,nx,kx)
-            real :: f0, randreal, randimag, twn
+            type(rpe_var) :: sppt_grid(ix,il,kx), sppt_grid_out(ix*il,kx)
+            type(rpe_complex_var) :: eta(mx,nx,kx)
+            type(rpe_var) :: f0, randreal, randimag, twn
 
             ! Seed RNG if first use of SPPT
             if (first) call time_seed()
@@ -105,7 +106,7 @@ module mod_sppt
         !> @return randn the generated random number
         function randn(mean, stdev)
             real, intent(in) :: mean, stdev
-            real :: u, v, randn
+            type(rpe_var) :: u, v, randn
             real :: rand(2)
 
             call random_number(rand)
