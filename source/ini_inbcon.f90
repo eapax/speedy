@@ -22,8 +22,8 @@ subroutine inbcon(grav0,radlat)
     integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
 
     real(sp) :: r4inp(nlon,nlat), dummy4
-    real   :: inp(nlon,nlat), phis1(nlon,nlat)
-    real   :: veg(nlon,nlat), swl1(nlon,nlat), swl2(nlon,nlat)
+    type(rpe_var) :: inp(nlon,nlat), phis1(nlon,nlat)
+    type(rpe_var) :: veg(nlon,nlat), swl1(nlon,nlat), swl2(nlon,nlat)
 
     integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec
     type(rpe_var) :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
@@ -420,11 +420,13 @@ subroutine fillsf(sf,nlon,nlat,fmis)
     ! Purpose: replace missing values in surface fields
     ! NB: it is assumed that non-missing values exist near the Equator
 
+    use rp_emulator
+
     implicit none
 
-    real :: sf(nlon,nlat), sf2(0:nlon+1)
+    type(rpe_var) :: sf(nlon,nlat), sf2(0:nlon+1)
     integer, intent(in) :: nlon, nlat
-    real, intent(in) :: fmis
+    type(rpe_var), intent(in) :: fmis
 
     integer :: khem, j, j1, j2, j3, i, nmis
     real :: fmean
