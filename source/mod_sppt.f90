@@ -20,14 +20,14 @@ module mod_sppt
     ! A value of 1 means the tendency is not tapered at that level
     real :: mu(kx) = (/ 1, 1, 1, 1, 1, 1, 1, 1 /)
 
-    type(rpe_complex_var) :: sppt_spec(mx,nx,kx)
+    type(rpe_complex_var) :: sppt_spec(mx, nx)
     logical :: first = .true.
-
-    ! Time autocorrelation of spectral AR(1) signals
-    type(rpe_var) :: phi
 
     ! Decorrelation time of SPPT perturbation (in hours)
     real, parameter :: time_decorr = 6.0
+
+    ! Time autocorrelation of spectral AR(1) signals
+    type(rpe_var) :: phi = exp(-(rpe_literal(24.)/nsteps)/time_decorr)
 
     ! Correlation length scale of SPPT perturbation (in metres)
     real, parameter :: len_decorr = 500000.0
@@ -36,7 +36,7 @@ module mod_sppt
     real, parameter :: stddev = 0.33
 
     ! Total wavenumber-wise standard deviation of spectral signals
-    type(rpe_var) :: sigma(mx,nx,kx)
+    type(rpe_var) :: sigma(mx, nx)
 
     contains
         !> @brief
@@ -45,25 +45,24 @@ module mod_sppt
         !> @return sppt_grid the generated grid point pattern
         function gen_sppt() result(sppt_grid_out)
             integer :: m, n, k
-            type(rpe_var) :: sppt_grid(ix,il,kx), sppt_grid_out(ix*il,kx)
-            type(rpe_complex_var) :: eta(mx,nx,kx)
+            type(rpe_var) :: sppt_grid(ix, il), sppt_grid_out(ix*il, kx)
+            type(rpe_complex_var) :: eta(mx, nx)
             type(rpe_var) :: f0, randreal, randimag, twn
 
             ! Seed RNG if first use of SPPT
             if (first) call time_seed()
 
             ! Generate Gaussian noise
-            do m = 1,mx
-                do n = 1,nx
-                    do k = 1,kx
-                        randreal = randn(0.0, 1.0)
-                        randimag = randn(0.0, 1.0)
+            do n=1,nx
+                do m=1,mx
+                    randreal = randn(0.0, 1.0)
+                    randimag = randn(0.0, 1.0)
 
-                        ! Clip noise to +- 10 standard deviations
-                        eta(m,n,k) = cmplx(&
-                            & min(10.0, abs(randreal)) * sign(1.0,randreal),&
-                            & min(10.0, abs(randimag)) * sign(1.0,randimag))
-                    end do
+                    ! Clip noise to +- 10 standard deviations
+                    eta(m,n) = cmplx(randreal, randimag)!&
+                        !& min(10.0, abs(randreal)) * sign(1.0,randreal),&
+                        !& min(10.0, abs(randimag)) * sign(1.0,randimag))
+
                 end do
             end do
 
@@ -73,11 +72,7 @@ module mod_sppt
                 f0 = sum((/ ((2*n+1)*exp(-0.5*(len_decorr/rearth)**2*n*(n+1)),n=1,ntrun) /))
                 f0 = sqrt((stddev**2*(1-phi**2))/(2*f0))
 
-                do k = 1,kx
-                    sigma(:,:,k) = f0 * exp(-0.25*len_decorr**2 * el2)
-                end do
-
-                phi = exp(-(24/real(nsteps))/time_decorr)
+                sigma = f0 * exp(-0.25*len_decorr**2 * el2)
 
                 ! First AR(1) step
                 sppt_spec = (1 - phi**2)**(-0.5) * sigma * eta
@@ -89,13 +84,13 @@ module mod_sppt
             end if
 
             ! Convert to grid point space
-             do k=1,kx
-                 call grid(sppt_spec(:,:,k),sppt_grid(:,:,k),1)
-                 sppt_grid_out(:,k) = reshape(sppt_grid(:,:,k), (/ix*il/))
-             end do
+            call grid(sppt_spec, sppt_grid, 1)
+            do k=1,kx
+                sppt_grid_out(:, k) = reshape(sppt_grid, (/ix*il/))
+            end do
 
-             ! Clip to +/- 1.0
-             sppt_grid_out = min(1.0, abs(sppt_grid_out)) * sign(1.0,sppt_grid_out)
+            ! Clip to +/- 1.0
+            sppt_grid_out = min(1.0, abs(sppt_grid_out)) * sign(1.0,sppt_grid_out)
         end function
 
         !> @brief
@@ -113,7 +108,7 @@ module mod_sppt
 
             ! Box-Muller method
             u = (-2.0 * log(rand(1))) ** 0.5
-            v =   2.0 * 6.28318530718 * rand(2)
+            v = 6.28318530718 * rand(2)
             randn = mean + stdev * u * sin(v)
         end function
 
