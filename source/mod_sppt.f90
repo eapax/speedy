@@ -83,16 +83,16 @@ module mod_sppt
             if (first) then
                 ! First AR(1) step
                 do n=1, nscales
-                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(-0.5)
+                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(-0.5) * &
+                            sigma(:,:,n) * eta(:,:,n)
                 end do
-                sppt_spec = sppt_spec * sigma * eta
                 first = .false.
             else
                 ! Subsequent AR(1) steps
                 do n=1, nscales
-                    sppt_spec(:,:,n) = phi(n)*sppt_spec(:,:,n)
+                    sppt_spec(:,:,n) = phi(n)*sppt_spec(:,:,n) * &
+                            sigma(:,:,n) * eta(:,:,n)
                 end do
-                sppt_spec = sppt_spec + sigma*eta
             end if
 
             ! Sum SPPT perturbations over correlation scales
