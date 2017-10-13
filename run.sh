@@ -73,13 +73,8 @@ time ./imp.exe | tee out.lis
 mv out.lis $OUT/atgcm$2.lis
 mv fort.10 $OUT/atgcm$2.rst
 
-mv at*$2.ctl   $OUT
-mv at*$2_*.grd $OUT
-
-mv day*$2.ctl   $OUT
-mv day*$2_*.grd $OUT
-
 mv *.grd $OUT
+mv *.ctl $OUT
 cp ../ctl_files/yyyymmddhh.ctl $OUT
 
 cd $OUT
