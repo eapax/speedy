@@ -3,17 +3,33 @@ module mod_date
 
     private
     public iyear, imonth, iday, imont1, tmonth, tyear, ndaycal, ndaytot
-    public ihour
-    public newdate
+    public ihour, isecond
+    public newdate, update_time
 
     ! Date and time variables (updated in NEWDATE)
-    integer :: iyear, imonth, iday, imont1, ihour
+    integer :: iyear, imonth, iday, imont1, ihour, isecond=0
     real :: tmonth, tyear
 
     ! Calendar set-up (initialized in NEWDATE)
     integer :: ndaycal(12,2), ndaytot
 
     contains
+        !> @brief
+        !> Increment the time by a single timestep
+        subroutine update_time()
+            use mod_tsteps, only: delt
+
+            isecond = isecond + int(delt)
+            do while(isecond >= 3600)
+                ! Transfer one hour from the seconds counter to the hour counter
+                isecond = isecond - 3600
+
+                ! Check for a new day
+                ihour = mod(ihour + 1, 24)
+                if (ihour==0) call newdate(1)
+            end do
+        end subroutine
+
         subroutine newdate(imode)
             !--   subroutine newdate (imode)
             !--   purpose:   initilialize and update date variables 
