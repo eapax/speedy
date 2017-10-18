@@ -219,12 +219,10 @@ subroutine iogrid(imode)
             write (99,rec=irec) (qgr4(j,k),j=1,ngp)
             irec=irec+1
         end do
-        if (imode.eq.2) then !Z output is only for p-level
-            do k=kx,1,-1
-                write (99,rec=irec) (phigr4(j,k),j=1,ngp)
-                irec=irec+1
-            end do
-        end if
+        do k = kx,1,-1
+            write (99,rec=irec) (phigr4(j,k),j=1,ngp)
+            irec = irec + 1
+        end do
         write (99,rec=irec) (psgr4(j),j=1,ngp)
         irec=irec+1
         write (99,rec=irec) (rrgr4(j),j=1,ngp)
