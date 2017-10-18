@@ -19,9 +19,9 @@ module mod_date
         !> @brief
         !> Increment the time by a single timestep
         subroutine update_time()
-            use mod_tsteps, only: delt
+            use mod_tsteps, only: delt_
 
-            isecond = isecond + int(delt)
+            isecond = isecond + int(delt_)
             do while(isecond >= 3600)
                 ! Transfer one hour from the seconds counter to the hour counter
                 isecond = isecond - 3600

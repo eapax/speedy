@@ -9,7 +9,7 @@ module mod_tsteps
     private
     public nmonts, ndaysl, nsteps, nstdia, nstppr, nstout, idout, nmonrs, ihout, sixhrrun
     public iseasc, istart, iyear0, imont0, ipout, nstrad, sppt_on, nstrdf, indrdf, issty0
-    public isst0, delt, delt2, rob, wil, alph
+    public isst0, delt_, delt, delt2, rob, wil, alph
     public init_tsteps
 
     ! Integration length in months
