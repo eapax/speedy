@@ -53,8 +53,8 @@ module mod_sppt
         !> @return sppt_grid the generated grid point pattern
         function gen_sppt() result(sppt_grid_out)
             integer :: m, n, k
-            type(rpe_complex_var) :: sppt_spec_total(mx, nx)
-            type(rpe_var) :: sppt_grid(ix, il), sppt_grid_out(ix*il, kx)
+            type(rpe_var) :: sppt_grid(ix, il), sppt_grid_total(ix, il), &
+                             sppt_grid_out(ix*il, kx)
             type(rpe_complex_var) :: eta(mx, nx, nscales)
             type(rpe_var) :: randreal, randimag
 
@@ -96,15 +96,16 @@ module mod_sppt
             end if
 
             ! Sum SPPT perturbations over correlation scales
+            sppt_grid_total = 0.0
             do n=1, nscales
-                sppt_spec_total = sppt_spec_total + sppt_spec(:,:,n)
+                ! Convert to grid point space
+                call grid(sppt_spec(:,:,n), sppt_grid, 1)
+                sppt_grid_total = sppt_grid_total + sppt_grid
             end do
 
-            ! Convert to grid point space
-            call grid(sppt_spec_total, sppt_grid, 1)
             do k=1,kx
                 ! SPPT perturbations uniform in height
-                sppt_grid_out(:, k) = reshape(sppt_grid, (/ix*il/))
+                sppt_grid_out(:, k) = reshape(sppt_grid_total, (/ix*il/))
             end do
 
             ! Clip to +/- 1.0
@@ -115,18 +116,17 @@ module mod_sppt
         !> Calculates the phi and sigma parameters in the SPPT calculations
         !> from the defined correlation scales and standard deviations
         subroutine init_sppt_parameters()
-            integer :: n
+            integer :: n, sc
             type(rpe_var) :: f0(nscales)
 
             ! Calculate time autocorrelation factor as a function of timestep
             phi = exp(-(24/real(nsteps))/time_decorr)
 
             ! Generate spatial amplitude pattern
-            f0 = sum((/ ((2*n+1)*exp(-0.5*(len_decorr/rearth)**2*n*(n+1)),n=1,ntrun) /))
-            f0 = sqrt((stddev**2*(1-phi**2))/f0)
-
-            do n=1, nscales
-                sigma(:,:,n) = f0(n) * exp(-0.25*len_decorr(n)**2 * el2)
+            do sc=1, nscales
+                f0(sc) = sum((/ ((2*n+1)*exp(-0.5*(len_decorr(sc)/rearth)**2*n*(n+1)),n=1,ntrun) /))
+                f0(sc) = sqrt((stddev(sc)**2*(1-phi(sc)**2))/f0(sc))
+                sigma(:,:,sc) = f0(sc) * exp(-0.25*len_decorr(sc)**2 * el2)
             end do
 
         end subroutine
