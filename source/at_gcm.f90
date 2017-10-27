@@ -1,5 +1,4 @@
 program agcm_main
-    use mod_tsteps, only: ndaysl, ihout, nmonts, sixhrrun
 
     implicit none
 
@@ -35,8 +34,8 @@ subroutine agcm_1day(jday, cexp)
     ! perform atm. model integration for 1 day, 
     ! post-proc. and i/o at selected times 
 
-    use mod_tsteps, only: nsteps, idout, nstout, ihout
-    use mod_date, only: iyear, imonth, iday, ndaytot, newdate
+    use mod_tsteps, only: nsteps
+    use mod_date, only: iyear, imonth, iday
 
     implicit none
 
@@ -56,19 +55,4 @@ subroutine agcm_1day(jday, cexp)
 
     ! 3. integrate the atmospheric model for 1 day
     call stloop(istep)
-
-    ! 4. write daily-mean output
-    call dmout(idout)
-
-    ! 5. write time-mean output files and restart file at the end of selected
-    ! months
-    if (iday == 1) then
-        ! write monthly-mean output for previous month
-        if (ihout .eqv. .false.) then
-            if (nstout < 0) call tmout(1)
-        end if
-        
-        ! open new output files at the beginning of each year
-        if (imonth == 1 .and. jday < ndaytot .and. (ihout .eqv. .false.)) call setgrd(1, cexp)
-    endif
 end

@@ -33,19 +33,6 @@ subroutine stloop(istep)
         ! Do diagnostic, post-processing and I/O tasks
         call diagns(2, istep)
 
-        if (mod(istep, nstppr) == 0) then
-            if (ihout .eqv. .false.) then
-                ! Time means
-                call tminc
-                if (nstout > 0 .and. mod(istep, nstout) == 0) call tmout(1)
-            end if
-            ! Output on pressure levels
-            if (ipout) call iogrid(2)
-
-            ! Output on sigma levels
-            if (ihout) call iogrid(4)
-        end if
-
         if (sixhrrun .and. ihour.eq.6) then
             call restart (2)
             print *,'normal end with 6-hr fcst (yeahhhhhhh!!!!)'

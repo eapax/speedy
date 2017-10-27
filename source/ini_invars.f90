@@ -121,9 +121,11 @@ subroutine invars
     else if (istart .eq. 2) then
         ! 4. Start from grid initial condition
 
-        call iogrid(1)
-
-        call diagns(1,0)
+        !TODO reimplement starting from gridded data
+        !call iogrid(1)
+        !call diagns(1,0)
+        print *, 'Starting from gridded data not implemented yet'
+        stop
     else
         print *, 'IMPOSSIBLE!! check the fort.2 file!'
         stop
