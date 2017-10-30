@@ -55,4 +55,6 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
 
     ! 5. do the initial (2nd-order) time step, initialize the semi-impl. scheme
     call stepone
+
+    ! 6. todo initialise IO
 end subroutine
