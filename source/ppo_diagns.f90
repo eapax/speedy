@@ -9,6 +9,7 @@ subroutine diagns(jj,istep)
     use mod_tsteps, only: nstdia
     use mod_atparam
     use mod_dynvar
+    use ppo_IO_stream, only: update_IO
 
     implicit none
 
@@ -18,6 +19,8 @@ subroutine diagns(jj,istep)
     integer :: k, m, n, kk
     complex :: temp(mx,nx)
     real :: diag(kx,3), sqhalf
+
+    call update_IO(istep)
 
     ! 1. Get global-mean temperature and compute eddy kinetic energy 
     sqhalf = sqrt(0.5)

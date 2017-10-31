@@ -31,6 +31,7 @@ cp $SRC/*.f90      $TMP/
 cp $SRC/*.h      $TMP/
 cp $SRC/*.s      $TMP/
 cp $SRC/makefile $TMP/
+cp $UT/setup/*.txt $TMP/
 
 # Set experiment no. and restart file (if needed)
 
@@ -61,7 +62,7 @@ fi
 
 # Write date input file
 cat << EOF > fort.2
-0
+1
 1982
 01
 01

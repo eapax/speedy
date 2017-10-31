@@ -7,10 +7,13 @@ module ppo_IO_stream
     implicit none
 
     private
-    public IO_stream, init_IO_stream, write_IO_stream
+    public initialise_IO, update_IO
 
     integer, parameter :: recl_spec = 4*mx*nx
     integer, parameter :: recl_grid = 4*ix*il
+
+    ! Counter so that each IO stream has a unique file ID
+    integer :: next_file_ID = 200
 
     ! Generic type used to describe an output stream
     type IO_stream
@@ -19,40 +22,138 @@ module ppo_IO_stream
         ! numbers
         logical :: spectral
 
+        ! Flags for determining output frequency
+        ! nstpinc: How often the output variables are increments
+        ! nstpout: How often the variables are output and increments reset
+        ! nstpopen: How often a new file is opened
+        integer :: nstpinc, nstpout, nstpopen
+
         ! The ID used in open/read/write statements
         integer :: file_ID
 
         ! An array of integers corresponding to the variables being output
+        integer :: nvars
         integer, allocatable :: var_ID(:)
 
         ! The record counter used for direct access in read/write statements
+        integer :: recl
         integer :: rec = 1
+
+        ! An array to hold the output data in single precision
+        real(4), allocatable :: output(:, :)
     end type IO_stream
 
+    ! Array containing all IO streams. Allocated during model set up
+    integer :: nstreams
+    type(IO_stream), allocatable :: streams(:)
+
     contains
+        ! Initialise output IO streams from the input .txt file
+        subroutine initialise_IO()
+            integer :: n
+            character(len=100) :: filename
+            logical :: spectral
+            integer :: nstpinc, nstpout, nstpopen
+            integer :: nvars
+            integer, allocatable :: var_ID(:)
+
+            ! Read output parameters from input text file
+            open(99, file='output_requests.txt', status='old', action='read')
+
+            read(99, *), nstreams
+            allocate(streams(nstreams))
+
+            ! Setup IO stream for each set of outputs
+            do n=1, nstreams
+                read(99, *) filename
+                read(99, *) spectral
+                read(99, *) nstpinc
+                read(99, *) nstpout
+                read(99, *) nstpopen
+                read(99, *) nvars
+                allocate(var_ID(nvars))
+                read(99, *) var_ID
+                streams(n) = init_IO_stream(trim(filename), spectral, nstpinc, &
+                                            nstpout, nstpopen, nvars, var_ID)
+                deallocate(var_ID)
+            end do
+
+        end subroutine
+
+        ! Update all of the IO streams
+        subroutine update_IO(istep)
+            integer, intent(in) :: istep
+            integer :: n
+
+            do n=1, nstreams
+                call update_IO_stream(streams(n), istep)
+            end do
+        end subroutine
+
         !
-        function init_IO_stream(filename, spectral, var_ID) result(stream)
+        function init_IO_stream(filename, spectral, nstpinc, nstpout, &
+                                nstpopen, nvars, var_ID) result(stream)
             character(len=*), intent(in) :: filename
             logical, intent(in) :: spectral
-            integer, intent(in) :: var_ID(:)
+            integer, intent(in) :: nstpinc, nstpout, nstpopen
+            integer, intent(in) :: nvars, var_ID(:)
             type(IO_stream) :: stream
 
             integer :: recl
 
+            ! Pass parameters to the new object
             stream%spectral = spectral
-            stream%file_ID = 200
-            allocate(stream%var_ID(size(var_ID)))
+            stream%nstpinc = nstpinc
+            stream%nstpout = nstpout
+            stream%nstpopen = nstpopen
+            stream%nvars = nvars
+            allocate(stream%var_ID(stream%nvars))
             stream%var_ID = var_ID
 
             if (spectral) then
-                recl = recl_spec
+                stream%recl = recl_spec
             else
-                recl = recl_grid
+                stream%recl = recl_grid
             end if
 
+            ! Open the the first file
+            stream%file_ID = next_file_ID
+            next_file_ID = next_file_ID + 1
             open(stream%file_ID, file=filename, form='unformatted', &
-                    access='direct', recl=recl)
+                    access='direct', recl=stream%recl)
         end function
+
+        ! Update called once per timestep for each output stream.
+        ! The subroutine determines actions based on IO_stream parameters
+        ! nstpinc: How often the output variables are increments
+        ! nstpout: How often the variables are output and increments reset
+        ! nstpopen: How often a new file is opened
+        ! Each variables is an integer number of timesteps or, if the integer
+        ! is negative, todo number of months.
+        subroutine update_IO_stream(stream, istep)
+            type(IO_stream), intent(inout) :: stream
+            integer, intent(in) :: istep
+
+            if (mod(istep, stream%nstpinc) == 0) call incr_IO_stream(stream)
+
+            if (mod(istep, stream%nstpout) == 0) call write_IO_stream(stream)
+
+            if (mod(istep, stream%nstpopen) == 0) call reinit_IO_stream(stream)
+        end subroutine
+
+        ! todo Close the currently open file and open a new file named by the
+        ! current time
+        subroutine reinit_IO_stream(stream)
+            type(IO_stream), intent(inout) :: stream
+
+            close(stream%file_ID)
+        end subroutine
+
+        ! todo Increment the output on substeps relative to how often it is
+        ! written to file
+        subroutine incr_IO_stream(stream)
+            type(IO_stream), intent(inout) :: stream
+        end subroutine
 
         ! Write each of the variables associated with the given stream to file.
         ! Acts a wrapper to separate write functions for spectral and grid
@@ -73,7 +174,7 @@ module ppo_IO_stream
             real(4) :: re_output(mx, nx, kx), im_output(mx, nx, kx)
             integer :: n, k
 
-            do n=1, size(stream%var_ID)
+            do n=1, stream%nvars
                 output = fetch_output_spectral(stream%var_ID(n))
 
                 ! Write real and imaginary parts as separate variables
@@ -97,8 +198,8 @@ module ppo_IO_stream
             real(4) :: output(ix*il, kx)
             integer :: n, k
 
-            do n=1, size(stream%var_ID)
-                output = fetch_output(stream%var_ID(n))
+            do n=1, stream%nvars
+                output = fetch_output_grid(stream%var_ID(n))
 
                 ! For some reason the height levels need to be written backwards
                 do k=kx, 1, -1
@@ -152,7 +253,7 @@ module ppo_IO_stream
         ! Get the variable corresponding to the varID in single bit precision
         ! Essentially a look up for all the variables in mod_physvar
         ! TODO implement 2d variables in same interface
-        function fetch_output(varID) result(output)
+        function fetch_output_grid(varID) result(output)
             integer :: varID
             real(4) :: output(ix*il, kx)
 
