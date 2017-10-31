@@ -1,10 +1,12 @@
 module mod_date
+    use mod_tsteps, only: idelt
+
     implicit none
 
     private
     public iyear, imonth, iday, imont1, tmonth, tyear, ndaycal, ndaytot
     public ihour, isecond
-    public newdate, update_time
+    public newdate, update_time, month_start
 
     ! Date and time variables (updated in NEWDATE)
     integer :: iyear, imonth, iday, imont1, ihour, isecond=0
@@ -17,9 +19,7 @@ module mod_date
         !> @brief
         !> Increment the time by a single timestep
         subroutine update_time()
-            use mod_tsteps, only: delt
-
-            isecond = isecond + int(delt)
+            isecond = isecond + idelt
             do while(isecond >= 3600)
                 ! Transfer one hour from the seconds counter to the hour counter
                 isecond = isecond - 3600
@@ -29,6 +29,14 @@ module mod_date
                 if (ihour==0) call newdate(1)
             end do
         end subroutine
+
+        ! Returns true if it is the first timestep in a month and false
+        ! otherwise
+        function month_start()
+            logical :: month_start
+
+            month_start = (isecond < idelt .and. ihour == 0 .and. iday == 1)
+        end function
 
         subroutine newdate(imode)
             !--   subroutine newdate (imode)

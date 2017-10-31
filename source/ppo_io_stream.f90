@@ -3,6 +3,7 @@ module ppo_IO_stream
     use mod_atparam
     use mod_dynvar
     use mod_physvar
+    use mod_date, only: imonth, month_start
 
     implicit none
 
@@ -128,18 +129,37 @@ module ppo_IO_stream
         ! nstpinc: How often the output variables are increments
         ! nstpout: How often the variables are output and increments reset
         ! nstpopen: How often a new file is opened
-        ! Each variables is an integer number of timesteps or, if the integer
-        ! is negative, todo number of months.
+        ! Each variable is an integer number of timesteps or, if the integer
+        ! is negative, number of months.
         subroutine update_IO_stream(stream, istep)
             type(IO_stream), intent(inout) :: stream
             integer, intent(in) :: istep
 
-            if (mod(istep, stream%nstpinc) == 0) call incr_IO_stream(stream)
+            if (xmod(istep, stream%nstpinc)) call incr_IO_stream(stream)
 
-            if (mod(istep, stream%nstpout) == 0) call write_IO_stream(stream)
+            if (xmod(istep, stream%nstpout)) call write_IO_stream(stream)
 
-            if (mod(istep, stream%nstpopen) == 0) call reinit_IO_stream(stream)
+            if (xmod(istep, stream%nstpopen)) call reinit_IO_stream(stream)
         end subroutine
+
+        ! Check whether the timestep matches the frequency by using mod in
+        ! terms of timesteps if positive and mod in terms of months if negative
+        ! If zero returns false
+        function xmod(istep, frequency)
+            integer, intent(in) :: istep
+            integer, intent(in) :: frequency
+            logical :: xmod
+
+            if (frequency > 0) then
+                xmod = (mod(istep, frequency) == 0)
+
+            else if (frequency < 0) then
+                ! Output on the first day of each month
+                xmod = (month_start() .and. mod(imonth, -frequency) == 0)
+            else
+                xmod = .false.
+            end if
+        end function
 
         ! todo Close the currently open file and open a new file named by the
         ! current time

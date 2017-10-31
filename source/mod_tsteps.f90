@@ -6,7 +6,7 @@ module mod_tsteps
     private
     public nmonts, ndaysl, nsteps, nstdia, nmonrs, sixhrrun
     public iseasc, istart, iyear0, imont0, nstrad, sppt_on, nstrdf, indrdf, issty0
-    public isst0, delt, delt2, rob, wil, alph
+    public isst0, idelt, delt, delt2, rob, wil, alph
 
     ! Integration length in months
     integer :: nmonts = 3
@@ -58,10 +58,11 @@ module mod_tsteps
     integer :: isst0
     
     ! Time step in seconds
-    real, parameter :: delt = 86400.0 / nsteps
+    integer, parameter :: idelt = 86400 / nsteps
+    real, parameter :: delt = real(idelt)
     
     ! 2 * time step in seconds
-    real, parameter :: delt2 = 2 * delt
+    real, parameter :: delt2 = 2.0 * idelt
 
     ! Damping factor in Robert time filter
     real, parameter :: rob = 0.05
