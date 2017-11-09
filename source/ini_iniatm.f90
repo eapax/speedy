@@ -106,7 +106,7 @@ subroutine ini_atm(cexp)
     if (ihout .eqv. .false.) call setgrd(0,cexp)
 
     ! Write initial data
-    if (ihout .and. ipout) call iogrid(2)
+    if (ipout) call iogrid(2)
     if (ihout) call iogrid(4)
 
     contains

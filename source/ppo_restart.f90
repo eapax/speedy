@@ -12,11 +12,12 @@ subroutine restart(jday)
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ndaytot, ihour
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
     integer, intent(in) :: jday
-    integer :: jrec
+    integer :: jrec, m, n
     type(rpe_var) :: adummy
 
     if (jday.eq.0) then
@@ -32,12 +33,28 @@ subroutine restart(jday)
             print '(A,I4.4,A,I2.2,A,I2.2,A,I2.2)',&
                 & 'Read restart dataset for year/month/date/hour: ', &
                 & iyear,'/',imonth,'/',iday,'/',ihour
-            
+
+            ! Load data in full precision
+            RPE_DEFAULT_SBITS = 52
+
             read (3) vor
             read (3) div
             read (3) t
             read (3) ps
             read (3) tr
+
+            ! Reduce precision of input fields
+            do n=1,nx
+                do m=1,mx
+                    call set_precision(m, n)
+                    vor(m, n, :, :)   = vor(m, n, :, :)
+                    div(m, n, :, :)   = div(m, n, :, :)
+                    t(m, n, :, :)     = t(m, n, :, :)
+                    ps(m, n, :)       = ps(m, n, :)
+                    tr(m, n, :, :, :) = tr(m, n, :, :, :)
+                end do
+            end do
+            call set_precision(0, 0)
 
             call rest_land(0)
             call rest_sea(0)

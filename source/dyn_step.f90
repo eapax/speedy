@@ -25,6 +25,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     use mod_dynvar
     use mod_hdifcon
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -66,12 +67,14 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call hordif(kx,div,divdt,dmpd,dmp1d)
 
     do k=1,kx
-        do m=1,mx
-            do n=1,nx 
+        do n=1,nx
+            do m=1,mx
+                call set_precision(m, n)
                 ctmp(m,n,k) = t(m,n,k,1)+tcorh(m,n)*tcorv(k)
             enddo
         enddo
     enddo
+    call set_precision(0, 0)
 
     call hordif(kx,ctmp,tdt,dmp,dmp1)
 
@@ -136,6 +139,7 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
 
     USE mod_atparam
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -147,9 +151,11 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
 
     do k=1,nlev
         do m=1,mxnx
+            call set_precision(m, 1)
             fdt(m,k)=(fdt(m,k)-dmp(m)*field(m,k))*dmp1(m)
         enddo
     enddo
+    call set_precision(0, 0)
 end
 
 subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
@@ -159,6 +165,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     use mod_atparam
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -183,6 +190,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     ! The actual leap frog with the robert filter
     do k=1,nlev
         do m=1,mxnx
+            call set_precision(m, 1)
             fnew (m)     = field(m,k,1) + dt*fdt(m,k)
             field(m,k,1) = field(m,k,j1) +  wil*eps*(field(m,k,1)&
                 & -two*field(m,k,j1)+fnew(m))
@@ -192,6 +200,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
                 &-two*field(m,k,j1)+fnew(m))
         enddo
     enddo
+    call set_precision(0, 0)
 end
 
 subroutine cgrate(vor,div,vordt,divdt)

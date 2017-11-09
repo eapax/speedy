@@ -1,6 +1,7 @@
 program agcm_main
     use mod_tsteps, only: ndaysl, ihout, nmonts
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -10,9 +11,9 @@ program agcm_main
     character(len=3) :: cexp = 'exp'
     integer :: jday, ndays
 
-    ! Setup reduced precision emulator for half precision
-    RPE_DEFAULT_SBITS = 8
-    RPE_IEEE_HALF = .true.
+    ! Setup reduced precision emulator
+    call set_precision(0, 0)
+    RPE_IEEE_HALF = .false.
     RPE_ACTIVE = .true.
 
     ! 1. initialization
