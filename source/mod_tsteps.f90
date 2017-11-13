@@ -13,10 +13,10 @@ module mod_tsteps
     public init_tsteps
 
     ! Integration length in months
-    integer :: nmonts = 3
+    integer :: nmonts = 0
 
     ! No. of days in the last month of int. (max=30)
-    integer :: ndaysl = 0
+    integer :: ndaysl = 1
 
     ! No. of time steps in one day
     integer, parameter :: nsteps = 36
@@ -25,7 +25,7 @@ module mod_tsteps
     integer, parameter :: nstdia = 36*5
 
     ! Period (no. of steps) for post-processing
-    integer, parameter :: nstppr = 6
+    integer, parameter :: nstppr = 9
 
     ! Period (no. of steps) for time-mean output
     integer :: nstout = -1
@@ -38,7 +38,7 @@ module mod_tsteps
 
     ! 6-hourly output flags
     logical, parameter :: ihout = .false.
-    logical, parameter :: ipout = .false.
+    logical, parameter :: ipout = .true.
     logical, parameter :: sixhrrun = .false.
 
     ! Seasonal cycle flag (0=no, 1=yes)
@@ -57,7 +57,7 @@ module mod_tsteps
     integer, parameter :: nstrad = 3
 
     ! Turn on SPPT?
-    logical, parameter :: sppt_on = .false.
+    logical, parameter :: sppt_on = .true.
     
     ! Duration of random diabatic forcing ( 0 : no forcing, > 0 : no. of
     ! initial steps, < 0 : whole integration)
