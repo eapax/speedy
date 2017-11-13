@@ -106,9 +106,7 @@ subroutine iogrid(imode)
 
         ! Conversion from spectral model variable to gridded variable
         do k=1,kx
-           call uvspec(vor(1,1,k,1),div(1,1,k,1),ucostmp,vcostmp)
-           call grid(ucostmp,ugr(1,k),2)
-           call grid(vcostmp,vgr(1,k),2)
+           call uvspec(vor(1,1,k,1),div(1,1,k,1),ugr(1,k),vgr(1,k))
         end do
 
         do k=1,kx

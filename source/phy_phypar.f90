@@ -1,20 +1,14 @@
-subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
+subroutine phypar(utend,vtend,ttend,qtend)
     !  subroutine phypar(vor1,div1,t1,q1,phi1,psl1,
     ! &                   utend,vtend,ttend,qtend)
     !
     !  Purpose: compute physical parametrization tendencies for u, v, t, q
     !  and add them to dynamical grid-point tendencies
-    !  Input-only  arguments:   vor1   : vorticity (sp)
-    !                           div1   : divergence (sp)
-    !                           t1     : temperature (sp)
-    !                           q1     : specific humidity (sp)
-    !                           phi1   : geopotential (sp)
-    !                           psl1   : log of sfc pressure (sp)
-    !  Input-output arguments:  utend  : u-wind tendency (gp)
-    !                           vtend  : v-wind tendency (gp)
-    !                           ttend  : temp. tendency (gp)
-    !                           qtend  : spec. hum. tendency (gp)
-    !  Modified common blocks:  phygr1, phygr2, phygr3, phyten, fluxes
+    !  Output arguments:  utend  : u-wind tendency (gp)
+    !                     vtend  : v-wind tendency (gp)
+    !                     ttend  : temp. tendency (gp)
+    !                     qtend  : spec. hum. tendency (gp)
+    !  Modified common blocks:  mod_physvar
 
     use mod_cpl_flags, only: icsea
     use mod_lflags, only: lradsw, lrandf
@@ -31,44 +25,13 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    complex, dimension(mx,nx,nlev) :: vor1, div1, t1, q1, phi1
-    complex, dimension(mx,nx) :: psl1, ucos, vcos
-
-    real, dimension(ngp,nlev) :: utend, vtend, ttend, qtend
-    real, dimension(ngp,nlev) :: utend_dyn, vtend_dyn, ttend_dyn, qtend_dyn
+    real, dimension(ngp,nlev), intent(out) :: utend, vtend, ttend, qtend
 
     integer :: iptop(ngp), icltop(ngp,2), icnv(ngp), iitest=0, j, k
     real, dimension(ngp) :: rps, gse
     real :: sppt(ngp,kx)
 
-    ! Keep a copy of the original (dynamics only) tendencies
-    utend_dyn = utend
-    vtend_dyn = vtend
-    ttend_dyn = ttend
-    qtend_dyn = qtend
-
-    ! 1. Compute grid-point fields
-    ! 1.1 Convert model spectral variables to grid-point variables
-    if (iitest.eq.1) print *, ' 1.1 in phypar'
-
-    do k=1,nlev
-      call uvspec(vor1(1,1,k),div1(1,1,k),ucos,vcos)
-      call grid(ucos,ug1(1,k),2)
-      call grid(vcos,vg1(1,k),2)
-    end do
-
-    do k=1,nlev
-      call grid(t1(1,1,k),  tg1(1,k),  1)
-      call grid(q1(1,1,k),  qg1(1,k),  1)
-      call grid(phi1(1,1,k),phig1(1,k),1)
-    end do
-
-    call grid(psl1,pslg1,1)
-
-    ! Remove negative humidity values
-    !call qneg (qg1)
-
-    ! 1.2 Compute thermodynamic variables
+    ! 1. Compute thermodynamic variables
     if (iitest.eq.1) print *, ' 1.2 in phypar'
 
     do j=1,ngp
@@ -78,7 +41,7 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
 
     do k=1,nlev
         do j=1,ngp
-            ! Remove when qneg is implemented
+            ! Remove negative humidity values
 	        qg1(j,k)=max(qg1(j,k),0.)
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
@@ -110,8 +73,8 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
 !fk      call lscond (psg,qg1,qsat,ts,iptop,precls,snowls,tt_lsc,qt_lsc)
 !fk#end if
 
-    ttend = ttend + tt_cnv + tt_lsc
-    qtend = qtend + qt_cnv + qt_lsc
+    ttend = tt_cnv + tt_lsc
+    qtend = qt_cnv + qt_lsc
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
@@ -185,8 +148,8 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
         qt_pbl(j,nlev)=qt_pbl(j,nlev)+evap(j,3)*rps(j)*grdsig(nlev)
     end do
 
-    utend = utend + ut_pbl
-    vtend = vtend + vt_pbl
+    utend = ut_pbl
+    vtend = vt_pbl
     ttend = ttend + tt_pbl
     qtend = qtend + qt_pbl
 
@@ -212,13 +175,12 @@ subroutine phypar(vor1,div1,t1,q1,phi1,psl1,utend,vtend,ttend,qtend)
     ! Add SPPT noise
     if (sppt_on) then
         sppt = gen_sppt()
-        
-        ! The physical contribution to the tendency is *tend - *tend_dyn, where * is u, v, t, q
+
         do k = 1,kx
-            utend(:,k) = (1 + sppt(:,k)*mu(k)) * (utend(:,k) - utend_dyn(:,k)) + utend_dyn(:,k)
-            vtend(:,k) = (1 + sppt(:,k)*mu(k)) * (vtend(:,k) - vtend_dyn(:,k)) + vtend_dyn(:,k)
-            ttend(:,k) = (1 + sppt(:,k)*mu(k)) * (ttend(:,k) - ttend_dyn(:,k)) + ttend_dyn(:,k)
-            qtend(:,k) = (1 + sppt(:,k)*mu(k)) * (qtend(:,k) - qtend_dyn(:,k)) + qtend_dyn(:,k)
+            utend(:,k) = (1 + sppt(:,k)*mu(k)) * utend(:,k)
+            vtend(:,k) = (1 + sppt(:,k)*mu(k)) * vtend(:,k)
+            ttend(:,k) = (1 + sppt(:,k)*mu(k)) * ttend(:,k)
+            qtend(:,k) = (1 + sppt(:,k)*mu(k)) * qtend(:,k)
         end do
     end if
 end
