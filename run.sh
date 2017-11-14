@@ -26,6 +26,7 @@ echo "copying from $SRC/source to $TMP"
 mkdir -p $TMP
 cd $TMP
 rm *
+mv ../precision.txt .
 
 cp $SRC/*.f90      $TMP/
 cp $SRC/*.h      $TMP/
