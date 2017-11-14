@@ -1,7 +1,7 @@
 program agcm_main
     use mod_tsteps, only: ndaysl, ihout, nmonts
     use rp_emulator
-    use mod_prec, only: set_precision
+    use mod_prec, only: setup_precision
 
     implicit none
 
@@ -12,7 +12,7 @@ program agcm_main
     integer :: jday, ndays
 
     ! Setup reduced precision emulator
-    call set_precision(0, 0)
+    call setup_precision()
     RPE_IEEE_HALF = .false.
     RPE_ACTIVE = .true.
 
