@@ -20,6 +20,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_physvar
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
+    use mod_prec, only: set_precision, set_precision_grid
     use rp_emulator
 
     implicit none
@@ -98,6 +99,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 3. Dynamics tendencies
     if (iitest.eq.1) print*,'Calculating dynamics tendencies'
+
+    call set_precision(1)
 
     umean(:,:) = 0.0
     vmean(:,:) = 0.0
@@ -235,6 +238,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
             end do
         end do
     end do
+
+    call set_precision(0)
 
     ! 4. Conversion of grid-point tendencies to spectral space and calculation
     !    of terms using grid-point and spectral components

@@ -12,7 +12,7 @@ subroutine restart(jday)
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ndaytot, ihour
     use rp_emulator
-    use mod_prec, only: set_precision
+    use mod_prec, only: set_precision, set_precision_spectral
 
     implicit none
 
@@ -46,7 +46,7 @@ subroutine restart(jday)
             ! Reduce precision of input fields
             do n=1,nx
                 do m=1,mx
-                    call set_precision(m, n)
+                    call set_precision_spectral(m, n)
                     vor(m, n, :, :)   = vor(m, n, :, :)
                     div(m, n, :, :)   = div(m, n, :, :)
                     t(m, n, :, :)     = t(m, n, :, :)
@@ -54,7 +54,7 @@ subroutine restart(jday)
                     tr(m, n, :, :, :) = tr(m, n, :, :, :)
                 end do
             end do
-            call set_precision(0, 0)
+            call set_precision(0)
 
             call rest_land(0)
             call rest_sea(0)
