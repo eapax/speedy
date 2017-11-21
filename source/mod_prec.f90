@@ -26,6 +26,10 @@ module mod_prec
             read (99,*) zeroth_mode_precision
             read (99,*) grid_dynamics_precision
 
+            print *, 'Reduced precision = ', reduced_precision
+            print *, 'Zeroth mode precision = ', zeroth_mode_precision
+            print *, 'Grid-dynamics precision = ', grid_dynamics_precision
+
             call set_precision(0)
         end subroutine
 

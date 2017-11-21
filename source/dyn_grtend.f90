@@ -20,7 +20,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_physvar
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
-    use mod_prec, only: set_precision, set_precision_grid
+    use mod_prec, only: set_precision
     use rp_emulator
 
     implicit none
@@ -101,6 +101,12 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     if (iitest.eq.1) print*,'Calculating dynamics tendencies'
 
     call set_precision(1)
+    ug = ug
+    vg = vg
+    tg = tg
+    vorg = vorg
+    divg = divg
+    trg = trg
 
     umean(:,:) = 0.0
     vmean(:,:) = 0.0
@@ -116,12 +122,16 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     ! Compute tendency of log(surface pressure)
     if (iitest.eq.1) print*,'d'
     ! ps(1,1,j2)=zero
+    call set_precision(0)
     call grad(ps(1,1,j2),dumc(1,1,2),dumc(1,1,3))
     call grid(dumc(1,1,2),px,2)
     call grid(dumc(1,1,3),py,2)
+    call set_precision(1)
 
     dumr(:,:,1) = -umean * px - vmean * py
+    call set_precision(0)
     call spec(dumr(1,1,1),psdt)
+    call set_precision(1)
     psdt(1,1)=zero
 
     ! Compute "vertical" velocity
@@ -239,8 +249,6 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         end do
     end do
 
-    call set_precision(0)
-
     ! 4. Conversion of grid-point tendencies to spectral space and calculation
     !    of terms using grid-point and spectral components
     if (iitest.eq.1) print*,'Converting grid-point tendencies to spectral space'
@@ -248,7 +256,9 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to 
         !  spectral vor and div
+        call set_precision(0)
         call vdspec(utend(1,1,k),vtend(1,1,k),vordt(1,1,k),divdt(1,1,k),2)
+        call set_precision(1)
 
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
@@ -260,6 +270,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
             end do
         end do
 
+        call set_precision(0)
         !  divergence tendency
         call spec(dumr(1,1,1),dumc(1,1,1))
         call lap (dumc(1,1,1),dumc(1,1,2))
@@ -273,6 +284,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
         !fk--   Change to keep dimensions 
         tdt(:,:,k) = tdt(:,:,k) + dumc(:,:,2)
+        call set_precision(1)
 
         ! tracer tendency
         do itr=1,ntr
@@ -282,12 +294,17 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
                     dumr(i,j,3)=-vg(i,j,k)*trg(i,j,k,itr)
                 end do
             end do
- 
+
+            call set_precision(0)
             call spec(trtend(1,1,k,itr),dumc(1,1,2))
             call vdspec(dumr(1,1,2),dumr(1,1,3),dumc(1,1,1),trdt(1,1,k,itr),2)
 
             !fk--   Change to keep dimensions 
             trdt(:,:,k,itr) = trdt(:,:,k,itr) + dumc(:,:,2)
+            call set_precision(1)
+
         end do
     end do
+
+    call set_precision(0)
 end 
