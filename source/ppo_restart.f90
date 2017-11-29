@@ -44,6 +44,13 @@ subroutine restart(jday)
             read (3) tr
 
             ! Reduce precision of input fields
+            call set_precision(2)
+            vor = vor
+            div = div
+            t = t
+            ps = ps
+            tr = tr
+
             do n=1,nx
                 do m=1,mx
                     call set_precision_spectral(m, n)
