@@ -1,6 +1,7 @@
 program agcm_main
     use mod_tsteps, only: nmonrs
     use rp_emulator
+    use mod_prec, only: setup_precision
     use mod_date, only: imonth, iday
 
     implicit none
