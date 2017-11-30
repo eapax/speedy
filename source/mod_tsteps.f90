@@ -7,8 +7,9 @@ module mod_tsteps
     implicit none
 
     private
-    public nmonts, ndaysl, nsteps, nstdia, nstppr, nstout, idout, nmonrs, ihout, sixhrrun
-    public iseasc, istart, iyear0, imont0, ipout, nstrad, sppt_on, nstrdf, indrdf, issty0
+    public nmonts, ndaysl, nsteps, nstdia, nstppr, nstout, idout, nmonrs, &
+            itmout, ihout, ipout, sixhrrun
+    public iseasc, istart, iyear0, imont0, nstrad, sppt_on, nstrdf, indrdf, issty0
     public isst0, delt_, delt, delt2, rob, wil, alph
     public init_tsteps
 
@@ -36,7 +37,8 @@ module mod_tsteps
     ! Period (no. of months) for restart file update
     integer, parameter :: nmonrs = 3
 
-    ! 6-hourly output flags
+    ! Output flags
+    logical, parameter :: itmout = .false.
     logical, parameter :: ihout = .false.
     logical, parameter :: ipout = .true.
     logical, parameter :: sixhrrun = .false.

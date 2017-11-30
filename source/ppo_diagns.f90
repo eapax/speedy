@@ -6,7 +6,7 @@ subroutine diagns(jj,istep)
     !         istep = time step index
 
 
-    use mod_tsteps, only: nstdia, nstppr, nstout, ihout
+    use mod_tsteps, only: nstdia, nstppr, nstout, itmout
     use mod_atparam
     use mod_dynvar
     use rp_emulator
@@ -63,7 +63,7 @@ subroutine diagns(jj,istep)
             print 2003,        (diag(kk,3),kk=1,kx)
 
             ! Write model fields at t-1 on output file 
-            if (ihout .eqv. .false.) then !Only when no hourly output
+            if (itmout) then
                 call tmout(0)
                 call tminc
                 nstout=nstppr

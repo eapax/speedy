@@ -3,7 +3,8 @@ subroutine ini_atm(cexp)
     !
     !   purpose : call initialization routines for all model common blocks 
 
-    use mod_tsteps, only: nmonts, nsteps, nstout, idout, iyear0, imont0, indrdf, ipout, ihout
+    use mod_tsteps, only: nmonts, nsteps, nstout, idout, iyear0, imont0, &
+            indrdf, itmout, ipout, ihout
     use mod_atparam
     use mod_dyncon1, only: grav, hsg, fsg, radang
     use mod_tmean
@@ -52,7 +53,7 @@ subroutine ini_atm(cexp)
     if (iitest == 1) print *, 'calling dmout'
     call dmout(0)
 
-    if (ihout .eqv. .false.) then ! Do not call time-mean procedures if IHOUT = true 
+    if (itmout) then
         if (iitest == 1) print *, 'calling tmout'
         call tmout(0)
     
@@ -94,16 +95,17 @@ subroutine ini_atm(cexp)
             call setctl_d(18, ix, il, kx, ndm, nddm, ns2d_d1, ns2d_d2, radang, ppl,&
                 & 'daytm', cexp, iyear0, imont0)
         end if
-    else
-        call iogrid(5) ! create control file for 6-hourly output
-        if (ipout) then
-            call iogrid(3)
-            call geop(1)
-        end if
     end if
 
+    if (ihout) call iogrid(5) ! create control file for 6-hourly output
+    if (ipout) then
+        call iogrid(3)
+        call geop(1)
+    end if
+
+
     ! 8.3 output files for grid-point fields
-    if (ihout .eqv. .false.) call setgrd(0,cexp)
+    if (itmout) call setgrd(0,cexp)
 
     ! Write initial data
     if (ipout) call iogrid(2)

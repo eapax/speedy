@@ -34,7 +34,7 @@ subroutine stloop(istep)
         call diagns(2, istep)
 
         if (mod(istep, nstppr) == 0) then
-            if (ihout .eqv. .false.) then
+            if (itmout) then
                 ! Time means
                 call tminc
                 if (nstout > 0 .and. mod(istep, nstout) == 0) call tmout(1)

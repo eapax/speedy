@@ -17,31 +17,35 @@ subroutine restart(jday)
     implicit none
 
     integer, intent(in) :: jday
-    integer :: jrec, m, n
-    type(rpe_var) :: adummy
+    integer :: yyyy, mm, dd, hh, m, n
+    character(len=14) :: filename='yyyymmddhh.rst'
 
     if (jday.eq.0) then
-        100 CONTINUE
-
         ! 1. Read the restart dataset corresponding to the specified initial date
-        ! [Modified:] Read the restart dataset for any initial date
-!       read (3,end=200) iyear, imonth
-        read (3,end=200) iyear, imonth, iday, ihour
+        write (filename(1:4),'(i4.4)') iyear
+        write (filename(5:6),'(i2.2)') imonth
+        write (filename(7:8),'(i2.2)') iday
+        write (filename(9:10),'(i2.2)') ihour
+        open (3, file=filename, form='unformatted')
 
-!        if (iyear.eq.iyear0.and.imonth.eq.imont0) then
-!           print*, 'read restart dataset for year/month: ', iyear,imonth
-            print '(A,I4.4,A,I2.2,A,I2.2,A,I2.2)',&
-                & 'Read restart dataset for year/month/date/hour: ', &
-                & iyear,'/',imonth,'/',iday,'/',ihour
+        read (3,end=200) yyyy, mm, dd, hh
 
-            ! Load data in full precision
-            RPE_DEFAULT_SBITS = 52
+        if (yyyy/=iyear .or. mm/=imonth .or. dd/=iday .or. hh/=ihour) then
+            stop 'Date in restart file does not match requested date'
+        end if
 
-            read (3) vor
-            read (3) div
-            read (3) t
-            read (3) ps
-            read (3) tr
+        print '(A,I4.4,A,I2.2,A,I2.2,A,I2.2)',&
+                'Read restart dataset for year/month/date/hour: ', &
+                iyear,'/',imonth,'/',iday,'/',ihour
+
+        ! Load data in full precision
+        RPE_DEFAULT_SBITS = 52
+
+        read (3) vor
+        read (3) div
+        read (3) t
+        read (3) ps
+        read (3) tr
 
             ! Reduce precision of input fields
             call set_precision(2)
@@ -61,42 +65,37 @@ subroutine restart(jday)
                     tr(m, n, :, :, :) = tr(m, n, :, :, :)
                 end do
             end do
-            call set_precision(0)
-
-            call rest_land(0)
+            call set_precision(0)call rest_land(0)
             call rest_sea(0)
-!        else
-!            print *, 'Skip restart dataset for year/month: ', iyear,imonth
-!            
-!            do jrec=1,5
-!              read (3) adummy
-!            end do
-!  
-!            CALL REST_LAND(0)
-!            CALL REST_SEA(0)
-!  
-!            go to 100
-!        end if
-    ! Check for write-up dates
-!    else if ( (iday.eq.1) .and.&
-!        & (mod(imonth-1,nmonrs).eq.0.or.jday.eq.ndaytot) ) then
+
+close (3)
     else
         ! 2. Write date and model variables to the restart file
-!        print*, 'Write restart dataset for year/month: ', IYEAR,IMONTH
-         print*, 'Write restart dataset for year/month/date/hour: ', &
-             & iyear,'/',imonth,'/',iday,'/',ihour
+        print*, 'Write restart dataset for year/month/date/hour: ', &
+                iyear,'/',imonth,'/',iday,'/',ihour
 
-!        write (10) iyear, imonth
-         write (10) iyear, imonth, iday, ihour
+        ! Set filename to restart date
+        write (filename(1:4),'(i4.4)') iyear
+        write (filename(5:6),'(i2.2)') imonth
+        write (filename(7:8),'(i2.2)') iday
+        write (filename(9:10),'(i2.2)') ihour
+        open (10, file=filename, form='unformatted')
 
-         write (10) vor
-         write (10) div
-         write (10) t
-         write (10) ps
-         write (10) tr
+        ! Write date to restart file
+        write (10) iyear, imonth, iday, ihour
 
-         call rest_land(1)
-         call rest_sea(1)
+        ! Write prognostic variables to restart file
+        write (10) vor
+        write (10) div
+        write (10) t
+        write (10) ps
+        write (10) tr
+
+        ! Write surface fields to restart file
+        call rest_land(1)
+        call rest_sea(1)
+
+        close(10)
     end if
 
     return
