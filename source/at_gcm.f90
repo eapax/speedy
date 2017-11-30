@@ -1,5 +1,6 @@
 program agcm_main
-    use mod_tsteps, only: ndaysl, ihout, nmonts, sixhrrun
+    use mod_tsteps, only: ndaysl, ihout, nmonts, nmonrs, sixhrrun
+    use mod_date, only: imonth, iday
 
     implicit none
 
@@ -25,8 +26,8 @@ program agcm_main
         call coupler_to_agcm(jday)
     enddo
 
-    ! Restart dataset is only written at the end
-    call restart(2)
+    ! Write restart file at end of run if not already written
+    if (mod(imonth, nmonrs) /= 0 .or. iday /= 1) call restart(2)
 end
 
 subroutine agcm_1day(jday, cexp)
@@ -35,7 +36,7 @@ subroutine agcm_1day(jday, cexp)
     ! perform atm. model integration for 1 day, 
     ! post-proc. and i/o at selected times 
 
-    use mod_tsteps, only: nsteps, idout, nstout, ihout
+    use mod_tsteps, only: nsteps, idout, nstout, nmonrs, ihout
     use mod_date, only: iyear, imonth, iday, ndaytot, newdate
 
     implicit none
@@ -63,6 +64,9 @@ subroutine agcm_1day(jday, cexp)
     ! 5. write time-mean output files and restart file at the end of selected
     ! months
     if (iday == 1) then
+        ! Write restart file
+        if (mod(imonth, nmonrs) == 0) call restart(2)
+
         ! write monthly-mean output for previous month
         if (ihout .eqv. .false.) then
             if (nstout < 0) call tmout(1)
