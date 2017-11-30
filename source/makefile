@@ -120,12 +120,12 @@ at_gcm.o               : at_gcm.f90 mod_tsteps.o mod_date.o
 #get_from_coupler.o     : get_from_coupler.f
 cpl_bcinterp.o         : cpl_bcinterp.f90
 cpl_land.o             : cpl_land.f90 mod_cpl_flags.o mod_atparam.o mod_cpl_land_model.o mod_flx_land.o\
-						 mod_cli_land.o mod_date.o mod_var_land.o
+						 mod_cli_land.o mod_date.o mod_var_land.o mod_prec.o
 mod_cpl_land_model.o   : mod_cpl_land_model.f90 mod_atparam.o
 cpl_main_interface.o   : cpl_main_interface.f90 mod_atparam.o mod_cpl_land_model.o mod_surfcon.o\
 	                     mod_cli_land.o mod_cli_sea.o
 cpl_sea.o              : cpl_sea.f90 mod_cpl_flags.o mod_atparam.o mod_cplvar_sea.o mod_date.o mod_flx_sea.o\
-	                     mod_cli_sea.o mod_var_sea.o
+	                     mod_cli_sea.o mod_var_sea.o mod_prec.o
 cpl_sea_model.o        : cpl_sea_model.f90 mod_atparam.o mod_cplcon_sea.o mod_cplvar_sea.o
 dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o mod_prec.o
 dyn_grtend.o           : dyn_grtend.f90 mod_atparam.o mod_dynvar.o mod_physvar.o\

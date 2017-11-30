@@ -104,13 +104,22 @@ subroutine rest_land(imode)
     use mod_cpl_flags, only: icland
     use mod_atparam
     use mod_var_land, only: stl_am, stl_lm
+    use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
     integer, intent(in) :: imode
 
     if (imode.eq.0) then
-        read (3)  stl_lm(:)       ! Land sfc. temperature 
+        ! Load data at full precision
+        RPE_DEFAULT_SBITS = 52
+        read (3)  stl_lm(:)       ! Land sfc. temperature
+
+        ! Reduce precision of input fields
+        call set_precision(2)
+        stl_lm = stl_lm
+        call set_precision(0)
     else
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model

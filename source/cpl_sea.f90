@@ -196,6 +196,7 @@ subroutine rest_sea(imode)
     use mod_atparam
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -206,9 +207,19 @@ subroutine rest_sea(imode)
     type(rpe_var) :: sstfr
 
     if (imode.eq.0) then
+        ! Load data at full precision
+        RPE_DEFAULT_SBITS = 52
+
         read (3)  sst_om(:)       ! sst 
         read (3) tice_om(:)       ! sea ice temperature
         read (3) sice_om(:)       ! sea ice fraction
+
+        ! Reduce precision of input fields
+        call set_precision(2)
+        sst_om = sst_om
+        tice_om = tice_om
+        sice_om = sice_om
+        call set_precision(0)
     else
         !    write sea/ice model variables from coupled runs,
         !    otherwise write fields used by atmospheric model
