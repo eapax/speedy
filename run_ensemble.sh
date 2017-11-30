@@ -11,6 +11,12 @@ if [ $# -ne 4 ] ; then
     exit 1
 fi
 
+# Start date
+year='1981'
+month='01'
+day='01'
+hour='00'
+
 # Define directory names
 UT=`pwd`
 SRC=${UT}/source
@@ -30,13 +36,9 @@ cp ${SRC}/*.h      ${TMP}/
 cp ${SRC}/*.s      ${TMP}/
 cp ${SRC}/makefile ${TMP}/
 
-# Set experiment no. and restart file (if needed)
-echo $3 >  fort.2
-echo $2 >> fort.2
-
 if [ $3 != 0 ] ; then
-  echo "link restart file atgcm$3.rst to fort.3"
-  ln -s ${CD}/atgcm$3.rst fort.3
+  echo "link restart file ${year}${month}${day}${hour}"
+  ln -s ${CD}/${year}${month}${day}${hour}.rst
 fi
 
 # Link input files
@@ -60,11 +62,10 @@ if [ $3 = 0 ]; then
 else
     echo 1 > fort.2
 fi
-
-echo 1982 >> fort.2
-echo 01 >> fort.2
-echo 01 >> fort.2
-echo 00 >> fort.2
+echo ${year} >> fort.2
+echo ${month} >> fort.2
+echo ${day} >> fort.2
+echo ${hour} >> fort.2
 
 
 # Loop over precisions being tested
