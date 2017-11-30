@@ -1,5 +1,5 @@
 program agcm_main
-    use mod_tsteps, only: ndaysl, ihout, nmonts, nmonrs, sixhrrun
+    use mod_tsteps, only: nmonrs
     use mod_date, only: imonth, iday
 
     implicit none
@@ -36,7 +36,7 @@ subroutine agcm_1day(jday, cexp)
     ! perform atm. model integration for 1 day, 
     ! post-proc. and i/o at selected times 
 
-    use mod_tsteps, only: nsteps, idout, nstout, nmonrs, ihout
+    use mod_tsteps, only: nsteps, idout, nstout, nmonrs, itmout
     use mod_date, only: iyear, imonth, iday, ndaytot, newdate
 
     implicit none
@@ -68,11 +68,11 @@ subroutine agcm_1day(jday, cexp)
         if (mod(imonth, nmonrs) == 0) call restart(2)
 
         ! write monthly-mean output for previous month
-        if (ihout .eqv. .false.) then
+        if (itmout) then
             if (nstout < 0) call tmout(1)
         end if
         
         ! open new output files at the beginning of each year
-        if (imonth == 1 .and. jday < ndaytot .and. (ihout .eqv. .false.)) call setgrd(1, cexp)
+        if (imonth == 1 .and. jday < ndaytot .and. itmout) call setgrd(1, cexp)
     endif
 end
