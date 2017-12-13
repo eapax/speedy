@@ -20,6 +20,7 @@ subroutine fordate(imode)
     use mod_var_sea, only: sstcl_ob, sst_am, sice_am
     use mod_radcon, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
         & alb_l, alb_s, albsfc
+    use surface_fluxes, only: sflset
 
     implicit none
 
