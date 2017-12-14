@@ -17,6 +17,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     USE mod_atparam
     USE mod_dynvar
+    use mod_physvar
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
 
@@ -53,11 +54,24 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     if (iitest.eq.1) print*,'inside GRTEND'
 
-    ! -------------
-    ! Grid converts 
+    ! 1. Compute grid-point fields
+    ! 1.1 Update geopotential in spectral space
+    call geop(j1)
 
-    if (iitest.eq.1) print*,'a'
+    ! 1.2 Grid-point variables for physics tendencies
+    do k=1,kx
+      call uvspec(vor(1,1,k, j1),div(1,1,k, j1),ug1(1,k),vg1(1,k))
+    end do
 
+    do k=1,kx
+      call grid(t(1,1,k,j1), tg1(1,k), 1)
+      call grid(tr(1,1,k,j1,1), qg1(1,k), 1)
+      call grid(phi(1,1,k), phig1(1,k), 1)
+    end do
+
+    call grid(ps(1,1,j1),pslg1,1)
+
+    ! 1.3 Grid point variables for dynamics tendencies
     do k=1,kx
         call grid(vor(1,1,k,j2),vorg(1,1,k),1)
         call grid(div(1,1,k,j2),divg(1,1,k),1)
@@ -67,9 +81,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
           call grid(tr(1,1,k,j2,itr),trg(1,1,k,itr),1)
         end do
 
-        call uvspec(vor(1,1,k,j2),div(1,1,k,j2),dumc(1,1,1),dumc(1,1,2))
-        call grid(dumc(1,1,2),vg(1,1,k),2)
-        call grid(dumc(1,1,1),ug(1,1,k),2)
+        call uvspec(vor(1,1,k,j2), div(1,1,k,j2), ug(1,1,k), vg(1,1,k))
 
         do j=1,il
             do i=1,ix
@@ -78,7 +90,12 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         end do
     end do
 
-    if (iitest.eq.1) print*,'b'
+    ! 2. Parametrized physics tendencies
+    if (iitest.eq.1) print*,'Calculating physics tendencies'
+    call phypar(utend, vtend, ttend, trtend)
+
+    ! 3. Dynamics tendencies
+    if (iitest.eq.1) print*,'Calculating dynamics tendencies'
 
     umean(:,:) = 0.0
     vmean(:,:) = 0.0
@@ -102,13 +119,13 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     call spec(dumr(1,1,1),psdt)
     psdt(1,1)=zero
 
-    ! Compute "vertical" velocity  
+    ! Compute "vertical" velocity
     sigdt(:,:,1) = 0.0
     sigdt(:,:,kxp) = 0.0
     sigm(:,:,1) = 0.0
     sigm(:,:,kxp) = 0.0
 
-    ! (The following combination of terms is utilized later in the 
+    ! (The following combination of terms is utilized later in the
     !     temperature equation)
     do k=1,kx
         puv(:,:,k) = (ug(:,:,k) - umean) * px + (vg(:,:,k) - vmean) * py
@@ -121,8 +138,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         sigdt(:,:,k+1) = sigdt(:,:,k) - dhs(k)*(puv(:,:,k)+divg(:,:,k)-dmean)
         sigm(:,:,k+1) = sigm(:,:,k) - dhs(k)*puv(:,:,k)
     end do
- 
-    ! Subtract part of temperature field that is used as reference for 
+
+    ! Subtract part of temperature field that is used as reference for
     ! implicit terms
     if (iitest.eq.1) print*,'f'
 
@@ -146,7 +163,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     end do
 
     do k=1,kx
-        utend(:,:,k) = vg(:,:,k) * vorg(:,:,k) - tgg(:,:,k)*px&
+        utend(:,:,k) = utend(:, :, k) + vg(:,:,k) * vorg(:,:,k) - tgg(:,:,k)*px&
             & - (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
     end do
 
@@ -158,7 +175,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     end do
 
     do k=1,kx
-        vtend(:,:,k) = -ug(:,:,k)*vorg(:,:,k) - tgg(:,:,k)*py&
+        vtend(:,:,k) = vtend(:, :, k) - ug(:,:,k)*vorg(:,:,k) - tgg(:,:,k)*py&
             & - (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
     end do
 
@@ -171,7 +188,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     do k=1,kx
         do j=1,il
             do i=1,ix
-                ttend(i,j,k)=tgg(i,j,k)*divg(i,j,k)&
+                ttend(i,j,k)= ttend(i,j,k) + tgg(i,j,k)*divg(i,j,k)&
                     & -(temp(i,j,k+1)+temp(i,j,k))*dhsr(k)&
                     & +fsgr(k)*tgg(i,j,k)*(sigdt(i,j,k+1)+sigdt(i,j,k))&
                     & +tref3(k)*(sigm(i,j,k+1)+sigm(i,j,k))&
@@ -184,16 +201,16 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     if (iitest.eq.1) print*,'h'
     ! Tracer tendency
 
-    do itr=1,ntr 
+    do itr=1,ntr
         do k=2,kx
             do j=1,il
                 do i=1,ix
-                    temp(i,j,k)=sigdt(i,j,k)*(trg(i,j,k,itr)-trg(i,j,k-1,itr)) 
+                    temp(i,j,k)=sigdt(i,j,k)*(trg(i,j,k,itr)-trg(i,j,k-1,itr))
                 end do
             end do
         end do
 
-        !spj for moisture, vertical advection is not possible between top 
+        !spj for moisture, vertical advection is not possible between top
         !spj two layers
         !kuch three layers
         !if(iinewtrace.eq.1)then
@@ -209,27 +226,17 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         do k=1,kx
             do j=1,il
                 do i=1,ix
-                    trtend(i,j,k,itr)=trg(i,j,k,itr)*divg(i,j,k)-(temp(i,j,k+1)&
+                    trtend(i,j,k,itr)=trtend(i, j, k, itr) + &
+                            trg(i,j,k,itr)*divg(i,j,k)-(temp(i,j,k+1)&
                         & +temp(i,j,k))*dhsr(k)
                 end do
             end do
         end do
     end do
 
-    if (iitest.eq.1) print*,'h'
-
-    !******************** physics ****************************
-
-    call geop(j1)
-
-    call phypar (vor(1,1,1,j1),div(1,1,1,j1),t(1,1,1,j1),tr(1,1,1,j1,1),phi,&
-        & ps(1,1,j1),utend,vtend,ttend,trtend)
-
-
-    !*********************************************************
-
-    if (iitest.eq.1) print*,'i'
-
+    ! 4. Conversion of grid-point tendencies to spectral space and calculation
+    !    of terms using grid-point and spectral components
+    if (iitest.eq.1) print*,'Converting grid-point tendencies to spectral space'
     do k=1,kx
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to 

@@ -1,4 +1,6 @@
 program agcm_main
+    use mod_tsteps, only: nmonrs
+    use mod_date, only: imonth, iday
 
     implicit none
 
@@ -24,8 +26,8 @@ program agcm_main
         call coupler_to_agcm(jday)
     enddo
 
-    ! Restart dataset is only written at the end
-    call restart(2)
+    ! Write restart file at end of run if not already written
+    if (mod(imonth, nmonrs) /= 0 .or. iday /= 1) call restart(2)
 end
 
 subroutine agcm_1day(jday, cexp)
@@ -55,4 +57,9 @@ subroutine agcm_1day(jday, cexp)
 
     ! 3. integrate the atmospheric model for 1 day
     call stloop(istep)
+
+    ! 4. Write restart file at the end of selected months
+    if (iday == 1) then
+        if (mod(imonth, nmonrs) == 0) call restart(2)
+    endif
 end

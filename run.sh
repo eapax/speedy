@@ -11,6 +11,12 @@ if [ $# -ne 4 ] ; then
     exit 1
 fi
 
+# Start date
+year='1981'
+month='01'
+day='01'
+hour='00'
+
 # Define directory names
 UT=`pwd`
 SRC=$UT/source	
@@ -39,8 +45,8 @@ echo $3 >  fort.2
 echo $2 >> fort.2
 
 if [ $3 != 0 ] ; then
-  echo "link restart file atgcm$3.rst to fort.3"
-  ln -s $CD/atgcm$3.rst fort.3
+  echo "link restart file ${year}${month}${day}${hour}"
+  ln -s ${CD}/${year}${month}${day}${hour}.rst
 fi 
 
 # Link input files
@@ -61,21 +67,21 @@ if [ $4 == make ] ; then
 fi
 
 # Write date input file
-cat << EOF > fort.2
-1
-1982
-01
-01
-00
-EOF
+# First line is 0 for no restart file and 1 for restart
+if [ $3 == 0 ] ; then
+    echo 0 > fort.2
+else
+    echo 1 > fort.2
+fi
+echo ${year} >> fort.2
+echo ${month} >> fort.2
+echo ${day} >> fort.2
+echo ${hour} >> fort.2
 
 time ./imp.exe | tee out.lis
 
+# Copy output to experiment directory
 mv out.lis $OUT/atgcm$2.lis
-mv fort.10 $OUT/atgcm$2.rst
-
+mv *.rst ${OUT}
 mv *.grd $OUT
 mv *.ctl $OUT
-cp ../ctl_files/yyyymmddhh.ctl $OUT
-
-cd $OUT

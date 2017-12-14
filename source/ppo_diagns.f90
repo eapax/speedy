@@ -22,7 +22,7 @@ subroutine diagns(jj,istep)
 
     call update_IO(istep)
 
-    ! 1. Get global-mean temperature and compute eddy kinetic energy 
+    ! 1. Get global-mean temperature and compute eddy kinetic energy
     sqhalf = sqrt(0.5)
 
     do k=1,kx

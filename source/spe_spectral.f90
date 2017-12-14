@@ -348,14 +348,17 @@ subroutine vds(ucosm,vcosm,vorm,divm)
     end do
 end
 !******************************************************************
-subroutine uvspec(vorm,divm,ucosm,vcosm)
+subroutine uvspec(vorm, divm, um, vm)
+    ! Calculate u and v in grid-point space from vorticity and divergence in
+    ! spectral space
     use mod_atparam
     use mod_spectral, only: uvdx, uvdyp, uvdym
 
     !include "param1spec.h"
                                                         
     real, dimension(2,mx,nx), intent(in) :: vorm,divm
-    real, dimension(2,mx,nx), intent(inout) :: ucosm,vcosm
+    real, dimension(2,mx,nx), intent(out) :: um,vm
+    real, dimension(2,mx,nx) :: ucosm,vcosm
     real, dimension(2,mx,nx) :: zc,zp
 
     integer :: k, n, m
@@ -384,6 +387,9 @@ subroutine uvspec(vorm,divm,ucosm,vcosm)
             end do
         end do
     end do
+
+    call grid(ucosm, um, 2)
+    call grid(vcosm, vm, 2)
 end
 !*******************************************************************
 subroutine grid(vorm,vorg,kcos)
