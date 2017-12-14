@@ -1,5 +1,6 @@
 module surface_fluxes
     use mod_atparam
+    use humidity, only: shtorh, q_sat
 
     implicit none
 
@@ -118,8 +119,8 @@ module surface_fluxes
             real, save :: denvvs(ngp,0:2)
             real :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, &
                     chlcp, chscp, dhfdt, dlambda, dt1, dthl, dths, esbc, &
-                    esbc4, ghum0, gtemp0, prd, qdummy, rcp, rdphi0, rdth, &
-                    rdummy, sqclat, tsk3, vg2
+                    esbc4, ghum0, gtemp0, prd, rcp, rdphi0, rdth, &
+                    sqclat, tsk3, vg2
         
             logical lscasym, lscdrag, lskineb
             logical lfluxland
@@ -264,8 +265,8 @@ module surface_fluxes
                 else
                     q1(:,1) = qa(:,kx)
                 end if
-        
-                call shtorh(0,ngp,tskin,psa,1.,qdummy,rdummy,qsat0(1,1))
+
+                qsat0(:, 1) = q_sat(ngp, tskin, psa, 1.)
         
                 do j=1,ngp
                     evap(j,1) = chl*denvvs(j,1) * &
@@ -295,7 +296,7 @@ module surface_fluxes
                     end do
         
                     ! Compute d(Evap) for a 1-degree increment of Tskin
-                    call shtorh(0,ngp,dtskin,psa,1.,qdummy,rdummy,qsat0(1,2))
+                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, 1.)
         
                     do j=1,ngp
                         if (evap(j,1).gt.0) then
@@ -392,7 +393,7 @@ module surface_fluxes
             end do
         
             ! 4.4 Evaporation
-            call shtorh(0,ngp,tsea,psa,1.,qdummy,rdummy,qsat0(1,2))
+            qsat0(:, 2) = q_sat(ngp, tsea, psa, 1.)
         
             do j=1,ngp
                 evap(j,2) = chs*denvvs(j,ks)*(qsat0(j,2)-q1(j,2))

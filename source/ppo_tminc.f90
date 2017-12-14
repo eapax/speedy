@@ -18,6 +18,7 @@ subroutine tminc
     use mod_var_sea, only: sst_am, sstan_am, sst_om, ssti_om
     use mod_physvar
     use mod_radcon, only: albsfc
+    use humidity, only: shtorh
 
     implicit none
 

@@ -9,7 +9,7 @@ COMPILE=gfortran
 ###COMOTT1=-dalign -fast -r8
 #COMOTT1=-Ofast -mips4 -IPA -r8
 # COMOTT1=  -fast -O3 -r8
- COMOTT1=  -Ofast -fdefault-real-8
+ COMOTT1=  -Ofast -fdefault-real-8 #-pedantic
 ### COMOTT1=  -fast  
 
 # COMCONV= -byteswapio 
@@ -143,7 +143,7 @@ ini_invars.o           : ini_invars.f90 mod_tsteps.o mod_dyncon0.o mod_atparam.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o
 ini_fordate.o          : ini_fordate.f90 mod_dyncon0.o mod_lflags.o mod_atparam.o mod_hdifcon.o mod_physcon.o\
 						 mod_surfcon.o mod_cli_land.o mod_date.o mod_var_land.o mod_cli_sea.o mod_var_sea.o\
-						 mod_radcon.o phy_suflux.o
+						 mod_radcon.o phy_suflux.o phy_shtorh.o
 #land2atm.o             : land2atm.f
 #land_init.o            : land_init.f
 mod_atparam.o          : mod_atparam.f90
@@ -177,17 +177,17 @@ phy_convmf.o           : phy_convmf.f90 mod_atparam.o mod_physcon.o
 phy_lscond.o           : phy_lscond.f90 mod_atparam.o mod_physcon.o
 phy_phypar.o           : phy_phypar.f90 mod_cpl_flags.o mod_lflags.o mod_atparam.o mod_physcon.o mod_randfor.o\
 					     mod_surfcon.o mod_var_land.o mod_cli_sea.o mod_var_sea.o mod_physvar.o mod_sppt.o\
-                         mod_tsteps.o phy_convmf.o phy_lscond.o phy_suflux.o phy_vdifsc.o
+                         mod_tsteps.o phy_shtorh.o phy_convmf.o phy_lscond.o phy_suflux.o phy_vdifsc.o
 phy_radiat.o           : phy_radiat.f90 mod_atparam.o mod_physcon.o mod_radcon.o
 phy_shtorh.o           : phy_shtorh.f90
-phy_suflux.o           : phy_suflux.f90 mod_atparam.o mod_physcon.o mod_radcon.o
+phy_suflux.o           : phy_suflux.f90 mod_atparam.o mod_physcon.o mod_radcon.o phy_shtorh.o
 phy_vdifsc.o           : phy_vdifsc.f90 mod_atparam.o mod_physcon.o
 ppo_diagns.o           : ppo_diagns.f90 mod_tsteps.o mod_atparam.o mod_dynvar.o mod_date.o
 ppo_restart.o          : ppo_restart.f90 mod_tsteps.o mod_atparam.o mod_dynvar.o mod_date.o
 ppo_setctl.o           : ppo_setctl.f90
 ppo_setgrd.o           : ppo_setgrd.f90 mod_tsteps.o mod_date.o
 ppo_tminc.o            : ppo_tminc.f90 mod_lflags.o mod_atparam.o mod_tmean.o mod_physcon.o mod_surfcon.o\
-						 mod_cli_land.o mod_cli_sea.o mod_var_sea.o mod_physvar.o mod_radcon.o
+						 mod_cli_land.o mod_cli_sea.o mod_var_sea.o mod_physvar.o mod_radcon.o phy_shtorh.o
 ppo_dmflux.o           : ppo_dmflux.f90 mod_tsteps.o mod_atparam.o mod_tmean.o mod_flx_land.o mod_physcon.o\
 						 mod_surfcon.o mod_flx_sea.o mod_var_sea.o mod_physvar.o mod_radcon.o
 ppo_tmout.o            : ppo_tmout.f90 mod_tsteps.o mod_atparam.o mod_tmean.o mod_physcon.o
