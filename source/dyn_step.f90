@@ -29,7 +29,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     integer, intent(in) :: j1, j2
     real, intent(in) :: dt, alph, rob, wil
-    complex, dimension(mx,nx,kx) ::  ordt, divdt, tdt, vordt
+    complex, dimension(mx,nx,kx) :: vordt, divdt, tdt
     complex :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
     real :: eps, sdrag
 

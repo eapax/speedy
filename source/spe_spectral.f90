@@ -48,8 +48,6 @@ subroutine parmtr(a)
 
     implicit none
 
-    !include "param1spec.h"
-
     real, intent(in) :: a
     real :: am1, am2, cosqr, el1, ell2, emm2
 
@@ -199,7 +197,6 @@ subroutine lgndre(j)
 
     implicit none
 
-    !include "param1spec.h"
     integer, intent(in) :: j
     real, parameter :: small = 1.e-30
 
@@ -257,8 +254,6 @@ subroutine invlap(vorm,strm)
     use mod_atparam
     use mod_spectral, only: elm2
 
-    ! include "param1spec.h"
-
     complex, intent(in) :: vorm(mx,nx)
     complex, intent(inout) :: strm(mx,nx)
     strm = -vorm * elm2
@@ -273,8 +268,6 @@ subroutine grad(psi,psdx,psdy)
     use mod_spectral, only: gradx, gradyp, gradym
 
     implicit none
-
-    !include "param1spec.h"
 
     real, dimension(2,mx,nx), intent(inout) :: psi
     real, dimension(2,mx,nx), intent(inout) :: psdx, psdy
@@ -309,8 +302,6 @@ subroutine vds(ucosm,vcosm,vorm,divm)
     use mod_spectral, only: gradx, vddyp, vddym
 
     implicit none
-
-    !include "param1spec.h"
                                                         
     real, dimension(2,mx,nx) :: ucosm, vcosm
     real, dimension(2,mx,nx), intent(inout) :: vorm, divm
@@ -353,8 +344,6 @@ subroutine uvspec(vorm, divm, um, vm)
     ! spectral space
     use mod_atparam
     use mod_spectral, only: uvdx, uvdyp, uvdym
-
-    !include "param1spec.h"
                                                         
     real, dimension(2,mx,nx), intent(in) :: vorm,divm
     real, dimension(2,mx,nx), intent(out) :: um,vm
@@ -397,8 +386,6 @@ subroutine grid(vorm,vorg,kcos)
 
     implicit none
 
-    !include "param1spec.h"
-
     real, intent(inout) :: vorg(ix,il), vorm(mx2,nx)
     integer, intent(in) :: kcos
     real :: varm(mx2,il)
@@ -411,8 +398,6 @@ subroutine spec(vorg,vorm)
 
     implicit none
 
-    !include "param1spec.h"
-
     real, intent(inout) :: vorg(ix,il), vorm(mx2,nx)
     real :: varm(mx2,il)
     call specx(vorg,varm)
@@ -424,8 +409,6 @@ subroutine vdspec(ug,vg,vorm,divm,kcos)
     use mod_spectral, only: cosgr, cosgr2
 
     implicit none
-
-    !include "param1spec.h"
 
     real, intent(in) :: ug(ix,il), vg(ix,il)
     real, intent(inout) :: vorm(mx2,nx), divm(mx2,nx)
@@ -462,8 +445,6 @@ subroutine gridy(v,varm)
     use mod_spectral, only: cpol, nsh2
 
     implicit none
-
-    !include "param1spec.h"
 
     real, intent(in) :: v(mx2,nx)
     real, intent(inout) :: varm(mx2,il)
@@ -506,8 +487,6 @@ subroutine specy(varm,vorm)
 
     implicit none
 
-    !include "param1spec.h"
-
     real, intent(in) :: varm(mx2,il)
     real, intent(inout) :: vorm(mx2,nx)
     real :: svarm(mx2,iy), dvarm(mx2,iy)
@@ -548,8 +527,6 @@ subroutine trunct(vor)
     use mod_spectral, only: trfilt
 
     implicit none
-
-    !include "param1spec.h"
 
     complex, intent(inout) :: vor(mx,nx)
 

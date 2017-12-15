@@ -18,10 +18,7 @@ subroutine sea_model_init(fmask_s,rlat)
     ! Auxiliary variables
 
     ! Domain mask
-    real :: dmask(nlon,nlat)              
-
-    ! Domain flags
-    logical :: l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian            
+    real :: dmask(nlon,nlat)
 
     ! Heat capacity of mixed-l
     real :: hcaps(nlat)
@@ -34,40 +31,6 @@ subroutine sea_model_init(fmask_s,rlat)
 
     ! 1. Set geographical domain, heat capacities and dissipation times
     !    for sea (mixed layer) and sea-ice 
-
-    ! Model parameters (default values)
-
-    ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
-    real :: depth_ml = 60.               ! High-latitude depth
-    real :: dept0_ml = 40.               ! Minimum depth (tropics)
-
-    ! sea-ice depth : d + (d0-d)*(cos_lat)^2
-    real :: depth_ice = 2.5              ! High-latitude depth
-    real :: dept0_ice = 1.5              ! Minimum depth 
-
-    ! Dissipation time (days) for sea-surface temp. anomalies
-    real :: tdsst  = 90.
-
-    ! Dissipation time (days) for sea-ice temp. anomalies
-    real :: dice = 30.
-
-    ! Minimum fraction of sea for the definition of anomalies
-    real :: fseamin = 1./3.
-
-    ! Dissipation time (days) for sea-ice temp. anomalies
-    real :: tdice
-
-    ! Geographical domain
-    ! note : more than one regional domain may be set .true.
-    l_globe  =  .true.         ! global domain
-    l_northe = .false.         ! Northern hem. oceans (lat > 20N)
-    l_natlan = .false.         ! N. Atlantic (lat 20-80N, lon 100W-45E)
-    l_npacif = .false.         ! N. Pacific  (lat 20-80N, lon 100E-100W)
-    l_tropic = .false.         ! Tropics (lat 30S-30N)
-    l_indian = .false.         ! Indian Ocean (lat 30S-30N, lon 30-120E)
-
-    ! Reset model parameters
-    include "cls_insea.h"
 
     ! Heat capacities per m^2 (depth*heat_cap/m^3)
     crad=asin(1.)/90.
