@@ -3,6 +3,7 @@ module ppo_IO_stream
     use mod_atparam
     use mod_dynvar
     use mod_physvar
+    use mod_physcon, only: gg
     use mod_date, only: imonth, month_start
 
     implicit none
@@ -18,6 +19,9 @@ module ppo_IO_stream
 
     ! Generic type used to describe an output stream
     type IO_stream
+        !
+        character (len=100) :: filename
+
         ! Spectral and Grid variables need to be treated differently in
         ! separate streams due to their different grids and the use of complex
         ! numbers
@@ -39,9 +43,6 @@ module ppo_IO_stream
         ! The record counter used for direct access in read/write statements
         integer :: recl
         integer :: rec = 1
-
-        ! An array to hold the output data in single precision
-        real(4), allocatable :: output(:, :)
     end type IO_stream
 
     ! Array containing all IO streams. Allocated during model set up
@@ -74,17 +75,70 @@ module ppo_IO_stream
                 read(99, *) nvars
                 allocate(var_ID(nvars))
                 read(99, *) var_ID
-                streams(n) = init_IO_stream(trim(filename), spectral, nstpinc, &
+                streams(n) = init_IO_stream(filename, spectral, nstpinc, &
                                             nstpout, nstpopen, nvars, var_ID)
                 deallocate(var_ID)
             end do
 
+            ! Output 0'th timestep variables
+            call update_IO(0)
         end subroutine
 
         ! Update all of the IO streams
         subroutine update_IO(istep)
             integer, intent(in) :: istep
-            integer :: n
+            integer :: n, m, p, k
+            logical :: l_transform_field(5)
+
+            ! Perform spectral transforms to update gridpoint variables if they
+            ! are required
+            ! Check which fields need to be updated
+            l_transform_field = .false.
+            do n=1, nstreams
+                ! Check all IOstreams that need to be updated and require grid
+                ! point fields
+                if (.not. streams(n)%spectral .and. &
+                        xmod(istep, streams(n)%nstpinc)) then
+                    ! Check for every prognostic variable in the IOstream
+                    do m=1, streams(n)%nvars
+                        do p=1, 5
+                            if (streams(n)%var_ID(m) == p) then
+                                l_transform_field(p) = .true.
+                            end if
+                        end do
+                    end do
+                end if
+            end do
+
+            ! Perform gridpoint transforms
+            ! ug1, vg1, tg1, qg1, phig1, pslg1
+            ! u and/or v
+            if (l_transform_field(1) .or. l_transform_field(2)) then
+                do k=1,kx
+                    call uvspec(vor(1,1,k,1), div(1,1,k,1), ug1(1,k), vg1(1,k))
+                end do
+            end if
+
+            ! Temperature
+            if (l_transform_field(3)) then
+                do k=1,kx
+                    call grid(t(1,1,k,1), tg1(1,k), 1)
+                end do
+            end if
+
+            ! Humidity
+            if (l_transform_field(4)) then
+                do k=1,kx
+                    call grid(tr(1,1,k,1,1), qg1(1,k), 1)
+                end do
+            end if
+
+            ! Geopotential
+            if (l_transform_field(5)) then
+                do k=1,kx
+                    call grid(phi(1,1,k), phig1(1,k), 1)
+                end do
+            end if
 
             do n=1, nstreams
                 call update_IO_stream(streams(n), istep)
@@ -103,6 +157,7 @@ module ppo_IO_stream
             integer :: recl
 
             ! Pass parameters to the new object
+            stream%filename = filename
             stream%spectral = spectral
             stream%nstpinc = nstpinc
             stream%nstpout = nstpout
@@ -117,11 +172,9 @@ module ppo_IO_stream
                 stream%recl = recl_grid
             end if
 
-            ! Open the the first file
+            ! Assign a unique file ID tyo the IOStream
             stream%file_ID = next_file_ID
             next_file_ID = next_file_ID + 1
-            open(stream%file_ID, file=filename, form='unformatted', &
-                    access='direct', recl=stream%recl)
         end function
 
         ! Update called once per timestep for each output stream.
@@ -135,11 +188,11 @@ module ppo_IO_stream
             type(IO_stream), intent(inout) :: stream
             integer, intent(in) :: istep
 
+            if (xmod(istep, stream%nstpopen)) call reinit_IO_stream(stream)
+
             if (xmod(istep, stream%nstpinc)) call incr_IO_stream(stream)
 
             if (xmod(istep, stream%nstpout)) call write_IO_stream(stream)
-
-            if (xmod(istep, stream%nstpopen)) call reinit_IO_stream(stream)
         end subroutine
 
         ! Check whether the timestep matches the frequency by using mod in
@@ -167,6 +220,9 @@ module ppo_IO_stream
             type(IO_stream), intent(inout) :: stream
 
             close(stream%file_ID)
+
+            open(stream%file_ID, file=trim(stream%filename), &
+                    form='unformatted', access='direct', recl=stream%recl)
         end subroutine
 
         ! todo Increment the output on substeps relative to how often it is
@@ -292,11 +348,11 @@ module ppo_IO_stream
 
                 ! qg1    = specific humidity (g/kg)
                 case(4)
-                output = qg1
+                output = qg1 * 1.0d-3  ! kg/kg
 
                 ! phig1  = geopotential
                 case(5)
-                output=phig1
+                output = phig1 / gg ! m
 
                 ! pslg1  = log. of surface pressure
                 !case(6)
