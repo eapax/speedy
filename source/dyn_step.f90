@@ -25,7 +25,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     use mod_dynvar
     use mod_hdifcon
     use rp_emulator
-    use mod_prec, only: set_precision, set_precision_spectral
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -47,6 +47,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
 
     ! 2. Computation of spectral tendencies
+    call set_precision('Spectral Dynamics')
     if (alph.eq.0.) then
         if (iitest.eq.1) print*,' call sptend'
         call sptend(divdt,tdt,psdt,j2)
@@ -60,6 +61,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     endif
 
     ! 3. Horizontal diffusion
+    call set_precision('Diffusion')
     if (iitest.eq.1) print*, ' biharmonic damping '
 
     ! 3.1 Diffusion of wind and temperature
@@ -67,23 +69,15 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call hordif(kx,div,divdt,dmpd,dmp1d)
 
     do k=1,kx
-        do n=1,nx
-            do m=1,mx
-                call set_precision_spectral(m, n)
-                ctmp(m,n,k) = t(m,n,k,1)+tcorh(m,n)*tcorv(k)
-            enddo
-        enddo
+        ctmp(:,:,k) = t(:,:,k,1) + tcorh*tcorv(k)
     enddo
-    call set_precision(0)
 
     call hordif(kx,ctmp,tdt,dmp,dmp1)
 
     ! 3.2 Stratospheric diffusion and zonal wind damping
     sdrag = rpe_literal(1.)/(tdrs*rpe_literal(3600.))
-    do n = 1,nx
-        vordt(1,n,1) = vordt(1,n,1)-sdrag*vor(1,n,1,1)
-        divdt(1,n,1) = divdt(1,n,1)-sdrag*div(1,n,1,1)
-    enddo
+    vordt(1,:,1) = vordt(1,:,1)-sdrag*vor(1,:,1,1)
+    divdt(1,:,1) = divdt(1,:,1)-sdrag*div(1,:,1,1)
 
     call hordif(1,vor, vordt,dmps,dmp1s)
     call hordif(1,div, divdt,dmps,dmp1s)
@@ -94,11 +88,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! 3.4 Diffusion of tracers
     do k=1,kx
-        do m=1,mx
-            do n=1,nx
-                ctmp(m,n,k) = tr(m,n,k,1,1)+qcorh(m,n)*qcorv(k)
-            enddo
-        enddo
+        ctmp(:,:,k) = tr(:,:,k,1,1) + qcorh*qcorv(k)
     enddo
 
     call hordif(kx,ctmp,trdt,dmpd,dmp1d)
@@ -113,6 +103,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     if (dt.le.0.) return
 
     if (iitest.eq.1) print*,' time integration'
+    call set_precision('Timestepping')
 
     if (j1.eq.1) then
         eps = 0.
@@ -121,7 +112,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     endif
 
     call timint(j1,dt,eps,wil,1,ps,psdt)
-
     call timint(j1,dt,eps,wil,kx,vor,vordt)
     call timint(j1,dt,eps,wil,kx,div,divdt)
     call timint(j1,dt,eps,wil,kx,t,  tdt)
@@ -139,7 +129,6 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
 
     USE mod_atparam
     use rp_emulator
-    use mod_prec, only: set_precision, set_precision_spectral
 
     implicit none
 
@@ -150,12 +139,8 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
     integer :: k, m
 
     do k=1,nlev
-        do m=1,mxnx
-            call set_precision_spectral(m, 1)
-            fdt(m,k)=(fdt(m,k)-dmp(m)*field(m,k))*dmp1(m)
-        enddo
+        fdt(:,k)=(fdt(:,k)-dmp*field(:,k))*dmp1
     enddo
-    call set_precision(0)
 end
 
 subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
@@ -165,7 +150,6 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     use mod_atparam
     use rp_emulator
-    use mod_prec, only: set_precision, set_precision_spectral
 
     implicit none
 
@@ -189,18 +173,13 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     ! The actual leap frog with the robert filter
     do k=1,nlev
-        do m=1,mxnx
-            call set_precision_spectral(m, 1)
-            fnew (m)     = field(m,k,1) + dt*fdt(m,k)
-            field(m,k,1) = field(m,k,j1) +  wil*eps*(field(m,k,1)&
-                & -two*field(m,k,j1)+fnew(m))
-
-            ! and here comes Williams' innovation to the filter
-            field(m,k,2) = fnew(m)-(1-wil)*eps*(field(m,k,1)&
-                &-two*field(m,k,j1)+fnew(m))
-        enddo
+        fnew = field(:,k,1) + dt*fdt(:,k)
+        field(:,k,1) = field(:,k,j1) +  wil*eps*(field(:,k,1)&
+                & -two*field(:,k,j1)+fnew)
+        ! and here comes Williams' innovation to the filter
+        field(:,k,2) = fnew - (1-wil)*eps* &
+                (field(:,k,1) - two*field(:,k,j1)+fnew)
     enddo
-    call set_precision(0)
 end
 
 subroutine cgrate(vor,div,vordt,divdt)

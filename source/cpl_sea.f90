@@ -208,18 +208,17 @@ subroutine rest_sea(imode)
 
     if (imode.eq.0) then
         ! Load data at full precision
-        RPE_DEFAULT_SBITS = 52
+        call set_precision('Full')
 
         read (3)  sst_om(:)       ! sst 
         read (3) tice_om(:)       ! sea ice temperature
         read (3) sice_om(:)       ! sea ice fraction
 
         ! Reduce precision of input fields
-        call set_precision(2)
+        call set_precision('Initial Values')
         sst_om = sst_om
         tice_om = tice_om
         sice_om = sice_om
-        call set_precision(0)
     else
         !    write sea/ice model variables from coupled runs,
         !    otherwise write fields used by atmospheric model

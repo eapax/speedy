@@ -113,13 +113,12 @@ subroutine rest_land(imode)
 
     if (imode.eq.0) then
         ! Load data at full precision
-        RPE_DEFAULT_SBITS = 52
+        call set_precision('Full')
         read (3)  stl_lm(:)       ! Land sfc. temperature
 
         ! Reduce precision of input fields
-        call set_precision(2)
+        call set_precision('Inital Values')
         stl_lm = stl_lm
-        call set_precision(0)
     else
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model
