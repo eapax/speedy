@@ -1,66 +1,103 @@
 module surface_fluxes
     use mod_atparam
     use humidity, only: shtorh, q_sat
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     private
-    public suflux, sflset
+    public suflux, sflset, init_sflcon
 
     !  Constants for surface fluxes
     ! Ratio of near-sfc wind to lowest-level wind
-    type(rpe_var) :: fwind0 = 0.95
+    real(dp), parameter :: fwind0_ = 0.95_dp
 
     ! Weight for near-sfc temperature extrapolation (0-1) :
     !          1 : linear extrapolation from two lowest levels
     !          0 : constant potential temperature ( = lowest level)
-    type(rpe_var) :: ftemp0 = 1.0
+    real(dp), parameter :: ftemp0_ = 1.0_dp
 
     ! Weight for near-sfc specific humidity extrapolation (0-1) :
     !            1 : extrap. with constant relative hum. ( = lowest level)
     !            0 : constant specific hum. ( = lowest level)
-    type(rpe_var) :: fhum0 = 0.0
+    real(dp), parameter :: fhum0_ = 0.0_dp
 
     ! Drag coefficient for momentum over land
-    type(rpe_var) :: cdl = 2.4e-3
+    real(dp), parameter :: cdl_ = 2.4d-3
 
     ! Drag coefficient for momentum over sea
-    type(rpe_var) :: cds = 1.0e-3
+    real(dp), parameter :: cds_ = 1.0d-3
 
     ! Heat exchange coefficient over land
-    type(rpe_var) :: chl = 1.2e-3
+    real(dp), parameter :: chl_ = 1.2d-3
 
     ! Heat exchange coefficient over sea
-    type(rpe_var) :: chs = 0.9e-3
+    real(dp), parameter :: chs_ = 0.9d-3
 
     ! Wind speed for sub-grid-scale gusts
-    type(rpe_var) :: vgust = 5.0
+    real(dp), parameter :: vgust_ = 5.0_dp
 
     ! Daily-cycle correction (dTskin/dSSRad)
-    type(rpe_var) :: ctday = 1.0e-2
+    real(dp), parameter :: ctday_ = 1.0d-2
 
     ! Potential temp. gradient for stability correction
-    type(rpe_var) :: dtheta = 3.0
+    real(dp), parameter :: dtheta_ = 3.0_dp
 
     ! Amplitude of stability correction (fraction)
-    type(rpe_var) :: fstab = 0.67
+    real(dp), parameter :: fstab_ = 0.67_dp
 
     ! Height scale for orographic correction
-    type(rpe_var) :: hdrag = 2000.0
+    real(dp), parameter :: hdrag_ = 2000.0_dp
 
     ! Amplitude of orographic correction (fraction)
-    type(rpe_var) :: fhdrag = 0.5
+    real(dp), parameter :: fhdrag_ = 0.5_dp
 
     ! Heat conductivity in skin-to-root soil layer
-    type(rpe_var) :: clambda = 7.0
+    real(dp), parameter :: clambda_ = 7.0_dp
 
     ! Heat conductivity in soil for snow cover = 1
-    type(rpe_var) :: clambsn = 7.0
+    real(dp), parameter :: clambsn_ = 7.0_dp
 
     ! Time-invariant fields (initial. in SFLSET)
     type(rpe_var) :: forog(ix*il)
 
+    ! Reduced precision versions
+    type(rpe_var) :: fwind0
+    type(rpe_var) :: ftemp0
+    type(rpe_var) :: fhum0
+    type(rpe_var) :: cdl
+    type(rpe_var) :: cds
+    type(rpe_var) :: chl
+    type(rpe_var) :: chs
+    type(rpe_var) :: vgust
+    type(rpe_var) :: ctday
+    type(rpe_var) :: dtheta
+    type(rpe_var) :: fstab
+    type(rpe_var) :: hdrag
+    type(rpe_var) :: fhdrag
+    type(rpe_var) :: clambda
+    type(rpe_var) :: clambsn
+
     contains
+
+        subroutine init_sflcon
+            fwind0  = fwind0_
+            ftemp0  = ftemp0_
+            fhum0   = fhum0_
+            cdl     = cdl_
+            cds     = cds_
+            chl     = chl_
+            chs     = chs_
+            vgust   = vgust_
+            ctday   = ctday_
+            dtheta  = dtheta_
+            fstab   = fstab_
+            hdrag   = hdrag_
+            fhdrag  = fhdrag_
+            clambda = clambda_
+            clambsn = clambsn_
+        end subroutine
 
         subroutine suflux(psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav, &
                 ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,tsfc,tskin,u0,v0,t0, &
@@ -258,7 +295,7 @@ module surface_fluxes
 
                 ! 2.5 Evaporation
                 if (fhum0.gt.0.) then
-                    call shtorh(-1,ngp,t1(1,1),psa,1.0_dp, &
+                    call shtorh(-1,ngp,t1(1,1),psa,rpe_literal(1.0), &
                             q1(1,1),rh(1,kx),qsat0(1,1))
 
                     do j=1,ngp
@@ -268,7 +305,7 @@ module surface_fluxes
                     q1(:,1) = qa(:,kx)
                 end if
 
-                qsat0(:, 1) = q_sat(ngp, tskin, psa, 1.0_dp)
+                qsat0(:, 1) = q_sat(ngp, tskin, psa, rpe_literal(1.0))
 
                 do j=1,ngp
                     evap(j,1) = chl*denvvs(j,1) * &
@@ -298,7 +335,7 @@ module surface_fluxes
                     end do
 
                     ! Compute d(Evap) for a 1-degree increment of Tskin
-                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, 1.0_dp)
+                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, rpe_literal(1.0))
 
                     do j=1,ngp
                         if (evap(j,1).gt.0) then
@@ -359,7 +396,7 @@ module surface_fluxes
                 end do
 
                 if (fhum0.gt.0.) then
-                    call shtorh(-1,ngp,t1(1,2),psa,1.0_dp, &
+                    call shtorh(-1,ngp,t1(1,2),psa,rpe_literal(1.0), &
                             q1(1,2),rh(1,kx),qsat0(1,2))
 
                     do j=1,ngp
@@ -395,7 +432,7 @@ module surface_fluxes
             end do
 
             ! 4.4 Evaporation
-            qsat0(:, 2) = q_sat(ngp, tsea, psa, 1.0_dp)
+            qsat0(:, 2) = q_sat(ngp, tsea, psa, rpe_literal(1.0))
 
             do j=1,ngp
                 evap(j,2) = chs*denvvs(j,ks)*(qsat0(j,2)-q1(j,2))

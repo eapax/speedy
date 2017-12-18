@@ -18,7 +18,7 @@ subroutine tminc
     use mod_var_sea, only: sst_am, sstan_am, sst_om, ssti_om
     use mod_physvar
     use mod_radcon, only: albsfc
-    use humidity, only: shtorh
+    use humidity, only: shtorh_dp
     use rp_emulator
     use mod_prec
 
@@ -192,8 +192,8 @@ subroutine tminc
         ! Estimate specific humidity using interpolated rel.hum. and
         ! sat. spec.hum. at interpolated temperature
         if (lppres) then
-            call shtorh(-1,ngp,adsave(1,2),pout(k),-1.0_dp,adsave(1,5),adsave(1,6),&
-                & qsatpl)
+            call shtorh_dp(-1,ngp,adsave(1,2),(/pout(k)%val/),-1.0_dp, &
+                    adsave(1,5),adsave(1,6),qsatpl)
 
             ! Below the surface, set spec.hum. = near-surface value 
             do j=1,ngp

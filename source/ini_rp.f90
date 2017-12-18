@@ -1,14 +1,14 @@
 subroutine ini_rp
-    use mod_cnvcon
+    use convection, only: init_cnvcon
+    use condensation, only: init_lsccon
+    use surface_fluxes, only: init_sflcon
+    use vertical_diffusion, only: init_vdicon
     use mod_dyncon0
     use mod_dyncon1
-    use mod_lsccon
     use mod_physcon
     use mod_radcon
-    use mod_sflcon
     use mod_surfcon
     use mod_tsteps
-    use mod_vdicon
     
     call init_cnvcon
     call init_dyncon0

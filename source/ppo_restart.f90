@@ -46,7 +46,6 @@ subroutine restart(jday)
         read (3) t
         read (3) ps
         read (3) tr
-        close (3)
 
         ! Reduce precision of input fields
         call set_precision('Initial Values')
@@ -58,6 +57,7 @@ subroutine restart(jday)
 
         call rest_land(0)
         call rest_sea(0)
+        close (3)
 
         call set_precision('Default')
     else

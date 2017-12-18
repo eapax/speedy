@@ -105,8 +105,8 @@ subroutine fordate(imode)
         end do
     end do
 
-    qref = q_sat(ngp, reshape(tref, (/ngp/)), (/1.0_dp/), -1.0_dp)
-    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  1.0_dp)
+    qref = q_sat(ngp, reshape(tref, (/ngp/)), (/rpe_literal(1.0)/), rpe_literal(-1.0))
+    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  rpe_literal(1.0))
 
     corh = refrh1 * reshape((qref - qsfc), (/nlon, nlat/))
 

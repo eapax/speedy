@@ -1,31 +1,49 @@
 module vertical_diffusion
 
     use rp_emulator
+    use mod_prec
 
     implicit none
 
     private
-    public vdifsc
+    public vdifsc, init_vdicon
 
     ! Relaxation time (in hours) for shallow convection
-    type(rpe_var), parameter :: trshc = 6.0
+    real(dp), parameter :: trshc_ = 6.0
 
     ! Relaxation time (in hours) for moisture diffusion
-    type(rpe_var), parameter :: trvdi = 24.0
+    real(dp), parameter :: trvdi_ = 24.0
 
     ! Relaxation time (in hours) for super-adiab. conditions
-    type(rpe_var), parameter :: trvds = 6.0
+    real(dp), parameter :: trvds_ = 6.0
 
     ! Reduction factor of shallow conv. in areas of deep conv.
-    type(rpe_var), parameter :: redshc = 0.5
+    real(dp), parameter :: redshc_ = 0.5
 
     ! Maximum gradient of relative humidity (d_RH/d_sigma)
-    type(rpe_var), parameter :: rhgrad = 0.5
+    real(dp), parameter :: rhgrad_ = 0.5
 
     ! Minimum gradient of dry static energy (d_DSE/d_phi)
-    type(rpe_var), parameter :: segrad = 0.1
+    real(dp), parameter :: segrad_ = 0.1
+
+    ! Reduced precision versions
+    type(rpe_var) :: trshc
+    type(rpe_var) :: trvdi
+    type(rpe_var) :: trvds
+    type(rpe_var) :: redshc
+    type(rpe_var) :: rhgrad
+    type(rpe_var) :: segrad
 
     contains
+        subroutine init_vdicon
+            trshc = trshc_
+            trvdi = trvdi_
+            trvds = trvds_
+            redshc = redshc_
+            rhgrad = rhgrad_
+            segrad = segrad_
+        end subroutine
+
         subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv, &
                 utenvd,vtenvd,ttenvd,qtenvd)
             !   subroutine vdifsc (ua,va,se,rh,qa,qsat,phi,icnv,
@@ -59,7 +77,7 @@ module vertical_diffusion
 
             integer :: nl1, j, k, k1
             type(rpe_var) :: cshc, cvdi, fshcq, fshcse, fvdiq, fvdise, drh0, &
-                    fvdiq2, dmse, drh, fluxse, fluxq, fcnv, se0
+                    fvdiq2, dmse, drh, fluxse, fluxq, fcnv, se0, one
             type(rpe_var), dimension(kx) :: rsig, rsig1
 
             one = 1.0

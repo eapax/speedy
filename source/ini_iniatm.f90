@@ -97,10 +97,16 @@ subroutine ini_atm(cexp)
         end if
     end if
 
-    if (ihout) call iogrid(5) ! create control file for 6-hourly output
+    call geop(1)
+
+    if (ihout) then
+        call iogrid(5) ! create control file for 6-hourly output
+        call iogrid(4)
+    end if
+
     if (ipout) then
+        call iogrid(2) ! create control file for 6-hourly output
         call iogrid(3)
-        call geop(1)
     end if
 
 

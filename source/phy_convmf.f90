@@ -1,29 +1,49 @@
 module convection
 
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
     private
-    public convmf
+    public convmf, init_cnvcon
 
     ! Minimum (norm.) sfc. pressure for the occurrence of convection
-    real, parameter :: psmin = 0.8
+    real(dp), parameter :: psmin_ = 0.8
 
     ! Time of relaxation (in hours) towards reference state
-    real, parameter :: trcnv = 6.0
+    real(dp), parameter :: trcnv_ = 6.0
 
     ! Relative hum. threshold in the boundary layer
-    real, parameter :: rhbl = 0.9
+    real(dp), parameter :: rhbl_ = 0.9
 
     ! Rel. hum. threshold in intermed. layers for secondary mass flux
-    real, parameter :: rhil = 0.7
+    real(dp), parameter :: rhil_ = 0.7
 
     ! Max. entrainment as a fraction of cloud-base mass flux
-    real, parameter :: entmax = 0.5
+    real(dp), parameter :: entmax_ = 0.5
 
     ! Ratio between secondary and primary mass flux at cloud-base
-    real, parameter :: smf = 0.8
+    real(dp), parameter :: smf_ = 0.8
+
+    ! Reduced precision versions
+    type(rpe_var) :: psmin
+    type(rpe_var) :: trcnv
+    type(rpe_var) :: rhbl
+    type(rpe_var) :: rhil
+    type(rpe_var) :: entmax
+    type(rpe_var) :: smf
 
     contains
+
+        subroutine init_cnvcon
+            psmin = psmin_
+            trcnv = trcnv_
+            rhbl = rhbl_
+            rhil = rhil_
+            entmax = entmax_
+            smf = smf_
+        end subroutine
 
         subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
             ! SUBROUTINE CONVMF (PSA,SE,QA,QSAT, ITOP,CBMF,PRECNV,DFSE,DFQA)
@@ -64,8 +84,8 @@ module convection
             nlp=kx+1
             fqmax=5.
 
-            fm0=p0*dsig(kx)/(gg*trcnv*3600)
-            rdps=2./(1.-psmin)
+            fm0=p0*dsig(kx)/(gg*trcnv*rpe_literal(3600))
+            rdps=rpe_literal(2.)/(rpe_literal(1.)-psmin)
 
             dfse = 0.0
             dfqa = 0.0
@@ -160,7 +180,7 @@ module convection
 
                 ! Cloud-base mass flux, computed to satisfy:
                 ! fmass*(qmax-qb)*(g/dp)=qdif/trcnv
-                fpsa=psa(j)*min(1.,(psa(j)-psmin)*rdps)
+                fpsa=psa(j)*min(1.0_dp,(psa(j)-psmin)*rdps)
                 fmass=fm0*fpsa*min(fqmax,qdif(j)/(qmax-qb))
                 cbmf(j)=fmass
 

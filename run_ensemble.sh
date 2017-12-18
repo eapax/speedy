@@ -12,7 +12,7 @@ if [ $# -ne 4 ] ; then
 fi
 
 # Start date
-year='1981'
+year='1982'
 month='01'
 day='01'
 hour='00'
@@ -20,7 +20,7 @@ hour='00'
 # Define directory names
 UT=`pwd`
 SRC=${UT}/source
-TMP=${UT}/tmp
+TMP=${UT}/temp
 mkdir -p ${UT}/output/exp_$2
 OUT=${UT}/output/exp_$2
 CD=${UT}/output/exp_$3
@@ -69,18 +69,27 @@ echo ${hour} >> fort.2
 
 
 # Loop over precisions being tested
-for i in {3..23}
+for i in {52..52}
 do
     echo ${i}
     # Write precision to input file
-    # Reduced precision
+    # reduced_precision
     echo ${i} > precision.txt
-    # Zeroth mode precision
+    # initial values
     echo ${i} >> precision.txt
-    # Grid-point dynamics precision
+    # spectral transform
     echo ${i} >> precision.txt
-    # Initial condition precision
+    # grid physics
     echo ${i} >> precision.txt
+    # grid dynamics
+    echo ${i} >> precision.txt
+    # spectral dynamics
+    echo ${i} >> precision.txt
+    # diffusion
+    echo ${i} >> precision.txt
+    # time stepping
+    echo ${i} >> precision.txt
+
 
     # Run the model
     time ./imp.exe | tee out.lis

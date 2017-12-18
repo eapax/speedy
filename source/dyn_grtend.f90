@@ -138,13 +138,12 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     ! (The following combination of terms is utilized later in the
     !     temperature equation)
     do k=1,kx
-        puv(i,j,k) = (ug(:,:,k) - umean) * px + (vg(:,:,k) - vmean) * py
+        puv(:,:,k) = (ug(:,:,k) - umean) * px + (vg(:,:,k) - vmean) * py
     end do
 
     if (iitest.eq.1) print*,'e'
 
     do k=1,kx
-        call set_precision_grid(i,j,k)
         !cspj sigdt is the vertical velocity (in sigma coords)
         sigdt(:,:,k+1) = sigdt(:,:,k) - dhs(k)*(puv(:,:,k)+divg(:,:,k)-dmean)
         sigm(:,:,k+1) = sigm(:,:,k) - dhs(k)*puv(:,:,k)
@@ -158,8 +157,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         tgg(:,:,k) = tg(:,:,k)-tref(k)
     end do
 
-    px(i,j) = rgas*px
-    py(i,j) = rgas*py
+    px = rgas*px
+    py = rgas*py
 
     ! Zonal wind tendency
     temp(:,:,1) = 0.0
@@ -188,7 +187,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! Temperature tendency
     do k=2,kx
-        temp(i,j,k) = sigdt(:,:,k)*(tgg(:,:,k) - tgg(:,:,k-1)) + &
+        temp(:,:,k) = sigdt(:,:,k)*(tgg(:,:,k) - tgg(:,:,k-1)) + &
                         sigm(:,:,k)*(tref(k) - tref(k-1))
     end do
 
