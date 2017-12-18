@@ -29,7 +29,7 @@ module humidity
 
             integer, intent(in) :: imode, ngp
             real, intent(in) :: ta(ngp), ps(*), sig
-            real, intent(inout) :: qsat(ngp), qa(ngp), rh(ngp)
+            real :: qsat(ngp), qa(ngp), rh(ngp)
 
             ! 2. Compute rel.hum. RH=Q/Qsat (imode>0), or Q=RH*Qsat (imode<0)
             qsat = q_sat(ngp, ta, ps, sig)
