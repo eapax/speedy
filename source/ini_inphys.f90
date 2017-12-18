@@ -6,8 +6,6 @@ subroutine inphys(hsg,ppl,rlat)
     ! Input :  hsg  : sigma at half levels
     !          ppl  : pressure levels for post-processing
     !          rlat : gaussian-grid latitudes
-    ! Initialized common blocks: phycon, fsiglt, forcon, 
-    !                            cnvcon, lsccon, radcon, sflcon, vdicon
 
     use mod_atparam
     use mod_physcon

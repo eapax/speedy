@@ -18,6 +18,7 @@ subroutine tminc
     use mod_var_sea, only: sst_am, sstan_am, sst_om, ssti_om
     use mod_physvar
     use mod_radcon, only: albsfc
+    use humidity, only: shtorh
     use rp_emulator
     use mod_prec
 
@@ -138,7 +139,7 @@ subroutine tminc
 
         ! 2.2 Interpolate 3-d fields
         ! Temperature (extrapolated below the lowest level when W0(j)<0)
-        call verint(adsave(1,2),tg1%val,ngp,kx,k0,w0) 
+        call verint(adsave(1,2),tg1%val,ngp,kx,k0,w0)
 
         ! Remove extrapolation of temperature inversions 
         ! and correct extrap. values using a reference lapse rate
@@ -170,14 +171,14 @@ subroutine tminc
                 adsave(j,1)=phi1+w0(j)*(phi2-phi1)
             end do
         else
-            call verint(adsave(1,1),phig1%val,ngp,kx,k0,w0) 
+            call verint(adsave(1,1),phig1%val,ngp,kx,k0,w0)
         end if
 
         ! Wind and relative humidity 
         ! a) Interpolate above the lowest level
-        call verint(adsave(1,3),ug1%val,ngp,kx,k0,w0) 
-        call verint(adsave(1,4),vg1%val,ngp,kx,k0,w0) 
-        call verint(adsave(1,6),rh%val, ngp,kx,k0,w0) 
+        call verint(adsave(1,3),ug1%val,ngp,kx,k0,w0)
+        call verint(adsave(1,4),vg1%val,ngp,kx,k0,w0)
+        call verint(adsave(1,6),rh%val, ngp,kx,k0,w0)
 
         ! b) Decrease wind speed below the lowest level
         do j=1,ngp
@@ -202,7 +203,7 @@ subroutine tminc
                 end if
             end do
         else
-            call verint(adsave(1,5),qg1%val,ngp,kx,k0,w0) 
+            call verint(adsave(1,5),qg1%val,ngp,kx,k0,w0)
         end if
 
         ! Rescale geopotential and rel. humidity
@@ -265,9 +266,9 @@ subroutine tminc
         n0=ns3d1+ns3d2
         call add1f(save3d,tt_lsc%val,ngp*nlev,n0,1)
         call add1f(save3d,tt_cnv%val,ngp*nlev,n0,1)
-        call add1f(save3d,tt_rsw%val,ngp*nlev,n0,1) 
-        call add1f(save3d,tt_rlw%val,ngp*nlev,n0,1) 
-        call add1f(save3d,tt_pbl%val,ngp*nlev,n0,1) 
+        call add1f(save3d,tt_rsw%val,ngp*nlev,n0,1)
+        call add1f(save3d,tt_rlw%val,ngp*nlev,n0,1)
+        call add1f(save3d,tt_pbl%val,ngp*nlev,n0,1)
     end if
 
     if (iitest.eq.1) print *, 'end of tminc'
@@ -348,7 +349,7 @@ subroutine maskout(finp,fout,fmask,ngp)
     implicit none
 
     ! *** Set undefined values according to binary land-sea mask
-    real(dp), intent(in) :: finp(ngp), fmask(ngp) 
+    real(dp), intent(in) :: finp(ngp), fmask(ngp)
     integer, intent(in) :: ngp
     real(dp), intent(inout) :: fout(ngp)
     integer :: j

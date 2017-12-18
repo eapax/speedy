@@ -20,6 +20,11 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_physvar
     use mod_sppt, only: mu, gen_sppt
     use mod_tsteps, only: sppt_on
+    use humidity, only: shtorh
+    use convection, only: convmf
+    use condensation, only: lscond
+    use surface_fluxes, only: suflux
+    use vertical_diffusion, only: vdifsc
     use rp_emulator
     use mod_prec
 

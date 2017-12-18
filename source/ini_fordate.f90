@@ -20,6 +20,8 @@ subroutine fordate(imode)
     use mod_var_sea, only: sstcl_ob, sst_am, sice_am
     use mod_radcon, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
         & alb_l, alb_s, albsfc
+    use surface_fluxes, only: sflset
+    use humidity, only: q_sat
     use rp_emulator
     use mod_prec
 
@@ -28,12 +30,13 @@ subroutine fordate(imode)
     integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon * nlat
 
     integer, intent(in) :: imode
-    type(rpe_var), dimension(nlon, nlat) :: corh, tsfc, tref, psfc, qsfc, qref
+    type(rpe_var), dimension(nlon, nlat) :: corh, tsfc, tref, psfc
+    type(rpe_var), dimension(ngp) :: qsfc, qref
     type(rpe_var) :: gamlat(nlat)
 
     type(rpe_var) :: fland(ngp), alb_0(ngp)
 
-    type(rpe_var) :: del_co2, dummy, pexp
+    type(rpe_var) :: del_co2, pexp
     integer :: i, j, ij, iitest = 0, iyear_ref
 
     fland = reshape(fmask_l, (/ngp/))
@@ -102,10 +105,10 @@ subroutine fordate(imode)
         end do
     end do
 
-    call shtorh(0, ngp, tref,   1.0_dp, -1.0_dp, dummy, dummy, qref)
-    call shtorh(0, ngp, tsfc, psfc, 1.0_dp, dummy, dummy, qsfc)
+    qref = q_sat(ngp, reshape(tref, (/ngp/)), (/1.0_dp/), -1.0_dp)
+    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  1.0_dp)
 
-    corh = refrh1 * (qref - qsfc)
+    corh = refrh1 * reshape((qref - qsfc), (/nlon, nlat/))
 
     if (iitest > 1.and.imode == 0) call outest(19,corh)
 
