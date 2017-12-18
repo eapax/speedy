@@ -97,23 +97,15 @@ subroutine ini_atm(cexp)
         end if
     end if
 
-    call geop(1)
-
-    if (ihout) then
-        call iogrid(5) ! create control file for 6-hourly output
-        call iogrid(4)
-    end if
-
-    if (ipout) then
-        call iogrid(2) ! create control file for 6-hourly output
-        call iogrid(3)
-    end if
-
-
     ! 8.3 output files for grid-point fields
     if (itmout) call setgrd(0,cexp)
 
+    ! create control file for 6-hourly output
+    if (ihout) call iogrid(5)
+    if (ipout) call iogrid(3)
+
     ! Write initial data
+    call geop(1)
     if (ipout) call iogrid(2)
     if (ihout) call iogrid(4)
 
