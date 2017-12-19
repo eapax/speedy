@@ -21,6 +21,7 @@ subroutine iogrid(imode)
     use mod_tmean
     use mod_flx_land
     use mod_flx_sea
+    use spectral, only: uvspec, grid, spec, vdspec
 
     implicit none
 

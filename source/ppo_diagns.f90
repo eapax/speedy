@@ -9,6 +9,7 @@ subroutine diagns(jj,istep)
     use mod_tsteps, only: nstdia, nstppr, nstout, itmout
     use mod_atparam
     use mod_dynvar
+    use spectral, only: invlap
 
     implicit none
 

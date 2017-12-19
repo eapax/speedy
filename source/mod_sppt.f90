@@ -9,6 +9,7 @@ module mod_sppt
     use mod_tsteps, only: nsteps
     use mod_dyncon1, only: rearth
     use mod_spectral, only: el2
+    use spectral, only: grid
 
     implicit none
 

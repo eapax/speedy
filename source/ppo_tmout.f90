@@ -11,6 +11,7 @@ subroutine tmout(imode)
     use mod_atparam
     use mod_tmean
     use mod_physcon, only: p0, pout
+    use spectral, only: invlap, grid, vdspec
 
     implicit none
 

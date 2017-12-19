@@ -382,6 +382,7 @@ subroutine truncg (itr,fg1,fg2)
     ! Output  : fg2 : filtered grid-point field
 
     USE mod_atparam
+    use spectral, only: grid, spec
 
     implicit none
 

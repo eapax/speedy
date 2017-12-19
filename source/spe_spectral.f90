@@ -1,3 +1,12 @@
+module spectral
+
+    implicit none
+
+    private
+    public parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
+
+    contains
+
 !******************************************************************
 subroutine gaussl(x,w,m)
     !   a slightly modified version of a program in Numerical Recipes 
@@ -245,11 +254,9 @@ subroutine lap(strm,vorm)
     use mod_atparam
     use mod_spectral, only: el2
 
-    implicit none
-
-
     complex, intent(in) :: strm(mx,nx)
     complex, intent(inout) :: vorm(mx,nx)
+
     vorm = -strm * el2
 end
 !*******************************************************************
@@ -257,94 +264,60 @@ subroutine invlap(vorm,strm)
     use mod_atparam
     use mod_spectral, only: elm2
 
-    ! include "param1spec.h"
-
     complex, intent(in) :: vorm(mx,nx)
     complex, intent(inout) :: strm(mx,nx)
-    strm = -vorm * elm2
 
-    !do m=1,mxnx
-    !    strm(m,1)=-vorm(m,1)*elm2(m,1)
-    !end do
+    strm = -vorm * elm2
 end
 !*********************************************************************
 subroutine grad(psi,psdx,psdy)
     use mod_atparam
     use mod_spectral, only: gradx, gradyp, gradym
 
-    implicit none
+    complex, dimension(mx,nx), intent(inout) :: psi
+    complex, dimension(mx,nx), intent(inout) :: psdx, psdy
 
-    !include "param1spec.h"
-
-    real, dimension(2,mx,nx), intent(inout) :: psi
-    real, dimension(2,mx,nx), intent(inout) :: psdx, psdy
-
-    integer :: k, n, m
+    integer :: n
 
     do n=1,nx
-        do m=1,mx
-            psdx(2,m,n)=gradx(m)*psi(1,m,n)
-            psdx(1,m,n)=-gradx(m)*psi(2,m,n)
-        end do
+        psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n))), &
+                           gradx*REAL(REAL (psi(:,n))))
     end do
 
-    do k=1,2
-        do m=1,mx
-            psdy(k,m,1)=gradyp(m,1)*psi(k,m,2)
-            psdy(k,m,nx)=-gradym(m,nx)*psi(k,m,ntrun1)
-        end do
-    end do
+    psdy(:,1) = gradyp(:,1)*psi(:,2)
+    psdy(:,nx) = -gradym(:,nx)*psi(:,ntrun1)
 
-    do k=1,2
-        do n=2,ntrun1
-            do m=1,mx
-                psdy(k,m,n)=-gradym(m,n)*psi(k,m,n-1)+gradyp(m,n)*psi(k,m,n+1)
-            end do
-        end do
+
+    do n=2,ntrun1
+        psdy(:,n) = -gradym(:,n)*psi(:,n-1) + gradyp(:,n)*psi(:,n+1)
     end do
 end
 !******************************************************************
 subroutine vds(ucosm,vcosm,vorm,divm)
     use mod_atparam
     use mod_spectral, only: gradx, vddyp, vddym
-
-    implicit none
-
-    !include "param1spec.h"
                                                         
-    real, dimension(2,mx,nx) :: ucosm, vcosm
-    real, dimension(2,mx,nx), intent(inout) :: vorm, divm
-    real, dimension(2,mx,nx) :: zc, zp
+    complex, dimension(mx,nx) :: ucosm, vcosm
+    complex, dimension(mx,nx), intent(inout) :: vorm, divm
+    complex, dimension(mx,nx) :: zc, zp
     
-    integer :: n, m, k
+    integer :: n
 
     do n=1,nx
-        do m=1,mx
-            zp(2,m,n)=gradx(m)*ucosm(1,m,n)
-            zp(1,m,n)=-gradx(m)*ucosm(2,m,n)
-            zc(2,m,n)=gradx(m)*vcosm(1,m,n)
-            zc(1,m,n)=-gradx(m)*vcosm(2,m,n)
-        end do
+        zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n))), &
+                        gradx*REAL(REAL (ucosm(:,n))))
+        zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n))), &
+                        gradx*REAL(REAL (vcosm(:,n))))
     end do
 
-    do k=1,2
-        do m=1,mx
-            vorm(k,m,1)=zc(k,m,1)-vddyp(m,1)*ucosm(k,m,2)
-            vorm(k,m,nx)=vddym(m,nx)*ucosm(k,m,ntrun1)
-            divm(k,m,1)=zp(k,m,1)+vddyp(m,1)*vcosm(k,m,2)
-            divm(k,m,nx)=-vddym(m,nx)*vcosm(k,m,ntrun1)
-        end do
-    end do
+    vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
+    vorm(:,nx) = vddym(:,nx)*ucosm(:,ntrun1)
+    divm(:,1) = zp(:,1) + vddyp(:,1)*vcosm(:,2)
+    divm(:,nx) = -vddym(:,nx)*vcosm(:,ntrun1)
 
-    do k=1,2
-        do n=2,ntrun1
-            do m=1,mx
-                vorm(k,m,n)=vddym(m,n)*ucosm(k,m,n-1)-vddyp(m,n)*&
-                    & ucosm(k,m,n+1)+zc(k,m,n)  
-                divm(k,m,n)=-vddym(m,n)*vcosm(k,m,n-1)+vddyp(m,n)*&
-                    & vcosm(k,m,n+1)+zp(k,m,n)
-            end do
-        end do
+    do n=2,ntrun1
+        vorm(:,n)= vddym(:,n)*ucosm(:,n-1) - vddyp(:,n)*ucosm(:,n+1) + zc(:,n)
+        divm(:,n)=-vddym(:,n)*vcosm(:,n-1) + vddyp(:,n)*vcosm(:,n+1) + zp(:,n)
     end do
 end
 !******************************************************************
@@ -353,39 +326,25 @@ subroutine uvspec(vorm, divm, um, vm)
     ! spectral space
     use mod_atparam
     use mod_spectral, only: uvdx, uvdyp, uvdym
-
-    !include "param1spec.h"
                                                         
-    real, dimension(2,mx,nx), intent(in) :: vorm,divm
-    real, dimension(2,mx,nx), intent(out) :: um,vm
-    real, dimension(2,mx,nx) :: ucosm,vcosm
-    real, dimension(2,mx,nx) :: zc,zp
+    complex, dimension(mx,nx), intent(in) :: vorm, divm
+    real, dimension(ix,il), intent(out) :: um, vm
+    complex, dimension(mx,nx) :: ucosm, vcosm
+    complex, dimension(mx,nx) :: zc, zp
 
-    integer :: k, n, m
+    integer :: n
 
-    zp(2,:,:) =  uvdx*vorm(1,:,:)
-    zp(1,:,:) = -uvdx*vorm(2,:,:)
-    zc(2,:,:) =  uvdx*divm(1,:,:)
-    zc(1,:,:) = -uvdx*divm(2,:,:)
-   
-    do k=1,2
-        do m=1,mx
-            ucosm(k,m,1)=zc(k,m,1)-uvdyp(m,1)*vorm(k,m,2)
-            ucosm(k,m,nx)=uvdym(m,nx)*vorm(k,m,ntrun1)
-            vcosm(k,m,1)=zp(k,m,1)+uvdyp(m,1)*divm(k,m,2)
-            vcosm(k,m,nx)=-uvdym(m,nx)*divm(k,m,ntrun1)
-        end do
-    end do
+    zp = CMPLX(-uvdx*REAL(AIMAG(vorm)), uvdx*REAL(REAL(vorm)))
+    zc = CMPLX(-uvdx*REAL(AIMAG(divm)), uvdx*REAL(REAL(divm)))
 
-    do k=1,2
-        do n=2,ntrun1
-            do m=1,mx
-              vcosm(k,m,n)=-uvdym(m,n)*divm(k,m,n-1)+uvdyp(m,n)*&
-                  & divm(k,m,n+1)+zp(k,m,n)  
-              ucosm(k,m,n)= uvdym(m,n)*vorm(k,m,n-1)-uvdyp(m,n)*&
-                  & vorm(k,m,n+1)+zc(k,m,n)
-            end do
-        end do
+    ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
+    ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)
+    vcosm(:,1) = zp(:,1) + uvdyp(:,1)*divm(:,2)
+    vcosm(:,nx) = -uvdym(:,nx)*divm(:,ntrun1)
+
+    do n=2,ntrun1
+        vcosm(:,n) =-uvdym(:,n)*divm(:,n-1) + uvdyp(:,n)*divm(:,n+1) + zp(:,n)
+        ucosm(:,n) = uvdym(:,n)*vorm(:,n-1) - uvdyp(:,n)*vorm(:,n+1) + zc(:,n)
     end do
 
     call grid(ucosm, um, 2)
@@ -399,9 +358,11 @@ subroutine grid(vorm,vorg,kcos)
 
     !include "param1spec.h"
 
-    real, intent(inout) :: vorg(ix,il), vorm(mx2,nx)
+    real, intent(out) :: vorg(ix,il)
+    complex, intent(in) :: vorm(mx,nx)
     integer, intent(in) :: kcos
-    real :: varm(mx2,il)
+    complex :: varm(mx,il)
+
     call gridy(vorm,varm)
     call gridx(varm,vorg,kcos)
 end
@@ -409,12 +370,10 @@ end
 subroutine spec(vorg,vorm)
     use mod_atparam
 
-    implicit none
+    real, intent(in) :: vorg(ix,il)
+    complex, intent(out) :: vorm(mx,nx)
+    complex :: varm(mx,il)
 
-    !include "param1spec.h"
-
-    real, intent(inout) :: vorg(ix,il), vorm(mx2,nx)
-    real :: varm(mx2,il)
     call specx(vorg,varm)
     call specy(varm,vorm)
 end
@@ -423,16 +382,12 @@ subroutine vdspec(ug,vg,vorm,divm,kcos)
     use mod_atparam
     use mod_spectral, only: cosgr, cosgr2
 
-    implicit none
-
-    !include "param1spec.h"
-
     real, intent(in) :: ug(ix,il), vg(ix,il)
-    real, intent(inout) :: vorm(mx2,nx), divm(mx2,nx)
+    complex, intent(out) :: vorm(mx,nx), divm(mx,nx)
     integer, intent(in) :: kcos
     integer :: i, j
-    real :: ug1(ix,il), vg1(ix,il), um(mx2,il), vm(mx2,il)
-    real :: dumc1(mx2,nx), dumc2(mx2,nx)
+    real :: ug1(ix,il), vg1(ix,il)
+    complex :: um(mx,il), vm(mx,il), dumc1(mx,nx), dumc2(mx,nx)
 
     if (kcos.eq.2) then
         do j=1,il
@@ -456,6 +411,8 @@ subroutine vdspec(ug,vg,vorm,divm,kcos)
     call specy(vm,dumc2)
     call vds(dumc1,dumc2,vorm,divm)
 end
+
+end module spectral
 !*********************************************************************
 subroutine gridy(v,varm)
     use mod_atparam
