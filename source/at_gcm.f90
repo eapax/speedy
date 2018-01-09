@@ -13,9 +13,9 @@ program agcm_main
     integer :: jday, ndays
 
     ! Setup reduced precision emulator
-    call setup_precision()
     RPE_IEEE_HALF = .false.
     RPE_ACTIVE = .true.
+    call setup_precision()
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init

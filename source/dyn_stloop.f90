@@ -10,6 +10,8 @@ subroutine stloop(istep)
     use mod_tsteps
     use mod_date, only: ihour, iday, update_time
     use mod_dynvar
+    use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -29,6 +31,9 @@ subroutine stloop(istep)
 
         ! Perform one leapfrog time step
         call step(2, 2, delt2, alph, rob, wil)
+        call set_precision('Prognostics')
+        call truncate_prognostics()
+        call set_precision('Default')
 
         ! Do diagnostic, post-processing and I/O tasks
         call diagns(2, istep)

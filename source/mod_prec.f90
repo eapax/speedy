@@ -11,7 +11,7 @@ module mod_prec
     integer, parameter :: sp = real32
     integer :: reduced_precision, rp_initial_values, rp_spectral_transform, &
             rp_grid_physics, rp_grid_dynamics, rp_spectral_dynamics, &
-            rp_diffusion, rp_timestepping
+            rp_diffusion, rp_timestepping, rp_prognostics, rp_tendencies
 
     contains
 
@@ -29,6 +29,8 @@ module mod_prec
             read (99,*) rp_spectral_dynamics
             read (99,*) rp_diffusion
             read (99,*) rp_timestepping
+            read (99,*) rp_prognostics
+            read (99,*) rp_tendencies
             close(99)
         end subroutine
 
@@ -67,6 +69,12 @@ module mod_prec
 
                 case('Timestepping')
                 RPE_DEFAULT_SBITS = rp_timestepping
+
+                case('Prognostics')
+                RPE_DEFAULT_SBITS = rp_prognostics
+
+                case('Tendencies')
+                RPE_DEFAULT_SBITS = rp_tendencies
             end select
         end subroutine
 end module

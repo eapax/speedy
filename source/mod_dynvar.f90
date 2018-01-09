@@ -8,6 +8,7 @@ module mod_dynvar
     implicit none
 
     private
+    public truncate_prognostics
     public vor, div, t, ps, tr
     public phi, phis
 
@@ -33,4 +34,15 @@ module mod_dynvar
 
     ! Surface geopotential
     type(rpe_complex_var) :: PHIS(MX,NX)
+
+    contains
+        subroutine truncate_prognostics()
+            vor = vor
+            div = div
+            t = t
+            ps = ps
+            tr = tr
+            phi = phi
+            phis = phis
+        end subroutine
 end module

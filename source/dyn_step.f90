@@ -103,6 +103,13 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     if (dt.le.0.) return
 
     if (iitest.eq.1) print*,' time integration'
+    call set_precision('Tendencies')
+    psdt = psdt
+    vordt = vordt
+    divdt = divdt
+    tdt = tdt
+    trdt = trdt
+
     call set_precision('Timestepping')
 
     if (j1.eq.1) then
