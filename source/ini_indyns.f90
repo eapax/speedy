@@ -15,6 +15,7 @@ subroutine indyns
     use mod_atparam
     use mod_hdifcon, only: dmp, dmpd, dmps, tcorv, qcorv
     use mod_spectral, only: sia, cosg
+    use spectral, only: parmtr
 
     implicit none
 

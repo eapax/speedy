@@ -22,6 +22,7 @@ subroutine fordate(imode)
         & alb_l, alb_s, albsfc
     use surface_fluxes, only: sflset
     use humidity, only: q_sat
+    use spectral, only: spec
 
     implicit none
 

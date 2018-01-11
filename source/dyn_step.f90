@@ -199,6 +199,7 @@ subroutine cgrate(vor,div,vordt,divdt)
     !            DIVDT  = time derivative of DIV
     
     USE mod_atparam
+    use spectral, only: invlap
 
     implicit none
 

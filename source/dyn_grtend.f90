@@ -20,6 +20,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_physvar
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
+    use spectral, only: lap, grad, uvspec, grid, spec, vdspec
 
     implicit none
 
