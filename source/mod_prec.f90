@@ -32,6 +32,8 @@ module mod_prec
             read (99,*) rp_prognostics
             read (99,*) rp_tendencies
             close(99)
+
+            call set_precision('Default')
         end subroutine
 
         subroutine set_precision(mode)
@@ -48,6 +50,12 @@ module mod_prec
 
                 case('Full')
                 RPE_DEFAULT_SBITS = 52
+
+                case('Single')
+                RPE_DEFAULT_SBITS = 23
+
+                case('Half')
+                RPE_DEFAULT_SBITS = 10
 
                 case('Initial Values')
                 RPE_DEFAULT_SBITS = rp_initial_values

@@ -36,14 +36,9 @@ cp ${SRC}/*.h      ${TMP}/
 cp ${SRC}/*.s      ${TMP}/
 cp ${SRC}/makefile ${TMP}/
 
-if [ $3 != 0 ] ; then
-  echo "link restart file ${year}${month}${day}${hour}"
-  ln -s ${CD}/${year}${month}${day}${hour}.rst
-fi
-
 # Link input files
 echo 'link input files to fortran units'
-ksh inpfiles.s $1
+sh inpfiles.s $1
 
 ls -l fort.*
 
@@ -60,6 +55,8 @@ fi
 if [ $3 = 0 ]; then
     echo 0 > fort.2
 else
+    echo "link restart file ${year}${month}${day}${hour}"
+    ln -s ${CD}/${year}${month}${day}${hour}.rst
     echo 1 > fort.2
 fi
 echo ${year} >> fort.2
@@ -69,7 +66,7 @@ echo ${hour} >> fort.2
 
 
 # Loop over precisions being tested
-for i in {52..52}
+for i in {50..52}
 do
     echo ${i}
     # Write precision to input file
@@ -89,13 +86,17 @@ do
     echo ${i} >> precision.txt
     # time stepping
     echo ${i} >> precision.txt
+    # Prognostics
+    echo ${i} >> precision.txt
+    # Tendencies
+    echo ${i} >> precision.txt
 
 
     # Run the model
     time ./imp.exe | tee out.lis
 
     # Convert .grd output to .nc
-    grd2nc.sh yyyymmddhh_p.ctl
+    grd2nc_p.sh yyyymmddhh_p.ctl
 
     # Move to a unique file labelled by the precision
     mv yyyymmddhh_p.nc ${OUT}/yyyymmddhh_p${i}.nc

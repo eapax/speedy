@@ -12,7 +12,7 @@ if [ $# -ne 4 ] ; then
 fi
 
 # Start date
-year='1981'
+year='1982'
 month='01'
 day='01'
 hour='00'
@@ -20,7 +20,7 @@ hour='00'
 # Define directory names
 UT=`pwd`
 SRC=$UT/source	
-TMP=$UT/tmp
+TMP=$UT/temp
 mkdir -p $UT/output/exp_$2	
 OUT=$UT/output/exp_$2
 CD=$UT/output/exp_$3	
