@@ -1,9 +1,39 @@
 module spectral
 
+    use mod_atparam
+
     implicit none
 
     private
     public parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
+    public el2, sia, cosg, cosgr
+    public cpol, nsh2, wt, trfilt
+
+    ! Initial. in parmtr
+    real, dimension(mx,nx) :: el2, elm2, el4, trfilt
+    integer :: l2(mx,nx), ll(mx,nx), mm(mx), nsh2(nx)
+
+    ! Initial. in parmtr
+    real, dimension(iy) :: sia, coa, wt, wght
+    real, dimension(il) :: cosg, cosgr, cosgr2
+
+    ! Initial. in parmtr
+    real :: gradx(mx), gradym(mx,nx), gradyp(mx,nx)
+
+    ! Initial. in parmtr
+    real :: sqrhlf, consq(mxp), epsi(mxp,nxp), repsi(mxp,nxp), emm(mxp), ell(mxp,nxp)
+
+    ! Initial. in parmtr
+    real :: poly(mx,nx)
+
+    ! Initial. in parmtr
+    real :: cpol(mx2,nx,iy)
+
+    ! Initial. in parmtr
+    real, dimension(mx,nx) :: uvdx, uvdym, uvdyp
+
+    ! Initial. in parmtr
+    real, dimension(mx,nx) :: vddym, vddyp
 
     contains
 
@@ -53,7 +83,6 @@ end
 !****************************************************************
 subroutine parmtr(a)
     use mod_atparam
-    use mod_spectral
 
     implicit none
 
@@ -204,7 +233,6 @@ subroutine lgndre(j)
     ! follows Leith Holloways code 
 
     use mod_atparam
-    use mod_spectral, only: sia, coa, sqrhlf, consq, repsi, epsi, poly
 
     implicit none
 
@@ -252,7 +280,6 @@ end
 !***************************************************************
 subroutine lap(strm,vorm)
     use mod_atparam
-    use mod_spectral, only: el2
 
     complex, intent(in) :: strm(mx,nx)
     complex, intent(inout) :: vorm(mx,nx)
@@ -262,7 +289,6 @@ end
 !*******************************************************************
 subroutine invlap(vorm,strm)
     use mod_atparam
-    use mod_spectral, only: elm2
 
     complex, intent(in) :: vorm(mx,nx)
     complex, intent(inout) :: strm(mx,nx)
@@ -272,7 +298,6 @@ end
 !*********************************************************************
 subroutine grad(psi,psdx,psdy)
     use mod_atparam
-    use mod_spectral, only: gradx, gradyp, gradym
 
     complex, dimension(mx,nx), intent(inout) :: psi
     complex, dimension(mx,nx), intent(inout) :: psdx, psdy
@@ -295,7 +320,6 @@ end
 !******************************************************************
 subroutine vds(ucosm,vcosm,vorm,divm)
     use mod_atparam
-    use mod_spectral, only: gradx, vddyp, vddym
                                                         
     complex, dimension(mx,nx) :: ucosm, vcosm
     complex, dimension(mx,nx), intent(inout) :: vorm, divm
@@ -325,7 +349,6 @@ subroutine uvspec(vorm, divm, um, vm)
     ! Calculate u and v in grid-point space from vorticity and divergence in
     ! spectral space
     use mod_atparam
-    use mod_spectral, only: uvdx, uvdyp, uvdym
                                                         
     complex, dimension(mx,nx), intent(in) :: vorm, divm
     real, dimension(ix,il), intent(out) :: um, vm
@@ -380,7 +403,6 @@ end
 !*********************************************************************
 subroutine vdspec(ug,vg,vorm,divm,kcos)
     use mod_atparam
-    use mod_spectral, only: cosgr, cosgr2
 
     real, intent(in) :: ug(ix,il), vg(ix,il)
     complex, intent(out) :: vorm(mx,nx), divm(mx,nx)
@@ -416,7 +438,7 @@ end module spectral
 !*********************************************************************
 subroutine gridy(v,varm)
     use mod_atparam
-    use mod_spectral, only: cpol, nsh2
+    use spectral, only: cpol, nsh2
 
     implicit none
 
@@ -459,7 +481,7 @@ end
 !******************************************************************
 subroutine specy(varm,vorm)
     use mod_atparam
-    use mod_spectral, only: wt, cpol, nsh2
+    use spectral, only: wt, cpol, nsh2
 
     implicit none
 
@@ -502,7 +524,7 @@ end
 !******************************************************************
 subroutine trunct(vor)
     use mod_atparam
-    use mod_spectral, only: trfilt
+    use spectral, only: trfilt
 
     implicit none
 
