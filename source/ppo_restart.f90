@@ -59,7 +59,7 @@ subroutine restart(jday)
         call rest_sea(0)
         close (3)
 
-        call set_precision('Default')
+        call set_precision('Initialisation')
     else
         ! 2. Write date and model variables to the restart file
         print*, 'Write restart dataset for year/month/date/hour: ', &

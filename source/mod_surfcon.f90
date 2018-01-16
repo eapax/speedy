@@ -7,7 +7,7 @@ module mod_surfcon
 
     private
     public fmask, fmask1, phi0, phis0, alb0, swcap, swwil, sd2sc
-    public init_surfcon
+    public init_surfcon, truncate_surfcon
 
     ! Land-sea masks (initial. in INBCON)
     ! Original (fractional) land-sea mask
@@ -47,4 +47,12 @@ module mod_surfcon
             swwil = swwil_
             sd2sc = sd2sc_
         end subroutine
+
+        subroutine truncate_surfcon()
+            fmask = fmask
+            fmask1 = fmask1
+            phi0 = phi0
+            phis0 = phis0
+            alb0 = alb0
+        end subroutine truncate_surfcon
 end module

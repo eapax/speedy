@@ -15,7 +15,7 @@ module mod_radcon
     public alb_l, alb_s, albsfc, snowc
     public tau2, st4a, stratc, flux
     public qcloud, irhtop
-    public init_radcon
+    public init_radcon, truncate_radcon
 
     ! Radiation and cloud constants
     
@@ -193,4 +193,29 @@ module mod_radcon
             ablcl1 = ablcl1_
             ablcl2 = ablcl2_
         end subroutine
+
+        subroutine truncate_radcon
+            ablco2_ref = ablco2_ref
+
+            fband = fband
+
+            fsol = fsol
+            ozone = ozone
+            ozupp = ozupp
+            zenit = zenit
+            stratz = stratz
+
+            alb_l = alb_l
+            alb_s = alb_s
+            albsfc = albsfc
+            snowc = snowc
+
+            tau2 = tau2
+            st4a = st4a
+            stratc = stratc
+            flux = flux
+
+            qcloud = qcloud
+            irhtop = irhtop
+        end subroutine truncate_radcon
 end module

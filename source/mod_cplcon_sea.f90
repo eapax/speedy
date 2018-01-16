@@ -6,6 +6,7 @@ module mod_cplcon_sea
     implicit none
 
     private
+    public truncate_cplcon_sea
     public rhcaps, rhcapi, cdsea, cdice, beta
 
     ! Constant parameters and fields in sea/ice model
@@ -23,4 +24,12 @@ module mod_cplcon_sea
 
     ! Heat flux coef. at sea/ice int.
     real(dp) :: beta = 1.0
+
+    contains
+        subroutine truncate_cplcon_sea()
+            rhcaps = rhcaps
+            rhcapi = rhcapi
+            cdsea = cdsea
+            cdice = cdice
+        end subroutine
 end module

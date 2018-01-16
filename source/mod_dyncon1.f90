@@ -10,7 +10,7 @@ module mod_dyncon1
     public hsg, dhs, fsg, dhsr, fsgr
     public radang, gsin, gcos, coriol
     public xgeop1, xgeop2
-    public init_dyncon1
+    public init_dyncon1, truncate_dyncon1
 
     ! Physical constants for dynamics
     real(dp), parameter :: rearth_ = 6.371d+6
@@ -51,6 +51,20 @@ module mod_dyncon1
             pi = pi_
             a = a_
             g = g_
+        end subroutine
+
+        subroutine truncate_dyncon1()
+            hsg = hsg
+            dhs = dhs
+            fsg = fsg
+            dhsr = dhsr
+            fsgr = fsgr
+            radang = radang
+            gsin = gsin
+            gcos = gcos
+            coriol = coriol
+            xgeop1 = xgeop1
+            xgeop2 = xgeop2
         end subroutine
 
 end module

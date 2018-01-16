@@ -5,6 +5,7 @@ module mod_cli_sea
     implicit none
 
     private
+    public truncate_cli_sea
     public fmask_s, bmask_s, deglat_s, sst12, sice12, sstan3, hfseacl, sstom12
 
     ! Sea masks
@@ -34,4 +35,16 @@ module mod_cli_sea
 
     ! Ocean model SST climatology
     type(rpe_var) :: sstom12(ix,il,12)
+
+    contains
+        subroutine truncate_cli_sea()
+            fmask_s = fmask_s
+            bmask_s = bmask_s
+            deglat_s = deglat_s
+            sst12 = sst12
+            sice12 = sice12
+            sstan3 = sstan3
+            hfseacl = hfseacl
+            sstom12 = sstom12
+        end subroutine
 end module

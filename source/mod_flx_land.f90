@@ -5,6 +5,7 @@ module mod_flx_land
     implicit none
 
     private
+    public truncate_flx_land
     public prec_l, snowf_l, evap_l, ustr_l, vstr_l, ssr_l, slr_l, shf_l, ehf_l,&
         & hflux_l
 
@@ -38,4 +39,18 @@ module mod_flx_land
 
     ! Net heat flux into land sfc.end module
     type(rpe_var) :: hflux_l(ix*il)
+
+    contains
+        subroutine truncate_flx_land()
+            prec_l = prec_l
+            snowf_l = snowf_l
+            evap_l = evap_l
+            ustr_l = ustr_l
+            vstr_l = vstr_l
+            ssr_l = ssr_l
+            slr_l = slr_l
+            shf_l = shf_l
+            ehf_l = ehf_l
+            hflux_l = hflux_l
+        end subroutine
 end module

@@ -7,7 +7,8 @@ module surface_fluxes
     implicit none
 
     private
-    public suflux, sflset, init_sflcon
+    public suflux, sflset
+    public init_sflcon, truncate_sflcon
 
     !  Constants for surface fluxes
     ! Ratio of near-sfc wind to lowest-level wind
@@ -97,6 +98,10 @@ module surface_fluxes
             fhdrag  = fhdrag_
             clambda = clambda_
             clambsn = clambsn_
+        end subroutine
+
+        subroutine truncate_sflcon()
+            forog = forog
         end subroutine
 
         subroutine suflux(psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav, &

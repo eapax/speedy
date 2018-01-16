@@ -8,6 +8,7 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     use mod_cpl_flags, only: icsea, isstan
     use mod_tsteps
     use mod_date, only: newdate, ndaytot, iyear, imonth, iday, ihour
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -23,6 +24,7 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     print *, ' hallo from speedy_agcm'
 
     ! Initialise reduced precision constants
+    call set_precision('Initialisation')
     call ini_rp
 
     ! 1. set run initial time, duration, time-stepping and coupling options
@@ -47,7 +49,7 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     ! check consistency of coupling and prescribed SST anomaly flags
     if (icsea >= 4) isstan = 1
 
-    ! 2. initialization of atmospheric model constants and variables 
+    ! 2. initialization of atmospheric model constants and variables
     call ini_atm(cexp)
 
     ! 3. initialization of coupled modules (land, sea, ice)
@@ -58,4 +60,10 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
 
     ! 5. do the initial (2nd-order) time step, initialize the semi-impl. scheme
     call stepone
+
+    ! Truncate parameters and derived constants
+    call set_precision('Parameters')
+    call ini_rp
+    call truncate_rp
+    call set_precision('Default')
 end subroutine

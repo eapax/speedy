@@ -8,7 +8,7 @@ module mod_physcon
     private
     public p0, gg, rd, cp, alhc, alhs, sbc
     public sig, sigl, sigh, dsig, pout, grdsig, grdscp, wvi, slat, clat
-    public init_physcon
+    public init_physcon, truncate_physcon
 
     ! Physical constants
     ! Reference pressure
@@ -66,4 +66,17 @@ module mod_physcon
             alhs = alhs_
             sbc = sbc_
         end subroutine
+
+        subroutine truncate_physcon()
+            sig = sig
+            sigl = sigl
+            dsig = dsig
+            pout = pout
+            grdsig = grdsig
+            grdscp = grdscp
+            wvi = wvi
+            sigh = sigh
+            slat = slat
+            clat = clat
+        end subroutine truncate_physcon
 end module

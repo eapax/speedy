@@ -5,6 +5,7 @@ module mod_cli_land
     implicit none
 
     private
+    public truncate_cli_land
     public fmask_l, bmask_l, stl12, snowd12, soilw12
 
     ! Land masks
@@ -23,4 +24,13 @@ module mod_cli_land
 
     ! Soil water availabilityend module
     type(rpe_var) :: soilw12(ix,il,12)
+
+    contains
+        subroutine truncate_cli_land()
+            fmask_l = fmask_l
+            bmask_l = bmask_l
+            stl12 = stl12
+            snowd12 = snowd12
+            soilw12 = soilw12
+        end subroutine
 end module

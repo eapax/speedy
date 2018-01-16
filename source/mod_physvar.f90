@@ -5,6 +5,7 @@ module mod_physvar
     implicit none
 
     private
+    public truncate_physvar
     public ug1, vg1, tg1, qg1, phig1, pslg1
     public se, rh, qsat
     public psg, ts, tskin, u0, v0, t0, q0, cloudc, clstr, cltop, prtop
@@ -75,4 +76,59 @@ module mod_physvar
     type(rpe_var), dimension(ix*il) :: precnv, precls, snowcv, snowls, cbmf, tsr, ssrd,&
         & ssr, slrd, slr, olr
     type(rpe_var), dimension(ix*il,3) :: slru, ustr, vstr, shf, evap, hfluxn
+
+    contains
+        subroutine truncate_physvar()
+            ug1 = ug1
+            vg1 = vg1
+            tg1 = tg1
+            qg1 = qg1
+            phig1 = phig1
+            pslg1 = pslg1
+
+            se = se
+            rh = rh
+            qsat = qsat
+
+            psg = psg
+            ts = ts
+            tskin = tskin
+            u0 = u0
+            v0 = v0
+            t0 = t0
+            q0 = q0
+            cloudc = cloudc
+            clstr = clstr
+            cltop = cltop
+            prtop = prtop
+
+            tt_cnv = tt_cnv
+            qt_cnv = qt_cnv
+            tt_lsc = tt_lsc
+            qt_lsc = qt_lsc
+            tt_rsw = tt_rsw
+            tt_rlw = tt_rlw
+            ut_pbl = ut_pbl
+            vt_pbl = vt_pbl
+            tt_pbl = tt_pbl
+            qt_pbl = qt_pbl
+
+            precnv = precnv
+            precls = precls
+            snowcv = snowcv
+            snowls = snowls
+            cbmf = cbmf
+            tsr = tsr
+            ssrd = ssrd
+            ssr = ssr
+            slrd = slrd
+            slr = slr
+            olr = olr
+            slru = slru
+            ustr = ustr
+            vstr = vstr
+            shf = shf
+            evap = evap
+            hfluxn = hfluxn
+        end subroutine truncate_physvar
 end module

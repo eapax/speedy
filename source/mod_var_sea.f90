@@ -7,6 +7,7 @@ module mod_var_sea
     private
     public sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om, sst_am, sstan_am
     public sice_am, tice_am, sst_om, sice_om, tice_om, ssti_om, wsst_ob
+    public truncate_var_sea
 
     ! Daily observed climatological fields over sea
     ! Observed clim. SST
@@ -55,4 +56,22 @@ module mod_var_sea
     ! Weight for obs. SST anomaly in coupled runs
     ! Weight mask for obs. SST
     type(rpe_var) :: wsst_ob(ix*il)
+
+    contains
+        subroutine truncate_var_sea()
+            sstcl_ob = sstcl_ob
+            sicecl_ob = sicecl_ob
+            ticecl_ob = ticecl_ob
+            sstan_ob = sstan_ob
+            sstcl_om = sstcl_om
+            sst_am = sst_am
+            sstan_am = sstan_am
+            sice_am = sice_am
+            tice_am = tice_am
+            sst_om = sst_om
+            sice_om = sice_om
+            tice_om = tice_om
+            ssti_om = ssti_om
+            wsst_ob = wsst_ob
+        end subroutine truncate_var_sea
 end module

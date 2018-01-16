@@ -5,6 +5,7 @@ module mod_flx_sea
     implicit none
 
     private
+    public truncate_flx_sea
     public prec_s, snowf_s, evap_s, ustr_s, vstr_s, ssr_s, slr_s, shf_s, ehf_s,&
         & hflux_s, hflux_i
 
@@ -41,4 +42,19 @@ module mod_flx_sea
 
     ! Net heat flux into sea-ice sfc.
     type(rpe_var) :: hflux_i(ix*il)
+
+    contains
+        subroutine truncate_flx_sea()
+            prec_s = prec_s
+            snowf_s = snowf_s
+            evap_s = evap_s
+            ustr_s = ustr_s
+            vstr_s = vstr_s
+            ssr_s = ssr_s
+            slr_s = slr_s
+            shf_s = shf_s
+            ehf_s = ehf_s
+            hflux_s = hflux_s
+            hflux_i = hflux_i
+        end subroutine
 end module

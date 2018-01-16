@@ -11,7 +11,8 @@ module mod_prec
     integer, parameter :: sp = real32
     integer :: reduced_precision, rp_initial_values, rp_spectral_transform, &
             rp_grid_physics, rp_grid_dynamics, rp_spectral_dynamics, &
-            rp_diffusion, rp_timestepping, rp_prognostics, rp_tendencies
+            rp_diffusion, rp_timestepping, rp_prognostics, rp_tendencies, &
+            rp_initialisation, rp_parameters
 
     contains
 
@@ -31,6 +32,8 @@ module mod_prec
             read (99,*) rp_timestepping
             read (99,*) rp_prognostics
             read (99,*) rp_tendencies
+            read (99,*) rp_initialisation
+            read (99,*) rp_parameters
             close(99)
 
             call set_precision('Default')
@@ -42,9 +45,6 @@ module mod_prec
             character (len=*), intent(in) :: mode
 
             select case(mode)
-                case default
-                RPE_DEFAULT_SBITS = reduced_precision
-
                 case('Default')
                 RPE_DEFAULT_SBITS = reduced_precision
 
@@ -83,6 +83,12 @@ module mod_prec
 
                 case('Tendencies')
                 RPE_DEFAULT_SBITS = rp_tendencies
+
+                case('Initialisation')
+                RPE_DEFAULT_SBITS = rp_initialisation
+
+                case('Parameters')
+                RPE_DEFAULT_SBITS = rp_parameters
             end select
         end subroutine
 end module

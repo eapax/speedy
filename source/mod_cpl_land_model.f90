@@ -4,6 +4,10 @@ module mod_cpl_land_model
 
     implicit none
 
+    private
+    public truncate_land_model, land_model_init, land_model
+    public vland_input, vland_output
+
     ! 1./heat_capacity (land)
     type(rpe_var) :: rhcapl(ix,il)           
 
@@ -18,6 +22,13 @@ module mod_cpl_land_model
     type(rpe_var) :: vland_output(ix*il,2)           
 
     contains
+        subroutine truncate_land_model()
+            rhcapl = rhcapl
+            cdland = cdland
+            vland_input = vland_input
+            vland_output = vland_output
+        end subroutine
+
         subroutine land_model_init(fmask_l,alb0) 
             ! subroutine land_model_init (fmask_l,alb0)
             !

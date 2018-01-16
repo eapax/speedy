@@ -66,7 +66,7 @@ echo ${hour} >> fort.2
 
 
 # Loop over precisions being tested
-for i in {50..52}
+for i in {5..52}
 do
     echo ${i}
     # Write precision to input file
@@ -89,6 +89,10 @@ do
     # Prognostics
     echo ${i} >> precision.txt
     # Tendencies
+    echo ${i} >> precision.txt
+    # Initialisation
+    echo ${i} >> precision.txt
+    # Parameters
     echo ${i} >> precision.txt
 
 
