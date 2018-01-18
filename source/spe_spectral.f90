@@ -369,8 +369,8 @@ subroutine uvspec(vorm, divm, um, vm)
     !include "param1spec.h"
                                                         
     type(rpe_var), dimension(2,mx,nx), intent(in) :: vorm,divm
-    type(rpe_var), dimension(2,mx,nx), intent(out) :: um,vm
-    type(rpe_var), dimension(ix,il) :: ucosm, vcosm
+    type(rpe_var), dimension(ix,il), intent(out) :: um,vm
+    type(rpe_var), dimension(2,mx,nx) :: ucosm, vcosm
     type(rpe_var), dimension(2,mx,nx) :: zc,zp
 
     integer :: k, n, m
