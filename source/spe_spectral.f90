@@ -427,8 +427,8 @@ subroutine spec(vorg,vorm)
 
     implicit none
 
-    type(rpe_var) :: vorm(mx2,nx)
-    type(rpe_var), intent(inout) :: vorg(ix,il)
+    type(rpe_var), intent(out) :: vorm(mx2,nx)
+    type(rpe_var), intent(in) :: vorg(ix,il)
     type(rpe_var) :: varm(mx2,il)
 
     call specx(vorg,varm)

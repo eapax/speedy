@@ -60,6 +60,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2. Precipitation 
     ! 2.1 Deep convection
+    call set_precision('Convection')
     call convmf(psg,se,qg1,qsat,iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
     do k=2,nlev
@@ -75,6 +76,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2.2 Large-scale condensation
 !fk#if !defined(KNMI)
+    call set_precision('Condensation')
     call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
 !fk#else
 !fk      call lscond (psg,qg1,qsat,ts,iptop,precls,snowls,tt_lsc,qt_lsc)
@@ -99,7 +101,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
             cltop(j)=sigh(icltop(j,1)-1)*psg(j)
             prtop(j)=float(iptop(j))
         end do
-  
+
+        call set_precision('SW Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,ssrd,ssr,tsr,tt_rsw)
   
         do k=1,nlev
@@ -109,7 +112,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
     end if
 
-    ! 3.2 Compute downward longwave fluxes 
+    ! 3.2 Compute downward longwave fluxes
+    call set_precision('LW Radiation')
     call radlw(-1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     ! 3.3. Compute surface fluxes and land skin temperature
@@ -119,6 +123,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
     end if
 
+    call set_precision('Surface Fluxes')
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,sst_am,&
         & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,t0,&
         & q0,.true.)
@@ -134,6 +139,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
 
+    call set_precision('LW Radiation')
     call radlw (1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     do k=1,nlev
@@ -145,6 +151,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
+    call set_precision('Vertical Diffusion')
     call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 4.2 Add tendencies due to surface fluxes 
@@ -181,6 +188,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Add SPPT noise
     if (sppt_on) then
+        call set_precision('SPPT')
         sppt = gen_sppt()
 
         do k = 1,kx

@@ -78,6 +78,20 @@ do
     echo ${i} >> precision.txt
     # grid physics
     echo ${i} >> precision.txt
+    # convection
+    echo ${i} >> precision.txt
+    # condensation
+    echo ${i} >> precision.txt
+    # short-wave radiation
+    echo ${i} >> precision.txt
+    # long-wave radiation
+    echo ${i} >> precision.txt
+    # surface fluxes
+    echo ${i} >> precision.txt
+    # vertical diffusion
+    echo ${i} >> precision.txt
+    # SPPT
+    echo ${i} >> precision.txt
     # grid dynamics
     echo ${i} >> precision.txt
     # spectral dynamics
