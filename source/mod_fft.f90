@@ -12,6 +12,7 @@ module mod_fft
 
     contains
         subroutine truncate_fft()
-            wsave = wsave
+            wsave(1:192) = wsave(1:192)
+            wsave(196:) = wsave(196:)
         end subroutine
 end module
