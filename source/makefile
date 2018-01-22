@@ -181,12 +181,12 @@ phy_suflux.o           : phy_suflux.f90 mod_atparam.o mod_physcon.o\
                          mod_radcon.o phy_shtorh.o
 phy_vdifsc.o           : phy_vdifsc.f90 mod_atparam.o mod_physcon.o
 ppo_io_stream.o        : ppo_io_stream.f90 mod_atparam.o mod_dynvar.o\
-                         mod_physvar.o mod_physcon.o mod_date.o
+                         mod_physvar.o mod_physcon.o mod_date.o spe_spectral.o
 ppo_diagns.o           : ppo_diagns.f90 mod_tsteps.o mod_atparam.o mod_dynvar.o\
                          mod_date.o spe_spectral.o
 ppo_restart.o          : ppo_restart.f90 mod_tsteps.o mod_atparam.o\
                          mod_dynvar.o mod_date.o
-ppo_dmflux.o           : ppo_dmflux.f90 mod_tsteps.o mod_atparam.o mod_tmean.o\
+ppo_dmflux.o           : ppo_dmflux.f90 mod_tsteps.o mod_atparam.o\
                          mod_flx_land.o mod_physcon.o mod_surfcon.o\
                          mod_flx_sea.o mod_var_sea.o mod_physvar.o mod_radcon.o
 spe_matinv.o           : spe_matinv.f90

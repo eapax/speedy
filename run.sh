@@ -12,7 +12,7 @@ if [ $# -ne 4 ] ; then
 fi
 
 # Start date
-year='1981'
+year='1982'
 month='01'
 day='01'
 hour='00'

@@ -5,6 +5,7 @@ module ppo_IO_stream
     use mod_physvar
     use mod_physcon, only: gg
     use mod_date, only: imonth, month_start
+    use spectral, only: uvspec, grid
 
     implicit none
 
@@ -188,6 +189,8 @@ module ppo_IO_stream
             type(IO_stream), intent(inout) :: stream
             integer, intent(in) :: istep
 
+            print *, 'Updating Output: ', istep
+
             if (xmod(istep, stream%nstpopen)) call reinit_IO_stream(stream)
 
             if (xmod(istep, stream%nstpinc)) call incr_IO_stream(stream)
@@ -236,6 +239,8 @@ module ppo_IO_stream
         ! variables.
         subroutine write_IO_stream(stream)
             type(IO_stream), intent(inout) :: stream
+
+            print *, 'Writing output to'
 
             if (stream%spectral) then
                 call write_spectral(stream)
