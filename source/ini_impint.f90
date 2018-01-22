@@ -142,7 +142,7 @@ subroutine impint(dt,alph)
     end do
 
     do l=1,lmax
-        call inv(xf(1,1,l),xj(1,1,l),indx,kx)
+        call inv(xf(:,:,l),xj(:,:,l),indx,kx)
     end do
 
     do k=1,kx

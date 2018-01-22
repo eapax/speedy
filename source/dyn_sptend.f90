@@ -62,7 +62,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
 
     do k=1,kx
         dumc(:,:,1) = phi(:,:,k) + rgas*tref(k)*ps(:,:,j4)
-        call lap(dumc(1,1,1),dumc(1,1,2))
+        call lap(dumc(:,:,1),dumc(:,:,2))
         divdt(:,:,k) = divdt(:,:,k) - dumc(:,:,2)
     end do
 end   

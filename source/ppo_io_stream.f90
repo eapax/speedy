@@ -116,28 +116,28 @@ module ppo_IO_stream
             ! u and/or v
             if (l_transform_field(1) .or. l_transform_field(2)) then
                 do k=1,kx
-                    call uvspec(vor(1,1,k,1), div(1,1,k,1), ug1(1,k), vg1(1,k))
+                    call uvspec(vor(:,:,k,1), div(:,:,k,1), ug1(:,k), vg1(:,k))
                 end do
             end if
 
             ! Temperature
             if (l_transform_field(3)) then
                 do k=1,kx
-                    call grid(t(1,1,k,1), tg1(1,k), 1)
+                    call grid(t(:,:,k,1), tg1(:,k), 1)
                 end do
             end if
 
             ! Humidity
             if (l_transform_field(4)) then
                 do k=1,kx
-                    call grid(tr(1,1,k,1,1), qg1(1,k), 1)
+                    call grid(tr(:,:,k,1,1), qg1(:,k), 1)
                 end do
             end if
 
             ! Geopotential
             if (l_transform_field(5)) then
                 do k=1,kx
-                    call grid(phi(1,1,k), phig1(1,k), 1)
+                    call grid(phi(:,:,k), phig1(:,k), 1)
                 end do
             end if
 
@@ -189,8 +189,6 @@ module ppo_IO_stream
             type(IO_stream), intent(inout) :: stream
             integer, intent(in) :: istep
 
-            print *, 'Updating Output: ', istep
-
             if (xmod(istep, stream%nstpopen)) call reinit_IO_stream(stream)
 
             if (xmod(istep, stream%nstpinc)) call incr_IO_stream(stream)
@@ -240,7 +238,7 @@ module ppo_IO_stream
         subroutine write_IO_stream(stream)
             type(IO_stream), intent(inout) :: stream
 
-            print *, 'Writing output to'
+            print *, 'Writing output to ', stream%filename
 
             if (stream%spectral) then
                 call write_spectral(stream)

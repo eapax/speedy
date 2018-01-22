@@ -217,7 +217,7 @@ subroutine cgrate(vor,div,vordt,divdt)
         grate=0.
         rnorm=0.
 
-        call invlap (vor(1,1,k),temp)
+        call invlap (vor(:,:,k),temp)
 
         do n=1,nx
             do m=2,mx
@@ -249,7 +249,7 @@ subroutine cgrate(vor,div,vordt,divdt)
         grate=0.
         rnorm=0.
 
-        call invlap (div(1,1,k),temp)
+        call invlap (div(:,:,k),temp)
 
         do n=1,nx
             do m=2,mx

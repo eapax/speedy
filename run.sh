@@ -34,7 +34,6 @@ cd $TMP
 rm *
 
 cp $SRC/*.f90      $TMP/
-cp $SRC/*.h      $TMP/
 cp $SRC/*.s      $TMP/
 cp $SRC/makefile $TMP/
 cp $UT/setup/*.txt $TMP/

@@ -253,7 +253,7 @@ subroutine obs_ssta
 
     sstan3(1:nlon,1:nlat,3)   = inp
 
-    call forchk(bmask_s,sstan3(1,1,3),nlon*nlat,1,-50.,50.,0.)
+    call forchk(bmask_s,sstan3(:,:,3),nlon*nlat,1,-50.,50.,0.)
 
  100  continue
 
