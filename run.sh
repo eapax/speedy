@@ -32,7 +32,6 @@ echo "copying from $SRC/source to $TMP"
 mkdir -p $TMP
 cd $TMP
 rm *
-mv ../precision.txt .
 
 cp $SRC/*.f90      $TMP/
 cp $SRC/*.h      $TMP/
@@ -77,6 +76,46 @@ echo ${year} >> fort.2
 echo ${month} >> fort.2
 echo ${day} >> fort.2
 echo ${hour} >> fort.2
+
+# Write precision to input file
+# reduced_precision
+echo 52 > precision.txt
+# initial values
+echo 52 >> precision.txt
+# spectral transform
+echo 52 >> precision.txt
+# grid physics
+echo 52 >> precision.txt
+# convection
+echo 52 >> precision.txt
+# condensation
+echo 52 >> precision.txt
+# short-wave radiation
+echo 52 >> precision.txt
+# long-wave radiation
+echo 52 >> precision.txt
+# surface fluxes
+echo 52 >> precision.txt
+# vertical diffusion
+echo 52 >> precision.txt
+# SPPT
+echo 52 >> precision.txt
+# grid dynamics
+echo 52 >> precision.txt
+# spectral dynamics
+echo 52 >> precision.txt
+# diffusion
+echo 52 >> precision.txt
+# time stepping
+echo 52 >> precision.txt
+# Prognostics
+echo 52 >> precision.txt
+# Tendencies
+echo 52 >> precision.txt
+# Initialisation
+echo 52 >> precision.txt
+# Parameters
+echo 52 >> precision.txt
 
 time ./imp.exe | tee out.lis
 
