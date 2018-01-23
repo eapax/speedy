@@ -1,4 +1,26 @@
 subroutine rffti(n, wsave)
+!    ****************************************************************
+!
+!    subroutine rffti(n,wsave)
+!
+!    ****************************************************************
+!
+!    subroutine rffti initializes the array wsave which is used in
+!    both rfftf and rfftb. the prime factorization of n together with
+!    a tabulation of the trigonometric functions are computed and
+!    stored in wsave.
+!
+!    input parameter
+!
+!    n       the length of the sequence to be transformed.
+!
+!    output parameter
+!
+!    wsave   a work array which must be dimensioned at least 2*n+15.
+!            the same work array can be used for both rfftf and rfftb
+!            as long as n remains unchanged. different wsave arrays
+!            are required for different values of n. the contents of
+!            wsave must not be changed between calls of rfftf or rfftb.
     implicit none
 
     integer, intent(in) :: n
@@ -11,6 +33,63 @@ subroutine rffti(n, wsave)
 end
 
 subroutine rfftb(n, r, wsave)
+!    ******************************************************************
+!
+!    subroutine rfftb(n,r,wsave)
+!
+!    ******************************************************************
+!
+!    subroutine rfftb computes the real perodic sequence from its
+!    fourier coefficients (fourier synthesis). the transform is defined
+!    below at output parameter r.
+!
+!    input parameters
+!
+!    n       the length of the array r to be transformed.  the method
+!            is most efficient when n is a product of small primes.
+!            n may change so long as different work arrays are provided
+!
+!    r       a real array of length n which contains the sequence
+!            to be transformed
+!
+!    wsave   a work array which must be dimensioned at least 2*n+15.
+!            in the program that calls rfftb. the wsave array must be
+!            initialized by calling subroutine rffti(n,wsave) and a
+!            different wsave array must be used for each different
+!            value of n. this initialization does not have to be
+!            repeated so long as n remains unchanged thus subsequent
+!            transforms can be obtained faster than the first.
+!            the same wsave array can be used by rfftf and rfftb.
+!
+!
+!    output parameters
+!
+!    r       for n even and for i = 1,...,n
+!
+!                 r(i) = r(1)+(-1)**(i-1)*r(n)
+!
+!                      plus the sum from k=2 to k=n/2 of
+!
+!                       2.*r(2*k-2)*cos((k-1)*(i-1)*2*pi/n)
+!
+!                      -2.*r(2*k-1)*sin((k-1)*(i-1)*2*pi/n)
+!
+!            for n odd and for i = 1,...,n
+!
+!                 r(i) = r(1) plus the sum from k=2 to k=(n+1)/2 of
+!
+!                      2.*r(2*k-2)*cos((k-1)*(i-1)*2*pi/n)
+!
+!                     -2.*r(2*k-1)*sin((k-1)*(i-1)*2*pi/n)
+!
+!     *****  note
+!                 this transform is unnormalized since a call of rfftf
+!                 followed by a call of rfftb will multiply the input
+!                 sequence by n.
+!
+!    wsave   contains results which must not be destroyed between
+!            calls of rfftb or rfftf.
+
     implicit none
 
     integer, intent(in) :: n
@@ -22,6 +101,65 @@ subroutine rfftb(n, r, wsave)
 end
 
 subroutine rfftf(n, r, wsave)
+!    ******************************************************************
+!
+!    subroutine rfftf(n,r,wsave)
+!
+!    ******************************************************************
+!
+!    subroutine rfftf computes the fourier coefficients of a real
+!    perodic sequence (fourier analysis). the transform is defined
+!    below at output parameter r.
+!
+!    input parameters
+!
+!    n       the length of the array r to be transformed.  the method
+!            is most efficient when n is a product of small primes.
+!            n may change so long as different work arrays are provided
+!
+!    r       a real array of length n which contains the sequence
+!            to be transformed
+!
+!    wsave   a work array which must be dimensioned at least 2*n+15.
+!            in the program that calls rfftf. the wsave array must be
+!            initialized by calling subroutine rffti(n,wsave) and a
+!            different wsave array must be used for each different
+!            value of n. this initialization does not have to be
+!            repeated so long as n remains unchanged thus subsequent
+!            transforms can be obtained faster than the first.
+!            the same wsave array can be used by rfftf and rfftb.
+!
+!
+!    output parameters
+!
+!    r       r(1) = the sum from i=1 to i=n of r(i)
+!
+!            if n is even set l =n/2   , if n is odd set l = (n+1)/2
+!
+!              then for k = 2,...,l
+!
+!                 r(2*k-2) = the sum from i = 1 to i = n of
+!
+!                      r(i)*cos((k-1)*(i-1)*2*pi/n)
+!
+!                 r(2*k-1) = the sum from i = 1 to i = n of
+!
+!                     -r(i)*sin((k-1)*(i-1)*2*pi/n)
+!
+!            if n is even
+!
+!                 r(n) = the sum from i = 1 to i = n of
+!
+!                      (-1)**(i-1)*r(i)
+!
+!     *****  note
+!                 this transform is unnormalized since a call of rfftf
+!                 followed by a call of rfftb will multiply the input
+!                 sequence by n.
+!
+!    wsave   contains results which must not be destroyed between
+!            calls of rfftf or rfftb.
+
     implicit none
 
     integer, intent(in) :: n
