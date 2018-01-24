@@ -90,7 +90,7 @@ module mod_sppt
             else
                 ! Subsequent AR(1) steps
                 do n=1, nscales
-                    sppt_spec(:,:,n) = phi(n)*sppt_spec(:,:,n) * &
+                    sppt_spec(:,:,n) = phi(n)*sppt_spec(:,:,n) + &
                             sigma(:,:,n) * eta(:,:,n)
                 end do
             end if
