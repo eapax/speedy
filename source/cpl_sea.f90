@@ -191,6 +191,7 @@ subroutine rest_sea(imode)
     use mod_cpl_flags, only: icsea, icice
     use mod_atparam
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
+    use downscaling, only: ix_in, il_in, regrid
 
     implicit none
 
@@ -200,10 +201,18 @@ subroutine rest_sea(imode)
     real :: sst_c(ngp)              ! sst corrected for sea-ice values
     real :: sstfr
 
+    ! Sea variables at input resolution
+    real :: sst_om_in(ix_in, il_in)
+    real :: tice_om_in(ix_in, il_in)
+    real :: sice_om_in(ix_in, il_in)
+
     if (imode.eq.0) then
-        read (3)  sst_om(:)       ! sst 
-        read (3) tice_om(:)       ! sea ice temperature
-        read (3) sice_om(:)       ! sea ice fraction
+        read (3)  sst_om_in       ! sst
+        call regrid(sst_om_in, sst_om)
+        read (3) tice_om_in      ! sea ice temperature
+        call regrid(tice_om_in, tice_om)
+        read (3) sice_om_in      ! sea ice fraction
+        call regrid(sice_om_in, sice_om)
     else
         !    write sea/ice model variables from coupled runs,
         !    otherwise write fields used by atmospheric model
