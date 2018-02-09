@@ -30,18 +30,32 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
+    ! Physics tendencies of prognostic variables
     real, dimension(ngp,nlev), intent(out) :: utend, vtend, ttend, qtend
 
-    integer :: iptop(ngp), icltop(ngp,2), icnv(ngp), iitest=0, j, k
-    real, dimension(ngp) :: rps, gse
+    ! Index of the top layer of deep convection (diagnosed in convmf)
+    integer :: iptop(ngp)
+
+    ! Index of cloud top for radiation scheme (diagnosed in cloud)
+    integer :: icltop(ngp), icnv(ngp)
+
+    integer :: iitest=0, j, k
+
+    ! Reciprocal of surface pressure 1/psg
+    real, dimension(ngp) :: rps
+
+    ! gradient of dry static energy (dSE/dPHI)
+    real, dimension(ngp) :: gse
+
+    ! 3D Stochastic perturbation pattern
     real :: sppt(ngp,kx)
 
     ! 1. Compute thermodynamic variables
     if (iitest.eq.1) print *, ' 1.2 in phypar'
 
     do j=1,ngp
-     psg(j)=exp(pslg1(j))
-     rps(j)=1./psg(j)
+        psg(j)=exp(pslg1(j))
+        rps(j)=1./psg(j)
     end do
 
     do k=1,nlev
@@ -94,7 +108,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         call cloud(qg1,rh,precnv,precls,iptop,gse,fmask1,icltop,cloudc,clstr)
   
         do j=1,ngp
-            cltop(j)=sigh(icltop(j,1)-1)*psg(j)
+            cltop(j)=sigh(icltop(j)-1)*psg(j)
             prtop(j)=float(iptop(j))
         end do
   

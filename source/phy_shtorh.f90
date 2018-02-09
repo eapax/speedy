@@ -53,9 +53,11 @@ module humidity
 
             do j=1,ngp
                 if (ta(j).ge.t0) then
-                  q_sat(j)=e0*exp(c1*(ta(j)-t0)/(ta(j)-t1))
+                    ! Saturation relative to liquid water
+                    q_sat(j)=e0*exp(c1*(ta(j)-t0)/(ta(j)-t1))
                 else
-                  q_sat(j)=e0*exp(c2*(ta(j)-t0)/(ta(j)-t2))
+                    ! Saturation relative to ice
+                    q_sat(j)=e0*exp(c2*(ta(j)-t0)/(ta(j)-t2))
                 end if
             end do
 
