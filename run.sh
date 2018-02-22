@@ -19,24 +19,25 @@ hour='00'
 
 # Define directory names
 UT=`pwd`
-SRC=$UT/source	
-TMP=$UT/temp
-mkdir -p $UT/output/exp_$2	
-OUT=$UT/output/exp_$2
-CD=$UT/output/exp_$3	
+SRC=${UT}/source
+TMP=${UT}/temp
+mkdir -p ${UT}/output/exp_$2
+OUT=${UT}/output/exp_$2
+CD=${UT}/output/exp_$3
 
 # Copy files from basic version directory
 
 echo "copying from $SRC/source to $TMP"
 
-mkdir -p $TMP
-cd $TMP
+mkdir -p ${TMP}
+cd ${TMP}
 rm *
 
-cp $SRC/*.f90      $TMP/
-cp $SRC/*.h      $TMP/
-cp $SRC/*.s      $TMP/
-cp $SRC/makefile $TMP/
+cp ${SRC}/*.f90             ${TMP}/
+cp ${SRC}/*.h               ${TMP}/
+cp ${SRC}/*.s               ${TMP}/
+cp ${SRC}/makefile          ${TMP}/
+cp ${UT}/setup/namelist.txt ${TMP}/
 
 # Set experiment no. and restart file (if needed)
 
@@ -52,7 +53,7 @@ fi
 
 echo 'link input files to fortran units'
 
-ksh inpfiles.s $1
+sh inpfiles.s $1
 
 ls -l fort.*
 
@@ -77,50 +78,15 @@ echo ${month} >> fort.2
 echo ${day} >> fort.2
 echo ${hour} >> fort.2
 
-# Write precision to input file
-# reduced_precision
-echo 52 > precision.txt
-# initial values
-echo 52 >> precision.txt
-# spectral transform
-echo 52 >> precision.txt
-# grid physics
-echo 52 >> precision.txt
-# convection
-echo 52 >> precision.txt
-# condensation
-echo 52 >> precision.txt
-# short-wave radiation
-echo 52 >> precision.txt
-# long-wave radiation
-echo 52 >> precision.txt
-# surface fluxes
-echo 52 >> precision.txt
-# vertical diffusion
-echo 52 >> precision.txt
-# SPPT
-echo 52 >> precision.txt
-# grid dynamics
-echo 52 >> precision.txt
-# spectral dynamics
-echo 52 >> precision.txt
-# diffusion
-echo 52 >> precision.txt
-# time stepping
-echo 52 >> precision.txt
-# Prognostics
-echo 52 >> precision.txt
-# Tendencies
-echo 52 >> precision.txt
-# Initialisation
-echo 52 >> precision.txt
-# Parameters
-echo 52 >> precision.txt
+
+# Write non-default precisions to input namelist
+i=16
+sed -ie "/&precisions/a reduced_precision=$i," namelist.txt
 
 time ./imp.exe | tee out.lis
 
 # Copy output to experiment directory
-mv out.lis $OUT/atgcm$2.lis
+mv out.lis ${OUT}/atgcm$2.lis
 mv *.rst ${OUT}
-mv *.grd $OUT
-mv *.ctl $OUT
+mv *.grd ${OUT}
+mv *.ctl ${OUT}

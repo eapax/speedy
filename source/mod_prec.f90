@@ -9,7 +9,29 @@ module mod_prec
 
     integer, parameter :: dp = real64
     integer, parameter :: sp = real32
-    integer :: reduced_precision, rp_initial_values, rp_spectral_transform, &
+    integer :: &
+            reduced_precision=52, &
+            rp_initial_values=52, &
+            rp_spectral_transform=52, &
+            rp_grid_physics=52, &
+            rp_convection=52, &
+            rp_condensation=52, &
+            rp_sw_radiation=52, &
+            rp_lw_radiation=52, &
+            rp_surface_fluxes=52, &
+            rp_vertical_diffusion=52, &
+            rp_sppt=52, &
+            rp_grid_dynamics=52, &
+            rp_spectral_dynamics=52, &
+            rp_diffusion=52, &
+            rp_timestepping=52, &
+            rp_prognostics=52, &
+            rp_tendencies=52, &
+            rp_initialisation=52, &
+            rp_parameters=52
+
+    namelist /precisions/ &
+            reduced_precision, rp_initial_values, rp_spectral_transform, &
             rp_grid_physics, rp_convection, rp_condensation, rp_sw_radiation, &
             rp_lw_radiation, rp_surface_fluxes, rp_vertical_diffusion, &
             rp_sppt, rp_grid_dynamics, rp_spectral_dynamics, rp_diffusion, &
@@ -22,27 +44,8 @@ module mod_prec
             ! Load values for precision in different parts of the model from
             ! a text file. This way I don't need to recompile the model every
             ! time I want to run with a different precision.
-
-            open(99, file='precision.txt')
-            read (99,*) reduced_precision
-            read (99,*) rp_initial_values
-            read (99,*) rp_spectral_transform
-            read (99,*) rp_grid_physics
-            read (99,*) rp_convection
-            read (99,*) rp_condensation
-            read (99,*) rp_sw_radiation
-            read (99,*) rp_lw_radiation
-            read (99,*) rp_surface_fluxes
-            read (99,*) rp_vertical_diffusion
-            read (99,*) rp_sppt
-            read (99,*) rp_grid_dynamics
-            read (99,*) rp_spectral_dynamics
-            read (99,*) rp_diffusion
-            read (99,*) rp_timestepping
-            read (99,*) rp_prognostics
-            read (99,*) rp_tendencies
-            read (99,*) rp_initialisation
-            read (99,*) rp_parameters
+            open(99, file='namelist.txt')
+            read(99,precisions)
             close(99)
 
             call set_precision('Default')
