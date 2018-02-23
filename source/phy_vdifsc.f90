@@ -4,6 +4,8 @@ module vertical_diffusion
     private
     public vdifsc
 
+    namelist /vertical_diffusion/ trshc, trvdi, trvds, redshc, rhgrad, segrad
+
     ! Relaxation time (in hours) for shallow convection
     real, parameter :: trshc = 6.0
 
@@ -23,6 +25,12 @@ module vertical_diffusion
     real, parameter :: segrad = 0.1
 
     contains
+        subroutine setup_vertical_diffusion(fid)
+            integer, intent(in) :: fid
+
+            read(fid, vertical_diffusion)
+        end subroutine setup_vertical_diffusion
+
         subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv, &
                 utenvd,vtenvd,ttenvd,qtenvd)
             !   subroutine vdifsc (ua,va,se,rh,qa,qsat,phi,icnv,

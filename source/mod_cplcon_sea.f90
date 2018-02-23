@@ -9,6 +9,10 @@ module mod_cplcon_sea
             tdsst, tdice, fseamin, beta, &
             l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian
 
+    namelist /sea_model/ depth_ml, dept0_ml, depth_ice, dept0_ice, &
+            tdsst, tdice, fseamin, beta, &
+            l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian
+
     ! Constant parameters and fields in sea/ice model
     ! 1./heat_capacity (sea)
     real :: rhcaps(ix,il)
@@ -37,7 +41,7 @@ module mod_cplcon_sea
     real :: tdice = 30.
 
     ! Minimum fraction of sea for the definition of anomalies
-    real :: fseamin = 1./3.
+    real :: fseamin = 3.0
 
     ! Heat flux coef. at sea/ice int.
     real :: beta = 1.0
@@ -50,4 +54,12 @@ module mod_cplcon_sea
     logical, parameter :: l_npacif = .false. ! N. Pacific  (lat 20-80N, lon 100E-100W)
     logical, parameter :: l_tropic = .false. ! Tropics (lat 30S-30N)
     logical, parameter :: l_indian = .false. ! Indian Ocean (lat 30S-30N, lon 30-120E)
+
+    contains
+        subroutine setup_sea_model(fid)
+            integer, intent(in) :: fid
+
+            read(fid, sea_model)
+            fseamin = 1.0/fseamin
+        end subroutine setup_sea_model
 end module

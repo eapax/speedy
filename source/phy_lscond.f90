@@ -4,19 +4,26 @@ module condensation
     private
     public lscond
 
+    namelist /condensation/ trlsc, rhlsc, drhlsc, rhblsc
+
     ! Relaxation time (in hours) for specific humidity 
-    real, parameter :: trlsc  = 4.0
+    real :: trlsc  = 4.0
 
     ! Maximum relative humidity threshold (at sigma=1)
-    real, parameter :: rhlsc  = 0.9
+    real :: rhlsc  = 0.9
 
     ! Vertical range of relative humidity threshold
-    real, parameter :: drhlsc = 0.1
+    real :: drhlsc = 0.1
 
     ! Relative humidity threshold for boundary layer
-    real, parameter :: rhblsc = 0.95
+    real :: rhblsc = 0.95
     
     contains
+        subroutine setup_condensation(fid)
+            integer, intent(in) :: fid
+
+            read(fid, condensation)
+        end subroutine setup_condensation
     
         subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)

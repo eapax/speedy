@@ -11,7 +11,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !  Modified common blocks:  mod_physvar
 
     use mod_cpl_flags, only: icsea
-    use mod_lflags, only: lradsw, lrandf
+    use mod_physics, only: lradsw, lrandf, sppt_on
     use mod_atparam
     use mod_physcon, only: sig, sigh, grdsig, grdscp, cp
     use mod_surfcon, only: fmask1, phis0
@@ -19,7 +19,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_var_sea, only: sst_am, ssti_om
     use mod_physvar
     use mod_sppt, only: mu, gen_sppt
-    use mod_tsteps, only: sppt_on
     use humidity, only: shtorh
     use convection, only: convmf
     use condensation, only: lscond

@@ -4,9 +4,12 @@ module mod_tsteps
     implicit none
 
     private
-    public nmonts, ndaysl, nsteps, nstdia, nmonrs, sixhrrun
-    public iseasc, istart, iyear0, imont0, nstrad, sppt_on, nstrdf, indrdf, issty0
+    public nmonts, ndaysl, nsteps, nstdia, nmonrs
+    public iseasc, istart, iyear0, imont0, issty0
     public isst0, idelt, delt, delt2, rob, wil, alph
+
+    namelist /timestepping/ nmonts, ndaysl, nsteps, nstdia, nmonrs, iseasc,&
+            rob, wil
 
     ! Integration length in months
     integer :: nmonts = 3
@@ -15,19 +18,16 @@ module mod_tsteps
     integer :: ndaysl = 0
 
     ! No. of time steps in one day
-    integer, parameter :: nsteps = 36
+    integer :: nsteps = 36
 
     ! Period (no. of steps) for diagnostic print-out
-    integer, parameter :: nstdia = 36*5
+    integer :: nstdia = 36*5
 
     ! Period (no. of months) for restart file update
-    integer, parameter :: nmonrs = 3
-
-    ! 6-hourly output flags
-    logical, parameter :: sixhrrun = .false.
+    integer :: nmonrs = 3
 
     ! Seasonal cycle flag (0=no, 1=yes)
-    integer, parameter :: iseasc = 1
+    integer :: iseasc = 1
 
     ! Start flag (0: from rest, 1: from restart file)
     integer :: istart
@@ -38,19 +38,6 @@ module mod_tsteps
     ! Month of initial date (1 to 12)
     integer :: imont0
 
-    ! Period (no. of steps) for shortwave radiation 
-    integer, parameter :: nstrad = 3
-
-    ! Turn on SPPT?
-    logical, parameter :: sppt_on = .false.
-    
-    ! Duration of random diabatic forcing ( 0 : no forcing, > 0 : no. of
-    ! initial steps, < 0 : whole integration)
-    integer, parameter :: nstrdf = 0
-
-    ! Initialization index for random diabatic forcing
-    integer, parameter :: indrdf = -1
-
     integer, parameter :: issty0 = 1979
 
     ! Record in SST anomaly file corr. to the initial month
@@ -58,18 +45,29 @@ module mod_tsteps
     integer :: isst0
     
     ! Time step in seconds
-    integer, parameter :: idelt = 86400 / nsteps
-    real, parameter :: delt = real(idelt)
+    integer :: idelt
+    real :: delt
     
     ! 2 * time step in seconds
-    real, parameter :: delt2 = 2.0 * idelt
+    real :: delt2
 
     ! Damping factor in Robert time filter
-    real, parameter :: rob = 0.05
+    real :: rob = 0.05
 
     ! Parameter of Williams filter
-    real, parameter :: wil = 0.53
+    real :: wil = 0.53
 
     ! Coefficient for semi-implicit computations
     real :: alph
+
+    contains
+        subroutine setup_timestepping(fid)
+            integer, intent(in) :: fid
+
+            read(fid, timestepping)
+            idelt = 86400 / nsteps
+            delt = real(idelt)
+            delt2 = 2.0 * idelt
+
+        end subroutine setup_timestepping
 end module

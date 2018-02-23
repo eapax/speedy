@@ -7,6 +7,9 @@ module surface_fluxes
     private
     public suflux, sflset
 
+    namelist /surface_fluxes/ fwind0, ftemp0, fhum0, cdl, cds, chl, chs, &
+            vgust, ctday, dtheta, fstab, hdrag, fhdrag, clambda, clambsn
+
     !  Constants for surface fluxes
     ! Ratio of near-sfc wind to lowest-level wind
     real :: fwind0 = 0.95
@@ -61,6 +64,11 @@ module surface_fluxes
     real :: forog(ix*il)
     
     contains
+        subroutine setup_surface_fluxes(fid)
+            integer, intent(in) :: fid
+
+            read(fid, surface_fluxes)
+        end subroutine setup_surface_fluxes
 
         subroutine suflux(psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav, &
                 ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,tsfc,tskin,u0,v0,t0, &

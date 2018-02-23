@@ -3,6 +3,8 @@ module mod_cpl_land_model
 
     implicit none
 
+    namelist /land_model/ depth_soil, depth_lice, tdland, flandmin
+
     ! 1./heat_capacity (land)
     real :: rhcapl(ix,il)           
 
@@ -14,9 +16,28 @@ module mod_cpl_land_model
     real :: vland_input(ix*il,4)            
 
     ! Land model output variables
-    real :: vland_output(ix*il,2)           
+    real :: vland_output(ix*il,2)
+
+    ! Soil layer depth (m)
+    real :: depth_soil = 1.0
+
+    ! Land-ice depth (m)
+    real :: depth_lice = 5.0
+
+    ! Dissipation time (days) for land-surface temp. anomalies
+    real :: tdland  = 40.
+
+    ! Minimum fraction of land for the definition of anomalies (denominator)
+    real :: flandmin = 3.0
 
     contains
+        subroutine setup_land_model(fid)
+            integer, intent(in) :: fid
+
+            read(fid, land_model)
+            flandmin = 1./flandmin
+        end subroutine setup_land_model
+
         subroutine land_model_init(fmask_l,alb0) 
             ! subroutine land_model_init (fmask_l,alb0)
             !
@@ -35,21 +56,7 @@ module mod_cpl_land_model
             real :: depth_soil, depth_lice, tdland, hcapl, hcapli, flandmin
         
             ! 1. Set heat capacities and dissipation times for 
-            !    soil and ice-sheet layers 
-        
-            ! Model parameters (default values)
-        
-            ! Soil layer depth (m)
-            depth_soil = 1.0
-        
-            ! Land-ice depth (m)
-            depth_lice = 5.0
-        
-            ! Dissipation time (days) for land-surface temp. anomalies
-            tdland  = 40.
-        
-            ! Minimum fraction of land for the definition of anomalies
-            flandmin = 1./3.
+            !    soil and ice-sheet layers
         
             ! Heat capacities per m^2 (depth*heat_cap/m^3)
             hcapl  = depth_soil*2.50e+6
@@ -77,7 +84,7 @@ module mod_cpl_land_model
             end do
         
             cdland(:,:) = dmask(:,:)*tdland/(1.+dmask(:,:)*tdland)
-        end
+        end subroutine land_model_init
         
         subroutine land_model 
             ! subroutine land_model
@@ -120,5 +127,5 @@ module mod_cpl_land_model
             stl1 = tanom + stlcl1
 
             vland_output(:,1) = stl1
-        end
-end
+        end subroutine land_model
+end module mod_cpl_land_model

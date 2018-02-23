@@ -6,6 +6,8 @@ module mod_cpl_flags
     private
     public icland, icsea, icice, isstan
 
+    namelist /coupling_flags/ icland, icsea, icice, isstan
+
     ! Flag for land-coupling
     ! 0=no, 1=land-model
     integer :: icland = 1
@@ -26,4 +28,11 @@ module mod_cpl_flags
     ! 0 = no (clim. SST), 1 = observed anomaly
     ! (active if ICSEA = 0, 1; set to 1 if ICSEA = 4)
     integer :: isstan = 1
+
+    contains
+        subroutine setup_coupling_flags(fid)
+            integer, intent(in) :: fid
+
+            read(fid, coupling_flags)
+        end subroutine setup_coupling_flags
 end module

@@ -7,7 +7,7 @@ subroutine fordate(imode)
     !
     !   input : imode : 0 = initialization step, 1 = daily update
 
-    use mod_lflags, only: lco2
+    use mod_physics, only: lco2
     use mod_dyncon0, only: refrh1
     use mod_atparam
     use mod_hdifcon, only: tcorh, qcorh

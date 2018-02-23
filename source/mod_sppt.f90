@@ -15,6 +15,8 @@ module mod_sppt
     private
     public mu, gen_sppt
 
+    namelist /sppt/ mu, nscales, time_decorr, len_decorr, stddev
+
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
     real :: mu(kx) = (/ 1, 1, 1, 1, 1, 1, 1, 1 /)
@@ -22,19 +24,17 @@ module mod_sppt
     logical :: first = .true.
 
     ! Number of correlation scales for SPPT perturbations
-    integer, parameter :: nscales = 3
+    integer :: nscales = 3
 
     ! Decorrelation time of SPPT perturbation (in hours)
-    real, dimension(nscales), parameter :: &
-            time_decorr = (/ 3.0, 72.0, 720.0 /)
+    real, dimension(nscales) :: time_decorr = (/ 3.0, 72.0, 720.0 /)
 
     ! Correlation length scale of SPPT perturbation (in metres)
-    real, dimension(nscales), parameter :: &
+    real, dimension(nscales) :: &
             len_decorr = (/ 500000.0, 1000000.0, 2000000.0 /)
 
     ! Standard deviation of SPPT perturbation (in grid point space)
-    real, dimension(nscales), parameter :: &
-            stddev = (/ 0.52,  0.18, 0.06 /)
+    real, dimension(nscales) :: stddev = (/ 0.52,  0.18, 0.06 /)
 
     ! Time autocorrelation of spectral AR(1) signals
     real :: phi(nscales)
@@ -46,6 +46,14 @@ module mod_sppt
     complex :: sppt_spec(mx, nx, nscales)
 
     contains
+        subroutine setup_sppt(fid)
+            integer, intent(in) :: fid
+
+            read(fid, sppt)
+            call time_seed()
+            call init_sppt_parameters()
+        end subroutine setup_sppt
+
         !> @brief
         !> Generate grid point space SPPT pattern
         !> distribution.
@@ -56,12 +64,6 @@ module mod_sppt
                     sppt_grid_out(ix*il, kx)
             complex :: eta(mx, nx, nscales)
             real :: randreal, randimag
-
-            ! Seed RNG if first use of SPPT
-            if (first) then
-                call time_seed()
-                call init_sppt_parameters()
-            end if
 
             ! Generate Gaussian noise
             do k=1, nscales

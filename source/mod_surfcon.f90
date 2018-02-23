@@ -6,6 +6,8 @@ module mod_surfcon
     private
     public fmask, fmask1, phi0, phis0, alb0, swcap, swwil, sd2sc
 
+    namelist /surface/ swcap, swwil, sd2sc
+
     ! Land-sea masks (initial. in INBCON)
     ! Original (fractional) land-sea mask
     real :: fmask(ix,il)
@@ -32,4 +34,11 @@ module mod_surfcon
 
     ! Snow depth (mm water) corresponding to snow cover = 1
     real :: sd2sc = 60.0
+
+    contains
+        subroutine setup_surface(fid)
+            integer, intent(in) :: fid
+
+            read(fid, surface)
+        end subroutine setup_surface
 end module

@@ -3,7 +3,7 @@ subroutine ini_atm(cexp)
     !
     !   purpose : call initialization routines for all model common blocks 
 
-    use mod_tsteps, only: indrdf
+    use mod_physics, only: indrdf
     use mod_atparam
     use mod_dyncon1, only: grav, hsg, fsg, radang
 

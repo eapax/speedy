@@ -6,7 +6,7 @@ subroutine stloop(istep)
     !   Input/output : istep = time step index
     !   Updated common block : lflag2
       
-    use mod_lflags, only: lradsw, lrandf
+    use mod_physics, only: lradsw, lrandf, nstrad, nstrdf
     use mod_tsteps
     use mod_date, only: ihour, iday, update_time
     use mod_dynvar
@@ -33,11 +33,6 @@ subroutine stloop(istep)
         ! Do diagnostic, post-processing and I/O tasks
         call diagns(2, istep)
 
-        if (sixhrrun .and. ihour.eq.6) then
-            call restart (2)
-            print *,'normal end with 6-hr fcst (yeahhhhhhh!!!!)'
-            stop 1111
-        end if
         istep = istep + 1
     end do
 end subroutine
