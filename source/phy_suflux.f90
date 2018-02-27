@@ -1,11 +1,11 @@
-module surface_fluxes
+module phy_suflux
     use mod_atparam
     use humidity, only: shtorh, q_sat
 
     implicit none
 
     private
-    public suflux, sflset
+    public setup_surface_fluxes, suflux, sflset
 
     namelist /surface_fluxes/ fwind0, ftemp0, fhum0, cdl, cds, chl, chs, &
             vgust, ctday, dtheta, fstab, hdrag, fhdrag, clambda, clambsn
@@ -61,13 +61,24 @@ module surface_fluxes
     real :: clambsn = 7.0
 
     ! Time-invariant fields (initial. in SFLSET)
-    real :: forog(ix*il)
+    real, allocatable :: forog(:)
+
+    ! Save fields from suflux
+    real, dimension(:,:), allocatable :: t1, q1
+    real, allocatable :: denvvs(:,:)
     
     contains
         subroutine setup_surface_fluxes(fid)
             integer, intent(in) :: fid
 
             read(fid, surface_fluxes)
+
+            allocate(forog(ix*il))
+            allocate(t1(ngp, 2))
+            allocate(q1(ngp, 2))
+            allocate(denvvs(ngp, 0:2))
+
+            write(*, surface_fluxes)
         end subroutine setup_surface_fluxes
 
         subroutine suflux(psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav, &
@@ -111,8 +122,6 @@ module surface_fluxes
             use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
             use mod_radcon, only: emisfc, alb_l, alb_s, snowc
         
-            integer, parameter :: ngp=ix*il
-        
             real, dimension(ngp,kx), intent(in) :: ua, va, ta, qa, rh, phi
             real, dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, &
                     swav, ssrd, slrd
@@ -122,9 +131,9 @@ module surface_fluxes
             real, dimension(ngp), intent(inout) :: tsfc, tskin, u0, v0, t0, q0
                                             
             integer :: j, j0, jlat, ks, nl1
-            real, dimension(ngp,2), save :: t1, q1
+
             real, dimension(ngp,2) :: t2, qsat0
-            real, save :: denvvs(ngp,0:2)
+
             real :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, &
                     chlcp, chscp, dhfdt, dlambda, dt1, dthl, dths, esbc, &
                     esbc4, ghum0, gtemp0, prd, rcp, rdphi0, rdth, &
@@ -446,8 +455,6 @@ module surface_fluxes
 
             use mod_physcon, only: gg
         
-            integer, parameter :: ngp=ix*il
-        
             real, intent(in) :: phi0(ngp)
             integer :: j
             real :: rhdrag
@@ -458,4 +465,4 @@ module surface_fluxes
                 forog(j)=1.+fhdrag*(1.-exp(-max(phi0(j),0.)*rhdrag))
             end do
         end
-end module surface_fluxes
+end module phy_suflux

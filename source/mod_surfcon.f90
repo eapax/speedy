@@ -3,27 +3,24 @@ module mod_surfcon
 
     implicit none
 
-    private
-    public fmask, fmask1, phi0, phis0, alb0, swcap, swwil, sd2sc
-
     namelist /surface/ swcap, swwil, sd2sc
 
     ! Land-sea masks (initial. in INBCON)
     ! Original (fractional) land-sea mask
-    real :: fmask(ix,il)
+    real, allocatable :: fmask(:,:)
     ! Model-defined land fraction
-    real :: fmask1(ix,il)
+    real, allocatable :: fmask1(:,:)
 									
     ! Time invariant surface fields 
     ! (initial. in INBCON, phis0 initial. in INVARS)
     ! Unfiltered surface geopotential
-    real :: phi0(ix,il)
+    real, allocatable :: phi0(:,:)
 
     ! Spectrally-filtered sfc. geopotential
-    real :: phis0(ix,il)
+    real, allocatable :: phis0(:,:)
 
     ! Bare-land annual-mean albedo
-    real :: alb0(ix,il)
+    real, allocatable :: alb0(:,:)
 
     ! Soil moisture parameters
     ! Soil wetness at field capacity (volume fraction)
@@ -38,7 +35,14 @@ module mod_surfcon
     contains
         subroutine setup_surface(fid)
             integer, intent(in) :: fid
+            allocate(fmask(ix,il))
+            allocate(fmask1(ix,il))
+            allocate(phi0(ix,il))
+            allocate(phis0(ix,il))
+            allocate(alb0(ix,il))
 
             read(fid, surface)
+
+            write(*, surface)
         end subroutine setup_surface
 end module

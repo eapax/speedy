@@ -3,9 +3,6 @@
 module mod_dyncon0
     implicit none
 
-    private
-    public gamma, hscale, hshum, refrh1, thd, thdd, thds, tdrs
-
     namelist /dynamics/ gamma, hscale, hshum, refrh1, thd, thdd, thds, tdrs
 
     ! Ref. temperature lapse rate (-dT/dz in deg/km)
@@ -41,5 +38,7 @@ module mod_dyncon0
             integer, intent(in) :: fid
 
             read(fid, dynamics)
+
+            write(*, dynamics)
         end subroutine setup_dynamics
 end module

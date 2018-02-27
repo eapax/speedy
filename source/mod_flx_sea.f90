@@ -3,41 +3,52 @@ module mod_flx_sea
 
     implicit none
 
-    private
-    public prec_s, snowf_s, evap_s, ustr_s, vstr_s, ssr_s, slr_s, shf_s, ehf_s,&
-        & hflux_s, hflux_i
-
     ! Fluxes at sea surface (all downward, except evaporation)
     ! Precipitation (sea)
-    real :: prec_s(ix*il)
+    real, allocatable :: prec_s(:)
     
     ! Snowfall (sea)
-    real :: snowf_s(ix*il)
+    real, allocatable :: snowf_s(:)
 
     ! Evaporation (sea)
-    real :: evap_s(ix*il)
+    real, allocatable :: evap_s(:)
 
     ! u-wind stress (sea)
-    real :: ustr_s(ix*il)
+    real, allocatable :: ustr_s(:)
 
     ! v-wind stress (sea)
-    real :: vstr_s(ix*il)
+    real, allocatable :: vstr_s(:)
 
     ! Sfc short-wave radiation (sea)
-    real :: ssr_s(ix*il)
+    real, allocatable :: ssr_s(:)
 
     ! Sfc long-wave radiation (sea)
-    real :: slr_s(ix*il)
+    real, allocatable :: slr_s(:)
 
     ! Sensible heat flux (sea)
-    real :: shf_s(ix*il)
+    real, allocatable :: shf_s(:)
 
     ! Latent heat flux (sea)
-    real :: ehf_s(ix*il)
+    real, allocatable :: ehf_s(:)
 
     ! Net heat flux into sea sfc.
-    real :: hflux_s(ix*il)
+    real, allocatable :: hflux_s(:)
 
     ! Net heat flux into sea-ice sfc.
-    real :: hflux_i(ix*il)
+    real, allocatable :: hflux_i(:)
+    
+    contains
+        subroutine setup_flx_sea()
+            allocate(prec_s(ix*il))    
+            allocate(snowf_s(ix*il))        
+            allocate(evap_s(ix*il))        
+            allocate(ustr_s(ix*il))        
+            allocate(vstr_s(ix*il))        
+            allocate(ssr_s(ix*il))        
+            allocate(slr_s(ix*il))        
+            allocate(shf_s(ix*il))        
+            allocate(ehf_s(ix*il))        
+            allocate(hflux_s(ix*il))
+            allocate(hflux_i(ix*il))
+        end subroutine setup_flx_sea
 end module

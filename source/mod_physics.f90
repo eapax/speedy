@@ -34,5 +34,7 @@ module mod_physics
             integer, intent(in) :: fid
 
             read(fid, physics)
+
+            write(*, physics)
         end subroutine setup_physics
 end module

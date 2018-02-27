@@ -3,8 +3,10 @@ module mod_fft
 
     implicit none
 
-    private
-    public wsave
+    real, allocatable :: wsave(:)
 
-    real :: wsave(2*ix+15)
+    contains
+        subroutine setup_fft()
+            allocate(wsave(2*ix+15))
+        end subroutine setup_fft
 end module

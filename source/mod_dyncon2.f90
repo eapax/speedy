@@ -3,14 +3,31 @@ module mod_dyncon2
 
     implicit none
 
-    private
-    public :: tref, tref1, tref2, tref3
-    public :: xa, xb, xc, xd, xe, xf, xg, xh, xj, dhsx, elz
-
     ! Temp. profile for semi-imp. scheme (initial. in IMPINT)
-    real, dimension(kx) :: tref, tref1, tref2, tref3
+    real, dimension(:),       allocatable :: tref, tref1, tref2, tref3
+    real, dimension(:, :),    allocatable :: xa, xb, xc, xd, xe
+    real, dimension(:, :, :), allocatable :: xf, xg, xh, xj
+    real, allocatable :: dhsx(:), elz(:, :)
 
-    real, dimension(kx,kx) :: xa, xb, xc, xd, xe
-    real, dimension(kx,kx,lmax) :: xf, xg, xh, xj
-    real :: dhsx(kx), elz(mx,nx)                               
+    contains
+        subroutine setup_dyncon2()
+            allocate(tref(kx))
+            allocate(tref1(kx))
+            allocate(tref2(kx))
+            allocate(tref3(kx))
+
+            allocate(xa(kx, kx))
+            allocate(xb(kx, kx))
+            allocate(xc(kx, kx))
+            allocate(xd(kx, kx))
+            allocate(xe(kx, kx))
+
+            allocate(xf(kx, kx, lmax))
+            allocate(xg(kx, kx, lmax))
+            allocate(xh(kx, kx, lmax))
+            allocate(xj(kx, kx, lmax))
+
+            allocate(dhsx(kx))
+            allocate(elz(mx,nx))
+        end subroutine setup_dyncon2
 end module

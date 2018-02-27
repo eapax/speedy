@@ -2,14 +2,20 @@
 
 # $1 = resolution (eg t21, t30)
 # $2 = experiment no. (eg 111)
-# $3 = experiment no. for restart file ( 0 = no restart ) 
-# $4 = make only, and don't run? ("make" for yes, "run" for no)
+# $3 = experiment no. for restart file ( 0 = no restart )
 
 
-if [ $# -ne 4 ] ; then
-    echo 'Usage: '$0' resol. exp_no. restart_no make_only_or_run' 1>&2
+if [ $# -ne 3 ] ; then
+    echo 'Usage: '${0}' resol. exp_no. restart_no' 1>&2
     exit 1
 fi
+
+# Define directory names
+UT=`pwd`
+TMP=/home/saffin/temp/
+mkdir -p ${UT}/output/exp_${2}
+OUT=${UT}/output/exp_${2}
+INP=${UT}/output/exp_${3}
 
 # Start date
 year='1982'
@@ -17,53 +23,38 @@ month='01'
 day='01'
 hour='00'
 
-# Define directory names
-UT=`pwd`
-SRC=${UT}/source
-TMP=${UT}/tmp
-mkdir -p ${UT}/output/exp_${2}
-OUT=${UT}/output/exp_${2}
-CD=${UT}/output/exp_${3}
+# Setup files
+executable=${UT}/source/imp.exe
+namelist=${UT}/setup/speedy.nml
+
 
 # Copy files from basic version directory
-
-echo "copying from ${SRC}/source to ${TMP}"
-
 mkdir -p ${TMP}
 cd ${TMP}
 rm *
+cp ${executable} ${TMP}/imp.exe
+cp ${namelist}   ${TMP}/speedy.nml
+cp ${UT}/setup/output_requests.txt ${TMP}
 
-cp ${SRC}/*.f90      ${TMP}/
-cp ${SRC}/*.s      ${TMP}/
-cp ${SRC}/makefile ${TMP}/
-cp ${UT}/setup/speedy.nml ${TMP}/
-
-# Set experiment no. and restart file (if needed)
-
-echo ${3} >  fort.2
-echo ${2} >> fort.2
-
+# Link restart file if needed
 if [ ${3} != 0 ] ; then
   echo "link restart file ${year}${month}${day}${hour}"
-  ln -s ${CD}/${year}${month}${day}${hour}.rst
+  ln -s ${INP}/${year}${month}${day}${hour}.rst
 fi 
 
 # Link input files
+SB=${UT}/data/bc/${1}/clim
+SC=${UT}/data/bc/${1}/anom
 
-echo 'link input files to fortran units'
-
-ksh inpfiles.s ${1}
+ln -sf ${SB}/sfc.grd   fort.20
+ln -sf ${SB}/sst.grd   fort.21
+ln -sf ${SB}/icec.grd  fort.22
+ln -sf ${SB}/stl.grd   fort.23
+ln -sf ${SB}/snowd.grd fort.24
+ln -sf ${SB}/swet.grd  fort.26
+ln -sf ${SC}/ssta.grd  fort.30
 
 ls -l fort.*
-
-echo ' compiling at_gcm - calling make'
-
-make clean
-make imp.exe || { echo "Compilation failed"; exit 1; }
-
-if [ ${4} == make ] ; then
-    exit 0
-fi
 
 # Write date input file
 # First line is 0 for no restart file and 1 for restart

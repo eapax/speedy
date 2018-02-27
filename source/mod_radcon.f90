@@ -3,17 +3,6 @@ module mod_radcon
 
     implicit none
 
-    private
-    public solc, albsea, albice, albsn, rhcl1, rhcl2, qacl, wpcl, pmaxcl,&
-        & clsmax, clsminl, gse_s0, gse_s1, albcl, albcls, epssw,  epslw, emisfc,&
-        & absdry, absaer, abswv1, abswv2, abscl1, abscl2, ablwin, ablco2,&
-        & ablco2_ref, ablwv1, ablwv2, ablcl1, ablcl2
-    public fband
-    public fsol, ozone, ozupp, zenit, stratz
-    public alb_l, alb_s, albsfc, snowc
-    public tau2, st4a, stratc, flux
-    public qcloud, irhtop
-
     ! Radiation and cloud constants
     
     ! solc   = Solar constant (area averaged) in W/m^2
@@ -105,23 +94,42 @@ module mod_radcon
     ! ozupp  = flux absorbed by ozone (upper stratos.)
     ! zenit  = optical depth ratio (function of solar zenith angle)
     ! stratz = stratospheric correction for polar night
-    real, dimension(ix*il) :: fsol, ozone, ozupp, zenit, stratz
+    real, dimension(:), allocatable :: fsol, ozone, ozupp, zenit, stratz
 
     ! Radiative properties of the surface (updated in fordate)
     ! alb_l  = daily-mean albedo over land (bare-land + snow)
     ! alb_s  = daily-mean albedo over sea  (open sea + sea ice)
     ! albsfc = combined surface albedo (land + sea)
     ! snowc  = effective snow cover (fraction)
-    real, dimension(ix*il) :: alb_l, alb_s, albsfc, snowc
+    real, dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
 
     ! Transmissivity and blackbody rad. (updated in radsw/radlw)
     ! tau2   = transmissivity of atmospheric layers
     ! st4a   = blackbody emission from full and half atmospheric levels
     ! stratc = stratospheric correction term 
     ! flux   = radiative flux in different spectral bands
-    real :: tau2(ix*il,kx,4), st4a(ix*il,kx,2), stratc(ix*il,2), flux(ix*il,4)
+    real, allocatable :: tau2(:,:,:), st4a(:,:,:), stratc(:,:), flux(:,:)
 
     ! Radiative properties of clouds (updated in cloud)
     ! qcloud = Equivalent specific humidity of clouds 
-    real, dimension(ix*il) :: qcloud, irhtop
+    real, dimension(:), allocatable :: qcloud, irhtop
+    
+    contains
+        subroutine setup_radcon()
+            allocate(fsol(ix*il))
+            allocate(ozone(ix*il))
+            allocate(ozupp(ix*il))
+            allocate(zenit(ix*il))
+            allocate(stratz(ix*il))
+            allocate(alb_l(ix*il))
+            allocate(alb_s(ix*il))
+            allocate(albsfc(ix*il))
+            allocate(snowc(ix*il))
+            allocate(tau2(ix*il,kx,4))
+            allocate(st4a(ix*il,kx,2))
+            allocate(stratc(ix*il,2))
+            allocate(flux(ix*il,4))
+            allocate(qcloud(ix*il))
+            allocate(irhtop(ix*il))
+        end subroutine setup_radcon
 end module

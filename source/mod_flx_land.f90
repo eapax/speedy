@@ -3,38 +3,48 @@ module mod_flx_land
 
     implicit none
 
-    private
-    public prec_l, snowf_l, evap_l, ustr_l, vstr_l, ssr_l, slr_l, shf_l, ehf_l,&
-        & hflux_l
-
     ! Fluxes at land surface (all downward, except evaporation)
     ! Precipitation (land)
-    real :: prec_l(ix*il)
+    real, allocatable :: prec_l(:)
 
     ! Snowfall (land)
-    real :: snowf_l(ix*il)
+    real, allocatable :: snowf_l(:)
 
     ! Evaporation (land)
-    real :: evap_l(ix*il)
+    real, allocatable :: evap_l(:)
 
     ! u-wind stress (land)
-    real :: ustr_l(ix*il)
+    real, allocatable :: ustr_l(:)
 
     ! v-wind stress (land)
-    real :: vstr_l(ix*il)
+    real, allocatable :: vstr_l(:)
 
     ! Sfc short-wave radiation (land)
-    real :: ssr_l(ix*il)
+    real, allocatable :: ssr_l(:)
 
     ! Sfc long-wave radiation (land)
-    real :: slr_l(ix*il)
+    real, allocatable :: slr_l(:)
 
     ! Sensible heat flux (land)
-    real :: shf_l(ix*il)
+    real, allocatable :: shf_l(:)
 
     ! Latent heat flux (land)
-    real :: ehf_l(ix*il)
+    real, allocatable :: ehf_l(:)
 
     ! Net heat flux into land sfc.end module
-    real :: hflux_l(ix*il)
+    real, allocatable :: hflux_l(:)
+    
+    contains
+        subroutine setup_flx_land()
+            allocate(prec_l(ix*il))        
+            allocate(snowf_l(ix*il))        
+            allocate(evap_l(ix*il))        
+            allocate(ustr_l(ix*il))        
+            allocate(vstr_l(ix*il))        
+            allocate(ssr_l(ix*il))        
+            allocate(slr_l(ix*il))        
+            allocate(shf_l(ix*il))        
+            allocate(ehf_l(ix*il))        
+            allocate(hflux_l(ix*il))        
+        end subroutine setup_flx_land
 end module

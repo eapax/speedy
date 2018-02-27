@@ -13,45 +13,55 @@ module mod_sppt
     implicit none
 
     private
-    public mu, gen_sppt
+    public mu, setup_sppt, gen_sppt
 
-    namelist /sppt/ mu, nscales, time_decorr, len_decorr, stddev
+    namelist /sppt_scales/ nscales
+    namelist /sppt/ mu, time_decorr, len_decorr, stddev
 
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
-    real :: mu(kx) = (/ 1, 1, 1, 1, 1, 1, 1, 1 /)
-
-    logical :: first = .true.
+    real, allocatable :: mu(:)
 
     ! Number of correlation scales for SPPT perturbations
     integer :: nscales = 3
 
     ! Decorrelation time of SPPT perturbation (in hours)
-    real, dimension(nscales) :: time_decorr = (/ 3.0, 72.0, 720.0 /)
+    real, allocatable :: time_decorr(:)
 
     ! Correlation length scale of SPPT perturbation (in metres)
-    real, dimension(nscales) :: &
-            len_decorr = (/ 500000.0, 1000000.0, 2000000.0 /)
+    real, allocatable :: len_decorr(:)
 
     ! Standard deviation of SPPT perturbation (in grid point space)
-    real, dimension(nscales) :: stddev = (/ 0.52,  0.18, 0.06 /)
+    real, allocatable :: stddev(:)
 
     ! Time autocorrelation of spectral AR(1) signals
-    real :: phi(nscales)
+    real, allocatable :: phi(:)
 
     ! Total wavenumber-wise standard deviation of spectral signals
-    real :: sigma(mx, nx, nscales)
+    real, allocatable :: sigma(:, :, :)
 
     ! Perturbations in spectral space
-    complex :: sppt_spec(mx, nx, nscales)
+    complex, allocatable :: sppt_spec(:, :, :)
+
+    logical :: first = .true.
 
     contains
         subroutine setup_sppt(fid)
             integer, intent(in) :: fid
 
+            read(fid, sppt_scales)
+            write(*, sppt_scales)
+
+            allocate(mu(kx))
+            allocate(time_decorr(nscales))
+            allocate(len_decorr(nscales))
+            allocate(stddev(nscales))
+            allocate(phi(nscales))
+            allocate(sigma(mx, nx, nscales))
+            allocate(sppt_spec(mx, nx, nscales))
+
             read(fid, sppt)
-            call time_seed()
-            call init_sppt_parameters()
+            write(*, sppt)
         end subroutine setup_sppt
 
         !> @brief
@@ -64,6 +74,11 @@ module mod_sppt
                     sppt_grid_out(ix*il, kx)
             complex :: eta(mx, nx, nscales)
             real :: randreal, randimag
+
+            if (first) then
+                call time_seed()
+                call init_sppt_parameters()
+            end if
 
             ! Generate Gaussian noise
             do k=1, nscales

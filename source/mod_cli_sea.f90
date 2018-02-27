@@ -3,34 +3,43 @@ module mod_cli_sea
 
     implicit none
 
-    private
-    public fmask_s, bmask_s, deglat_s, sst12, sice12, sstan3, hfseacl, sstom12
-
     ! Sea masks
     ! Fraction of sea
-    real :: fmask_s(ix,il)
+    real, allocatable :: fmask_s(:,:)
 
     ! Binary sea mask
-    real :: bmask_s(ix,il)
+    real, allocatable :: bmask_s(:,:)
 
     ! Grid latitudes
-    real :: deglat_s(il)
+    real, allocatable :: deglat_s(:)
 
     ! Monthly-mean climatological fields over sea
     ! Sea/ice surface temperature
-    real :: sst12(ix,il,12)
+    real, allocatable :: sst12(:,:,:)
 
     ! Sea ice fraction
-    real :: sice12(ix,il,12)
+    real, allocatable :: sice12(:,:,:)
 
     ! SST anomaly fields
     ! SST anomaly in 3 consecutive months
-    real :: sstan3(ix,il,3)
+    real, allocatable :: sstan3(:,:,:)
 
     ! Climatological fields from model output
     ! Annual-mean heat flux into sea sfc.
-    real :: hfseacl(ix,il)
+    real, allocatable :: hfseacl(:,:)
 
     ! Ocean model SST climatology
-    real :: sstom12(ix,il,12)
+    real, allocatable :: sstom12(:,:,:)
+    
+    contains
+        subroutine setup_cli_sea()
+            allocate(fmask_s(ix, il))
+            allocate(bmask_s(ix, il))
+            allocate(deglat_s(il))
+            allocate(sst12(ix, il, 12))
+            allocate(sice12(ix, il, 12))
+            allocate(sstan3(ix, il, 3))
+            allocate(hfseacl(ix, il))
+            allocate(sstom12(ix, il, 12))
+        end subroutine setup_cli_sea
 end module

@@ -19,8 +19,6 @@ subroutine dmflux(iadd)
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
     integer, intent(in) :: iadd
     integer :: j
 

@@ -20,16 +20,14 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_physvar
     use mod_sppt, only: mu, gen_sppt
     use humidity, only: shtorh
-    use convection, only: convmf
-    use condensation, only: lscond
-    use surface_fluxes, only: suflux
-    use vertical_diffusion, only: vdifsc
+    use phy_convmf, only: convmf
+    use phy_lscond, only: lscond
+    use phy_suflux, only: suflux
+    use phy_vdifsc, only: vdifsc
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
-    real, dimension(ngp,nlev), intent(out) :: utend, vtend, ttend, qtend
+    real, dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
 
     integer :: iptop(ngp), icltop(ngp,2), icnv(ngp), iitest=0, j, k
     real, dimension(ngp) :: rps, gse
@@ -43,7 +41,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
      rps(j)=1./psg(j)
     end do
 
-    do k=1,nlev
+    do k=1,kx
         do j=1,ngp
             ! Remove negative humidity values
 	        qg1(j,k)=max(qg1(j,k),0.)
@@ -51,7 +49,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
     end do
 
-    do k=1,nlev
+    do k=1,kx
         call shtorh(1,ngp,tg1(1,k),psg,sig(k),qg1(1,k),rh(1,k),qsat(1,k))
     end do
 
@@ -59,7 +57,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 2.1 Deep convection
     call convmf(psg,se,qg1,qsat,iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
-    do k=2,nlev
+    do k=2,kx
        do j=1,ngp
         tt_cnv(j,k) = tt_cnv(j,k)*rps(j)*grdscp(k)
         qt_cnv(j,k) = qt_cnv(j,k)*rps(j)*grdsig(k)
@@ -67,7 +65,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     do j=1,ngp
-        icnv(j)=nlev-iptop(j)
+        icnv(j)=kx-iptop(j)
     end do
 
     ! 2.2 Large-scale condensation
@@ -87,7 +85,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
         do j=1,ngp
-            gse(j) = (se(j,nlev-1)-se(j,nlev))/(phig1(j,nlev-1)-phig1(j,nlev))
+            gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
   
         call cloud(qg1,rh,precnv,precls,iptop,gse,fmask1,icltop,cloudc,clstr)
@@ -99,14 +97,14 @@ subroutine phypar(utend,vtend,ttend,qtend)
   
         call radsw(psg,qg1,icltop,cloudc,clstr,ssrd,ssr,tsr,tt_rsw)
   
-        do k=1,nlev
+        do k=1,kx
             do j=1,ngp
                 tt_rsw(j,k)=tt_rsw(j,k)*rps(j)*grdscp(k)
             end do
         end do
     end if
 
-    ! 3.2 Compute downward longwave fluxes 
+    ! 3.2 Compute downward longwave fluxes
     call radlw(-1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     ! 3.3. Compute surface fluxes and land skin temperature
@@ -125,7 +123,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
        call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,ssti_om,&
            & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,&
            & t0,q0,.false.)
-    end if   
+    end if
 
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies 
     !     and add shortwave tendencies
@@ -133,7 +131,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     call radlw (1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
-    do k=1,nlev
+    do k=1,kx
         do j=1,ngp
             tt_rlw(j,k) = tt_rlw(j,k)*rps(j)*grdscp(k)
             ttend(j,k) = ttend(j,k)+tt_rsw(j,k)+tt_rlw(j,k)
@@ -146,10 +144,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 4.2 Add tendencies due to surface fluxes 
     do j=1,ngp
-        ut_pbl(j,nlev)=ut_pbl(j,nlev)+ustr(j,3)*rps(j)*grdsig(nlev)
-        vt_pbl(j,nlev)=vt_pbl(j,nlev)+vstr(j,3)*rps(j)*grdsig(nlev)
-        tt_pbl(j,nlev)=tt_pbl(j,nlev)+ shf(j,3)*rps(j)*grdscp(nlev)
-        qt_pbl(j,nlev)=qt_pbl(j,nlev)+evap(j,3)*rps(j)*grdsig(nlev)
+        ut_pbl(j,kx)=ut_pbl(j,kx)+ustr(j,3)*rps(j)*grdsig(kx)
+        vt_pbl(j,kx)=vt_pbl(j,kx)+vstr(j,3)*rps(j)*grdsig(kx)
+        tt_pbl(j,kx)=tt_pbl(j,kx)+ shf(j,3)*rps(j)*grdscp(kx)
+        qt_pbl(j,kx)=qt_pbl(j,kx)+evap(j,3)*rps(j)*grdsig(kx)
     end do
 
     utend = ut_pbl
@@ -202,28 +200,26 @@ subroutine xs_rdf(tt1,tt2,ivm)
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
-    real, dimension(nlon,nlat,nlev), intent(in) :: tt1, tt2
+    real, dimension(ix,il,kx), intent(in) :: tt1, tt2
     integer, intent(in) :: ivm
 
-    real :: rand1(0:nlat+1), pigr2, rnlon, rnsig
+    real :: rand1(0:il+1), pigr2, rnlon, rnsig
     integer :: i, j, k, nsmooth
 
-    rnlon = 1./float(nlon)
+    rnlon = 1./float(ix)
     pigr2 = 4.*asin(1.)
 
     ! 1. Compute cross sections
-    do k=1,nlev
+    do k=1,kx
          if (ivm.eq.1) then
             rnsig = rnlon
          else
             rnsig = rnlon*sin(pigr2*sig(k))
          endif
 
-         do j=1,nlat
+         do j=1,il
            randfv(j,k,ivm) = 0.
-           do i=1,nlon
+           do i=1,ix
               randfv(j,k,ivm) = randfv(j,k,ivm)+tt1(i,j,k)+tt2(i,j,k)
            end do
            randfv(j,k,ivm) = randfv(j,k,ivm)*rnsig 
@@ -232,15 +228,15 @@ subroutine xs_rdf(tt1,tt2,ivm)
 
     ! 2. Perform smoothing in latitude
     do nsmooth=1,2
-        do k=1,nlev
+        do k=1,kx
 
-          do j=1,nlat
+          do j=1,il
              rand1(j) = randfv(j,k,ivm)
           end do
           rand1(0) = rand1(2)
-          rand1(nlat+1) = rand1(nlat-1)
+          rand1(il+1) = rand1(il-1)
              
-          do j=1,nlat
+          do j=1,il
              randfv(j,k,ivm) = 0.5*rand1(j)+0.25*(rand1(j-1)+rand1(j+1))
           end do
         end do
@@ -258,14 +254,12 @@ subroutine setrdf(tt_rdf)
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
-    real :: tt_rdf(nlon,nlat,nlev)
+    real :: tt_rdf(ix,il,kx)
     integer :: i, j, k
 
-    do k=1,nlev
-        do j=1,nlat
-           do i=1,nlon
+    do k=1,kx
+        do j=1,il
+           do i=1,ix
                tt_rdf(i,j,k) = randfh(i,j,1)*randfv(j,k,1)&
                    & +randfh(i,j,2)*randfv(j,k,2)
            end do

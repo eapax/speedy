@@ -3,11 +3,6 @@
 module mod_tsteps
     implicit none
 
-    private
-    public nmonts, ndaysl, nsteps, nstdia, nmonrs
-    public iseasc, istart, iyear0, imont0, issty0
-    public isst0, idelt, delt, delt2, rob, wil, alph
-
     namelist /timestepping/ nmonts, ndaysl, nsteps, nstdia, nmonrs, iseasc,&
             rob, wil
 
@@ -21,7 +16,7 @@ module mod_tsteps
     integer :: nsteps = 36
 
     ! Period (no. of steps) for diagnostic print-out
-    integer :: nstdia = 36*5
+    integer :: nstdia = 9
 
     ! Period (no. of months) for restart file update
     integer :: nmonrs = 3
@@ -69,5 +64,6 @@ module mod_tsteps
             delt = real(idelt)
             delt2 = 2.0 * idelt
 
+            write(*, timestepping)
         end subroutine setup_timestepping
 end module

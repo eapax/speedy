@@ -5,37 +5,70 @@ module spectral
     implicit none
 
     private
-    public parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
+    public setup_spectral, parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
     public el2, sia, cosg, cosgr
     public cpol, nsh2, wt, trfilt
 
     ! Initial. in parmtr
-    real, dimension(mx,nx) :: el2, elm2, el4, trfilt
-    integer :: l2(mx,nx), ll(mx,nx), mm(mx), nsh2(nx)
+    real, dimension(:,:), allocatable :: el2, elm2, el4, trfilt
+    integer, allocatable :: l2(:,:), ll(:,:), mm(:), nsh2(:)
 
     ! Initial. in parmtr
-    real, dimension(iy) :: sia, coa, wt, wght
-    real, dimension(il) :: cosg, cosgr, cosgr2
+    real, dimension(:), allocatable :: sia, coa, wt, wght
+    real, dimension(:), allocatable :: cosg, cosgr, cosgr2
 
     ! Initial. in parmtr
-    real :: gradx(mx), gradym(mx,nx), gradyp(mx,nx)
+    real, allocatable :: gradx(:), gradym(:,:), gradyp(:,:)
 
     ! Initial. in parmtr
-    real :: sqrhlf, consq(mxp), epsi(mxp,nxp), repsi(mxp,nxp), emm(mxp), ell(mxp,nxp)
+    real :: sqrhlf
+    real, allocatable :: consq(:), epsi(:,:), repsi(:,:), emm(:), ell(:,:)
 
     ! Initial. in parmtr
-    real :: poly(mx,nx)
+    real, allocatable :: poly(:,:)
 
     ! Initial. in parmtr
-    real :: cpol(mx2,nx,iy)
+    real, allocatable :: cpol(:,:,:)
 
     ! Initial. in parmtr
-    real, dimension(mx,nx) :: uvdx, uvdym, uvdyp
+    real, dimension(:,:), allocatable :: uvdx, uvdym, uvdyp
 
     ! Initial. in parmtr
-    real, dimension(mx,nx) :: vddym, vddyp
+    real, dimension(:,:), allocatable :: vddym, vddyp
 
     contains
+        subroutine setup_spectral()
+            allocate(el2(mx, nx))
+            allocate(elm2(mx, nx))
+            allocate(el4(mx, nx))
+            allocate(trfilt(mx, nx))
+            allocate(l2(mx,nx))
+            allocate(ll(mx,nx))
+            allocate(mm(mx))
+            allocate(nsh2(nx))
+            allocate(sia(iy))
+            allocate(coa(iy))
+            allocate(wt(iy))
+            allocate(wght(iy))
+            allocate(cosg(il))
+            allocate(cosgr(il))
+            allocate(cosgr2(il))
+            allocate(gradx(mx))
+            allocate(gradym(mx, nx))
+            allocate(gradyp(mx, nx))
+            allocate(consq(mxp))
+            allocate(epsi(mxp,nxp))
+            allocate(repsi(mxp,nxp))
+            allocate(emm(mxp))
+            allocate(ell(mxp,nxp))
+            allocate(poly(mx,nx))
+            allocate(cpol(mx2,nx,iy))
+            allocate(uvdx(mx, nx))
+            allocate(uvdym(mx, nx))
+            allocate(uvdyp(mx, nx))
+            allocate(vddym(mx, nx))
+            allocate(vddyp(mx, nx))
+        end subroutine setup_spectral
 
 !******************************************************************
 subroutine gaussl(x,w,m)

@@ -65,7 +65,7 @@ subroutine indyns
 
     ! 3. Horizontal functions and spectral operators
 
-    ! 3.1 Initialization of spectral operators 
+    ! 3.1 Initialization of spectral operators
     call parmtr(rearth)
 
     ! 3.2 Latitudes and functions of latitude

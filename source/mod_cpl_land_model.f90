@@ -3,20 +3,24 @@ module mod_cpl_land_model
 
     implicit none
 
-    namelist /land_model/ depth_soil, depth_lice, tdland, flandmin
+    private
+    public vland_input, vland_output
+    public setup_land, land_model_init, land_model
+
+    namelist /land/ depth_soil, depth_lice, tdland, flandmin
 
     ! 1./heat_capacity (land)
-    real :: rhcapl(ix,il)           
+    real, allocatable :: rhcapl(:, :)
 
     ! 1./dissip_time (land)
-    real :: cdland(ix,il)           
+    real, allocatable :: cdland(:, :)
 
     ! Input and output land variables exchanged by coupler
     ! Land model input variables
-    real :: vland_input(ix*il,4)            
+    real, allocatable :: vland_input(:, :)
 
     ! Land model output variables
-    real :: vland_output(ix*il,2)
+    real, allocatable :: vland_output(:, :)
 
     ! Soil layer depth (m)
     real :: depth_soil = 1.0
@@ -31,12 +35,19 @@ module mod_cpl_land_model
     real :: flandmin = 3.0
 
     contains
-        subroutine setup_land_model(fid)
+        subroutine setup_land(fid)
             integer, intent(in) :: fid
 
-            read(fid, land_model)
+            allocate(rhcapl(ix,il))
+            allocate(cdland(ix,il))
+            allocate(vland_input(ix*il,4))
+            allocate(vland_output(ix*il,2))
+
+            read(fid, land)
             flandmin = 1./flandmin
-        end subroutine setup_land_model
+
+            write(*, land)
+        end subroutine setup_land
 
         subroutine land_model_init(fmask_l,alb0) 
             ! subroutine land_model_init (fmask_l,alb0)
@@ -53,7 +64,7 @@ module mod_cpl_land_model
             ! Auxiliary variables
             integer :: i, j
             real :: dmask(ix,il)           ! domain mask
-            real :: depth_soil, depth_lice, tdland, hcapl, hcapli, flandmin
+            real :: tdland, hcapl, hcapli, flandmin
         
             ! 1. Set heat capacities and dissipation times for 
             !    soil and ice-sheet layers
@@ -86,7 +97,7 @@ module mod_cpl_land_model
             cdland(:,:) = dmask(:,:)*tdland/(1.+dmask(:,:)*tdland)
         end subroutine land_model_init
         
-        subroutine land_model 
+        subroutine land_model()
             ! subroutine land_model
             !
             ! purpose : integrate slab land-surface model for one day
@@ -118,7 +129,6 @@ module mod_cpl_land_model
  
             ! Anomaly w.r.t final-time climatological temp.
             tanom = stl0 - stlcl1
-        
             ! Time evoloution of temp. anomaly 
             tanom = reshape(cdland, (/ ix*il /))*&
                 & (tanom+reshape(rhcapl, (/ ix*il /))*hflux)

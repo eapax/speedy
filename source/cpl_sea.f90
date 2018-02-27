@@ -45,7 +45,6 @@ subroutine atm2sea(jday)
     implicit none
 
     integer, intent(in) :: jday
-    integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
     real :: fmasks(ngp)                  ! sea fraction
     real :: hfyearm(ngp)                 ! annual mean heat flux into the ocean
@@ -195,7 +194,6 @@ subroutine rest_sea(imode)
     implicit none
 
     integer, intent(in) :: imode
-    integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
     real :: sst_c(ngp)              ! sst corrected for sea-ice values
     real :: sstfr
@@ -239,8 +237,7 @@ subroutine obs_ssta
     implicit none
  
     integer :: i, j, next_month
-    integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
-    real   :: inp(nlon,nlat)
+    real   :: inp(ix,il)
 
     sstan3(:,:,1) = sstan3(:,:,2)
     sstan3(:,:,2) = sstan3(:,:,3)
@@ -251,9 +248,9 @@ subroutine obs_ssta
     ! Read next month SST anomalies
     call load_boundary_file(1,30,inp,next_month-1)
 
-    sstan3(1:nlon,1:nlat,3)   = inp
+    sstan3(1:ix,1:il,3)   = inp
 
-    call forchk(bmask_s,sstan3(:,:,3),nlon*nlat,1,-50.,50.,0.)
+    call forchk(bmask_s,sstan3(:,:,3),ngp,1,-50.,50.,0.)
 
  100  continue
 

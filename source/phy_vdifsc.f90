@@ -1,34 +1,36 @@
-module vertical_diffusion
+module phy_vdifsc
     implicit none
 
     private
-    public vdifsc
+    public vdifsc, setup_vertical_diffusion
 
     namelist /vertical_diffusion/ trshc, trvdi, trvds, redshc, rhgrad, segrad
 
     ! Relaxation time (in hours) for shallow convection
-    real, parameter :: trshc = 6.0
+    real :: trshc = 6.0
 
     ! Relaxation time (in hours) for moisture diffusion
-    real, parameter :: trvdi = 24.0
+    real :: trvdi = 24.0
 
     ! Relaxation time (in hours) for super-adiab. conditions
-    real, parameter :: trvds = 6.0
+    real :: trvds = 6.0
 
     ! Reduction factor of shallow conv. in areas of deep conv.
-    real, parameter :: redshc = 0.5
+    real :: redshc = 0.5
 
     ! Maximum gradient of relative humidity (d_RH/d_sigma)
-    real, parameter :: rhgrad = 0.5
+    real :: rhgrad = 0.5
 
     ! Minimum gradient of dry static energy (d_DSE/d_phi)
-    real, parameter :: segrad = 0.1
+    real :: segrad = 0.1
 
     contains
         subroutine setup_vertical_diffusion(fid)
             integer, intent(in) :: fid
 
             read(fid, vertical_diffusion)
+
+            write(*, vertical_diffusion)
         end subroutine setup_vertical_diffusion
 
         subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv, &
@@ -54,8 +56,6 @@ module vertical_diffusion
         
             use mod_atparam
             use mod_physcon, only: cp, alhc, sig, sigh, dsig
-        
-            integer, parameter :: ngp=ix*il
         
             real, dimension(ngp,kx), intent(in) :: ua, va, se, rh, qa, qsat, phi
             integer, intent(in) :: icnv(ngp)
@@ -154,4 +154,4 @@ module vertical_diffusion
                 end do
             end do
         end subroutine vdifsc
-end module vertical_diffusion
+end module phy_vdifsc

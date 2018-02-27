@@ -19,7 +19,7 @@
 ! 2 = full (uncorrected) SST from coupled ocean model
 ! 3 = SST anomaly from coupled ocean model + obs. SST clim.
 ! 4 = as 3 with prescribed SST anomaly in ElNino region
- icsea=1,
+ icsea=0,
 ! Flag for sea-ice coupling
 ! 0=no, 1=ice-model
  icice=1,
@@ -29,7 +29,7 @@
  isstan=1/
 
 ! mod_cpl_land_model
-&land_model
+&land
 ! Soil layer depth (m)
  depth_soil=1.0,
 ! Land-ice depth (m)
@@ -40,7 +40,7 @@
  flandmin=3.0/
 
 ! mod_cplcon_sea
-&sea_model
+&sea
 ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
 ! High-latitude depth
  depth_ml = 60.0,
@@ -56,7 +56,7 @@
 ! Dissipation time (days) for sea-ice temp. anomalies
  tdice = 30.0,
 ! Minimum fraction of sea for the definition of anomalies (denominator)
- fseamin = 3,
+ fseamin = 3.0,
 ! Heat flux coef. at sea/ice int.
  beta = 1.0,
 ! Geographical domain
@@ -112,20 +112,6 @@
 &radiation
 /
 
-! mod_sppt
-&sppt
-! Array for tapering value of SPPT in the different layers of the atmosphere
-! A value of 1 means the tendency is not tapered at that level
- mu=8*1,
-! Number of correlation scales for SPPT perturbations
- nscales=3,
-! Decorrelation time of SPPT perturbation (in hours)
- time_decorr=3.0 72.0 720.0,
-! Correlation length scale of SPPT perturbation (in metres)
- len_decorr=500000.0 1000000.0 2000000.0,
-! Standard deviation of SPPT perturbation (in grid point space)
- stddev=0.52 0.18 0.06/
-
 ! mod_surfcon
 &surface
 ! Soil wetness at field capacity (volume fraction)
@@ -138,13 +124,13 @@
 ! mod_tsteps
 &timestepping
 ! Integration length in months
- nmonts=3,
+ nmonts=1,
 ! No. of days in the last month of int. (max=30)
  ndaysl=0,
 ! No. of time steps in one day
  nsteps=36,
 ! Period (no. of steps) for diagnostic print-out
- nstdia=180,
+ nstdia=36,
 ! Period (no. of months) for restart file update
  nmonrs=3,
 ! Seasonal cycle flag (0=no, 1=yes)
@@ -232,6 +218,23 @@
  rhgrad=0.5,
 ! Minimum gradient of dry static energy (d_DSE/d_phi)
  segrad=0.1/
+
+! mod_sppt
+&sppt_scales
+! Number of correlation scales for SPPT perturbations
+ nscales=3/
+
+! Remaining arrays must be allocated first
+&sppt
+! Array for tapering value of SPPT in the different layers of the atmosphere
+! A value of 1 means the tendency is not tapered at that level
+ mu=1 1 1 1 1 1 1 1,
+! Decorrelation time of SPPT perturbation (in hours)
+ time_decorr=3.0 72.0 720.0,
+! Correlation length scale of SPPT perturbation (in metres)
+ len_decorr=500000.0 1000000.0 2000000.0,
+! Standard deviation of SPPT perturbation (in grid point space)
+ stddev=0.52 0.18 0.06/
 
 &precisions
 /

@@ -3,9 +3,6 @@
 module mod_cpl_flags
     implicit none
 
-    private
-    public icland, icsea, icice, isstan
-
     namelist /coupling_flags/ icland, icsea, icice, isstan
 
     ! Flag for land-coupling
@@ -34,5 +31,7 @@ module mod_cpl_flags
             integer, intent(in) :: fid
 
             read(fid, coupling_flags)
+
+            write(*, coupling_flags)
         end subroutine setup_coupling_flags
 end module

@@ -1,8 +1,8 @@
-module condensation
+module phy_lscond
     implicit none
 
     private
-    public lscond
+    public lscond, setup_condensation
 
     namelist /condensation/ trlsc, rhlsc, drhlsc, rhblsc
 
@@ -23,6 +23,8 @@ module condensation
             integer, intent(in) :: fid
 
             read(fid, condensation)
+
+            write(*, condensation)
         end subroutine setup_condensation
     
         subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
@@ -41,8 +43,6 @@ module condensation
         
             use mod_atparam
             use mod_physcon, only: p0, gg, cp, alhc, alhs, sig, dsig
-        
-            integer, parameter :: ngp=ix*il
         
             real, intent(in) :: psa(ngp), qa(ngp,kx), qsat(ngp,kx)
         
@@ -100,4 +100,4 @@ module condensation
                 precls(j) = precls(j)*psa(j)
             end do
         end subroutine lscond
-end module condensation
+end module phy_lscond

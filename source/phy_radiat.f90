@@ -16,10 +16,8 @@ subroutine sol_oz(tyear)
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
     real, intent(in) :: tyear
-    real :: topsr(nlat), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
+    real :: topsr(il), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
     real :: nzen, rzen, szen
     integer :: i, j, j0
 
@@ -41,10 +39,10 @@ subroutine sol_oz(tyear)
     fs0=6.
 
     ! Solar radiation at the top
-    call solar(tyear,4.*solc,nlat,clat,slat,topsr)
+    call solar(tyear,4.*solc,il,clat,slat,topsr)
 
-    do j=1,nlat
-        j0=1+nlon*(j-1)
+    do j=1,il
+        j0=1+ix*(j-1)
         flat2=1.5*slat(j)**2-0.5
 
         ! Solar radiation at the top
@@ -64,7 +62,7 @@ subroutine sol_oz(tyear)
         ! Polar night cooling in the stratosphere
         stratz(j0)=max(fs0-fsol(j0),0.)
 
-        do i=1,nlon-1
+        do i=1,ix-1
             fsol  (i+j0) = fsol  (j0)
             ozone (i+j0) = ozone (j0)
             ozupp (i+j0) = ozupp (j0)
@@ -74,15 +72,15 @@ subroutine sol_oz(tyear)
     end do
 end
 
-subroutine solar(tyear,csol,nlat,clat,slat,topsr)
+subroutine solar(tyear,csol,il,clat,slat,topsr)
     ! Average daily flux of solar radiation, from Hartmann (1994)
 
     implicit none
 
     real, intent(in) :: tyear, csol
-    integer, intent(in) :: nlat
-    real, dimension(nlat), intent(in) :: clat, slat
-    real, intent(inout) :: topsr(nlat)
+    integer, intent(in) :: il
+    real, dimension(il), intent(in) :: clat, slat
+    real, intent(inout) :: topsr(il)
 
     integer :: j
     real :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, h0, alpha, pigr, sa1
@@ -111,7 +109,7 @@ subroutine solar(tyear,csol,nlat,clat,slat,topsr)
     ! 2. Compute daily-average insolation at the atm. top
     csolp=csol/pigr
 
-    do j=1,nlat
+    do j=1,il
         ch0 = min(1.,max(-1.,-tdecl*slat(j)/clat(j)))
         h0  = acos(ch0)
         sh0 = sin(h0)
@@ -142,10 +140,8 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
     integer :: iptop(ngp)
-    real, intent(in) :: qa(ngp,nlev), rh(ngp,nlev), precnv(ngp), precls(ngp), gse(ngp),&
+    real, intent(in) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), precls(ngp), gse(ngp),&
         & fmask(ngp)
     real, intent(inout) :: cloudc(ngp), clstr(ngp)
     integer, intent(inout) :: icltop(ngp)
@@ -153,8 +149,8 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
     integer :: inew, j, k, nl1, nlp
     real :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, rgse, rrcl
       
-    nl1  = nlev-1
-    nlp  = nlev+1
+    nl1  = kx-1
+    nlp  = kx+1
     rrcl = 1./(rhcl2-rhcl1)
 
     ! 1.  Cloud cover, defined as the sum of:
@@ -176,7 +172,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
         end if
     end do
 
-    do k=3,nlev-2
+    do k=3,kx-2
         do j=1,ngp
             drh = rh(j,k)-rhcl1
             if (drh.gt.cloudc(j).and.qa(j,k).gt.qacl) then
@@ -213,7 +209,7 @@ subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
             fstab    = max(0.,min(1.,rgse*(gse(j)-gse_s0)))
             clstr(j) = fstab*max(clsmax-clfact*cloudc(j),0.)
             ! Stratocumulus clouds over land
-            clstrl   = max(clstr(j),clsminl)*rh(j,nlev)
+            clstrl   = max(clstr(j),clsminl)*rh(j,kx)
             clstr(j) = clstr(j)+fmask(j)*(clstrl-clstr(j))
         end do
     else
@@ -254,17 +250,15 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
 
     implicit none
 
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
-
     integer, intent(in) :: icltop(ngp)
-    real, intent(in) :: psa(ngp), qa(ngp,nlev), cloudc(ngp), clstr(ngp)
-    real, intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,nlev)
+    real, intent(in) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp)
+    real, intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,kx)
 
     integer :: j, k, nl1
     real :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
     real :: fband1, fband2
 
-    nl1 = nlev-1
+    nl1 = kx-1
 
     fband2 = 0.05
     fband1 = 1.-fband2
@@ -276,12 +270,12 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
     tau2 = 0.0
 
     do j=1,ngp
-        !fk-- change to ensure only icltop <= nlev used
-        if(icltop(j) .le. nlev) then
+        !fk-- change to ensure only icltop <= kx used
+        if(icltop(j) .le. kx) then
           tau2(j,icltop(j),3)= albcl*cloudc(j)
         endif
         !fk-- end change
-        tau2(j,nlev,3)     = albcls*clstr(j)
+        tau2(j,kx,3)     = albcls*clstr(j)
     end do
 
     ! 2. Shortwave transmissivity:
@@ -310,13 +304,13 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
         end do
     end do
 
-    abs1=absdry+absaer*sig(nlev)**2
+    abs1=absdry+absaer*sig(kx)**2
     do j=1,ngp
-        deltap=psaz(j)*dsig(nlev)
-        tau2(j,nlev,1)=exp(-deltap*(abs1+abswv1*qa(j,nlev)))
+        deltap=psaz(j)*dsig(kx)
+        tau2(j,kx,1)=exp(-deltap*(abs1+abswv1*qa(j,kx)))
     end do
 
-    do k=2,nlev
+    do k=2,kx
         do j=1,ngp
           deltap=psaz(j)*dsig(k)
           tau2(j,k,2)=exp(-deltap*abswv2*qa(j,k))
@@ -345,7 +339,7 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
     end do
 
     ! 3.3  Absorption and reflection in the troposphere
-    do k=3,nlev
+    do k=3,kx
         do j=1,ngp
             tau2(j,k,3)=flux(j,1)*tau2(j,k,3)
             flux (j,1)=flux(j,1)-tau2(j,k,3)
@@ -355,7 +349,7 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
         end do
     end do
 
-    do k=2,nlev
+    do k=2,kx
         do j=1,ngp
           dfabs(j,k)=dfabs(j,k)+flux(j,2)
           flux (j,2)=tau2(j,k,2)*flux(j,2)
@@ -372,7 +366,7 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
     end do
 
     ! 4.2  Absorption of upward flux
-    do k=nlev,1,-1
+    do k=kx,1,-1
         do j=1,ngp
             dfabs(j,k)=dfabs(j,k)+flux(j,1)
             flux (j,1)=tau2(j,k,1)*flux(j,1)
@@ -398,7 +392,7 @@ subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
         tau2(j,k,4)=1.
     end do
 
-    do k=2,nlev,nlev-2
+    do k=2,kx,kx-2
         do j=1,ngp
             deltap=psa(j)*dsig(k)
             tau2(j,k,1)=exp(-deltap*ablwin)
@@ -463,20 +457,19 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     implicit none
 
     integer, intent(in) :: imode
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
     ! Number of radiation bands with tau < 1
     integer, parameter :: nband=4
 
-    real, intent(in) :: ta(ngp,nlev), ts(ngp)
+    real, intent(in) :: ta(ngp,kx), ts(ngp)
     real, intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), fsfc(ngp)
-    real, intent(inout) :: dfabs(ngp,nlev)
+    real, intent(inout) :: dfabs(ngp,kx)
 
     integer :: j, jb, k, nl1
     real :: anis, anish, brad, corlw, corlw1, corlw2, emis, eps1, esbc, refsfc
     real :: st3a, tsq
 
-    nl1=nlev-1
+    nl1=kx-1
 
     refsfc=1.-emisfc
 
@@ -500,7 +493,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
         st4a(j,2,2)=0.50*ta(j,2)+0.25*(st4a(j,1,1)+st4a(j,2,1))
     end do
 
-    ! Temperature gradient in tropospheric layers 
+    ! Temperature gradient in tropospheric layers
     anis =1.0
     anish=0.5*anis
 
@@ -511,7 +504,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     end do
 
     do j=1,ngp
-        st4a(j,nlev,2)=anis*max(ta(j,nlev)-st4a(j,nl1,1),0.)
+        st4a(j,kx,2)=anis*max(ta(j,kx)-st4a(j,nl1,1),0.)
     end do
 
     ! Blackbody emission in the stratosphere
@@ -523,7 +516,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     end do
 
     ! Blackbody emission in the troposphere
-    do k=3,nlev
+    do k=3,kx
         do j=1,ngp
             st3a=sbc*ta(j,k)**3
             st4a(j,k,1)=st3a*ta(j,k)
@@ -555,7 +548,7 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
 	
     ! 3.2  Troposphere
     do jb=1,nband
-        do k=2,nlev
+        do k=2,kx
             do j=1,ngp
                 emis=1.-tau2(j,k,jb)
                 brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1)+emis*st4a(j,k,2))
@@ -576,8 +569,8 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
     ! 3.4 Correction for "black" band (incl. surface reflection)
     eps1=epslw*emisfc
     do j=1,ngp
-        corlw=eps1*st4a(j,nlev,1)
-        dfabs(j,nlev)=dfabs(j,nlev)-corlw
+        corlw=eps1*st4a(j,kx,1)
+        dfabs(j,kx)=dfabs(j,kx)-corlw
         fsfcd(j)     =fsfcd(j)     +corlw
     end do
 
@@ -612,11 +605,11 @@ subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
 
     ! Correction for "black" band
     do j=1,ngp
-        dfabs(j,nlev)=dfabs(j,nlev)+epslw*fsfcu(j)
+        dfabs(j,kx)=dfabs(j,kx)+epslw*fsfcu(j)
     end do
 
     do jb=1,nband
-        do k=nlev,2,-1
+        do k=kx,2,-1
             do j=1,ngp
                 emis=1.-tau2(j,k,jb)
                 brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1)-emis*st4a(j,k,2))
@@ -666,8 +659,6 @@ subroutine radset
     use mod_radcon, only: epslw, fband
 
     implicit none
-
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
     integer :: jb, jtemp
     real :: eps1

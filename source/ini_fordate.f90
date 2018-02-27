@@ -20,18 +20,16 @@ subroutine fordate(imode)
     use mod_var_sea, only: sstcl_ob, sst_am, sice_am
     use mod_radcon, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
         & alb_l, alb_s, albsfc
-    use surface_fluxes, only: sflset
+    use phy_suflux, only: sflset
     use humidity, only: q_sat
     use spectral, only: spec
 
     implicit none
 
-    integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon * nlat
-
     integer, intent(in) :: imode
-    real, dimension(nlon, nlat) :: corh, tsfc, tref, psfc
+    real, dimension(ix, il) :: corh, tsfc, tref, psfc
     real, dimension(ngp) :: qsfc, qref
-    real :: gamlat(nlat)
+    real :: gamlat(il)
 
     real :: fland(ngp), alb_0(ngp)
 
@@ -76,8 +74,8 @@ subroutine fordate(imode)
     ! 3. temperature correction term for horizontal diffusion
     call setgam(tyear,gamlat)
 
-    do j = 1, nlat
-        do i = 1, nlon
+    do j = 1, il
+        do i = 1, ix
             corh(i,j) = gamlat(j) * phis0(i,j)
         end do
     end do
@@ -91,9 +89,9 @@ subroutine fordate(imode)
 
 !   4. humidity correction term for horizontal diffusion
     ij = 0
-    do j = 1, nlat
+    do j = 1, il
         pexp = 1./(rd * gamlat(j))
-        do i = 1, nlon
+        do i = 1, ix
             ij = ij + 1
 !            tsfc(i,j) = fmask_l(i,j)*stlcl_ob(ij)
 !     &               +fmask_s(i,j)*sstcl_ob(ij)
@@ -107,7 +105,7 @@ subroutine fordate(imode)
     qref = q_sat(ngp, reshape(tref, (/ngp/)), (/1./), -1.)
     qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  1.)
 
-    corh = refrh1 * reshape((qref - qsfc), (/nlon, nlat/))
+    corh = refrh1 * reshape((qref - qsfc), (/ix, il/))
 
     if (iitest > 1.and.imode == 0) call outest(19,corh)
 
@@ -125,13 +123,12 @@ subroutine setgam(tyear,gamlat)
     implicit none
 
     real, intent(in) :: tyear
-    integer, parameter :: nlon = ix, nlat = il, nlev = kx, ngp = nlon * nlat
     integer :: j
                                             
-    real, intent(inout) :: gamlat(nlat)
+    real, intent(inout) :: gamlat(il)
 
     gamlat(1) = gamma/(1000. * gg)
-    do j = 2, nlat
+    do j = 2, il
         gamlat(j) = gamlat(1)
     end do
 end

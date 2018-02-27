@@ -3,19 +3,27 @@ module mod_var_land
 
     implicit none
 
-    private
-    public stlcl_ob, snowdcl_ob, soilwcl_ob, stl_am, snowd_am, soilw_am, stl_lm
-
     ! Daily observed climatological fields over land
-    real :: stlcl_ob(ix*il)              ! clim. land sfc. temperature 
-    real :: snowdcl_ob(ix*il)              ! clim. snow depth (water equiv)
-    real :: soilwcl_ob(ix*il)              ! clim. soil water availability
+    real, allocatable :: stlcl_ob(:)     ! clim. land sfc. temperature
+    real, allocatable :: snowdcl_ob(:)   ! clim. snow depth (water equiv)
+    real, allocatable :: soilwcl_ob(:)   ! clim. soil water availability
 
     ! Land sfc. fields used by atmospheric model
-    real :: stl_am(ix*il)                 ! land sfc. temperature
-    real :: snowd_am(ix*il)                 ! snow depth (water equiv)
-    real :: soilw_am(ix*il)                 ! soil water availability
+    real, allocatable :: stl_am(:)       ! land sfc. temperature
+    real, allocatable :: snowd_am(:)     ! snow depth (water equiv)
+    real, allocatable :: soilw_am(:)     ! soil water availability
 
     ! Land sfc. fields from land model
-    real :: stl_lm(ix*il)                 ! land-model sfc. temperature 
+    real, allocatable :: stl_lm(:)       ! land-model sfc. temperature
+    
+    contains
+        subroutine setup_var_land()
+            allocate(stlcl_ob(ix*il))
+            allocate(snowdcl_ob(ix*il))
+            allocate(soilwcl_ob(ix*il))
+            allocate(stl_am(ix*il))
+            allocate(snowd_am(ix*il))
+            allocate(soilw_am(ix*il))
+            allocate(stl_lm(ix*il))
+        end subroutine setup_var_land
 end module

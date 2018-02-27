@@ -13,9 +13,8 @@ subroutine inirdf(indrdf)
     real, external :: ran1
 
     integer, intent(in) :: indrdf
-    integer, parameter :: nlon=ix, nlat=il, nlev=kx, ngp=nlon*nlat
 
-    real :: redgrd(0:36,0:18), randf2(nlon,nlat), rnlon(0:18), colat(nlat)
+    real :: redgrd(0:36,0:18), randf2(ix,il), rnlon(0:18), colat(il)
     real :: ampl, flat1, flat2, fran, freq0, rdeg, rlon
     integer :: i, iseed, j, jlat, jlat1, jlat2, jlon, jlon1, nf, ntrfor
 
@@ -40,11 +39,11 @@ subroutine inirdf(indrdf)
     end do
 
     do jlat=0,18
-       rnlon(jlat) = float(nlonrg(jlat))/float(nlon)
+       rnlon(jlat) = float(nlonrg(jlat))/float(ix)
     end do
 
     rdeg = 9./asin(1.)
-    do j=1,nlat
+    do j=1,il
        colat(j)=rdeg*asin(slat(j))+9.
     end do
 
@@ -64,11 +63,11 @@ subroutine inirdf(indrdf)
         end do
 
         ! 3. Interpolate random field to gaussian grid
-        do j=1,nlat
+        do j=1,il
             jlat1 = int(colat(j))
             jlat2 = jlat1+1
 
-            do i=1,nlon
+            do i=1,ix
                 rlon  = (i-1)*rnlon(jlat1)
                 jlon  = int(rlon)
                 flat1 = redgrd(jlon,jlat1) + (rlon-jlon) *&

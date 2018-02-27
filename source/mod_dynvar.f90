@@ -6,30 +6,37 @@ module mod_dynvar
 
     implicit none
 
-    private
-    public vor, div, t, ps, tr
-    public phi, phis
-
     ! Prognostic spectral variables (updated in step)
     ! Vorticity
-    complex :: vor(MX,NX,KX,2)
+    complex, allocatable :: vor(:,:,:,:)
 
     ! Divergence 
-    complex :: div(MX,NX,KX,2)
+    complex, allocatable :: div(:,:,:,:)
 
     ! Absolute temperature
-    complex :: t(MX,NX,KX,2)
+    complex, allocatable :: t(:,:,:,:)
 
     ! Log of (norm.) sfc pressure (p_s/p0)
-    complex :: PS(MX,NX,2)
+    complex, allocatable :: PS(:,:,:)
 
     ! Tracers (tr.1: spec. humidity in g/kg)
-    complex :: TR(MX,NX,KX,2,NTR)
+    complex, allocatable :: TR(:,:,:,:,:)
 
     ! Geopotential (updated in geop)
     ! Atmos. geopotential
-    complex :: PHI(MX,NX,KX)
+    complex, allocatable :: PHI(:,:,:)
 
     ! Surface geopotential
-    complex :: PHIS(MX,NX)
+    complex, allocatable :: PHIS(:,:)
+
+    contains
+        subroutine setup_dynvar()
+            allocate(vor(MX,NX,KX,2))
+            allocate(div(MX,NX,KX,2))
+            allocate(t(MX,NX,KX,2))
+            allocate(PS(MX,NX,2))
+            allocate(TR(MX,NX,KX,2,NTR))
+            allocate(PHI(MX,NX,KX))
+            allocate(PHIS(MX,NX))
+        end subroutine setup_dynvar
 end module

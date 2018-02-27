@@ -16,11 +16,10 @@ subroutine inbcon(grav0,radlat)
     implicit none
 
     real, intent(in) :: grav0, radlat(il)
-    integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
 
-    real*4 :: r4inp(nlon,nlat), dummy4
-    real   :: inp(nlon,nlat), phis1(nlon,nlat)
-    real   :: veg(nlon,nlat), swl1(nlon,nlat), swl2(nlon,nlat)
+    real*4 :: r4inp(ix,il), dummy4
+    real   :: inp(ix,il), phis1(ix,il)
+    real   :: veg(ix,il), swl1(ix,il), swl2(ix,il)
 
     integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec
     real :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
@@ -77,9 +76,9 @@ subroutine inbcon(grav0,radlat)
     do it = 1,12
         call load_boundary_file(1,23,inp,it-1)
 
-        call fillsf(inp,nlon,nlat,0.)
+        call fillsf(inp,ix,il,0.)
 
-       stl12(1:nlon,1:nlat,it) = inp
+       stl12(1:ix,1:il,it) = inp
     end do
 
     if (iitest == 1) print *,' checking land-surface temp.'
@@ -92,7 +91,7 @@ subroutine inbcon(grav0,radlat)
     do it = 1,12
         call load_boundary_file(1,24,inp,it-1)
   
-        snowd12(1:nlon,1:nlat,it) = inp
+        snowd12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking snow depth'
@@ -124,14 +123,14 @@ subroutine inbcon(grav0,radlat)
         call load_boundary_file(1,26,swl2,3*it-2)
 
         ! Combine soil water content from two top layers
-        do j = 1,nlat
-            do i = 1,nlon
+        do j = 1,il
+            do i = 1,ix
                 swroot = idep2*swl2(i,j)
                 inp(i,j) = min(1.,rsw*(swl1(i,j)+veg(i,j)*max(0.,swroot-swwil2)))		
             end do
         end do
 
-        soilw12(1:nlon,1:nlat,it) = inp
+        soilw12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking soil moisture'
@@ -165,9 +164,9 @@ subroutine inbcon(grav0,radlat)
     do it = 1,12
         call load_boundary_file(1,21,inp,it-1)
 
-        call fillsf(inp,nlon,nlat,0.)
+        call fillsf(inp,ix,il,0.)
 
-        sst12(1:nlon,1:nlat,it) = inp
+        sst12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking sst'
@@ -182,7 +181,7 @@ subroutine inbcon(grav0,radlat)
 
         inp = max(inp,0.)
 
-        sice12(1:nlon,1:nlat,it) = inp
+        sice12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking sea ice'
@@ -199,7 +198,7 @@ subroutine inbcon(grav0,radlat)
                 call load_boundary_file(1,30,inp,isst0-2+it-1)
             end if
 
-            sstan3(1:nlon,1:nlat,it) = inp
+            sstan3(1:ix,1:il,it) = inp
         end do
 
         if (iitest >= 1) print *,' checking sst anomalies'
@@ -317,14 +316,12 @@ subroutine ftland (stl,phi0,phis0,fmaskl)
 
     implicit none
 
-    integer, parameter :: nlon = ix, nlat = il
-
-    real, dimension(nlon, nlat), intent(inout) :: stl, phi0, phis0, fmaskl
-    real :: stl2(nlon,nlat), sumt, sumw
+    real, dimension(ix, il), intent(inout) :: stl, phi0, phis0, fmaskl
+    real :: stl2(ix,il), sumt, sumw
     integer :: nl8, nlat1, nlat2, i, idtr, itr, j, jband, jfil
     real :: gam
 
-    nl8 = nlat/8
+    nl8 = il/8
     gam = 0.001*gamma/grav
 
     nlat1 = 1
@@ -335,7 +332,7 @@ subroutine ftland (stl,phi0,phis0,fmaskl)
         sumw=0.
 
         do j=nlat1,nlat2
-            do i=1,nlon
+            do i=1,ix
                 stl(i,j)=stl(i,j)+gam*phi0(i,j)
                 sumt=sumt+gcos(j)*fmaskl(i,j)*stl(i,j)
                 sumw=sumw+gcos(j)*fmaskl(i,j)
@@ -345,7 +342,7 @@ subroutine ftland (stl,phi0,phis0,fmaskl)
         SUMT=SUMT/SUMW
 
         do j=nlat1,nlat2
-            do i=1,nlon
+            do i=1,ix
                 if (fmaskl(i,j).eq.0.) stl(i,j)=sumt
             end do
         end do
@@ -360,8 +357,8 @@ subroutine ftland (stl,phi0,phis0,fmaskl)
     do jfil=1,4
         call truncg (itr,stl,stl2)
 
-        do j=1,nlat
-            do i=1,nlon
+        do j=1,il
+            do i=1,ix
                 if (fmaskl(i,j).eq.0.) stl(i,j)=stl2(i,j)
             end do
         end do
@@ -408,15 +405,15 @@ subroutine truncg (itr,fg1,fg2)
     call grid (fsp,fg2,1)
 end
 
-subroutine fillsf(sf,nlon,nlat,fmis)
-    ! subroutine fillsf (sf,nlon,nlat)
+subroutine fillsf(sf,ix,il,fmis)
+    ! subroutine fillsf (sf,ix,nlat)
     ! Purpose: replace missing values in surface fields
     ! NB: it is assumed that non-missing values exist near the Equator
 
     implicit none
 
-    real :: sf(nlon,nlat), sf2(0:nlon+1)
-    integer, intent(in) :: nlon, nlat
+    real :: sf(ix,il), sf2(0:ix+1)
+    integer, intent(in) :: ix, il
     real, intent(in) :: fmis
 
     integer :: khem, j, j1, j2, j3, i, nmis
@@ -424,35 +421,35 @@ subroutine fillsf(sf,nlon,nlat,fmis)
 
     do khem = 1,2
        if (khem == 1) then
-            j1 = nlat/2
+            j1 = il/2
             j2 = 1
             j3 = -1
         else
             j1 = j1+1
-            j2 = nlat
+            j2 = il
             j3 = 1
         end if
 
         do j=j1,j2,j3
-            sf2(1:nlon) = sf(1:nlon,j)
+            sf2(1:ix) = sf(1:ix,j)
 
             nmis = 0
-            do i=1,nlon
+            do i=1,ix
                 if (sf(i,j) < fmis) then
                     nmis = nmis+1
                     sf2(i) = 0.
                 end if
             end do
 
-            if (nmis < nlon) fmean = sum(sf2(1:nlon))/float(nlon-nmis) 
+            if (nmis < ix) fmean = sum(sf2(1:ix))/float(ix-nmis)
 
-            do i=1,nlon
+            do i=1,ix
                 if (sf(i,j).lt.fmis) sf2(i) = fmean
             end do
 
-            sf2(0)      = sf2(nlon)
-            sf2(nlon+1) = sf2(1)
-            do i=1,nlon
+            sf2(0)      = sf2(ix)
+            sf2(ix+1) = sf2(1)
+            do i=1,ix
                 if (sf(i,j).lt.fmis) sf(i,j) = 0.5*(sf2(i-1)+sf2(i+1))
             end do
         end do
@@ -467,16 +464,15 @@ subroutine load_boundary_file(ioflag,iunit,fld,offset)
 
     implicit none
 
-    integer, parameter :: nlon = ix, nlat = il, ngp = ix*il
     integer, intent(in) :: ioflag, iunit, offset
-    real     :: fld(nlon,nlat)
-    real(4) :: inp(nlon,nlat)
+    real     :: fld(ix,il)
+    real(4) :: inp(ix,il)
     integer :: i
 
-    open(unit=iunit, form='unformatted', access='direct', recl=nlon*4, convert='little_endian')
+    open(unit=iunit, form='unformatted', access='direct', recl=ix*4, convert='little_endian')
     if (ioflag <= 1) then
-        do i = 1, nlat
-            read(iunit,rec=offset*nlat+i) inp(:,nlat+1-i)
+        do i = 1, il
+            read(iunit,rec=offset*il+i) inp(:,il+1-i)
         end do
 
         fld = inp
@@ -485,7 +481,7 @@ subroutine load_boundary_file(ioflag,iunit,fld,offset)
         where (fld <= -999) fld = 0.0
     else
         inp = fld
-        do i = nlat*offset+1, nlat*offset+nlat
+        do i = il*offset+1, il*offset+il
             write(iunit,rec=i) inp(:,i)
         end do
     endif

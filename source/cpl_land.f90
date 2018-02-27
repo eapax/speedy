@@ -35,7 +35,6 @@ subroutine atm2land(jday)
     implicit none
 
     integer, intent(in) :: jday
-    integer, parameter :: nlon=ix, nlat=il, ngp=nlon*nlat
 
     ! 1. Interpolate climatological fields to actual date
 

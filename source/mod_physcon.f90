@@ -3,10 +3,6 @@ module mod_physcon
 
     implicit none
 
-    private
-    public p0, gg, rd, cp, alhc, alhs, sbc
-    public sig, sigl, sigh, dsig, pout, grdsig, grdscp, wvi, slat, clat
-
     ! Physical constants
     ! Reference pressure
     real, parameter :: p0 = 1.e+5
@@ -40,7 +36,21 @@ module mod_physcon
     !    wvi    = weights for vertical interpolation
     !    slat   = sin(lat)
     !    clat   = cos(lat)
-    real, dimension(kx) :: sig, sigl, dsig, pout, grdsig, grdscp
-    real :: wvi(kx,2), sigh(0:kx)
-    real, dimension(il) :: slat, clat
+    real, dimension(:), allocatable :: sig, sigl, dsig, pout, grdsig, grdscp
+    real, allocatable :: wvi(:,:), sigh(:)
+    real, dimension(:), allocatable :: slat, clat
+
+    contains
+        subroutine setup_physcon()
+            allocate(sig(kx))
+            allocate(sigl(kx))
+            allocate(dsig(kx))
+            allocate(pout(kx))
+            allocate(grdsig(kx))
+            allocate(grdscp(kx))
+            allocate(wvi(kx,2))
+            allocate(sigh(0:kx))
+            allocate(slat(il))
+            allocate(clat(il))
+        end subroutine setup_physcon
 end module

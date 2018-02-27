@@ -3,9 +3,12 @@ module mod_randfor
 
     implicit none
 
-    private
-    public randfh, randfv
-
     ! Random diabatic forcing (initial. in INIRDF, modified by XS_RDF))
-    real :: randfh(ix,il,2), randfv(il,kx,2)
+    real, dimension(:,:,:), allocatable :: randfh, randfv
+
+    contains
+        subroutine setup_randfor()
+            allocate(randfh(ix,il,2))
+            allocate(randfv(il,kx,2))
+        end subroutine setup_randfor
 end module

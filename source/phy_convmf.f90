@@ -1,11 +1,11 @@
-module convection
+module phy_convmf
     
     implicit none
 
     private
-    public convmf
+    public convmf, setup_convection
 
-    namelist /convection/ psmin, trcnv, rhbl, entmax, smf
+    namelist /convection/ psmin, trcnv, rhbl, rhil, entmax, smf
 
     ! Minimum (norm.) sfc. pressure for the occurrence of convection
     real :: psmin = 0.8
@@ -30,6 +30,8 @@ module convection
             integer, intent(in) :: fid
 
             read(fid, convection)
+
+            write(*, convection)
         end subroutine setup_convection
         
         subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
@@ -49,8 +51,6 @@ module convection
             
             use mod_atparam
             use mod_physcon, only: p0, gg, alhc, alhs, sig, dsig, wvi
-        
-            integer, parameter :: ngp=ix*il
         
             real, intent(in) :: psa(ngp), se(ngp,kx), qa(ngp,kx), qsat(ngp,kx)
         
@@ -230,4 +230,4 @@ module convection
                 dfqa(j,k)=fuq-fdq-precnv(j)
             end do
         end subroutine convmf
-end module convection
+end module phy_convmf

@@ -3,12 +3,6 @@ module mod_dyncon1
 
     implicit none
 
-    private
-    public rearth, omega, grav, akap, rgas, pi, a, g
-    public hsg, dhs, fsg, dhsr, fsgr
-    public radang, gsin, gcos, coriol
-    public xgeop1, xgeop2
-
     ! Physical constants for dynamics
     real, parameter :: rearth = 6.371e+6
     real, parameter :: omega  = 7.292e-05
@@ -20,11 +14,26 @@ module mod_dyncon1
     real, parameter :: g  = grav
 
     ! Vertical level parameters (initial. in indyns)
-    real :: hsg(kxp), dhs(kx), fsg(kx), dhsr(kx), fsgr(kx)
+    real, allocatable :: hsg(:), dhs(:), fsg(:), dhsr(:), fsgr(:)
 
     ! Functions of lat. and lon. (initial. in indyns)
-    real :: radang(il), gsin(il), gcos(il), coriol(il)
+    real, allocatable :: radang(:), gsin(:), gcos(:), coriol(:)
 
     ! Constants for hydrostatic eq. (initial. in indyns)
-    real :: xgeop1(kx), xgeop2(kx)
+    real, allocatable :: xgeop1(:), xgeop2(:)
+    
+    contains
+        subroutine setup_dyncon1()
+            allocate(hsg(kxp))
+            allocate(dhs(kx))
+            allocate(fsg(kx))
+            allocate(dhsr(kx))
+            allocate(fsgr(kx))
+            allocate(radang(il))
+            allocate(gsin(il))
+            allocate(gcos(il))
+            allocate(coriol(il))
+            allocate(xgeop1(kx))
+            allocate(xgeop2(kx))
+        end subroutine setup_dyncon1
 end module

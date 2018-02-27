@@ -3,28 +3,22 @@ module mod_cplcon_sea
 
     implicit none
 
-    private
-    public rhcaps, rhcapi, cdsea, cdice, &
-            depth_ml, dept0_ml, depth_ice, dept0_ice, &
-            tdsst, tdice, fseamin, beta, &
-            l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian
-
-    namelist /sea_model/ depth_ml, dept0_ml, depth_ice, dept0_ice, &
+    namelist /sea/ depth_ml, dept0_ml, depth_ice, dept0_ice, &
             tdsst, tdice, fseamin, beta, &
             l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian
 
     ! Constant parameters and fields in sea/ice model
     ! 1./heat_capacity (sea)
-    real :: rhcaps(ix,il)
+    real, allocatable :: rhcaps(:,:)
 
     ! 1./heat_capacity (ice)
-    real :: rhcapi(ix,il)
+    real, allocatable :: rhcapi(:,:)
 
     ! 1./dissip_time (sea)
-    real :: cdsea(ix,il)
+    real, allocatable :: cdsea(:,:)
 
     ! 1./dissip_time (ice)
-    real :: cdice(ix,il)
+    real, allocatable :: cdice(:,:)
 
     ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
     real :: depth_ml = 60.               ! High-latitude depth
@@ -48,18 +42,31 @@ module mod_cplcon_sea
 
     ! Geographical domain
     ! note : more than one regional domain may be set .true.
-    logical, parameter :: l_globe  = .true.  ! global domain
-    logical, parameter :: l_northe = .false. ! Northern hem. oceans (lat > 20N)
-    logical, parameter :: l_natlan = .false. ! N. Atlantic (lat 20-80N, lon 100W-45E)
-    logical, parameter :: l_npacif = .false. ! N. Pacific  (lat 20-80N, lon 100E-100W)
-    logical, parameter :: l_tropic = .false. ! Tropics (lat 30S-30N)
-    logical, parameter :: l_indian = .false. ! Indian Ocean (lat 30S-30N, lon 30-120E)
+    logical :: l_globe  = .true.  ! global domain
+    logical :: l_northe = .false. ! Northern hem. oceans (lat > 20N)
+    logical :: l_natlan = .false. ! N. Atlantic (lat 20-80N, lon 100W-45E)
+    logical :: l_npacif = .false. ! N. Pacific  (lat 20-80N, lon 100E-100W)
+    logical :: l_tropic = .false. ! Tropics (lat 30S-30N)
+    logical :: l_indian = .false. ! Indian Ocean (lat 30S-30N, lon 30-120E)
 
     contains
-        subroutine setup_sea_model(fid)
+        subroutine setup_sea(fid)
             integer, intent(in) :: fid
+            ! 1./heat_capacity (sea)
+            allocate(rhcaps(ix,il))
+        
+            ! 1./heat_capacity (ice)
+            allocate(rhcapi(ix,il))
+        
+            ! 1./dissip_time (sea)
+            allocate(cdsea(ix,il))
+        
+            ! 1./dissip_time (ice)
+            allocate(cdice(ix,il))
 
-            read(fid, sea_model)
+            read(fid, sea)
             fseamin = 1.0/fseamin
-        end subroutine setup_sea_model
+
+            write(*, sea)
+        end subroutine setup_sea
 end module

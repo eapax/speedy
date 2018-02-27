@@ -23,6 +23,9 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
 
     print *, ' hallo from speedy_agcm'
 
+    ! 0. Read namelist and allocate arrays
+    call ini_namelist()
+
     ! 1. set run initial time, duration, time-stepping and coupling options
     read (2,*) istart
 

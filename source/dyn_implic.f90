@@ -14,8 +14,6 @@ subroutine implic(divdt,tdt,psdt)
 
     implicit none
 
-    integer, parameter :: mxnxkx = mx*nx*kx
-
     complex, intent(inout) :: divdt(mx,nx,kx), tdt(mx,nx,kx), psdt(mx,nx)
     complex ::  ye(mx,nx,kx), yf(mx,nx,kx), zero
     integer :: k1, k, m, n, ll, mm

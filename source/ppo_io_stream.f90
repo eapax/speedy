@@ -12,8 +12,7 @@ module ppo_IO_stream
     private
     public initialise_IO, update_IO
 
-    integer, parameter :: recl_spec = 4*mx*nx
-    integer, parameter :: recl_grid = 4*ix*il
+    integer :: recl_spec, recl_grid
 
     ! Counter so that each IO stream has a unique file ID
     integer :: next_file_ID = 200
@@ -59,6 +58,10 @@ module ppo_IO_stream
             integer :: nstpinc, nstpout, nstpopen
             integer :: nvars
             integer, allocatable :: var_ID(:)
+
+            ! Set record lengths to grid size
+            recl_spec = 4*mx*nx
+            recl_grid = 4*ix*il
 
             ! Read output parameters from input text file
             open(99, file='output_requests.txt', status='old', action='read')
