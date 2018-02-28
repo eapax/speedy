@@ -1,4 +1,6 @@
 *.swp
+*.exe
+*.nc
 input
 output
 figs
@@ -7,4 +9,4 @@ tmp
 animations
 .rsync-filter
 experiments
-data/bc/t39/anom
+data/bc/t39/
