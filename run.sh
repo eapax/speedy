@@ -2,44 +2,36 @@
 
 # $1 = resolution (eg t21, t30)
 # $2 = experiment no. (eg 111)
-# $3 = experiment no. for restart file ( 0 = no restart ) 
-# $4 = make only, and don't run? ("make" for yes, "run" for no)
+# $3 = experiment no. for restart file ( 0 = no restart )
 
 
-if [ $# -ne 4 ] ; then
-    echo 'Usage: '$0' resol. exp_no. restart_no make_only_or_run' 1>&2
+if [ $# -ne 3 ] ; then
+    echo 'Usage: '$0' resol. exp_no. restart_no' 1>&2
     exit 1
 fi
 
 # Start date
-year='1981'
+year='1982'
 month='01'
 day='01'
 hour='00'
 
 # Define directory names
 UT=`pwd`
-SRC=$UT/source	
-TMP=$UT/tmp
-mkdir -p $UT/output/exp_$2	
-OUT=$UT/output/exp_$2
-CD=$UT/output/exp_$3	
+SRC=${UT}/source
+TMP=/home/saffin/temp/
+mkdir -p ${UT}/output/exp_$2
+OUT=${UT}/output/exp_$2
+CD=${UT}/output/exp_$3
 
-# Copy files from basic version directory
-
-echo "copying from $SRC/source to $TMP"
-
-mkdir -p $TMP
-cd $TMP
+# Copy executable from basic version directory
+mkdir -p ${TMP}
+cd ${TMP}
 rm *
 
-cp $SRC/*.f90      $TMP/
-cp $SRC/*.h      $TMP/
-cp $SRC/*.s      $TMP/
-cp $SRC/makefile $TMP/
+cp ${SRC}/imp.exe ${TMP}/
 
 # Set experiment no. and restart file (if needed)
-
 echo $3 >  fort.2
 echo $2 >> fort.2
 
@@ -49,21 +41,19 @@ if [ $3 != 0 ] ; then
 fi 
 
 # Link input files
-
 echo 'link input files to fortran units'
+SB=${UT}/data/bc/$1/clim
+SC=${UT}/data/bc/$1/anom
+SH=${UT}/hflux
 
-ksh inpfiles.s $1
-
+ln -sf ${SB}/sfc.grd   fort.20
+ln -sf ${SB}/sst.grd   fort.21
+ln -sf ${SB}/icec.grd  fort.22
+ln -sf ${SB}/stl.grd   fort.23
+ln -sf ${SB}/snowd.grd fort.24
+ln -sf ${SB}/swet.grd  fort.26
+ln -sf ${SC}/ssta.grd  fort.30
 ls -l fort.*
-
-echo ' compiling at_gcm - calling make'
-
-make clean
-make imp.exe || { echo "Compilation failed"; exit 1; }
-
-if [ $4 == make ] ; then
-    exit 0
-fi
 
 # Write date input file
 # First line is 0 for no restart file and 1 for restart
@@ -80,7 +70,7 @@ echo ${hour} >> fort.2
 time ./imp.exe | tee out.lis
 
 # Copy output to experiment directory
-mv out.lis $OUT/atgcm$2.lis
+mv out.lis ${OUT}/atgcm$2.lis
 mv *.rst ${OUT}
-mv *.grd $OUT
-mv *.ctl $OUT
+mv *.grd ${OUT}
+mv *.ctl ${OUT}
