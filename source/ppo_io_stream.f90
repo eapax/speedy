@@ -28,7 +28,7 @@ module ppo_IO_stream
         logical :: spectral
 
         ! Flags for determining output frequency
-        ! nstpinc: How often the output variables are increments
+        ! nstpinc: How often the output variables are incremented
         ! nstpout: How often the variables are output and increments reset
         ! nstpopen: How often a new file is opened
         integer :: nstpinc, nstpout, nstpopen
@@ -52,36 +52,36 @@ module ppo_IO_stream
     contains
         ! Initialise output IO streams from the input .txt file
         subroutine initialise_IO()
-            integer :: n
-            character(len=100) :: filename
+            namelist /output/ nstreams
+
+            namelist /output_file/ filename, spectral, nstpinc, nstpout, &
+                    nstpopen, nvars
+            character (len=100) :: filename
             logical :: spectral
             integer :: nstpinc, nstpout, nstpopen
             integer :: nvars
-            integer, allocatable :: var_ID(:)
+
+            namelist /variables/ var_IDs
+            integer, allocatable :: var_IDs(:)
+
+            integer :: n
 
             ! Set record lengths to grid size
             recl_spec = 4*mx*nx
             recl_grid = 4*ix*il
 
             ! Read output parameters from input text file
-            open(99, file='output_requests.txt', status='old', action='read')
-
-            read(99, *), nstreams
+            open(99, file='output_requests.nml')
+            read(99, output)
             allocate(streams(nstreams))
 
             ! Setup IO stream for each set of outputs
             do n=1, nstreams
-                read(99, *) filename
-                read(99, *) spectral
-                read(99, *) nstpinc
-                read(99, *) nstpout
-                read(99, *) nstpopen
-                read(99, *) nvars
-                allocate(var_ID(nvars))
-                read(99, *) var_ID
+                read(99, output_file)
+                allocate(var_IDs(nvars))
+                read(99, variables)
                 streams(n) = init_IO_stream(filename, spectral, nstpinc, &
-                                            nstpout, nstpopen, nvars, var_ID)
-                deallocate(var_ID)
+                                            nstpout, nstpopen, nvars, var_IDs)
             end do
 
             ! Output 0'th timestep variables
