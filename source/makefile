@@ -1,3 +1,5 @@
+%.o: %.mod
+
 ###COMPILE=f77
 ###COMPILE=pgf90 
 COMPILE=gfortran
