@@ -110,11 +110,15 @@ subroutine rest_land(imode)
     integer, intent(in) :: imode
 
     ! land surface temperature at input resolution
-    real :: stl_lm_in(ix_in, il_in)
+    real :: stl_lm_in(ix_in*il_in)
 
     if (imode.eq.0) then
         read (3)  stl_lm_in
-        call regrid(stl_lm_in, stl_lm)
+        if (ix_in /= ix .or. il_in /= il) then
+            call regrid(stl_lm_in, stl_lm)
+        else
+            stl_lm = stl_lm_in
+        end if
     else
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model

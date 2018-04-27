@@ -11,7 +11,7 @@ subroutine restart(jday)
     use mod_atparam
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ndaytot, ihour
-    use downscaling, only: mx_in, nx_in, kx_in, calc_grid_weights
+    use downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, calc_grid_weights
 
     implicit none
 
@@ -88,7 +88,7 @@ subroutine restart(jday)
         tr (1:mx_tr, 1:nx_tr, :, :, :) = tr_in (1:mx_tr, 1:nx_tr, :, :, :)
 
         ! Initialise gridded surface fields
-        call calc_grid_weights()
+        if (ix_in /= ix .or. il_in /= il) call calc_grid_weights()
         call rest_land(0)
         call rest_sea(0)
 

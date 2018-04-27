@@ -200,17 +200,32 @@ subroutine rest_sea(imode)
     real :: sstfr
 
     ! Sea variables at input resolution
-    real :: sst_om_in(ix_in, il_in)
-    real :: tice_om_in(ix_in, il_in)
-    real :: sice_om_in(ix_in, il_in)
+    real :: sst_om_in(ix_in*il_in)
+    real :: tice_om_in(ix_in*il_in)
+    real :: sice_om_in(ix_in*il_in)
 
     if (imode.eq.0) then
         read (3)  sst_om_in       ! sst
-        call regrid(sst_om_in, sst_om)
+        if (ix_in /= ix .or. il_in /= il) then
+            call regrid(sst_om_in, sst_om)
+        else
+            sst_om = sst_om_in
+        end if
+
         read (3) tice_om_in      ! sea ice temperature
-        call regrid(tice_om_in, tice_om)
+        if (ix_in /= ix .or. il_in /= il) then
+            call regrid(tice_om_in, tice_om)
+        else
+            tice_om = tice_om_in
+        end if
+
         read (3) sice_om_in      ! sea ice fraction
-        call regrid(sice_om_in, sice_om)
+        if (ix_in /= ix .or. il_in /= il) then
+            call regrid(sice_om_in, sice_om)
+        else
+            sice_om = sice_om
+        end if
+
     else
         !    write sea/ice model variables from coupled runs,
         !    otherwise write fields used by atmospheric model
