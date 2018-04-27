@@ -214,7 +214,7 @@ subroutine inbcon(grav0,radlat)
     if (icsea >= 1) then
         if (iitest >= 1) print *,' reading sfc heat fluxes' 
 
-        irecl = 4*ix*il
+        irecl = 4*ngp
         irec = 0
 
         open ( unit=31, file='fort.31', status='old',&
@@ -243,7 +243,7 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking sfc heat fluxes'
 
-        call forchk (bmask_s,hfseacl,ix*il,1,-1000.,1000.,0.)
+        call forchk (bmask_s,hfseacl,ngp,1,-1000.,1000.,0.)
     end if
 
     ! 4.2. Ocean model SST climatology:
@@ -253,7 +253,7 @@ subroutine inbcon(grav0,radlat)
     if (icsea >= 3) then
         if (iitest >= 1) print *,' reading ocean model SST bias' 
 
-        !irecl = 4*ix*il
+        !irecl = 4*ngp
         !irec = 0
 
         !open ( unit=32, file='fort.32', status='old',&
@@ -273,7 +273,7 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking ocean model SST'
 
-        call forchk (bmask_s,sstom12,ix*il,12,100.,400.,273.)
+        call forchk (bmask_s,sstom12,ngp,12,100.,400.,273.)
     end if
 end
 

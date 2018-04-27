@@ -71,7 +71,7 @@ module mod_sppt
         function gen_sppt() result(sppt_grid_out)
             integer :: m, n, k
             real :: sppt_grid(ix, il), sppt_grid_total(ix, il),  &
-                    sppt_grid_out(ix*il, kx)
+                    sppt_grid_out(ngp, kx)
             complex :: eta(mx, nx, nscales)
             real :: randreal, randimag
 
@@ -121,7 +121,7 @@ module mod_sppt
 
             do k=1,kx
                 ! SPPT perturbations uniform in height
-                sppt_grid_out(:, k) = reshape(sppt_grid_total, (/ix*il/))
+                sppt_grid_out(:, k) = reshape(sppt_grid_total, (/ngp/))
             end do
 
             ! Clip to +/- 1.0

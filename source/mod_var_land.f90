@@ -18,12 +18,12 @@ module mod_var_land
     
     contains
         subroutine setup_var_land()
-            allocate(stlcl_ob(ix*il))
-            allocate(snowdcl_ob(ix*il))
-            allocate(soilwcl_ob(ix*il))
-            allocate(stl_am(ix*il))
-            allocate(snowd_am(ix*il))
-            allocate(soilw_am(ix*il))
-            allocate(stl_lm(ix*il))
+            allocate(stlcl_ob(ngp))
+            allocate(snowdcl_ob(ngp))
+            allocate(soilwcl_ob(ngp))
+            allocate(stl_am(ngp))
+            allocate(snowd_am(ngp))
+            allocate(soilw_am(ngp))
+            allocate(stl_lm(ngp))
         end subroutine setup_var_land
 end module

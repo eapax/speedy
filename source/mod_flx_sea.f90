@@ -39,16 +39,16 @@ module mod_flx_sea
     
     contains
         subroutine setup_flx_sea()
-            allocate(prec_s(ix*il))    
-            allocate(snowf_s(ix*il))        
-            allocate(evap_s(ix*il))        
-            allocate(ustr_s(ix*il))        
-            allocate(vstr_s(ix*il))        
-            allocate(ssr_s(ix*il))        
-            allocate(slr_s(ix*il))        
-            allocate(shf_s(ix*il))        
-            allocate(ehf_s(ix*il))        
-            allocate(hflux_s(ix*il))
-            allocate(hflux_i(ix*il))
+            allocate(prec_s(ngp))    
+            allocate(snowf_s(ngp))        
+            allocate(evap_s(ngp))        
+            allocate(ustr_s(ngp))        
+            allocate(vstr_s(ngp))        
+            allocate(ssr_s(ngp))        
+            allocate(slr_s(ngp))        
+            allocate(shf_s(ngp))        
+            allocate(ehf_s(ngp))        
+            allocate(hflux_s(ngp))
+            allocate(hflux_i(ngp))
         end subroutine setup_flx_sea
 end module

@@ -73,7 +73,7 @@ module phy_suflux
 
             read(fid, surface_fluxes)
 
-            allocate(forog(ix*il))
+            allocate(forog(ngp))
             allocate(t1(ngp, 2))
             allocate(q1(ngp, 2))
             allocate(denvvs(ngp, 0:2))

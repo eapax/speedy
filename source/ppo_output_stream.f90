@@ -72,7 +72,7 @@ module ppo_output_stream
 
             ! Set record lengths to grid size
             recl_spec = 4*mx*nx
-            recl_grid = 4*ix*il
+            recl_grid = 4*ngp
 
             ! Read output parameters from input text file
             open(99, file='output_requests.nml')
@@ -283,9 +283,9 @@ module ppo_output_stream
 
         subroutine write_grid(stream)
             type(output_stream), intent(inout) :: stream
-            real :: output(ix*il, kx)
-            real(4) :: output_sp(ix*il, kx)
-            real(4) :: output_p(ix*il, np)
+            real :: output(ngp, kx)
+            real(4) :: output_sp(ngp, kx)
+            real(4) :: output_p(ngp, np)
             integer :: n, k
 
             do n=1, stream%nvars
@@ -361,7 +361,7 @@ module ppo_output_stream
         ! TODO implement 2d variables in same interface
         function fetch_output_grid(varID) result(output)
             integer :: varID
-            real :: output(ix*il, kx)
+            real :: output(ngp, kx)
 
             select case(varID)
                 ! ug1    = u-wind

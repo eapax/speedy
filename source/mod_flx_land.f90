@@ -36,15 +36,15 @@ module mod_flx_land
     
     contains
         subroutine setup_flx_land()
-            allocate(prec_l(ix*il))        
-            allocate(snowf_l(ix*il))        
-            allocate(evap_l(ix*il))        
-            allocate(ustr_l(ix*il))        
-            allocate(vstr_l(ix*il))        
-            allocate(ssr_l(ix*il))        
-            allocate(slr_l(ix*il))        
-            allocate(shf_l(ix*il))        
-            allocate(ehf_l(ix*il))        
-            allocate(hflux_l(ix*il))        
+            allocate(prec_l(ngp))
+            allocate(snowf_l(ngp))
+            allocate(evap_l(ngp))
+            allocate(ustr_l(ngp))
+            allocate(vstr_l(ngp))
+            allocate(ssr_l(ngp))
+            allocate(slr_l(ngp))
+            allocate(shf_l(ngp))
+            allocate(ehf_l(ngp))
+            allocate(hflux_l(ngp))
         end subroutine setup_flx_land
 end module

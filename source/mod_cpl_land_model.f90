@@ -40,8 +40,8 @@ module mod_cpl_land_model
 
             allocate(rhcapl(ix,il))
             allocate(cdland(ix,il))
-            allocate(vland_input(ix*il,4))
-            allocate(vland_output(ix*il,2))
+            allocate(vland_input(ngp,4))
+            allocate(vland_output(ngp,2))
 
             read(fid, land)
             flandmin = 1./flandmin
@@ -105,16 +105,16 @@ module mod_cpl_land_model
             !real vland_input(ix,il,3), vland_output(ix,il,2)
         
             ! Input variables:
-            real :: stl0(ix*il)    ! land temp. at initial time
-            real :: hfland(ix*il)    ! land sfc. heat flux between t0 and t1
-            real :: stlcl1(ix*il)    ! clim. land temp. at final time 
+            real :: stl0(ngp)    ! land temp. at initial time
+            real :: hfland(ngp)    ! land sfc. heat flux between t0 and t1
+            real :: stlcl1(ngp)    ! clim. land temp. at final time
         
             ! Output variables
-            real :: stl1(ix*il)     ! land temp. at final time
+            real :: stl1(ngp)     ! land temp. at final time
         
             ! Auxiliary variables
-            real :: hflux(ix*il)   ! net sfc. heat flux
-            real :: tanom(ix*il)   ! sfc. temperature anomaly
+            real :: hflux(ngp)   ! net sfc. heat flux
+            real :: tanom(ngp)   ! sfc. temperature anomaly
 
             ! Initialise variables
             stl0 = vland_input(:,1)
@@ -130,8 +130,8 @@ module mod_cpl_land_model
             ! Anomaly w.r.t final-time climatological temp.
             tanom = stl0 - stlcl1
             ! Time evoloution of temp. anomaly 
-            tanom = reshape(cdland, (/ ix*il /))*&
-                & (tanom+reshape(rhcapl, (/ ix*il /))*hflux)
+            tanom = reshape(cdland, (/ ngp /))*&
+                & (tanom+reshape(rhcapl, (/ ngp /))*hflux)
  
             ! Full SST at final time
             stl1 = tanom + stlcl1

@@ -13,7 +13,7 @@ module mod_cplvar_sea
     contains
     
         subroutine setup_cplvar_sea()
-            allocate(vsea_input(ix*il,8))
-            allocate(vsea_output(ix*il,3))
+            allocate(vsea_input(ngp,8))
+            allocate(vsea_output(ngp,3))
         end subroutine setup_cplvar_sea
 end module
