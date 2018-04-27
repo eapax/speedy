@@ -11,13 +11,35 @@ subroutine restart(jday)
     use mod_atparam
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ndaytot, ihour
+    use downscaling, only: mx_in, nx_in, kx_in, calc_grid_weights
 
     implicit none
 
+    !---------------------------------------------------------------------------
     integer, intent(in) :: jday
     integer :: yyyy, mm, dd, hh
     character(len=14) :: filename='yyyymmddhh.rst'
 
+    ! Prognostic spectral variables. Can be at different resolution.
+    ! Vorticity
+    complex :: vor_in(mx_in, nx_in, kx_in, 2)
+
+    ! Divergence
+    complex :: div_in(mx_in, nx_in, kx_in, 2)
+
+    ! Absolute temperature
+    complex :: T_in(mx_in, nx_in, kx_in, 2)
+
+    ! Log of (norm.) sfc pressure (p_s/p0)
+    complex :: Ps_in(mx_in, nx_in, 2)
+
+    ! Tracers (tr.1: spec. humidity in g/kg)
+    complex :: tr_in(mx_in, nx_in, kx_in, 2, ntr)
+
+    ! Truncation scale for initial conditions
+    integer :: mx_tr, nx_tr
+
+    !---------------------------------------------------------------------------
     if (jday.eq.0) then
         ! 1. Read the restart dataset corresponding to the specified initial date
         write (filename(1:4),'(i4.4)') iyear
@@ -36,12 +58,37 @@ subroutine restart(jday)
                 'Read restart dataset for year/month/date/hour: ', &
                 iyear,'/',imonth,'/',iday,'/',ihour
             
-        read (3) vor
-        read (3) div
-        read (3) t
-        read (3) ps
-        read (3) tr
+        read (3) vor_in
+        read (3) div_in
+        read (3) T_in
+        read (3) Ps_in
+        read (3) tr_in
 
+        ! If input vertical levels are different, interpolate
+        if (kx /= kx_in) then
+            ! TODO
+            continue
+        end if
+
+        ! Copy prognostic variables matching the truncation scale of input and
+        ! model run
+        mx_tr = min(mx, mx_in)
+        nx_tr = min(nx, nx_in)
+
+        vor = 0.
+        div = 0.
+        T   = 0.
+        Ps  = 0.
+        tr  = 0.
+
+        vor(1:mx_tr, 1:nx_tr, :, :)    = vor_in(1:mx_tr, 1:nx_tr, :, :)
+        div(1:mx_tr, 1:nx_tr, :, :)    = div_in(1:mx_tr, 1:nx_tr, :, :)
+        T  (1:mx_tr, 1:nx_tr, :, :)    = T_in  (1:mx_tr, 1:nx_tr, :, :)
+        Ps (1:mx_tr, 1:nx_tr, :)       = Ps_in (1:mx_tr, 1:nx_tr, :)
+        tr (1:mx_tr, 1:nx_tr, :, :, :) = tr_in (1:mx_tr, 1:nx_tr, :, :, :)
+
+        ! Initialise gridded surface fields
+        call calc_grid_weights()
         call rest_land(0)
         call rest_sea(0)
 

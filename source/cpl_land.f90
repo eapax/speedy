@@ -103,13 +103,18 @@ subroutine rest_land(imode)
     use mod_cpl_flags, only: icland
     use mod_atparam
     use mod_var_land, only: stl_am, stl_lm
+    use downscaling, only: ix_in, il_in, regrid
 
     implicit none
 
     integer, intent(in) :: imode
 
+    ! land surface temperature at input resolution
+    real :: stl_lm_in(ix_in, il_in)
+
     if (imode.eq.0) then
-        read (3)  stl_lm(:)       ! Land sfc. temperature 
+        read (3)  stl_lm_in
+        call regrid(stl_lm_in, stl_lm)
     else
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model

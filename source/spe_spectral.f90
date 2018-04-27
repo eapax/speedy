@@ -5,7 +5,8 @@ module spectral
     implicit none
 
     private
-    public setup_spectral, parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
+    public setup_spectral, gaussl, parmtr, lap, invlap, grad, uvspec, grid, &
+            spec, vdspec
     public el2, sia, cosg, cosgr
     public cpol, nsh2, wt, trfilt
 
