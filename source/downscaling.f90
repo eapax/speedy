@@ -8,17 +8,35 @@ module downscaling
     implicit none
 
     private
-    public nx_in, mx_in, ix_in, il_in, kx_in, calc_grid_weights, regrid
+    public nx_in, mx_in, ix_in, il_in, kx_in, &
+            setup_downscaling, calc_grid_weights, regrid
 
-    integer, parameter :: ntrun_in = 30, mtrun_in = 30
-    integer, parameter :: nx_in = ntrun_in+2, mx_in = mtrun_in+1
-    integer, parameter :: ix_in = 96, iy_in = 24, kx_in = 8
-    integer, parameter :: il_in = 2*iy_in
+    namelist /input_resolution/ ntrun_in, mtrun_in, ix_in, iy_in, kx_in
 
-    integer :: idx_x(ix), idx_y(il)
-    real :: weights_x(ix), weights_y(il)
+    integer :: ntrun_in, mtrun_in
+    integer :: ix_in, iy_in, kx_in
+    integer :: nx_in, mx_in, il_in
+
+    integer, allocatable :: idx_x(:), idx_y(:)
+    real, allocatable :: weights_x(:), weights_y(:)
 
     contains
+        subroutine setup_downscaling(fid)
+            integer, intent(in) :: fid
+
+            read(fid, input_resolution)
+
+            nx_in = ntrun_in+2
+            mx_in = mtrun_in+1
+            il_in = 2*iy_in
+
+            allocate(idx_x(ix))
+            allocate(idx_y(il))
+            allocate(weights_x(ix))
+            allocate(weights_y(il))
+
+        end subroutine setup_downscaling
+
         subroutine calc_grid_weights()
             real :: lons_in(ix_in), lons_out(ix)
             real :: sin_lat(iy_in), wt_in(iy_in)

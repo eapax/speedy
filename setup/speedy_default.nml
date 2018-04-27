@@ -9,6 +9,17 @@
     kx=8,
 /
 
+! downscaling
+&input_resolution
+    ! Spectral truncation
+    ntrun_in = 30,
+    mtrun_in = 30
+    ! Grid resolution (lon,lat/2,z)
+    ix_in = 96,
+    iy_in = 24,
+    kx_in = 8
+/
+
 ! mod_cpl_flags
 &coupling_flags
     ! Flag for land-coupling

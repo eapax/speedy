@@ -1,5 +1,6 @@
 subroutine ini_namelist()
     use mod_atparam, only: setup_resolution
+    use downscaling, only: setup_downscaling
     use mod_cpl_flags, only: setup_coupling_flags
     use mod_cpl_land_model, only: setup_land
     use mod_cplcon_sea, only: setup_sea
@@ -37,6 +38,7 @@ subroutine ini_namelist()
     ! Call setup_resolution first as it contains the dimensions needed for
     ! allocating arrays
     call setup_resolution(99)
+    call setup_downscaling(99)
     call setup_coupling_flags(99)
     call setup_land(99)
     call setup_sea(99)
