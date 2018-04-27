@@ -8,7 +8,7 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     use mod_cpl_flags, only: icsea, isstan
     use mod_tsteps
     use mod_date, only: newdate, ndaytot, iyear, imonth, iday, ihour
-    use ppo_IO_stream, only: initialise_IO
+    use ppo_output_stream, only: initialise_output
 
     implicit none
 
@@ -61,6 +61,6 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     call stepone
 
     ! 6. Set up model output
-    call initialise_IO()
+    call initialise_output()
 
 end subroutine

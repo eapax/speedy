@@ -10,7 +10,7 @@ subroutine diagns(jj,istep)
     use mod_atparam
     use mod_dynvar
     use spectral, only: invlap
-    use ppo_IO_stream, only: update_IO
+    use ppo_output_stream, only: update_output
 
     implicit none
 
@@ -20,7 +20,7 @@ subroutine diagns(jj,istep)
     complex :: temp(mx,nx)
     real :: diag(kx,3), sqhalf
 
-    call update_IO(istep)
+    call update_output(istep)
 
     ! 1. Get global-mean temperature and compute eddy kinetic energy
     sqhalf = sqrt(0.5)

@@ -1,4 +1,4 @@
-module ppo_IO_stream
+module ppo_output_stream
 
     use mod_atparam
     use mod_dynvar
@@ -11,15 +11,15 @@ module ppo_IO_stream
     implicit none
 
     private
-    public initialise_IO, update_IO
+    public initialise_output, update_output
 
     integer :: recl_spec, recl_grid
 
-    ! Counter so that each IO stream has a unique file ID
+    ! Counter so that each output stream has a unique file ID
     integer :: next_file_ID = 200
 
     ! Generic type used to describe an output stream
-    type IO_stream
+    type output_stream
         !
         character (len=100) :: filename
 
@@ -47,15 +47,15 @@ module ppo_IO_stream
         ! The record counter used for direct access in read/write statements
         integer :: recl
         integer :: rec = 1
-    end type IO_stream
+    end type output_stream
 
-    ! Array containing all IO streams. Allocated during model set up
+    ! Array containing all output streams. Allocated during model set up
     integer :: nstreams
-    type(IO_stream), allocatable :: streams(:)
+    type(output_stream), allocatable :: streams(:)
 
     contains
-        ! Initialise output IO streams from the input .txt file
-        subroutine initialise_IO()
+        ! Initialise output streams from the input .txt file
+        subroutine initialise_output()
             namelist /output/ nstreams
 
             namelist /output_file/ filename, spectral, plevs, nstpinc, &
@@ -79,21 +79,21 @@ module ppo_IO_stream
             read(99, output)
             allocate(streams(nstreams))
 
-            ! Setup IO stream for each set of outputs
+            ! Setup output stream for each set of outputs
             do n=1, nstreams
                 read(99, output_file)
                 allocate(var_IDs(nvars))
                 read(99, variables)
-                streams(n) = init_IO_stream(filename, spectral, plevs, nstpinc,&
-                                            nstpout, nstpopen, nvars, var_IDs)
+                streams(n) = init_output_stream(filename, spectral, plevs, &
+                        nstpinc, nstpout, nstpopen, nvars, var_IDs)
             end do
 
             ! Output 0'th timestep variables
-            call update_IO(0)
+            call update_output(0)
         end subroutine
 
-        ! Update all of the IO streams
-        subroutine update_IO(istep)
+        ! Update all of the output streams
+        subroutine update_output(istep)
             integer, intent(in) :: istep
             integer :: n, m, p, k
             logical :: l_transform_field(5)
@@ -103,11 +103,11 @@ module ppo_IO_stream
             ! Check which fields need to be updated
             l_transform_field = .false.
             do n=1, nstreams
-                ! Check all IOstreams that need to be updated and require grid
-                ! point fields
+                ! Check all output streams that need to be updated and require
+                ! grid point fields
                 if (.not. streams(n)%spectral .and. &
                         xmod(istep, streams(n)%nstpinc)) then
-                    ! Check for every prognostic variable in the IOstream
+                    ! Check for every prognostic variable in the output stream
                     do m=1, streams(n)%nvars
                         do p=1, 5
                             if (streams(n)%var_ID(m) == p) then
@@ -150,18 +150,19 @@ module ppo_IO_stream
             end if
 
             do n=1, nstreams
-                call update_IO_stream(streams(n), istep)
+                call update_output_stream(streams(n), istep)
             end do
         end subroutine
 
         !
-        function init_IO_stream(filename, spectral, plevs, nstpinc, nstpout, &
-                                nstpopen, nvars, var_ID) result(stream)
+        function init_output_stream(filename, spectral, plevs, nstpinc, &
+                nstpout, nstpopen, nvars, var_ID) &
+                result(stream)
             character(len=*), intent(in) :: filename
             logical, intent(in) :: spectral, plevs
             integer, intent(in) :: nstpinc, nstpout, nstpopen
             integer, intent(in) :: nvars, var_ID(:)
-            type(IO_stream) :: stream
+            type(output_stream) :: stream
 
             integer :: recl
 
@@ -182,27 +183,27 @@ module ppo_IO_stream
                 stream%recl = recl_grid
             end if
 
-            ! Assign a unique file ID tyo the IOStream
+            ! Assign a unique file ID to the output stream
             stream%file_ID = next_file_ID
             next_file_ID = next_file_ID + 1
         end function
 
         ! Update called once per timestep for each output stream.
-        ! The subroutine determines actions based on IO_stream parameters
+        ! The subroutine determines actions based on output_stream parameters
         ! nstpinc: How often the output variables are increments
         ! nstpout: How often the variables are output and increments reset
         ! nstpopen: How often a new file is opened
         ! Each variable is an integer number of timesteps or, if the integer
         ! is negative, number of months.
-        subroutine update_IO_stream(stream, istep)
-            type(IO_stream), intent(inout) :: stream
+        subroutine update_output_stream(stream, istep)
+            type(output_stream), intent(inout) :: stream
             integer, intent(in) :: istep
 
-            if (xmod(istep, stream%nstpopen)) call reinit_IO_stream(stream)
+            if (xmod(istep, stream%nstpopen)) call reinit_output_stream(stream)
 
-            if (xmod(istep, stream%nstpinc)) call incr_IO_stream(stream)
+            if (xmod(istep, stream%nstpinc)) call incr_output_stream(stream)
 
-            if (xmod(istep, stream%nstpout)) call write_IO_stream(stream)
+            if (xmod(istep, stream%nstpout)) call write_output_stream(stream)
         end subroutine
 
         ! Check whether the timestep matches the frequency by using mod in
@@ -226,8 +227,8 @@ module ppo_IO_stream
 
         ! todo Close the currently open file and open a new file named by the
         ! current time
-        subroutine reinit_IO_stream(stream)
-            type(IO_stream), intent(inout) :: stream
+        subroutine reinit_output_stream(stream)
+            type(output_stream), intent(inout) :: stream
 
             close(stream%file_ID)
 
@@ -237,15 +238,15 @@ module ppo_IO_stream
 
         ! todo Increment the output on substeps relative to how often it is
         ! written to file
-        subroutine incr_IO_stream(stream)
-            type(IO_stream), intent(inout) :: stream
+        subroutine incr_output_stream(stream)
+            type(output_stream), intent(inout) :: stream
         end subroutine
 
         ! Write each of the variables associated with the given stream to file.
         ! Acts a wrapper to separate write functions for spectral and grid
         ! variables.
-        subroutine write_IO_stream(stream)
-            type(IO_stream), intent(inout) :: stream
+        subroutine write_output_stream(stream)
+            type(output_stream), intent(inout) :: stream
 
             print *, 'Writing output to ', stream%filename
 
@@ -257,7 +258,7 @@ module ppo_IO_stream
         end subroutine
 
         subroutine write_spectral(stream)
-            type(IO_stream), intent(inout) :: stream
+            type(output_stream), intent(inout) :: stream
             complex :: output(mx, nx, kx)
             real(4) :: re_output(mx, nx, kx), im_output(mx, nx, kx)
             integer :: n, k
@@ -282,7 +283,7 @@ module ppo_IO_stream
         end subroutine
 
         subroutine write_grid(stream)
-            type(IO_stream), intent(inout) :: stream
+            type(output_stream), intent(inout) :: stream
             real :: output(ix*il, kx)
             real(4) :: output_sp(ix*il, kx)
             real(4) :: output_p(ix*il, np)
