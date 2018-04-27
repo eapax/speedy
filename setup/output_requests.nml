@@ -1,16 +1,18 @@
 &output
- nstreams=1
+    nstreams=1
 /
 
 &output_file
- filename='test1.grd',
- spectral=.false.,
- nstpinc=9,
- nstpout=9,
- nstpopen=125,
- nvars=5,
+    filename='test1.grd',
+    spectral=.false.,
+    plevs=.true.,
+    nstpinc=9,
+    nstpout=9,
+    nstpopen=125,
+    nvars=5,
 /
 
 &variables
- var_ids=1 2 3 4 5/
+    var_ids=1, 2, 3, 4, 5,
+/
 /

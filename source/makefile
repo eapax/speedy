@@ -74,6 +74,7 @@ FILES= \
        phy_suflux.o \
        phy_vdifsc.o \
        ppo_io_stream.o \
+       ppo_plevs.o \
        ppo_diagns.o \
        ppo_restart.o \
        ppo_dmflux.o \
@@ -193,7 +194,10 @@ phy_suflux.o           : phy_suflux.f90 mod_atparam.o mod_physcon.o\
                          mod_radcon.o phy_shtorh.o
 phy_vdifsc.o           : phy_vdifsc.f90 mod_atparam.o mod_physcon.o
 ppo_io_stream.o        : ppo_io_stream.f90 mod_atparam.o mod_dynvar.o\
-                         mod_physvar.o mod_physcon.o mod_date.o spe_spectral.o
+                         mod_physvar.o mod_physcon.o mod_date.o ppo_plevs.o\
+                         spe_spectral.o
+ppo_plevs.o            : ppo_plevs.f90 mod_atparam.o mod_dynvar.o mod_physcon.o\
+                         spe_spectral.o
 ppo_diagns.o           : ppo_diagns.f90 mod_tsteps.o mod_atparam.o mod_dynvar.o\
                          mod_date.o spe_spectral.o
 ppo_restart.o          : ppo_restart.f90 mod_tsteps.o mod_atparam.o\

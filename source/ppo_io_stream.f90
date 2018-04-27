@@ -6,6 +6,7 @@ module ppo_IO_stream
     use mod_physcon, only: gg
     use mod_date, only: imonth, month_start
     use spectral, only: uvspec, grid
+    use ppo_plevs, only: pressure_levels, np
 
     implicit none
 
@@ -26,6 +27,9 @@ module ppo_IO_stream
         ! separate streams due to their different grids and the use of complex
         ! numbers
         logical :: spectral
+
+        ! Flag for interpolating variables to pressure levels
+        logical :: plevs
 
         ! Flags for determining output frequency
         ! nstpinc: How often the output variables are incremented
@@ -54,10 +58,10 @@ module ppo_IO_stream
         subroutine initialise_IO()
             namelist /output/ nstreams
 
-            namelist /output_file/ filename, spectral, nstpinc, nstpout, &
-                    nstpopen, nvars
+            namelist /output_file/ filename, spectral, plevs, nstpinc, &
+                    nstpout, nstpopen, nvars
             character (len=100) :: filename
-            logical :: spectral
+            logical :: spectral, plevs
             integer :: nstpinc, nstpout, nstpopen
             integer :: nvars
 
@@ -80,7 +84,7 @@ module ppo_IO_stream
                 read(99, output_file)
                 allocate(var_IDs(nvars))
                 read(99, variables)
-                streams(n) = init_IO_stream(filename, spectral, nstpinc, &
+                streams(n) = init_IO_stream(filename, spectral, plevs, nstpinc,&
                                             nstpout, nstpopen, nvars, var_IDs)
             end do
 
@@ -124,7 +128,7 @@ module ppo_IO_stream
             end if
 
             ! Temperature
-            if (l_transform_field(3)) then
+            if (l_transform_field(3) .or. l_transform_field(5)) then
                 do k=1,kx
                     call grid(t(:,:,k,1), tg1(:,k), 1)
                 end do
@@ -139,6 +143,7 @@ module ppo_IO_stream
 
             ! Geopotential
             if (l_transform_field(5)) then
+                call geop(1)
                 do k=1,kx
                     call grid(phi(:,:,k), phig1(:,k), 1)
                 end do
@@ -150,10 +155,10 @@ module ppo_IO_stream
         end subroutine
 
         !
-        function init_IO_stream(filename, spectral, nstpinc, nstpout, &
+        function init_IO_stream(filename, spectral, plevs, nstpinc, nstpout, &
                                 nstpopen, nvars, var_ID) result(stream)
             character(len=*), intent(in) :: filename
-            logical, intent(in) :: spectral
+            logical, intent(in) :: spectral, plevs
             integer, intent(in) :: nstpinc, nstpout, nstpopen
             integer, intent(in) :: nvars, var_ID(:)
             type(IO_stream) :: stream
@@ -163,6 +168,7 @@ module ppo_IO_stream
             ! Pass parameters to the new object
             stream%filename = filename
             stream%spectral = spectral
+            stream%plevs = plevs
             stream%nstpinc = nstpinc
             stream%nstpout = nstpout
             stream%nstpopen = nstpopen
@@ -277,17 +283,35 @@ module ppo_IO_stream
 
         subroutine write_grid(stream)
             type(IO_stream), intent(inout) :: stream
-            real(4) :: output(ix*il, kx)
+            real :: output(ix*il, kx)
+            real(4) :: output_sp(ix*il, kx)
+            real(4) :: output_p(ix*il, np)
             integer :: n, k
 
             do n=1, stream%nvars
                 output = fetch_output_grid(stream%var_ID(n))
 
-                ! For some reason the height levels need to be written backwards
-                do k=kx, 1, -1
-                    write(stream%file_ID, rec=stream%rec) output(:, k)
-                    stream%rec = stream%rec + 1
-                end do
+                if(stream%plevs) then
+                    ! Interpolate output to pressure levels
+                    call pressure_levels(stream%var_ID(n), output, output_p)
+                    do k=np, 1, -1
+                        write(stream%file_ID, rec=stream%rec) output_p(:, k)
+                        stream%rec = stream%rec + 1
+                    end do
+                else
+                    ! Otherwise write model level output
+                    if (stream%var_ID(n) == 5) then
+                        output_sp = output / gg !m
+                    else
+                        output_sp = output
+                    end if
+
+                    ! For some reason the height levels need to be written backwards
+                    do k=kx, 1, -1
+                        write(stream%file_ID, rec=stream%rec) output_sp(:, k)
+                        stream%rec = stream%rec + 1
+                    end do
+                end if
             end do
         end subroutine write_grid
 
@@ -337,7 +361,7 @@ module ppo_IO_stream
         ! TODO implement 2d variables in same interface
         function fetch_output_grid(varID) result(output)
             integer :: varID
-            real(4) :: output(ix*il, kx)
+            real :: output(ix*il, kx)
 
             select case(varID)
                 ! ug1    = u-wind
@@ -358,7 +382,7 @@ module ppo_IO_stream
 
                 ! phig1  = geopotential
                 case(5)
-                output = phig1 / gg ! m
+                output = phig1
 
                 ! pslg1  = log. of surface pressure
                 !case(6)
