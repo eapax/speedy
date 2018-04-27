@@ -86,6 +86,7 @@ module ppo_output_stream
                 read(99, variables)
                 streams(n) = init_output_stream(filename, spectral, plevs, &
                         nstpinc, nstpout, nstpopen, nvars, var_IDs)
+                deallocate(var_IDs)
             end do
 
             ! Output 0'th timestep variables
@@ -247,8 +248,6 @@ module ppo_output_stream
         ! variables.
         subroutine write_output_stream(stream)
             type(output_stream), intent(inout) :: stream
-
-            print *, 'Writing output to ', stream%filename
 
             if (stream%spectral) then
                 call write_spectral(stream)
