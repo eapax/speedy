@@ -120,7 +120,7 @@ module phy_suflux
             !           Q0     = near-surface sp. humidity [g/kg](2-dim)
 
             use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
-            use mod_radcon, only: emisfc, alb_l, alb_s, snowc
+            use phy_radiat, only: emisfc, alb_l, alb_s, snowc
         
             real, dimension(ngp,kx), intent(in) :: ua, va, ta, qa, rh, phi
             real, dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, &

@@ -23,6 +23,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use humidity, only: shtorh
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
+    use phy_radiat, only: cloud, radsw, radlw
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
 

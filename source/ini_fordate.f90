@@ -18,8 +18,8 @@ subroutine fordate(imode)
     use mod_var_land, only: stl_am, snowd_am
     use mod_cli_sea, only: fmask_s
     use mod_var_sea, only: sstcl_ob, sst_am, sice_am
-    use mod_radcon, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
-        & alb_l, alb_s, albsfc
+    use phy_radiat, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
+        & alb_l, alb_s, albsfc, sol_oz, radset
     use phy_suflux, only: sflset
     use humidity, only: q_sat
     use spectral, only: spec
@@ -43,7 +43,7 @@ subroutine fordate(imode)
     
     ! 1. time-independent parts of physical parametrizations
     if (imode == 0) then
-        call radset
+        call radset()
         call sflset(phis0)
 
         ablco2_ref = ablco2

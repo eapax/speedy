@@ -10,6 +10,7 @@ subroutine ini_namelist()
     use mod_tsteps, only: setup_timestepping
     use phy_convmf, only: setup_convection
     use phy_lscond, only: setup_condensation
+    use phy_radiat, only: setup_radiation
     use phy_suflux, only: setup_surface_fluxes
     use phy_vdifsc, only: setup_vertical_diffusion
     use mod_sppt, only: setup_sppt
@@ -27,7 +28,6 @@ subroutine ini_namelist()
     use mod_hdifcon, only: setup_hdifcon
     use mod_physcon, only: setup_physcon
     use mod_physvar, only: setup_physvar
-    use mod_radcon, only: setup_radcon
     use mod_var_land, only: setup_var_land
     use mod_var_sea, only: setup_var_sea
     use spectral, only: setup_spectral
@@ -48,6 +48,7 @@ subroutine ini_namelist()
     call setup_timestepping(99)
     call setup_convection(99)
     call setup_condensation(99)
+    call setup_radiation(99)
     call setup_surface_fluxes(99)
     call setup_vertical_diffusion(99)
     call setup_sppt(99)
@@ -70,7 +71,6 @@ subroutine ini_namelist()
     call setup_hdifcon()
     call setup_physcon()
     call setup_physvar()
-    call setup_radcon()
     call setup_var_land()
     call setup_var_sea()
     call setup_spectral()

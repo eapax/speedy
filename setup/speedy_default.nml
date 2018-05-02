@@ -121,10 +121,6 @@
     nstrad=3,
 /
 
-! mod_radcon
-&radiation
-/
-
 ! mod_surfcon
 &surface
     ! Soil wetness at field capacity (volume fraction)
@@ -181,6 +177,81 @@
     drhlsc=0.1,
     ! Relative humidity threshold for boundary layer
     rhblsc=0.95,
+/
+
+! phy_radiat
+&radiation
+    ! solc   = Solar constant (area averaged) in W/m^2
+    solc = 342.0,
+
+    ! albsea = Albedo over sea
+    albsea = 0.07,
+    ! albice = Albedo over sea ice (for ice fraction = 1)
+    albice = 0.60,
+    ! albsn  = Albedo over snow (for snow cover = 1)
+    albsn  = 0.60,
+
+    ! rhcl1  = relative hum. threshold corr. to cloud cover = 0
+    rhcl1  =  0.30,
+    ! rhcl2  = relative hum. corr. to cloud cover = 1
+    rhcl2  =  1.00,
+    ! qacl   = specific hum. threshold for cloud cover
+    qacl   =  0.20,
+    ! wpcl   = cloud c. weight for the sq. root of precip. (for p = 1 mm/day)
+    wpcl   =  0.2,
+    ! pmaxcl = max. value of precip. (mm/day) contributing to cloud cover
+    pmaxcl = 10.0,
+
+    ! clsmax = maximum stratiform cloud cover
+    clsmax  = 0.60,
+    ! clsminl= minimum stratiform cloud cover over land (for RH = 1)
+    clsminl = 0.15,
+    ! gse_s0 = gradient of dry static energy corresp. to strat.c.c. = 0
+    gse_s0  = 0.25,
+    ! gse_s1 = gradient of dry static energy corresp. to strat.c.c. = 1
+    gse_s1  = 0.40,
+
+    ! albcl  = cloud albedo (for cloud cover = 1)
+    albcl  =  0.43,
+    ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
+    albcls =  0.50,
+
+    ! epssw  = fraction of incoming solar radiation absorbed by ozone
+    epssw  =  0.020,
+    ! epslw  = fraction of blackbody spectrum absorbed/emitted by PBL only
+    epslw  =  0.05,
+    ! emisfc = longwave surface emissivity
+    emisfc =  0.98,
+
+    !          shortwave absorptivities (for dp = 10^5 Pa) :
+    ! absdry = abs. of dry air      (visible band)
+    absdry =  0.033,
+    ! absaer = abs. of aerosols     (visible band)
+    absaer =  0.033,
+    ! abswv1 = abs. of water vapour (visible band, for dq = 1 g/kg)
+    abswv1 =  0.022,
+    ! abswv2 = abs. of water vapour (near IR band, for dq = 1 g/kg)
+    abswv2 = 15.000,
+
+    ! abscl2 = abs. of clouds       (visible band, for dq_base = 1 g/kg)
+    abscl1 =  0.015,
+    ! abscl1 = abs. of clouds       (visible band, maximum value)
+    abscl2 =  0.15,
+
+    !          longwave absorptivities (per dp = 10^5 Pa) :
+    ! ablwin = abs. of air in "window" band
+    ablwin =  0.3,
+    ! ablco2 = abs. of air in CO2 band
+    ablco2 =  6.0,
+    ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
+    ablwv1 =  0.7,
+    ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
+    ablwv2 = 50.0,
+
+    ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
+    ablcl1 = 12.0,
+    ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
+    ablcl2 =  0.6,
 /
 
 ! phy_suflux

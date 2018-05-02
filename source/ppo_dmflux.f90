@@ -14,7 +14,7 @@ subroutine dmflux(iadd)
     use mod_surfcon, only: fmask, fmask1
     use mod_var_sea, only: tice_am, sice_am
     use mod_physvar
-    use mod_radcon, only: albsea, albice, emisfc
+    use phy_radiat, only: albsea, albice, emisfc
     use mod_date, only: ihour
 
     implicit none
