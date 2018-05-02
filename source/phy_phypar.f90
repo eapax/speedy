@@ -11,7 +11,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !  Modified common blocks:  mod_physvar
 
     use mod_cpl_flags, only: icsea
-    use mod_physics, only: lradsw, lrandf, sppt_on
+    use mod_physics, only: lradsw, sppt_on
+    use mod_randfor, only: lrandf
     use mod_atparam
     use mod_physcon, only: sig, sigh, grdsig, grdscp, cp
     use mod_surfcon, only: fmask1, phis0

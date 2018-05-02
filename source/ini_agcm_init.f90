@@ -1,7 +1,4 @@
-subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
-    !   subroutine agcm_init (cexp,inidate,ntimes,irstart,
-    !  &                      ndays)
-    !
+subroutine agcm_init(ndays)
     !   purpose: initialization of atmos. model and coupling interface 
     !
 
@@ -11,12 +8,6 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     use ppo_output_stream, only: initialise_output
 
     implicit none
-
-    ! input (reset by input/include files if inidate = 0):
-    character(len=3), intent(inout) :: cexp        ! experiment identifier
-    integer, intent(in) :: inidate     ! initial date yyyymm
-    integer, intent(in) :: ntimes      ! integr. length in months (< 0) or days (> 0)
-    integer, intent(in) :: irstart     ! restart flag: 0 = no, > 0 = yes
 
     ! output:
     integer, intent(inout) :: ndays       ! total no. of integration days
@@ -30,18 +21,18 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     read (2,*) istart
 
     ! Read date from fort.2 file
-    read (2,*) iyear0
-    read (2,*) imont0
+    read (2,*) iyear
+    read (2,*) imonth
     read (2,*) iday
     read (2,*) ihour
-    iyear = iyear0
-    imonth = imont0
+    iyear0 = iyear
+    imont0 = imonth
 
     call newdate(0)
 
     print *, 'start date ', iyear, imonth, iday, ihour
 
-    isst0 = (iyear0 - issty0) * 12 + imont0
+    isst0 = (iyear - issty0) * 12 + imonth
 
     ndays = ndaytot
 
@@ -49,7 +40,7 @@ subroutine agcm_init(cexp, inidate, ntimes, irstart, ndays)
     if (icsea >= 4) isstan = 1
 
     ! 2. initialization of atmospheric model constants and variables 
-    call ini_atm(cexp)
+    call ini_atm()
 
     ! 3. initialization of coupled modules (land, sea, ice)
     call ini_coupler(istart)

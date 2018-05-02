@@ -1,25 +1,23 @@
-subroutine ini_atm(cexp)
+subroutine ini_atm()
     !   subroutine ini_atm (cexp)
     !
     !   purpose : call initialization routines for all model common blocks 
 
-    use mod_physics, only: indrdf
     use mod_atparam
     use mod_dyncon1, only: grav, hsg, fsg, radang
 
     implicit none
 
-    character(len=3) :: cexp        ! experiment identifier
     real :: ppl(kx)            ! post-processing levels (hpa/1000)
-    integer :: iitest = 1, is3d = 1, k, nddm, ndm, ndtm, ntm
+    integer :: iitest = 1, k
 
     ! 1. initialize ffts
     if (iitest == 1) print *, 'calling inifft'
-    call inifft
+    call inifft()
 
     ! 2. initialize dynamical constants and operators
     if (iitest == 1) print *, 'calling indyns'
-    call indyns
+    call indyns()
 
     ! 3. set post-processing levels
     do k = 1, kx
@@ -35,11 +33,11 @@ subroutine ini_atm(cexp)
     call inbcon(grav,radang)
 
     if (iitest == 1) print *, 'calling inirdf'
-    call inirdf(indrdf)
+    call inirdf()
 
     ! 6. initialize model variables
     if (iitest == 1) print *, 'calling invars'
-    call invars
+    call invars()
 
     ! 7. initialize time-mean arrays for surface fluxes and output fields
     if (iitest == 1) print *, 'calling dmflux'

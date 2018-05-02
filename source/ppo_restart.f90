@@ -6,11 +6,10 @@ subroutine restart(jday)
     !                  > 0 : write model variables  to a restart file
     !                        at selected dates and at the end of run 
     !
-    
-    use mod_tsteps, only: nmonrs, iyear0, imont0
+
     use mod_atparam
     use mod_dynvar
-    use mod_date, only: iyear, imonth, iday, ndaytot, ihour
+    use mod_date, only: iyear, imonth, iday, ihour
     use downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, calc_grid_weights
 
     implicit none
@@ -67,7 +66,7 @@ subroutine restart(jday)
         ! If input vertical levels are different, interpolate
         if (kx /= kx_in) then
             ! TODO
-            continue
+            stop 'Input must have same vertical levels as output'
         end if
 
         ! Copy prognostic variables matching the truncation scale of input and

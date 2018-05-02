@@ -1,18 +1,15 @@
-subroutine inirdf(indrdf)
-    !  subroutine inirdf (indrdf)
+subroutine inirdf()
+    !  subroutine inirdf ()
     !
-    !  Purpose : Initialize random diabatic forcing 
-    !  Input :   inirdf = index of forcing perturbation
+    !  Purpose : Initialize random diabatic forcing
 
     use mod_atparam
     use mod_physcon, only: slat
-    use mod_randfor, only: randfh
+    use mod_randfor, only: indrdf, randfh
 
     implicit none
 
     real, external :: ran1
-
-    integer, intent(in) :: indrdf
 
     real :: redgrd(0:36,0:18), randf2(ix,il), rnlon(0:18), colat(il)
     real :: ampl, flat1, flat2, fran, freq0, rdeg, rlon

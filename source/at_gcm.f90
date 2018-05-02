@@ -6,20 +6,18 @@ program agcm_main
 
     ! program : agcm_main
 
-    ! experiment identifier
-    character(len=3) :: cexp = 'exp'
     integer :: jday, ndays
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init
-    call agcm_init(cexp, 0, 0, 0, ndays)
+    call agcm_init(ndays)
 
     print *, 'integration length in days: ', ndays
 
     ! 2. do loop over total no. of integration days
     do jday = 1, ndays
         ! 2.2 run atmospheric model for 1 day
-        call agcm_1day(jday, cexp)
+        call agcm_1day(jday)
 
         ! 2.1 exchange data with coupler
         call agcm_to_coupler(jday)
@@ -30,7 +28,7 @@ program agcm_main
     if (mod(imonth, nmonrs) /= 0 .or. iday /= 1) call restart(2)
 end
 
-subroutine agcm_1day(jday, cexp)
+subroutine agcm_1day(jday)
     ! subroutine agcm_1day (jday)
     !
     ! perform atm. model integration for 1 day, 
@@ -42,7 +40,6 @@ subroutine agcm_1day(jday, cexp)
     implicit none
 
     integer, intent(in) :: jday
-    character(len=3), intent(in) :: cexp
     integer :: istep
 
     if (iday == 1) print *, ' start of year/month = ', iyear, imonth

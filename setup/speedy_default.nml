@@ -10,14 +10,15 @@
 /
 
 ! downscaling
+! Resolution of data in the restart file
 &input_resolution
     ! Spectral truncation
     ntrun_in = 30,
-    mtrun_in = 30
+    mtrun_in = 30,
     ! Grid resolution (lon,lat/2,z)
     ix_in = 96,
     iy_in = 24,
-    kx_in = 8
+    kx_in = 8,
 /
 
 ! mod_cpl_flags
@@ -50,7 +51,7 @@
     ! Dissipation time (days) for land-surface temp. anomalies
     tdland=40.0,
     ! Minimum fraction of land for the definition of anomalies (denominator)
-    flandmin=3.0
+    flandmin=3.0,
 /
 
 ! mod_cplcon_sea
@@ -118,11 +119,6 @@
     sppt_on=.false.,
     ! Period (no. of steps) for shortwave radiation
     nstrad=3,
-    ! Duration of random diabatic forcing ( 0 : no forcing, > 0 : no. of
-    ! initial steps, < 0 : whole integration)
-    nstrdf=0,
-    ! Initialization index for random diabatic forcing
-    indrdf=-1,
 /
 
 ! mod_radcon
@@ -252,11 +248,20 @@
 &sppt
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
-    mu=1 1 1 1 1 1 1 1,
+    mu=1, 1, 1, 1, 1, 1, 1, 1,
     ! Decorrelation time of SPPT perturbation (in hours)
-    time_decorr=3.0 72.0 720.0,
+    time_decorr=3.0, 72.0, 720.0,
     ! Correlation length scale of SPPT perturbation (in metres)
-    len_decorr=500000.0 1000000.0 2000000.0,
+    len_decorr=500000.0, 1000000.0, 2000000.0,
     ! Standard deviation of SPPT perturbation (in grid point space)
-    stddev=0.52 0.18 0.06,
+    stddev=0.52, 0.18, 0.06,
+/
+
+! mod_randfor
+&randfor
+    ! Duration of random diabatic forcing ( 0 : no forcing, > 0 : no. of
+    ! initial steps, < 0 : whole integration)
+    nstrdf=0,
+    ! Initialization index for random diabatic forcing
+    indrdf=-1,
 /
