@@ -5,7 +5,6 @@ subroutine ini_namelist()
     use mod_cpl_land_model, only: setup_land
     use mod_cplcon_sea, only: setup_sea
     use mod_dyncon0, only: setup_dynamics
-    use mod_physics, only: setup_physics
     use mod_surfcon, only: setup_surface
     use mod_tsteps, only: setup_timestepping
     use phy_convmf, only: setup_convection
@@ -43,7 +42,6 @@ subroutine ini_namelist()
     call setup_land(99)
     call setup_sea(99)
     call setup_dynamics(99)
-    call setup_physics(99)
     call setup_surface(99)
     call setup_timestepping(99)
     call setup_convection(99)

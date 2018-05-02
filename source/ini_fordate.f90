@@ -7,7 +7,6 @@ subroutine fordate(imode)
     !
     !   input : imode : 0 = initialization step, 1 = daily update
 
-    use mod_physics, only: lco2
     use mod_dyncon0, only: refrh1
     use mod_atparam
     use mod_hdifcon, only: tcorh, qcorh
@@ -18,8 +17,8 @@ subroutine fordate(imode)
     use mod_var_land, only: stl_am, snowd_am
     use mod_cli_sea, only: fmask_s
     use mod_var_sea, only: sstcl_ob, sst_am, sice_am
-    use phy_radiat, only: ablco2, ablco2_ref, albsea, albice, snowc, albsn,&
-        & alb_l, alb_s, albsfc, sol_oz, radset
+    use phy_radiat, only: lco2, ablco2, ablco2_ref, albsea, albice, snowc, &
+            albsn, alb_l, alb_s, albsfc, sol_oz, radset
     use phy_suflux, only: sflset
     use humidity, only: q_sat
     use spectral, only: spec

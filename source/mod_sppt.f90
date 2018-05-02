@@ -13,10 +13,13 @@ module mod_sppt
     implicit none
 
     private
-    public mu, setup_sppt, gen_sppt
+    public sppt_on, mu, setup_sppt, gen_sppt
 
-    namelist /sppt_scales/ nscales
-    namelist /sppt/ mu, time_decorr, len_decorr, stddev
+    namelist /sppt/ sppt_on, nscales
+    namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev
+
+    ! Turn on SPPT?
+    logical :: sppt_on = .false.
 
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
@@ -49,8 +52,8 @@ module mod_sppt
         subroutine setup_sppt(fid)
             integer, intent(in) :: fid
 
-            read(fid, sppt_scales)
-            write(*, sppt_scales)
+            read(fid, sppt)
+            write(*, sppt)
 
             allocate(mu(kx))
             allocate(time_decorr(nscales))
@@ -60,8 +63,8 @@ module mod_sppt
             allocate(sigma(mx, nx, nscales))
             allocate(sppt_spec(mx, nx, nscales))
 
-            read(fid, sppt)
-            write(*, sppt)
+            read(fid, sppt_parameters)
+            write(*, sppt_parameters)
         end subroutine setup_sppt
 
         !> @brief

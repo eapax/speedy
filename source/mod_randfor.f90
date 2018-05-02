@@ -5,15 +5,15 @@ module mod_randfor
 
     namelist /randfor/ nstrdf, indrdf
 
-    ! Flag for random diabatic forcing (set each timestep in dyn_stloop)
-    logical :: lrandf
-
     ! Duration of random diabatic forcing ( 0 : no forcing, > 0 : no. of
     ! initial steps, < 0 : whole integration)
     integer :: nstrdf = 0
 
     ! Initialization index for random diabatic forcing
     integer :: indrdf = -1
+
+    ! Flag for random diabatic forcing (set each timestep in dyn_stloop)
+    logical :: lrandf
 
     ! Random diabatic forcing (initial. in INIRDF, modified by XS_RDF))
     real, dimension(:,:,:), allocatable :: randfh, randfv
@@ -23,7 +23,6 @@ module mod_randfor
             integer, intent(in) :: fid
 
             read(fid, randfor)
-
             write(*, randfor)
 
             allocate(randfh(ix,il,2))

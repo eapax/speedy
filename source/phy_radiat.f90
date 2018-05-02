@@ -6,10 +6,11 @@ module phy_radiat
 
     private
     public setup_radiation, sol_oz, cloud, radsw, radlw, radset, &
+            lco2, nstrad, lradsw, &
             ablco2, ablco2_ref, albsea, albice, albsn, emisfc, &
             alb_l, alb_s, albsfc, snowc
 
-    namelist /radiation/ solc, albsea, albice, albsn, &
+    namelist /radiation/ lco2, nstrad, solc, albsea, albice, albsn, &
             rhcl1, rhcl2, qacl, wpcl, pmaxcl, &
             clsmax, clsminl, gse_s0, gse_s1, &
             albcl, albcls, epssw, epslw, emisfc, &
@@ -17,8 +18,14 @@ module phy_radiat
             ablwin, ablco2, ablwv1, ablwv2, ablcl1, ablcl2
 
 
-    ! Radiation and cloud constants
+    ! Logical flags to activate processes throughout the integration
+    ! Flag for CO2 optical thickness increase
+    logical :: lco2 = .false.
 
+    ! Period (no. of steps) for shortwave radiation
+    integer :: nstrad = 3
+
+    ! Radiation and cloud constants
     ! solc   = Solar constant (area averaged) in W/m^2
     real :: solc = 342.0
 
@@ -122,11 +129,15 @@ module phy_radiat
     ! qcloud = Equivalent specific humidity of clouds
     real, dimension(:), allocatable :: qcloud, irhtop
 
+    ! Flag for shortwave radiation routine (updated each timestep in dyn_stloop)
+    logical :: lradsw
+
     contains
         subroutine setup_radiation(fid)
             integer, intent(in) :: fid
 
             read(fid, radiation)
+            write(*, radiation)
 
             allocate(fsol(ngp))
             allocate(ozone(ngp))

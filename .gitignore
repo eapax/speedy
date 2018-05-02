@@ -1,12 +1,12 @@
 *.swp
 *.exe
 *.nc
-input
+*.mod
+*.o
 output
-figs
 rpe
 tmp
 animations
 .rsync-filter
-experiments
+experiments.ods
 data/bc/t39/

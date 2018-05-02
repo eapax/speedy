@@ -115,8 +115,6 @@
 &physics
     ! Flag for CO2 optical thickness increase
     lco2=.false.,
-    ! Turn on SPPT?
-    sppt_on=.false.,
     ! Period (no. of steps) for shortwave radiation
     nstrad=3,
 /
@@ -310,13 +308,15 @@
 /
 
 ! mod_sppt
-&sppt_scales
+&sppt
+    ! Turn on SPPT?
+    sppt_on=.false.,
     ! Number of correlation scales for SPPT perturbations
     nscales=3,
 /
 
 ! Remaining arrays must be allocated first
-&sppt
+&sppt_parameters
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
     mu=1, 1, 1, 1, 1, 1, 1, 1,

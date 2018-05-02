@@ -6,10 +6,11 @@ subroutine stloop(istep)
     !   Input/output : istep = time step index
     !   Updated common block : lflag2
       
-    use mod_physics, only: lradsw, nstrad
+
     use mod_tsteps
     use mod_date, only: ihour, iday, update_time
     use mod_dynvar
+    use phy_radiat, only: lradsw, nstrad
     use mod_randfor, only: lrandf, nstrdf
 
     implicit none
