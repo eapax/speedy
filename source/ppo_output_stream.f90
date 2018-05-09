@@ -283,7 +283,7 @@ module ppo_output_stream
 
         subroutine write_grid(stream)
             type(output_stream), intent(inout) :: stream
-            real :: output(ngp, kx)
+            type(rpe_var) :: output(ngp, kx)
             real(4) :: output_sp(ngp, kx)
             real(4) :: output_p(ngp, np)
             integer :: n, k

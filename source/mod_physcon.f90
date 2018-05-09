@@ -47,10 +47,10 @@ module mod_physcon
     !    wvi    = weights for vertical interpolation
     !    slat   = sin(lat)
     !    clat   = cos(lat)
-    type(rpe_complex_var), dimension(:), allocatable :: &
+    type(rpe_var), dimension(:), allocatable :: &
             sig, sigl, dsig, pout, grdsig, grdscp
-    type(rpe_complex_var), allocatable :: wvi(:,:), sigh(:)
-    type(rpe_complex_var), dimension(:), allocatable :: slat, clat
+    type(rpe_var), allocatable :: wvi(:,:), sigh(:)
+    type(rpe_var), dimension(:), allocatable :: slat, clat
 
     contains
         subroutine setup_physcon()

@@ -786,7 +786,7 @@ module phy_radiat
                     ftop(j)=ftop(j)+flux(j,jb)
                 end do
             end do
-        end
+        end subroutine radlw
 
         subroutine radset
             ! subroutine radset
@@ -814,5 +814,5 @@ module phy_radiat
                     fband(jtemp,jb)=fband(320,jb)
                 end do
             end do
-        end subroutine radlw
+        end subroutine radset
 end module phy_radiat

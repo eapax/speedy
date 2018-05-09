@@ -35,6 +35,7 @@ rm *
 cp ${executable} ${TMP}/imp.exe
 cp ${namelist}   ${TMP}/speedy.nml
 cp ${UT}/setup/output_requests.nml ${TMP}
+cp ${UT}/setup/precisions.nml ${TMP}
 
 # Link restart file if needed
 if [ ${3} != 0 ] ; then

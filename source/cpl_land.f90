@@ -112,12 +112,12 @@ subroutine rest_land(imode)
     integer, intent(in) :: imode
 
     ! land surface temperature at input resolution
-    real :: stl_lm_in(ix_in*il_in)
+    type(rpe_var) :: stl_lm_in(ix_in*il_in)
 
     if (imode.eq.0) then
         ! Load data at full precision
         call set_precision('Full')
-        read (3)  stl_lm_in
+        read (3)  stl_lm_in%val
         if (ix_in /= ix .or. il_in /= il) then
             call regrid(stl_lm_in, stl_lm)
         else

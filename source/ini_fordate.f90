@@ -52,7 +52,7 @@ subroutine fordate(imode)
 
     ! 2. daily-mean radiative forcing 
     ! incoming solar radiation
-    call sol_oz(tyear)
+    call sol_oz(rpe_literal(tyear))
 
     ! total surface albedo
 

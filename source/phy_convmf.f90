@@ -11,22 +11,22 @@ module phy_convmf
     namelist /convection/ psmin, trcnv, rhbl, rhil, entmax, smf
 
     ! Minimum (norm.) sfc. pressure for the occurrence of convection
-    type(rpe_var) :: psmin = 0.8
+    type(rpe_var) :: psmin
 
     ! Time of relaxation (in hours) towards reference state
-    type(rpe_var) :: trcnv = 6.0
+    type(rpe_var) :: trcnv
 
     ! Relative hum. threshold in the boundary layer
-    type(rpe_var) :: rhbl = 0.9
+    type(rpe_var) :: rhbl
 
     ! Rel. hum. threshold in intermed. layers for secondary mass flux
-    type(rpe_var) :: rhil = 0.7
+    type(rpe_var) :: rhil
 
     ! Max. entrainment as a fraction of cloud-base mass flux
-    type(rpe_var) :: entmax = 0.5
+    type(rpe_var) :: entmax
 
     ! Ratio between secondary and primary mass flux at cloud-base
-    type(rpe_var) :: smf = 0.8
+    type(rpe_var) :: smf
     
     contains
         subroutine setup_convection(fid)

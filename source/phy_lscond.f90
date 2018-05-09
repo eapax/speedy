@@ -6,21 +6,21 @@ module phy_lscond
     implicit none
 
     private
-    public lscond, setup_condensation, init_lscon
+    public lscond, setup_condensation, init_lsccon
 
     namelist /condensation/ trlsc, rhlsc, drhlsc, rhblsc
 
     ! Relaxation time (in hours) for specific humidity 
-    type(rpe_var) :: trlsc  = 4.0
+    type(rpe_var) :: trlsc
 
     ! Maximum relative humidity threshold (at sigma=1)
-    type(rpe_var) :: rhlsc  = 0.9
+    type(rpe_var) :: rhlsc
 
     ! Vertical range of relative humidity threshold
-    type(rpe_var) :: drhlsc = 0.1
+    type(rpe_var) :: drhlsc
 
     ! Relative humidity threshold for boundary layer
-    type(rpe_var) :: rhblsc = 0.95
+    type(rpe_var) :: rhblsc
     
     contains
         subroutine setup_condensation(fid)
@@ -31,12 +31,12 @@ module phy_lscond
             write(*, condensation)
         end subroutine setup_condensation
 
-        subroutine init_lsccon
+        subroutine init_lsccon()
             trlsc = trlsc
             rhlsc = rhlsc
             drhlsc = drhlsc
             rhblsc = rhblsc
-        end subroutine
+        end subroutine init_lsccon
 
         subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)

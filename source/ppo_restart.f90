@@ -79,11 +79,11 @@ subroutine restart(jday)
         mx_tr = min(mx, mx_in)
         nx_tr = min(nx, nx_in)
 
-        vor = 0.
-        div = 0.
-        T   = 0.
-        Ps  = 0.
-        tr  = 0.
+        vor = CMPLX(0., 0.)
+        div = CMPLX(0., 0.)
+        T   = CMPLX(0., 0.)
+        Ps  = CMPLX(0., 0.)
+        tr  = CMPLX(0., 0.)
 
         ! Reduce precision of input fields
         call set_precision('Initial Values')

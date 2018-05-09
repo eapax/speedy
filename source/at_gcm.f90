@@ -23,12 +23,10 @@ program agcm_main
 
     ! 2. do loop over total no. of integration days
     do jday = 1, ndays
-        !print *, 'RPE_DEFAULT_SBITS = ', RPE_DEFAULT_SBITS
-
-        ! 2.2 run atmospheric model for 1 day
+        ! 2.1 run atmospheric model for 1 day
         call agcm_1day(jday)
 
-        ! 2.1 exchange data with coupler
+        ! 2.2 exchange data with coupler
         call agcm_to_coupler(jday)
         call coupler_to_agcm(jday)
     enddo

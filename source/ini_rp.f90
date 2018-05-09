@@ -1,12 +1,11 @@
 subroutine ini_rp
-    use convection, only: init_cnvcon
-    use condensation, only: init_lsccon
-    use surface_fluxes, only: init_sflcon
-    use vertical_diffusion, only: init_vdicon
+    use phy_convmf, only: init_cnvcon
+    use phy_lscond, only: init_lsccon
+    use phy_suflux, only: init_sflcon
+    use phy_vdifsc, only: init_vdicon
     use mod_dyncon0, only: init_dyncon0
     use mod_dyncon1, only: init_dyncon1
     use mod_physcon, only: init_physcon
-    use mod_radcon, only: init_radcon
     use mod_surfcon, only: init_surfcon
     use mod_tsteps, only: init_tsteps
     
@@ -15,7 +14,6 @@ subroutine ini_rp
     call init_dyncon1
     call init_lsccon
     call init_physcon
-    call init_radcon
     call init_sflcon
     call init_surfcon
     call init_tsteps
@@ -36,13 +34,11 @@ subroutine truncate_rp
     use mod_hdifcon, only: truncate_hdifcon
     use mod_physcon, only: truncate_physcon
     use mod_physvar, only: truncate_physvar
-    use mod_radcon, only: truncate_radcon
     use mod_randfor, only: truncate_randfor
-    use mod_spectral, only: truncate_spectral
     use mod_surfcon, only: truncate_surfcon
     use mod_var_land, only: truncate_var_land
     use mod_var_sea, only: truncate_var_sea
-    use surface_fluxes, only: truncate_sflcon
+    use phy_suflux, only: truncate_sflcon
 
     call truncate_cli_land
     call truncate_cli_sea
@@ -57,9 +53,7 @@ subroutine truncate_rp
     call truncate_hdifcon
     call truncate_physcon
     call truncate_physvar
-    call truncate_radcon
     call truncate_randfor
-    call truncate_spectral
     call truncate_surfcon
     call truncate_var_land
     call truncate_var_sea

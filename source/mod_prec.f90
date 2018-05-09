@@ -44,8 +44,8 @@ module mod_prec
             ! Load values for precision in different parts of the model from
             ! a text file. This way I don't need to recompile the model every
             ! time I want to run with a different precision.
-            open(99, file='namelist.txt')
-            read(99,precisions)
+            open(99, file='precisions.nml')
+            read(99, precisions)
             close(99)
 
             call set_precision('Default')

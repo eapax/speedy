@@ -20,9 +20,6 @@ subroutine sea_model_init(fmask_s,rlat)
     ! Domain mask
     type(rpe_var) :: dmask(ix,il)
 
-    ! Domain flags
-    logical :: l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian            
-
     ! Heat capacity of mixed-l
     type(rpe_var) :: hcaps(il)
 

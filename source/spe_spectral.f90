@@ -323,8 +323,8 @@ subroutine grad(psi,psdx,psdy)
     integer :: n
 
     do n=1,nx
-        psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n))), &
-                           gradx*REAL(REAL (psi(:,n))))
+        psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n)%val)), &
+                           gradx*REAL(REAL (psi(:,n)%val)))
     end do
 
     psdy(:,1) = gradyp(:,1)*psi(:,2)
@@ -344,10 +344,10 @@ subroutine vds(ucosm,vcosm,vorm,divm)
     integer :: n
 
     do n=1,nx
-        zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n))), &
-                        gradx*REAL(REAL (ucosm(:,n))))
-        zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n))), &
-                        gradx*REAL(REAL (vcosm(:,n))))
+        zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n)%val)), &
+                        gradx*REAL(REAL (ucosm(:,n)%val)))
+        zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n)%val)), &
+                        gradx*REAL(REAL (vcosm(:,n)%val)))
     end do
 
     vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
@@ -371,8 +371,8 @@ subroutine uvspec(vorm, divm, um, vm)
 
     integer :: n
 
-    zp = CMPLX(-uvdx*REAL(AIMAG(vorm)), uvdx*REAL(REAL(vorm)))
-    zc = CMPLX(-uvdx*REAL(AIMAG(divm)), uvdx*REAL(REAL(divm)))
+    zp = CMPLX(-uvdx*REAL(AIMAG(vorm%val)), uvdx*REAL(REAL(vorm%val)))
+    zc = CMPLX(-uvdx*REAL(AIMAG(divm%val)), uvdx*REAL(REAL(divm%val)))
 
     ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
     ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)
@@ -409,7 +409,7 @@ end
 !*********************************************************************
 subroutine vdspec(ug,vg,vorm,divm,kcos)
 
-    type(rpe_complex_var), intent(in) :: ug(ix,il), vg(ix,il)
+    type(rpe_var), intent(in) :: ug(ix,il), vg(ix,il)
     type(rpe_complex_var), intent(out) :: vorm(mx,nx), divm(mx,nx)
     integer, intent(in) :: kcos
     integer :: i, j
@@ -444,6 +444,8 @@ end module spectral
 subroutine gridy(v,varm)
     use mod_atparam
     use spectral, only: cpol, nsh2
+    use rp_emulator
+    use mod_prec
 
     implicit none
 

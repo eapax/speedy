@@ -1,5 +1,8 @@
 module ppo_plevs
 
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
     private
@@ -17,17 +20,17 @@ module ppo_plevs
             use spectral, only: grid
 
             integer, intent(in) :: varid
-            real, dimension(ngp, kx), intent(in) :: x_sigma
-            real(4), dimension(ngp, kx), intent(out) :: x_pressure
+            type(rpe_var), dimension(ngp, kx), intent(in) :: x_sigma
+            real(sp), dimension(ngp, kx), intent(out) :: x_pressure
 
-            real, dimension(ngp) :: x_pressure_dp
-            real, dimension(kx) :: zinp, rdzinp
+            type(rpe_var), dimension(ngp) :: x_pressure_dp
+            type(rpe_var), dimension(kx) :: zinp, rdzinp
             integer :: k0(ngp)
-            real :: w0(ngp)
-            real, dimension(ngp) :: psgr
-            real, dimension(ngp) :: zout
-            real, dimension(ngp) :: T_pressure
-            real :: textr, aref, tref, phi1, phi2
+            type(rpe_var) :: w0(ngp)
+            type(rpe_var), dimension(ngp) :: psgr
+            type(rpe_var), dimension(ngp) :: zout
+            type(rpe_var), dimension(ngp) :: T_pressure
+            type(rpe_var) :: textr, aref, tref, phi1, phi2
             integer :: k, j
 
             ! Vertical interpolation from sigma level to pressure level
@@ -107,9 +110,9 @@ module ppo_plevs
         subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
             implicit none
 
-            real, intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
+            type(rpe_var), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
             integer, intent(in) :: ngp, nlev
-            real, intent(out) :: w0(ngp)
+            type(rpe_var), intent(out) :: w0(ngp)
             integer, intent(out) :: k0(ngp)
             integer :: j, k
 
@@ -135,8 +138,8 @@ module ppo_plevs
 
             ! *** 1. Perform vertical interpolation
             integer, intent(in) :: ngp, nlev, k0(ngp)
-            real, intent(in) :: f3d(ngp,nlev), w0(ngp)
-            real, intent(out) :: f2d(ngp)
+            type(rpe_var), intent(in) :: f3d(ngp,nlev), w0(ngp)
+            type(rpe_var), intent(out) :: f2d(ngp)
             integer :: j
 
             do j=1,ngp

@@ -26,13 +26,13 @@ module mod_dyncon1
     type(rpe_var) :: g
 
     ! Vertical level parameters (initial. in indyns)
-    real, allocatable :: hsg(:), dhs(:), fsg(:), dhsr(:), fsgr(:)
+    type(rpe_var), allocatable :: hsg(:), dhs(:), fsg(:), dhsr(:), fsgr(:)
 
     ! Functions of lat. and lon. (initial. in indyns)
-    real, allocatable :: radang(:), gsin(:), gcos(:), coriol(:)
+    type(rpe_var), allocatable :: radang(:), gsin(:), gcos(:), coriol(:)
 
     ! Constants for hydrostatic eq. (initial. in indyns)
-    real, allocatable :: xgeop1(:), xgeop2(:)
+    type(rpe_var), allocatable :: xgeop1(:), xgeop2(:)
 
     contains
         subroutine setup_dyncon1()

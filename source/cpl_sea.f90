@@ -206,16 +206,16 @@ subroutine rest_sea(imode)
     type(rpe_var) :: sstfr
 
     ! Sea variables at input resolution
-    real :: sst_om_in(ix_in*il_in)
-    real :: tice_om_in(ix_in*il_in)
-    real :: sice_om_in(ix_in*il_in)
+    type(rpe_var) :: sst_om_in(ix_in*il_in)
+    type(rpe_var) :: tice_om_in(ix_in*il_in)
+    type(rpe_var) :: sice_om_in(ix_in*il_in)
 
     if (imode.eq.0) then
         ! Load data at full precision
         call set_precision('Full')
-        read (3)  sst_om_in      ! sst
-        read (3) tice_om_in      ! sea ice temperature
-        read (3) sice_om_in      ! sea ice fraction
+        read (3)  sst_om_in%val      ! sst
+        read (3) tice_om_in%val      ! sea ice temperature
+        read (3) sice_om_in%val      ! sea ice fraction
 
         ! Interpolate to new grid
         if (ix_in /= ix .or. il_in /= il) then
