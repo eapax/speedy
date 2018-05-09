@@ -1,5 +1,6 @@
 module mod_date
     use mod_tsteps, only: idelt
+    use mod_prec
 
     implicit none
 
@@ -10,7 +11,7 @@ module mod_date
 
     ! Date and time variables (updated in NEWDATE)
     integer :: iyear, imonth, iday, imont1, ihour, isecond=0
-    real :: tmonth, tyear
+    real(dp) :: tmonth, tyear
 
     ! Calendar set-up (initialized in NEWDATE)
     integer :: ndaycal(12,2), ndaytot
@@ -20,6 +21,7 @@ module mod_date
         !> Increment the time by a single timestep
         subroutine update_time()
             isecond = isecond + idelt
+
             do while(isecond >= 3600)
                 ! Transfer one hour from the seconds counter to the hour counter
                 isecond = isecond - 3600

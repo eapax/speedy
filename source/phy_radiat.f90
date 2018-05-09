@@ -1,6 +1,8 @@
 module phy_radiat
 
     use mod_atparam
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -27,81 +29,81 @@ module phy_radiat
 
     ! Radiation and cloud constants
     ! solc   = Solar constant (area averaged) in W/m^2
-    real :: solc = 342.0
+    type(rpe_var) :: solc
 
     ! albsea = Albedo over sea
-    real :: albsea = 0.07
+    type(rpe_var) :: albsea
     ! albice = Albedo over sea ice (for ice fraction = 1)
-    real :: albice = 0.60
+    type(rpe_var) :: albice
     ! albsn  = Albedo over snow (for snow cover = 1)
-    real :: albsn  = 0.60
+    type(rpe_var) :: albsn
 
     ! rhcl1  = relative hum. threshold corr. to cloud cover = 0
-    real :: rhcl1  =  0.30
+    type(rpe_var) :: rhcl1
     ! rhcl2  = relative hum. corr. to cloud cover = 1
-    real :: rhcl2  =  1.00
+    type(rpe_var) :: rhcl2
     ! qacl   = specific hum. threshold for cloud cover
-    real :: qacl   =  0.20
+    type(rpe_var) :: qacl
     ! wpcl   = cloud c. weight for the sq. root of precip. (for p = 1 mm/day)
-    real :: wpcl   =  0.2
+    type(rpe_var) :: wpcl
     ! pmaxcl = max. value of precip. (mm/day) contributing to cloud cover
-    real :: pmaxcl = 10.0
+    type(rpe_var) :: pmaxcl
 
     ! clsmax = maximum stratiform cloud cover
-    real :: clsmax  = 0.60
+    type(rpe_var) :: clsmax
     ! clsminl= minimum stratiform cloud cover over land (for RH = 1)
-    real :: clsminl = 0.15
+    type(rpe_var) :: clsminl
     ! gse_s0 = gradient of dry static energy corresp. to strat.c.c. = 0
-    real :: gse_s0  = 0.25
+    type(rpe_var) :: gse_s0
     ! gse_s1 = gradient of dry static energy corresp. to strat.c.c. = 1
-    real :: gse_s1  = 0.40
+    type(rpe_var) :: gse_s1
 
     ! albcl  = cloud albedo (for cloud cover = 1)
-    real :: albcl  =  0.43
+    type(rpe_var) :: albcl
     ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
-    real :: albcls =  0.50
+    type(rpe_var) :: albcls
 
     ! epssw  = fraction of incoming solar radiation absorbed by ozone
-    real :: epssw  =  0.020
+    type(rpe_var) :: epssw
     ! epslw  = fraction of blackbody spectrum absorbed/emitted by PBL only
-    real :: epslw  =  0.05
+    type(rpe_var) :: epslw
     ! emisfc = longwave surface emissivity
-    real :: emisfc =  0.98
+    type(rpe_var) :: emisfc
 
     !          shortwave absorptivities (for dp = 10^5 Pa) :
     ! absdry = abs. of dry air      (visible band)
-    real :: absdry =  0.033
+    type(rpe_var) :: absdry
     ! absaer = abs. of aerosols     (visible band)
-    real :: absaer =  0.033
+    type(rpe_var) :: absaer
     ! abswv1 = abs. of water vapour (visible band, for dq = 1 g/kg)
-    real :: abswv1 =  0.022
+    type(rpe_var) :: abswv1
     ! abswv2 = abs. of water vapour (near IR band, for dq = 1 g/kg)
-    real :: abswv2 = 15.000
+    type(rpe_var) :: abswv2
 
     ! abscl2 = abs. of clouds       (visible band, for dq_base = 1 g/kg)
-    real :: abscl1 =  0.015
+    type(rpe_var) :: abscl1
     ! abscl1 = abs. of clouds       (visible band, maximum value)
-    real :: abscl2 =  0.15
+    type(rpe_var) :: abscl2
 
     !          longwave absorptivities (per dp = 10^5 Pa) :
     ! ablwin = abs. of air in "window" band
-    real :: ablwin =  0.3
+    type(rpe_var) :: ablwin
     ! ablco2 = abs. of air in CO2 band
-    real :: ablco2 =  6.0
+    type(rpe_var) :: ablco2
     ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
-    real :: ablwv1 =  0.7
+    type(rpe_var) :: ablwv1
     ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
-    real :: ablwv2 = 50.0
+    type(rpe_var) :: ablwv2
 
     ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
-    real :: ablcl1 = 12.0
+    type(rpe_var) :: ablcl1
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
-    real :: ablcl2 =  0.6
-    real :: ablco2_ref
+    type(rpe_var) :: ablcl2
+    type(rpe_var) :: ablco2_ref
 
     ! Time-invariant fields (initial. in radset)
     ! fband  = energy fraction emitted in each LW band = f(T)
-    real :: fband(100:400,4)
+    type(rpe_var) :: fband(100:400,4)
 
     ! Zonally-averaged fields for SW/LW scheme (updated in sol_oz)
     ! fsol   = flux of incoming solar radiation
@@ -109,25 +111,25 @@ module phy_radiat
     ! ozupp  = flux absorbed by ozone (upper stratos.)
     ! zenit  = optical depth ratio (function of solar zenith angle)
     ! stratz = stratospheric correction for polar night
-    real, dimension(:), allocatable :: fsol, ozone, ozupp, zenit, stratz
+    type(rpe_var), dimension(:), allocatable :: fsol, ozone, ozupp, zenit, stratz
 
     ! Radiative properties of the surface (updated in fordate)
     ! alb_l  = daily-mean albedo over land (bare-land + snow)
     ! alb_s  = daily-mean albedo over sea  (open sea + sea ice)
     ! albsfc = combined surface albedo (land + sea)
     ! snowc  = effective snow cover (fraction)
-    real, dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
+    type(rpe_var), dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
 
     ! Transmissivity and blackbody rad. (updated in radsw/radlw)
     ! tau2   = transmissivity of atmospheric layers
     ! st4a   = blackbody emission from full and half atmospheric levels
     ! stratc = stratospheric correction term
     ! flux   = radiative flux in different spectral bands
-    real, allocatable :: tau2(:,:,:), st4a(:,:,:), stratc(:,:), flux(:,:)
+    type(rpe_var), allocatable :: tau2(:,:,:), st4a(:,:,:), stratc(:,:), flux(:,:)
 
     ! Radiative properties of clouds (updated in cloud)
     ! qcloud = Equivalent specific humidity of clouds
-    real, dimension(:), allocatable :: qcloud, irhtop
+    type(rpe_var), dimension(:), allocatable :: qcloud, irhtop
 
     ! Flag for shortwave radiation routine (updated each timestep in dyn_stloop)
     logical :: lradsw
@@ -169,9 +171,9 @@ module phy_radiat
             !  Updated common blocks: radzon
             use mod_physcon, only: slat, clat
 
-            real, intent(in) :: tyear
-            real :: topsr(il), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
-            real :: nzen, rzen, szen
+            type(rpe_var), intent(in) :: tyear
+            type(rpe_var) :: topsr(il), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
+            type(rpe_var) :: nzen, rzen, szen
             integer :: i, j, j0
 
             ! alpha = year phase ( 0 - 2pi, 0 = winter solstice = 22dec.h00 )
@@ -179,7 +181,7 @@ module phy_radiat
             dalpha=0.
             !DALPHA=ASIN(0.5)
 
-            coz1= 1.0*max(0.,cos(alpha-dalpha))
+            coz1= 1.0*max(0.0_dp,cos(alpha-dalpha))
             coz2= 1.8
 
             azen=1.0
@@ -192,7 +194,7 @@ module phy_radiat
             fs0=6.
 
             ! Solar radiation at the top
-            call solar(tyear,4.*solc,il,clat,slat,topsr)
+            call solar(tyear,4.0_dp*solc,il,clat,slat,topsr)
 
             do j=1,il
                 j0=1+ix*(j-1)
@@ -213,7 +215,7 @@ module phy_radiat
                 ozone(j0)=fsol(j0)*ozone(j0)*zenit(j0)
 
                 ! Polar night cooling in the stratosphere
-                stratz(j0)=max(fs0-fsol(j0),0.)
+                stratz(j0)=max(fs0-fsol(j0),0.0_dp)
 
                 do i=1,ix-1
                     fsol  (i+j0) = fsol  (j0)
@@ -223,19 +225,19 @@ module phy_radiat
                     stratz(i+j0) = stratz(j0)
                 end do
             end do
-        end
+        end subroutine sol_oz
 
         subroutine solar(tyear,csol,il,clat,slat,topsr)
             ! Average daily flux of solar radiation, from Hartmann (1994)
 
-            real, intent(in) :: tyear, csol
+            type(rpe_var), intent(in) :: tyear, csol
             integer, intent(in) :: il
-            real, dimension(il), intent(in) :: clat, slat
-            real, intent(inout) :: topsr(il)
+            type(rpe_var), dimension(il), intent(in) :: clat, slat
+            type(rpe_var), intent(inout) :: topsr(il)
 
             integer :: j
-            real :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, h0, alpha, pigr, sa1
-            real :: sa2, sa3, sdecl, sh0, tdecl
+            type(rpe_var) :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, h0, alpha, pigr, sa1
+            type(rpe_var) :: sa2, sa3, sdecl, sh0, tdecl
 
             ! 1. Compute declination angle and Earth-Sun distance factor
             pigr  = 2.*asin(1.)
@@ -261,13 +263,13 @@ module phy_radiat
             csolp=csol/pigr
 
             do j=1,il
-                ch0 = min(1.,max(-1.,-tdecl*slat(j)/clat(j)))
+                ch0 = min(1.0_dp,max(-1.0_dp,-tdecl*slat(j)/clat(j)))
                 h0  = acos(ch0)
                 sh0 = sin(h0)
 
                 topsr(j) = csolp*fdis*(h0*slat(j)*sdecl+sh0*clat(j)*cdecl)
             end do
-        end
+        end subroutine solar
 
         subroutine cloud(qa,rh,precnv,precls,iptop,gse,fmask,icltop,cloudc,clstr)
             !  subroutine cloud (qa,rh,precnv,precls,iptop,gse,fmask,
@@ -286,17 +288,17 @@ module phy_radiat
             !           clstr  = stratiform cloud cover                  (2-dim)
 
             integer :: iptop(ngp)
-            real, intent(in) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), precls(ngp), gse(ngp),&
+            type(rpe_var), intent(in) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), precls(ngp), gse(ngp),&
                 & fmask(ngp)
-            real, intent(inout) :: cloudc(ngp), clstr(ngp)
+            type(rpe_var), intent(inout) :: cloudc(ngp), clstr(ngp)
             integer, intent(inout) :: icltop(ngp)
 
             integer :: inew, j, k, nl1, nlp
-            real :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, rgse, rrcl
+            type(rpe_var) :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, rgse, rrcl
 
             nl1  = kx-1
             nlp  = kx+1
-            rrcl = 1./(rhcl2-rhcl1)
+            rrcl = rpe_literal(1.)/(rhcl2-rhcl1)
 
             ! 1.  Cloud cover, defined as the sum of:
             !     - a term proportional to the square-root of precip. rate
@@ -328,9 +330,9 @@ module phy_radiat
             end do
 
             do j=1,ngp
-                cl1 = min(1.,cloudc(j)*rrcl)
-                pr1 = min(pmaxcl,86.4*(precnv(j)+precls(j)))
-                cloudc(j) = min(1.,wpcl*sqrt(pr1)+cl1*cl1)
+                cl1 = min(1.0_dp,cloudc(j)*rrcl)
+                pr1 = min(pmaxcl,rpe_literal(86.4)*(precnv(j)+precls(j)))
+                cloudc(j) = min(1.0_dp,wpcl*sqrt(pr1)+cl1*cl1)
                 icltop(j) = min(iptop(j),icltop(j))
             end do
 
@@ -347,12 +349,12 @@ module phy_radiat
                 !        GSE_S1  = 0.40
 
                 clfact = 1.2
-                rgse   = 1./(gse_s1-gse_s0)
+                rgse   = rpe_literal(1.)/(gse_s1-gse_s0)
 
                 do j=1,ngp
                     ! Stratocumulus clouds over sea
-                    fstab    = max(0.,min(1.,rgse*(gse(j)-gse_s0)))
-                    clstr(j) = fstab*max(clsmax-clfact*cloudc(j),0.)
+                    fstab    = max(0.0_dp,min(1.0_dp,rgse*(gse(j)-gse_s0)))
+                    clstr(j) = fstab*max(clsmax-clfact*cloudc(j),0.0_dp)
                     ! Stratocumulus clouds over land
                     clstrl   = max(clstr(j),clsminl)*rh(j,kx)
                     clstr(j) = clstr(j)+fmask(j)*(clstrl-clstr(j))
@@ -360,18 +362,18 @@ module phy_radiat
             else
                 clsmax  = 0.3
                 clsminl = 0.1
-                albcor  = albcl/0.5
+                albcor  = albcl/rpe_literal(0.5)
 
                 do j=1,ngp
                     ! stratocumulus clouds over sea
-                    clstr(j) = max(clsmax-cloudc(j),0.)
+                    clstr(j) = max(clsmax-cloudc(j),0.0_dp)
                     ! rescale for consistency with previous albedo values
                     clstr(j) = clstr(j)*albcor
                     ! correction for aerosols over land
                     clstr(j) = clstr(j)+fmask(j)*(clsminl-clstr(j))
                 end do
             end if
-        end
+        end subroutine cloud
 
         subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
             !  subroutine radsw (psa,qa,icltop,cloudc,clstr,
@@ -392,17 +394,17 @@ module phy_radiat
             use mod_physcon, only: sig, dsig
 
             integer, intent(in) :: icltop(ngp)
-            real, intent(in) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp)
-            real, intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,kx)
+            type(rpe_var), intent(in) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp)
+            type(rpe_var), intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,kx)
 
             integer :: j, k, nl1
-            real :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
-            real :: fband1, fband2
+            type(rpe_var) :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
+            type(rpe_var) :: fband1, fband2
 
             nl1 = kx-1
 
             fband2 = 0.05
-            fband1 = 1.-fband2
+            fband1 = rpe_literal(1.)-fband2
 
             ! ALBMINL=0.05
             ! ALBCLS = 0.5
@@ -567,7 +569,7 @@ module phy_radiat
                 stratc(j,1)=stratz(j)*psa(j)
                 stratc(j,2)=eps1*psa(j)
             end do
-        end
+        end subroutine radsw
 
         subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
             !  subroutine radlw(imode,ta,ts,
@@ -598,13 +600,13 @@ module phy_radiat
             ! Number of radiation bands with tau < 1
             integer, parameter :: nband=4
 
-            real, intent(in) :: ta(ngp,kx), ts(ngp)
-            real, intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), fsfc(ngp)
-            real, intent(inout) :: dfabs(ngp,kx)
+            type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp)
+            type(rpe_var), intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), fsfc(ngp)
+            type(rpe_var), intent(inout) :: dfabs(ngp,kx)
 
             integer :: j, jb, k, nl1
-            real :: anis, anish, brad, corlw, corlw1, corlw2, emis, eps1, esbc, refsfc
-            real :: st3a, tsq
+            type(rpe_var) :: anis, anish, brad, corlw, corlw1, corlw2, emis, eps1, esbc, refsfc
+            type(rpe_var) :: st3a, tsq
 
             nl1=kx-1
 
@@ -626,28 +628,28 @@ module phy_radiat
 
             ! Mean temperature in stratospheric layers
             do j=1,ngp
-                st4a(j,1,2)=0.75*ta(j,1)+0.25* st4a(j,1,1)
-                st4a(j,2,2)=0.50*ta(j,2)+0.25*(st4a(j,1,1)+st4a(j,2,1))
+                st4a(j,1,2)=rpe_literal(0.75)*ta(j,1)+rpe_literal(0.25)* st4a(j,1,1)
+                st4a(j,2,2)=rpe_literal(0.50)*ta(j,2)+rpe_literal(0.25)*(st4a(j,1,1)+st4a(j,2,1))
             end do
 
             ! Temperature gradient in tropospheric layers
             anis =1.0
-            anish=0.5*anis
+            anish=rpe_literal(0.5)*anis
 
             do k=3,nl1
                 do j=1,ngp
-                    st4a(j,k,2)=anish*max(st4a(j,k,1)-st4a(j,k-1,1),0.)
+                    st4a(j,k,2)=anish*max(st4a(j,k,1)-st4a(j,k-1,1),0.0_dp)
                 end do
             end do
 
             do j=1,ngp
-                st4a(j,kx,2)=anis*max(ta(j,kx)-st4a(j,nl1,1),0.)
+                st4a(j,kx,2)=anis*max(ta(j,kx)-st4a(j,nl1,1),0.0_dp)
             end do
 
             ! Blackbody emission in the stratosphere
             do k=1,2
                 do j=1,ngp
-                    st4a(j,k,1)=sbc*st4a(j,k,2)**4
+                    st4a(j,k,1)=sbc*st4a(j,k,2)**rpe_literal(4)
                     st4a(j,k,2)=0.
                 end do
             end do
@@ -655,9 +657,9 @@ module phy_radiat
             ! Blackbody emission in the troposphere
             do k=3,kx
                 do j=1,ngp
-                    st3a=sbc*ta(j,k)**3
+                    st3a=sbc*ta(j,k)**rpe_literal(3)
                     st4a(j,k,1)=st3a*ta(j,k)
-                    st4a(j,k,2)=4.*st3a*st4a(j,k,2)
+                    st4a(j,k,2)=rpe_literal(4.)*st3a*st4a(j,k,2)
                 end do
             end do
 
@@ -793,7 +795,7 @@ module phy_radiat
             !          as a function of temperature
 
             integer :: jb, jtemp
-            real :: eps1
+            type(rpe_var) :: eps1
 
             eps1=1.-epslw
 
@@ -812,5 +814,5 @@ module phy_radiat
                     fband(jtemp,jb)=fband(320,jb)
                 end do
             end do
-        end
+        end subroutine radlw
 end module phy_radiat

@@ -1,38 +1,39 @@
 module mod_cpl_land_model
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     private
     public vland_input, vland_output
-    public setup_land, land_model_init, land_model
+    public setup_land, truncate_land_model, land_model_init, land_model
 
     namelist /land/ depth_soil, depth_lice, tdland, flandmin
 
     ! 1./heat_capacity (land)
-    real, allocatable :: rhcapl(:, :)
+    type(rpe_var), allocatable :: rhcapl(:, :)
 
     ! 1./dissip_time (land)
-    real, allocatable :: cdland(:, :)
+    type(rpe_var), allocatable :: cdland(:, :)
 
     ! Input and output land variables exchanged by coupler
     ! Land model input variables
-    real, allocatable :: vland_input(:, :)
+    type(rpe_var), allocatable :: vland_input(:, :)
 
     ! Land model output variables
-    real, allocatable :: vland_output(:, :)
+    type(rpe_var), allocatable :: vland_output(:, :)
 
     ! Soil layer depth (m)
-    real :: depth_soil = 1.0
+    type(rpe_var) :: depth_soil
 
     ! Land-ice depth (m)
-    real :: depth_lice = 5.0
+    type(rpe_var) :: depth_lice
 
     ! Dissipation time (days) for land-surface temp. anomalies
-    real :: tdland  = 40.
+    type(rpe_var) :: tdland
 
     ! Minimum fraction of land for the definition of anomalies (denominator)
-    real :: flandmin = 3.0
+    type(rpe_var) :: flandmin
 
     contains
         subroutine setup_land(fid)
@@ -49,7 +50,14 @@ module mod_cpl_land_model
             write(*, land)
         end subroutine setup_land
 
-        subroutine land_model_init(fmask_l,alb0) 
+        subroutine truncate_land_model()
+            rhcapl = rhcapl
+            cdland = cdland
+            vland_input = vland_input
+            vland_output = vland_output
+        end subroutine truncate_land_model
+
+        subroutine land_model_init(fmask_l,alb0)
             ! subroutine land_model_init (fmask_l,alb0)
             !
             ! purpose : initialization of land model
@@ -57,18 +65,18 @@ module mod_cpl_land_model
             
             ! Input variables
             ! Land mask (fraction of land)
-            real, intent(in) :: fmask_l(ix,il)            
+            type(rpe_var), intent(in) :: fmask_l(ix,il)
             ! Annual-mean albedo
-            real, intent(in) :: alb0(ix,il)            
+            type(rpe_var), intent(in) :: alb0(ix,il)
         
             ! Auxiliary variables
             integer :: i, j
-            real :: dmask(ix,il)           ! domain mask
-            real :: tdland, hcapl, hcapli, flandmin
+            type(rpe_var) :: dmask(ix,il)           ! domain mask
+            type(rpe_var) :: tdland, hcapl, hcapli, flandmin
         
             ! 1. Set heat capacities and dissipation times for 
             !    soil and ice-sheet layers
-        
+
             ! Heat capacities per m^2 (depth*heat_cap/m^3)
             hcapl  = depth_soil*2.50e+6
             hcapli = depth_lice*1.93e+6
@@ -101,20 +109,19 @@ module mod_cpl_land_model
             ! subroutine land_model
             !
             ! purpose : integrate slab land-surface model for one day
-        							
-            !real vland_input(ix,il,3), vland_output(ix,il,2)
+
         
             ! Input variables:
-            real :: stl0(ngp)    ! land temp. at initial time
-            real :: hfland(ngp)    ! land sfc. heat flux between t0 and t1
-            real :: stlcl1(ngp)    ! clim. land temp. at final time
+            type(rpe_var) :: stl0(ngp)    ! land temp. at initial time
+            type(rpe_var) :: hfland(ngp)    ! land sfc. heat flux between t0 and t1
+            type(rpe_var) :: stlcl1(ngp)    ! clim. land temp. at final time
         
             ! Output variables
-            real :: stl1(ngp)     ! land temp. at final time
+            type(rpe_var) :: stl1(ngp)     ! land temp. at final time
         
             ! Auxiliary variables
-            real :: hflux(ngp)   ! net sfc. heat flux
-            real :: tanom(ngp)   ! sfc. temperature anomaly
+            type(rpe_var) :: hflux(ngp)   ! net sfc. heat flux
+            type(rpe_var) :: tanom(ngp)   ! sfc. temperature anomaly
 
             ! Initialise variables
             stl0 = vland_input(:,1)

@@ -1,28 +1,32 @@
 module phy_vdifsc
+
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
     private
-    public vdifsc, setup_vertical_diffusion
+    public vdifsc, setup_vertical_diffusion, init_vdicon
 
     namelist /vertical_diffusion/ trshc, trvdi, trvds, redshc, rhgrad, segrad
 
     ! Relaxation time (in hours) for shallow convection
-    real :: trshc = 6.0
+    type(rpe_var) :: trshc
 
     ! Relaxation time (in hours) for moisture diffusion
-    real :: trvdi = 24.0
+    type(rpe_var) :: trvdi
 
     ! Relaxation time (in hours) for super-adiab. conditions
-    real :: trvds = 6.0
+    type(rpe_var) :: trvds
 
     ! Reduction factor of shallow conv. in areas of deep conv.
-    real :: redshc = 0.5
+    type(rpe_var) :: redshc
 
     ! Maximum gradient of relative humidity (d_RH/d_sigma)
-    real :: rhgrad = 0.5
+    type(rpe_var) :: rhgrad
 
     ! Minimum gradient of dry static energy (d_DSE/d_phi)
-    real :: segrad = 0.1
+    type(rpe_var) :: segrad
 
     contains
         subroutine setup_vertical_diffusion(fid)
@@ -32,6 +36,15 @@ module phy_vdifsc
 
             write(*, vertical_diffusion)
         end subroutine setup_vertical_diffusion
+
+        subroutine init_vdicon
+            trshc = trshc
+            trvdi = trvdi
+            trvds = trvds
+            redshc = redshc
+            rhgrad = rhgrad
+            segrad = segrad
+        end subroutine
 
         subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv, &
                 utenvd,vtenvd,ttenvd,qtenvd)
@@ -53,81 +66,83 @@ module phy_vdifsc
             !            ttenvd = temperature tendency             (3-dim)
             !            qtenvd = sp. humidity tendency [g/(kg s)] (3-dim)
             !
-        
+
             use mod_atparam
             use mod_physcon, only: cp, alhc, sig, sigh, dsig
         
-            real, dimension(ngp,kx), intent(in) :: ua, va, se, rh, qa, qsat, phi
+            type(rpe_var), dimension(ngp,kx), intent(in) :: ua, va, se, rh, qa, qsat, phi
             integer, intent(in) :: icnv(ngp)
-            real, dimension(ngp,kx), intent(inout) :: &
+            type(rpe_var), dimension(ngp,kx), intent(inout) :: &
                     utenvd, vtenvd, ttenvd, qtenvd
-        
+
             integer :: nl1, j, k, k1
-            real :: cshc, cvdi, fshcq, fshcse, fvdiq, fvdise, drh0, fvdiq2, &
-                    dmse, drh, fluxse, fluxq, fcnv, se0
-            real, dimension(kx) :: rsig, rsig1
-        
+            type(rpe_var) :: cshc, cvdi, fshcq, fshcse, fvdiq, fvdise, drh0, &
+                    fvdiq2, dmse, drh, fluxse, fluxq, fcnv, se0, one
+            type(rpe_var), dimension(kx) :: rsig, rsig1
+
+            one = 1.0
+
             ! 1. Initalization
-        
+
             ! N.B. In this routine, fluxes of dry static energy and humidity
             !      are scaled in such a way that:
             !      d_T/dt = d_F'(SE)/d_sigma,  d_Q/dt = d_F'(Q)/d_sigma
-        
+
             nl1  = kx-1
-            cshc = dsig(kx)/3600.
-            cvdi = (sigh(nl1)-sigh(1))/((nl1-1)*3600.)
-        
+            cshc = dsig(kx)/rpe_literal(3600.)
+            cvdi = (sigh(nl1)-sigh(1))/((nl1-1)*rpe_literal(3600.))
+
             fshcq  = cshc/trshc
             fshcse = cshc/(trshc*cp)
-        
+
             fvdiq  = cvdi/trvdi
             fvdise = cvdi/(trvds*cp)
-        
+
             do k=1,nl1
-                rsig(k)=1./dsig(k)
-                rsig1(k)=1./(1.-sigh(k))
+                rsig(k)=one/dsig(k)
+                rsig1(k)=one/(one-sigh(k))
             end do
-            rsig(kx)=1./dsig(kx)
-        
+            rsig(kx)=one/dsig(kx)
+
             utenvd = 0.0
             vtenvd = 0.0
             ttenvd = 0.0
             qtenvd = 0.0
-           
+
             ! 2. Shallow convection
             drh0   = rhgrad*(sig(kx)-sig(nl1))
             fvdiq2 = fvdiq*sigh(nl1)
-        
+
             do j=1,ngp
                 dmse = (se(j,kx)-se(j,nl1))+alhc*(qa(j,kx)-qsat(j,nl1))
                 drh  = rh(j,kx)-rh(j,nl1)
                 fcnv = 1.
-        
+
                 if (dmse.ge.0.0) then
                     if (icnv(j).gt.0) fcnv = redshc
-          
+
                     fluxse         = fcnv*fshcse*dmse
                     ttenvd(j,nl1)  = fluxse*rsig(nl1)
                     ttenvd(j,kx) =-fluxse*rsig(kx)
-          
+
                     if (drh.ge.0.0) then
                         fluxq          = fcnv*fshcq*qsat(j,kx)*drh
-                        qtenvd(j,nl1)  = fluxq*rsig(nl1) 
+                        qtenvd(j,nl1)  = fluxq*rsig(nl1)
                         qtenvd(j,kx) =-fluxq*rsig(kx)
                     end if
                 else if (drh.ge.drh0) then
                   fluxq          = fvdiq2*qsat(j,nl1)*drh
-                  qtenvd(j,nl1)  = fluxq*rsig(nl1) 
+                  qtenvd(j,nl1)  = fluxq*rsig(nl1)
                   qtenvd(j,kx) =-fluxq*rsig(kx)
                 end if
             end do
-        
+
             ! 3. Vertical diffusion of moisture above the PBL
             do k=3,kx-2
                 if (sigh(k).gt.0.5) then
                     drh0   = rhgrad*(sig(k+1)-sig(k))
                     fvdiq2 = fvdiq*sigh(k)
-        
+
                     do j=1,ngp
                         drh=rh(j,k+1)-rh(j,k)
                         if (drh.ge.drh0) then
@@ -138,12 +153,12 @@ module phy_vdifsc
                     end do
                 end if
             end do
-        
+
             ! 4. Damping of super-adiabatic lapse rate
             do k=1,nl1
                 do j=1,ngp
                     se0 = se(j,k+1)+segrad*(phi(j,k)-phi(j,k+1))
-          
+
                     if (se(j,k).lt.se0) then
                         fluxse      = fvdise*(se0-se(j,k))
                         ttenvd(j,k) = ttenvd(j,k)+fluxse*rsig(k)

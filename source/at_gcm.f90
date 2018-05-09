@@ -1,5 +1,7 @@
 program agcm_main
     use mod_tsteps, only: nmonrs
+    use rp_emulator
+    use mod_prec, only: setup_precision
     use mod_date, only: imonth, iday
 
     implicit none
@@ -7,6 +9,11 @@ program agcm_main
     ! program : agcm_main
 
     integer :: jday, ndays
+
+    ! Setup reduced precision emulator
+    RPE_IEEE_HALF = .false.
+    RPE_ACTIVE = .true.
+    call setup_precision()
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init
@@ -16,6 +23,8 @@ program agcm_main
 
     ! 2. do loop over total no. of integration days
     do jday = 1, ndays
+        !print *, 'RPE_DEFAULT_SBITS = ', RPE_DEFAULT_SBITS
+
         ! 2.2 run atmospheric model for 1 day
         call agcm_1day(jday)
 

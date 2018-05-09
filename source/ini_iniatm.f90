@@ -5,10 +5,12 @@ subroutine ini_atm()
 
     use mod_atparam
     use mod_dyncon1, only: grav, hsg, fsg, radang
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
-    real :: ppl(kx)            ! post-processing levels (hpa/1000)
+    real(dp) :: ppl(kx)            ! post-processing levels (hpa/1000)
     integer :: iitest = 1, k
 
     ! 1. initialize ffts
@@ -21,7 +23,7 @@ subroutine ini_atm()
 
     ! 3. set post-processing levels
     do k = 1, kx
-        ppl(k) = prlev(fsg(k))
+        ppl(k) = prlev(fsg(k)%val)
     end do
 
     ! 4. initialize constants for physical parametrization
@@ -48,14 +50,18 @@ subroutine ini_atm()
             ! function prlev (siglev)
             ! purpose : select the closest standard pressure level for post-proc.
             ! input :   siglev = sigma level
+            use mod_prec
+
             implicit none
         
-            real, intent(in) :: siglev
-            real :: plev(14) = (/ 0.925, 0.850, 0.775, 0.700, 0.600, 0.500, 0.400,&
-                & 0.300, 0.250, 0.200, 0.150, 0.100, 0.050, 0.030 /)
-            real :: prlev, dif, adif
+            real(dp), intent(in) :: siglev
+            real(dp) :: plev(14)
+            real(dp) :: prlev, dif, adif
             integer :: k
-        
+
+            plev = (/ 0.925, 0.850, 0.775, 0.700, 0.600, 0.500, 0.400,&
+                & 0.300, 0.250, 0.200, 0.150, 0.100, 0.050, 0.030 /)
+
             dif = 1.0 - siglev
         
             prlev = 1.0

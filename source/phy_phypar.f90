@@ -25,11 +25,13 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_radiat, only: lradsw, cloud, radsw, radlw
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! Physics tendencies of prognostic variables
-    real, dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
+    type(rpe_var), dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
 
     ! Index of the top layer of deep convection (diagnosed in convmf)
     integer :: iptop(ngp)
@@ -40,13 +42,13 @@ subroutine phypar(utend,vtend,ttend,qtend)
     integer :: iitest=0, j, k
 
     ! Reciprocal of surface pressure 1/psg
-    real, dimension(ngp) :: rps
+    type(rpe_var), dimension(ngp) :: rps
 
     ! gradient of dry static energy (dSE/dPHI)
-    real, dimension(ngp) :: gse
+    type(rpe_var), dimension(ngp) :: gse
 
     ! 3D Stochastic perturbation pattern
-    real :: sppt(ngp,kx)
+    type(rpe_var) :: sppt(ngp,kx)
 
     ! 1. Compute thermodynamic variables
     if (iitest.eq.1) print *, ' 1.2 in phypar'
@@ -59,7 +61,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             ! Remove negative humidity values
-	        qg1(j,k)=max(qg1(j,k),0.)
+	        qg1(j,k)=max(qg1(j,k),0.0_dp)
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
     end do
@@ -70,6 +72,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2. Precipitation 
     ! 2.1 Deep convection
+    call set_precision('Convection')
     call convmf(psg,se,qg1,qsat,iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
     do k=2,kx
@@ -85,6 +88,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2.2 Large-scale condensation
 !fk#if !defined(KNMI)
+    call set_precision('Condensation')
     call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
 !fk#else
 !fk      call lscond (psg,qg1,qsat,ts,iptop,precls,snowls,tt_lsc,qt_lsc)
@@ -109,7 +113,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
             cltop(j)=sigh(icltop(j)-1)*psg(j)
             prtop(j)=float(iptop(j))
         end do
-  
+
+        call set_precision('SW Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,ssrd,ssr,tsr,tt_rsw)
   
         do k=1,kx
@@ -120,6 +125,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end if
 
     ! 3.2 Compute downward longwave fluxes
+    call set_precision('LW Radiation')
     call radlw(-1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     ! 3.3. Compute surface fluxes and land skin temperature
@@ -129,6 +135,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
     end if
 
+    call set_precision('Surface Fluxes')
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,sst_am,&
         & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,t0,&
         & q0,.true.)
@@ -144,6 +151,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
 
+    call set_precision('LW Radiation')
     call radlw (1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     do k=1,kx
@@ -155,6 +163,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
+    call set_precision('Vertical Diffusion')
     call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 4.2 Add tendencies due to surface fluxes 
@@ -191,13 +200,18 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Add SPPT noise
     if (sppt_on) then
+        call set_precision('SPPT')
         sppt = gen_sppt()
 
         do k = 1,kx
-            utend(:,k) = (1 + sppt(:,k)*mu(k)) * utend(:,k)
-            vtend(:,k) = (1 + sppt(:,k)*mu(k)) * vtend(:,k)
-            ttend(:,k) = (1 + sppt(:,k)*mu(k)) * ttend(:,k)
-            qtend(:,k) = (1 + sppt(:,k)*mu(k)) * qtend(:,k)
+            utend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
+                    rpe_literal(mu(k))) * utend(:,k)
+            vtend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
+                    rpe_literal(mu(k))) * vtend(:,k)
+            ttend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
+                    rpe_literal(mu(k))) * ttend(:,k)
+            qtend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
+                    rpe_literal(mu(k))) * qtend(:,k)
         end do
     end if
 end
@@ -212,17 +226,18 @@ subroutine xs_rdf(tt1,tt2,ivm)
     use mod_atparam
     use mod_physcon, only: sig
     use mod_randfor, only: randfv
+    use rp_emulator
 
     implicit none
 
-    real, dimension(ix,il,kx), intent(in) :: tt1, tt2
+    type(rpe_var), dimension(ix,il,kx), intent(in) :: tt1, tt2
     integer, intent(in) :: ivm
 
-    real :: rand1(0:il+1), pigr2, rnlon, rnsig
+    type(rpe_var) :: rand1(0:il+1), pigr2, rnlon, rnsig
     integer :: i, j, k, nsmooth
 
-    rnlon = 1./float(ix)
-    pigr2 = 4.*asin(1.)
+    rnlon = rpe_literal(1.)/rpe_literal(ix)
+    pigr2 = rpe_literal(4.)*asin(rpe_literal(1.))
 
     ! 1. Compute cross sections
     do k=1,kx
@@ -252,7 +267,7 @@ subroutine xs_rdf(tt1,tt2,ivm)
           rand1(il+1) = rand1(il-1)
              
           do j=1,il
-             randfv(j,k,ivm) = 0.5*rand1(j)+0.25*(rand1(j-1)+rand1(j+1))
+             randfv(j,k,ivm) = rpe_literal(0.5)*rand1(j)+rpe_literal(0.25)*(rand1(j-1)+rand1(j+1))
           end do
         end do
     end do
@@ -266,10 +281,11 @@ subroutine setrdf(tt_rdf)
 
     use mod_atparam
     use mod_randfor
+    use rp_emulator
 
     implicit none
 
-    real :: tt_rdf(ix,il,kx)
+    type(rpe_var) :: tt_rdf(ix,il,kx)
     integer :: i, j, k
 
     do k=1,kx

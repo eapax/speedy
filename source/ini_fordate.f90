@@ -22,17 +22,19 @@ subroutine fordate(imode)
     use phy_suflux, only: sflset
     use humidity, only: q_sat
     use spectral, only: spec
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     integer, intent(in) :: imode
-    real, dimension(ix, il) :: corh, tsfc, tref, psfc
-    real, dimension(ngp) :: qsfc, qref
-    real :: gamlat(il)
+    type(rpe_var), dimension(ix, il) :: corh, tsfc, tref, psfc
+    type(rpe_var), dimension(ngp) :: qsfc, qref
+    type(rpe_var) :: gamlat(il)
 
-    real :: fland(ngp), alb_0(ngp)
+    type(rpe_var) :: fland(ngp), alb_0(ngp)
 
-    real :: del_co2, pexp
+    type(rpe_var) :: del_co2, pexp
     integer :: i, j, ij, iitest = 0, iyear_ref
 
     fland = reshape(fmask_l, (/ngp/))
@@ -55,7 +57,7 @@ subroutine fordate(imode)
     ! total surface albedo
 
     do j = 1, ngp
-        snowc(j)  = min(1., snowd_am(j)/sd2sc)
+        snowc(j)  = min(1.0_dp, snowd_am(j)/sd2sc)
         alb_l(j)  = alb_0(j) + snowc(j) * (albsn - alb_0(j))
         alb_s(j)  = albsea + sice_am(j) * (albice - albsea)
         albsfc(j) = alb_s(j) + fland(j) * (alb_l(j) - alb_s(j))
@@ -101,8 +103,8 @@ subroutine fordate(imode)
         end do
     end do
 
-    qref = q_sat(ngp, reshape(tref, (/ngp/)), (/1./), -1.)
-    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  1.)
+    qref = q_sat(ngp, reshape(tref, (/ngp/)), (/rpe_literal(1.0)/), rpe_literal(-1.0))
+    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  rpe_literal(1.0))
 
     corh = refrh1 * reshape((qref - qsfc), (/ix, il/))
 
@@ -118,13 +120,15 @@ subroutine setgam(tyear,gamlat)
     use mod_dyncon0, only: gamma
     use mod_atparam
     use mod_physcon, only: gg
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
-    real, intent(in) :: tyear
+    real(dp), intent(in) :: tyear
     integer :: j
                                             
-    real, intent(inout) :: gamlat(il)
+    type(rpe_var), intent(inout) :: gamlat(il)
 
     gamlat(1) = gamma/(1000. * gg)
     do j = 2, il
@@ -136,11 +140,12 @@ subroutine outest(iunit,fout)
     ! aux. routine outest : write one field on a test output file 
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: iunit
-    real, intent(in) :: fout(ix, il)
+    type(rpe_var), intent(in) :: fout(ix, il)
     integer :: i, j
 
     real*4 :: r4out(ix,il)

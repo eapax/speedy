@@ -23,13 +23,15 @@ subroutine impint(dt,alph)
     use mod_dyncon1, only: akap, rgas, hsg, dhs, fsg, fsgr, a, grav
     use mod_dyncon2
     use mod_hdifcon, only: dmp, dmpd, dmps, dmp1, dmp1d, dmp1s
+    use rp_emulator
+    use mod_prec
 
     implicit none
 	  								
-    real, intent(in) :: dt, alph
-    real :: dsum(kx), ya(kx,kx)
+    type(rpe_var), intent(in) :: dt, alph
+    type(rpe_var) :: dsum(kx), ya(kx,kx)
     integer :: indx(kx), m, n, k, k1, k2, l, ll, mm
-    real :: rgam, xi, xxi, xxx
+    type(rpe_var) :: rgam, xi, xxi, xxx
 
     ! 1. Constants for backwards implicit biharmonic diffusion
     do m=1,mx
@@ -45,7 +47,7 @@ subroutine impint(dt,alph)
     rgam = rgas*gamma/(1000.*grav)
 
     do k=1,kx
-        tref(k)=288.*max(0.2,fsg(k))**rgam
+        tref(k)=288.*max(0.2_dp,fsg(k))**rgam
         print *, '  tref = ', tref(k)
         tref1(k)=rgas*tref(k)
         tref2(k)=akap*tref(k)

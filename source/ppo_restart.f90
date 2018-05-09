@@ -11,12 +11,14 @@ subroutine restart(jday)
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ihour
     use downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, calc_grid_weights
+    use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
     !---------------------------------------------------------------------------
     integer, intent(in) :: jday
-    integer :: yyyy, mm, dd, hh
+    integer :: yyyy, mm, dd, hh, m, n
     character(len=14) :: filename='yyyymmddhh.rst'
 
     ! Prognostic spectral variables. Can be at different resolution.
@@ -56,7 +58,10 @@ subroutine restart(jday)
         print '(A,I4.4,A,I2.2,A,I2.2,A,I2.2)',&
                 'Read restart dataset for year/month/date/hour: ', &
                 iyear,'/',imonth,'/',iday,'/',ihour
-            
+
+        ! Load data in full precision
+        call set_precision('Full')
+
         read (3) vor_in
         read (3) div_in
         read (3) T_in
@@ -80,6 +85,8 @@ subroutine restart(jday)
         Ps  = 0.
         tr  = 0.
 
+        ! Reduce precision of input fields
+        call set_precision('Initial Values')
         vor(1:mx_tr, 1:nx_tr, :, :)    = vor_in(1:mx_tr, 1:nx_tr, :, :)
         div(1:mx_tr, 1:nx_tr, :, :)    = div_in(1:mx_tr, 1:nx_tr, :, :)
         T  (1:mx_tr, 1:nx_tr, :, :)    = T_in  (1:mx_tr, 1:nx_tr, :, :)
@@ -90,8 +97,9 @@ subroutine restart(jday)
         if (ix_in /= ix .or. il_in /= il) call calc_grid_weights()
         call rest_land(0)
         call rest_sea(0)
+        close (3)
 
-        close(3)
+        call set_precision('Initialisation')
     else
         ! 2. Write date and model variables to the restart file
         print*, 'Write restart dataset for year/month/date/hour: ', &

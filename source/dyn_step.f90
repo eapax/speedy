@@ -24,16 +24,18 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     use mod_atparam
     use mod_dynvar
     use mod_hdifcon
+    use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
     integer, intent(in) :: j1, j2
-    real, intent(in) :: dt, alph, rob, wil
-    complex, dimension(mx,nx,kx) :: vordt, divdt, tdt
-    complex :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
-    real :: eps, sdrag
+    type(rpe_var), intent(in) :: dt, alph, rob, wil
+    type(rpe_complex_var), dimension(mx,nx,kx) :: vordt, divdt, tdt
+    type(rpe_complex_var) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
+    type(rpe_var) :: eps, sdrag
 
-    complex :: ctmp(mx,nx,kx)
+    type(rpe_complex_var) :: ctmp(mx,nx,kx)
 
     integer :: iitest = 0, n, itr, k, m
 
@@ -45,6 +47,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
 
     ! 2. Computation of spectral tendencies
+    call set_precision('Spectral Dynamics')
     if (alph.eq.0.) then
         if (iitest.eq.1) print*,' call sptend'
         call sptend(divdt,tdt,psdt,j2)
@@ -58,6 +61,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     endif
 
     ! 3. Horizontal diffusion
+    call set_precision('Diffusion')
     if (iitest.eq.1) print*, ' biharmonic damping '
 
     ! 3.1 Diffusion of wind and temperature
@@ -65,21 +69,15 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call hordif(kx,div,divdt,dmpd,dmp1d)
 
     do k=1,kx
-        do m=1,mx
-            do n=1,nx 
-                ctmp(m,n,k) = t(m,n,k,1)+tcorh(m,n)*tcorv(k)
-            enddo
-        enddo
+        ctmp(:,:,k) = t(:,:,k,1) + tcorh*tcorv(k)
     enddo
 
     call hordif(kx,ctmp,tdt,dmp,dmp1)
 
     ! 3.2 Stratospheric diffusion and zonal wind damping
-    sdrag = 1./(tdrs*3600.)
-    do n = 1,nx
-        vordt(1,n,1) = vordt(1,n,1)-sdrag*vor(1,n,1,1)
-        divdt(1,n,1) = divdt(1,n,1)-sdrag*div(1,n,1,1)
-    enddo
+    sdrag = rpe_literal(1.)/(tdrs*rpe_literal(3600.))
+    vordt(1,:,1) = vordt(1,:,1)-sdrag*vor(1,:,1,1)
+    divdt(1,:,1) = divdt(1,:,1)-sdrag*div(1,:,1,1)
 
     call hordif(1,vor, vordt,dmps,dmp1s)
     call hordif(1,div, divdt,dmps,dmp1s)
@@ -90,11 +88,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! 3.4 Diffusion of tracers
     do k=1,kx
-        do m=1,mx
-            do n=1,nx
-                ctmp(m,n,k) = tr(m,n,k,1,1)+qcorh(m,n)*qcorv(k)
-            enddo
-        enddo
+        ctmp(:,:,k) = tr(:,:,k,1,1) + qcorh*qcorv(k)
     enddo
 
     call hordif(kx,ctmp,trdt,dmpd,dmp1d)
@@ -109,6 +103,14 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     if (dt.le.0.) return
 
     if (iitest.eq.1) print*,' time integration'
+    call set_precision('Tendencies')
+    psdt = psdt
+    vordt = vordt
+    divdt = divdt
+    tdt = tdt
+    trdt = trdt
+
+    call set_precision('Timestepping')
 
     if (j1.eq.1) then
         eps = 0.
@@ -117,7 +119,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     endif
 
     call timint(j1,dt,eps,wil,1,ps,psdt)
-
     call timint(j1,dt,eps,wil,kx,vor,vordt)
     call timint(j1,dt,eps,wil,kx,div,divdt)
     call timint(j1,dt,eps,wil,kx,t,  tdt)
@@ -134,19 +135,18 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
     !             using damping coefficients DMP and DMP1
 
     USE mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: nlev
-    complex, intent(in) :: field(mxnx,kx)
-    complex, intent(inout) :: fdt(mxnx,kx)
-    real, intent(in) :: dmp(mxnx), dmp1(mxnx)
+    type(rpe_complex_var), intent(in) :: field(mxnx,kx)
+    type(rpe_complex_var), intent(inout) :: fdt(mxnx,kx)
+    type(rpe_var), intent(in) :: dmp(mxnx), dmp1(mxnx)
     integer :: k, m
 
     do k=1,nlev
-        do m=1,mxnx
-            fdt(m,k)=(fdt(m,k)-dmp(m)*field(m,k))*dmp1(m)
-        enddo
+        fdt(:,k)=(fdt(:,k)-dmp*field(:,k))*dmp1
     enddo
 end
 
@@ -156,18 +156,21 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     !            using tendency fdt
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: j1, nlev
-    real, intent(in) :: dt, eps, wil
-    complex, intent(in) :: fdt(mxnx,nlev)
-    complex, intent(inout) :: field(mxnx,nlev,2)
-    real :: eps2
-    complex :: fnew(mxnx)
+    type(rpe_var), intent(in) :: dt, eps, wil
+    type(rpe_complex_var), intent(in) :: fdt(mxnx,nlev)
+    type(rpe_complex_var), intent(inout) :: field(mxnx,nlev,2)
+    type(rpe_var) :: eps2, two
+    type(rpe_complex_var) :: fnew(mxnx)
     integer :: k, m
 
-    eps2 = 1.-2.*eps
+    two = 2.0
+
+    eps2 = rpe_literal(1.)-two*eps
 
     if (ix.eq.iy*4) then
         do k=1,nlev
@@ -177,15 +180,12 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     ! The actual leap frog with the robert filter
     do k=1,nlev
-        do m=1,mxnx
-            fnew (m)     = field(m,k,1) + dt*fdt(m,k)
-            field(m,k,1) = field(m,k,j1) +  wil*eps*(field(m,k,1)&
-                & -2*field(m,k,j1)+fnew(m))
-
-            ! and here comes Williams' innovation to the filter
-            field(m,k,2) = fnew(m)-(1-wil)*eps*(field(m,k,1)&
-                &-2*field(m,k,j1)+fnew(m))
-        enddo
+        fnew = field(:,k,1) + dt*fdt(:,k)
+        field(:,k,1) = field(:,k,j1) +  wil*eps*(field(:,k,1)&
+                & -two*field(:,k,j1)+fnew)
+        ! and here comes Williams' innovation to the filter
+        field(:,k,2) = fnew - (1-wil)*eps* &
+                (field(:,k,1) - two*field(:,k,j1)+fnew)
     enddo
 end
 
@@ -200,13 +200,14 @@ subroutine cgrate(vor,div,vordt,divdt)
     
     USE mod_atparam
     use spectral, only: invlap
+    use rp_emulator
 
     implicit none
 
-    complex, dimension(mx,nx,kx), intent(in) :: vor, div
-    complex, dimension(mx,nx,kx), intent(inout) :: vordt, divdt
-    complex :: temp(mx,nx)
-    real :: cdamp, grate, grmax, rnorm
+    type(rpe_complex_var), dimension(mx,nx,kx), intent(in) :: vor, div
+    type(rpe_complex_var), dimension(mx,nx,kx), intent(inout) :: vordt, divdt
+    type(rpe_complex_var) :: temp(mx,nx)
+    type(rpe_var) :: cdamp, grate, grmax, rnorm
     integer :: k, m, n
 
     grmax=0.2/(86400.*2.)
@@ -221,8 +222,8 @@ subroutine cgrate(vor,div,vordt,divdt)
 
         do n=1,nx
             do m=2,mx
-                grate=grate-real(vordt(m,n,k)*conjg(temp(m,n)))
-                rnorm=rnorm-real(  vor(m,n,k)*conjg(temp(m,n)))
+                grate=grate-realpart(vordt(m,n,k)*conjg(temp(m,n)))
+                rnorm=rnorm-realpart(  vor(m,n,k)*conjg(temp(m,n)))
             enddo
         enddo
 
@@ -253,8 +254,8 @@ subroutine cgrate(vor,div,vordt,divdt)
 
         do n=1,nx
             do m=2,mx
-                grate=grate-real(divdt(m,n,k)*conjg(temp(m,n)))
-                rnorm=rnorm-real(  div(m,n,k)*conjg(temp(m,n)))
+                grate=grate-realpart(divdt(m,n,k)*conjg(temp(m,n)))
+                rnorm=rnorm-realpart(  div(m,n,k)*conjg(temp(m,n)))
             enddo
         enddo
 

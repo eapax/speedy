@@ -6,36 +6,41 @@ subroutine sea_model_init(fmask_s,rlat)
 
     use mod_atparam
     use mod_cplcon_sea
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! Input variables
-    real fmask_s(ix,il)            ! sea mask (fraction of sea)
-    real rlat(il)                    ! latitudes in degrees
+    type(rpe_var) :: fmask_s(ix,il)            ! sea mask (fraction of sea)
+    type(rpe_var) :: rlat(il)                    ! latitudes in degrees
 
     ! Auxiliary variables
 
     ! Domain mask
-    real :: dmask(ix,il)
+    type(rpe_var) :: dmask(ix,il)
+
+    ! Domain flags
+    logical :: l_globe, l_northe, l_natlan, l_npacif, l_tropic, l_indian            
 
     ! Heat capacity of mixed-l
-    real :: hcaps(il)
+    type(rpe_var) :: hcaps(il)
 
     ! Heat capacity of sea-ice
-    real :: hcapi(il)
+    type(rpe_var) :: hcapi(il)
 
     integer :: i, j
-    real :: coslat, crad
+    type(rpe_var) :: coslat, crad
 
     ! 1. Set geographical domain, heat capacities and dissipation times
     !    for sea (mixed layer) and sea-ice 
 
     ! Heat capacities per m^2 (depth*heat_cap/m^3)
-    crad=asin(1.)/90.
+    crad=asin(1.)/rpe_literal(90.)
     do j=1,il
         coslat   = cos(crad*rlat(j))
-        hcaps(j) = 4.18e+6*(depth_ml +(dept0_ml -depth_ml) *coslat**3)
-        hcapi(j) = 1.93e+6*(depth_ice+(dept0_ice-depth_ice)*coslat**2)
+        hcaps(j) = rpe_literal(4.18e+6)*(depth_ml +(dept0_ml -depth_ml) *coslat**rpe_literal(3))
+        hcapi(j) = rpe_literal(1.93e+6)*(depth_ice+(dept0_ice-depth_ice)*coslat**rpe_literal(2))
     end do
 
     ! 3. Compute constant parameters and fields
@@ -55,7 +60,7 @@ subroutine sea_model_init(fmask_s,rlat)
 
     ! Smooth latitudinal boundaries and blank out land points
     do j=2,il-1
-        rhcaps(:,j) = 0.25*(dmask(:,j-1)+2*dmask(:,j)+dmask(:,j+1))
+        rhcaps(:,j) = rpe_literal(0.25)*(dmask(:,j-1)+rpe_literal(2)*dmask(:,j)+dmask(:,j+1))
     end do
     dmask(:,2:il-1) = rhcaps(:,2:il-1)
 
@@ -67,12 +72,12 @@ subroutine sea_model_init(fmask_s,rlat)
 
     ! Set heat capacity and dissipation time over selected domain
     do j=1,il
-        rhcaps(:,j) = 86400./hcaps(j)
-        rhcapi(:,j) = 86400./hcapi(j)
+        rhcaps(:,j) = rpe_literal(86400.)/hcaps(j)
+        rhcapi(:,j) = rpe_literal(86400.)/hcapi(j)
     end do
 
-    cdsea = dmask*tdsst/(1.+dmask*tdsst)
-    cdice = dmask*tdice/(1.+dmask*tdice)
+    cdsea = dmask*tdsst/(rpe_literal(1.)+dmask*tdsst)
+    cdice = dmask*tdice/(rpe_literal(1.)+dmask*tdice)
 end
 
 subroutine sea_model 
@@ -83,33 +88,32 @@ subroutine sea_model
     use mod_atparam
     use mod_cplcon_sea
     use mod_cplvar_sea
+    use rp_emulator
 
     implicit none
 
-    !real vsea_input(ix,il,8), vsea_output(ix,il,3)
-
     ! Input variables:
-    real ::  sst0(ix,il)     ! SST at initial time
-    real :: tice0(ix,il)     ! sea ice temp. at initial time
-    real :: sice0(ix,il)     ! sea ice fraction at initial time
-    real :: hfsea(ix,il)     ! sea+ice  sfc. heat flux between t0 and t1
-    real :: hfice(ix,il)     ! ice-only sfc. heat flux between t0 and t1
+    type(rpe_var) ::  sst0(ix,il)     ! SST at initial time
+    type(rpe_var) :: tice0(ix,il)     ! sea ice temp. at initial time
+    type(rpe_var) :: sice0(ix,il)     ! sea ice fraction at initial time
+    type(rpe_var) :: hfsea(ix,il)     ! sea+ice  sfc. heat flux between t0 and t1
+    type(rpe_var) :: hfice(ix,il)     ! ice-only sfc. heat flux between t0 and t1
 
-    real ::  sstcl1(ix,il)   ! clim. SST at final time
-    real :: ticecl1(ix,il)   ! clim. sea ice temp. at final time
-    real :: hfseacl(ix,il)   ! clim. heat flux due to advection/upwelling
+    type(rpe_var) ::  sstcl1(ix,il)   ! clim. SST at final time
+    type(rpe_var) :: ticecl1(ix,il)   ! clim. sea ice temp. at final time
+    type(rpe_var) :: hfseacl(ix,il)   ! clim. heat flux due to advection/upwelling
 
     ! Output variables
-    real ::  sst1(ix,il)     ! SST at final time
-    real :: tice1(ix,il)     ! sea ice temp. at final time
-    real :: sice1(ix,il)     ! sea ice fraction at final time
+    type(rpe_var) ::  sst1(ix,il)     ! SST at final time
+    type(rpe_var) :: tice1(ix,il)     ! sea ice temp. at final time
+    type(rpe_var) :: sice1(ix,il)     ! sea ice fraction at final time
 
     ! Auxiliary variables
-    real :: hflux(ix,il)   ! net sfc. heat flux
-    real :: tanom(ix,il)   ! sfc. temperature anomaly
-    real :: cdis(ix,il)    ! dissipation ceofficient
+    type(rpe_var) :: hflux(ix,il)   ! net sfc. heat flux
+    type(rpe_var) :: tanom(ix,il)   ! sfc. temperature anomaly
+    type(rpe_var) :: cdis(ix,il)    ! dissipation ceofficient
 
-    real :: anom0, sstfr
+    type(rpe_var) :: anom0, sstfr
 
     sst0 = reshape(vsea_input(:,1), (/ix, il/))
     tice0 = reshape(vsea_input(:,2), (/ix, il/))
@@ -120,7 +124,7 @@ subroutine sea_model
     ticecl1 = reshape(vsea_input(:,7), (/ix, il/))
     hfseacl = reshape(vsea_input(:,8), (/ix, il/))
 
-    sstfr = 273.2-1.8       ! SST at freezing point
+    sstfr = rpe_literal(273.2)-rpe_literal(1.8)       ! SST at freezing point
 
     !beta = 1.               ! heat flux coef. at sea-ice bottom
 
@@ -170,23 +174,25 @@ subroutine sea_domain(cdomain,rlat,dmask)
     ! Purpose : Definition of ocean domains
 
     use mod_atparam
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! Input variables
 
     character(len=6), intent(in) :: cdomain           ! domain name
-    real, intent(in) :: rlat(il)               ! latitudes in degrees
+    type(rpe_var), intent(in) :: rlat(il)               ! latitudes in degrees
 
     ! Output variables (initialized by calling routine) 
-    real, intent(inout) :: dmask(ix,il)         ! domain mask
+    type(rpe_var), intent(inout) :: dmask(ix,il)         ! domain mask
 
     integer :: i, j
-    real :: arlat, dlon, rlon, rlonw, wlat
+    type(rpe_var) :: arlat, dlon, rlon, rlonw, wlat
 
     print *, 'sea domain : ', cdomain
 
-    dlon = 360./float(ix)
+    dlon = rpe_literal(360.)/rpe_literal(ix)
                                    
     if (cdomain.eq.'northe') then
         do j=1,il
@@ -239,7 +245,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
             if (arlat.lt.25.0) then
                 wlat = 1.
                 if (arlat.gt.15.0) wlat = (0.1*(25.-arlat))**2
-                rlonw = 300.-2*max(rlat(j),0.)
+                rlonw = 300.-2*max(rlat(j),0.0_dp)
                 do i=1,ix
                     rlon = (i-1)*dlon
                     if (rlon.gt.165.0.and.rlon.lt.rlonw) then

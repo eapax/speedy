@@ -1,5 +1,6 @@
 module mod_randfor
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -16,7 +17,7 @@ module mod_randfor
     logical :: lrandf
 
     ! Random diabatic forcing (initial. in INIRDF, modified by XS_RDF))
-    real, dimension(:,:,:), allocatable :: randfh, randfv
+    type(rpe_var), dimension(:,:,:), allocatable :: randfh, randfv
 
     contains
         subroutine setup_randfor(fid)
@@ -28,4 +29,9 @@ module mod_randfor
             allocate(randfh(ix,il,2))
             allocate(randfv(il,kx,2))
         end subroutine setup_randfor
+
+        subroutine truncate_randfor()
+            randfh = randfh
+            randfv = randfv
+        end subroutine truncate_randfor
 end module

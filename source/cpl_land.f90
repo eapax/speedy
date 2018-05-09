@@ -104,6 +104,8 @@ subroutine rest_land(imode)
     use mod_atparam
     use mod_var_land, only: stl_am, stl_lm
     use downscaling, only: ix_in, il_in, regrid
+    use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -113,12 +115,18 @@ subroutine rest_land(imode)
     real :: stl_lm_in(ix_in*il_in)
 
     if (imode.eq.0) then
+        ! Load data at full precision
+        call set_precision('Full')
         read (3)  stl_lm_in
         if (ix_in /= ix .or. il_in /= il) then
             call regrid(stl_lm_in, stl_lm)
         else
             stl_lm = stl_lm_in
         end if
+
+        ! Reduce precision of input fields
+        call set_precision('Inital Values')
+        stl_lm = stl_lm
     else
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model

@@ -6,6 +6,7 @@ subroutine agcm_init(ndays)
     use mod_tsteps
     use mod_date, only: newdate, ndaytot, iyear, imonth, iday, ihour
     use ppo_output_stream, only: initialise_output
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -16,6 +17,10 @@ subroutine agcm_init(ndays)
 
     ! 0. Read namelist and allocate arrays
     call ini_namelist()
+
+    ! Initialise reduced precision constants
+    call set_precision('Initialisation')
+    call ini_rp
 
     ! 1. set run initial time, duration, time-stepping and coupling options
     read (2,*) istart
@@ -39,7 +44,7 @@ subroutine agcm_init(ndays)
     ! check consistency of coupling and prescribed SST anomaly flags
     if (icsea >= 4) isstan = 1
 
-    ! 2. initialization of atmospheric model constants and variables 
+    ! 2. initialization of atmospheric model constants and variables
     call ini_atm()
 
     ! 3. initialization of coupled modules (land, sea, ice)
@@ -54,4 +59,10 @@ subroutine agcm_init(ndays)
     ! 6. Set up model output
     call initialise_output()
 
+
+    ! Truncate parameters and derived constants
+    call set_precision('Parameters')
+    call ini_rp
+    call truncate_rp
+    call set_precision('Default')
 end subroutine

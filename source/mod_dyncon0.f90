@@ -1,37 +1,40 @@
 !> @brief
 !> Constants for initialization of dynamics.
 module mod_dyncon0
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
     namelist /dynamics/ gamma, hscale, hshum, refrh1, thd, thdd, thds, tdrs
 
     ! Ref. temperature lapse rate (-dT/dz in deg/km)
-    real :: gamma = 6.0
+    type(rpe_var) :: gamma
 
     ! Ref. scale height for pressure (in km)
-    real :: hscale = 7.5
+    type(rpe_var) :: hscale
 
     ! Ref. scale height for spec. humidity (in km)
-    real :: hshum = 2.5
+    type(rpe_var) :: hshum
 
     ! Ref. relative humidity of near-surface air
-    real :: refrh1 = 0.7
+    type(rpe_var) :: refrh1
 
     ! Max damping time (in hours) for hor. diffusion (del^6) of temperature and
     ! vorticity
-    real :: thd = 2.4
+    type(rpe_var) :: thd
 
     ! Max damping time (in hours) for hor. diffusion (del^6)
     ! of divergence
-    real :: thdd = 2.4
+    type(rpe_var) :: thdd
 
     ! Max damping time (in hours) for extra diffusion (del^2)
     ! in the stratosphere 
-    real :: thds = 12.0
+    type(rpe_var) :: thds
 
     ! Damping time (in hours) for drag on zonal-mean wind
     ! in the stratosphere 
-    real :: tdrs = 24.0 * 30.0
+    type(rpe_var) :: tdrs
 
     contains
         subroutine setup_dynamics(fid)
@@ -41,4 +44,15 @@ module mod_dyncon0
 
             write(*, dynamics)
         end subroutine setup_dynamics
+
+        subroutine init_dyncon0
+            gamma = gamma
+            hscale = hscale
+            hshum = hshum
+            refrh1 = refrh1
+            thd = thd
+            thdd = thdd
+            thds = thds
+            tdrs = tdrs
+        end subroutine
 end module

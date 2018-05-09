@@ -1,5 +1,6 @@
 module mod_physvar
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
@@ -9,13 +10,13 @@ module mod_physvar
     ! qg1    = specific humidity (g/kg)
     ! phig1  = geopotential
     ! pslg1  = log. of surface pressure
-    real, dimension(:, :), allocatable :: ug1, vg1, tg1, qg1, phig1
-    real, allocatable :: pslg1(:)
+    type(rpe_var), dimension(:, :), allocatable :: ug1, vg1, tg1, qg1, phig1
+    type(rpe_var), allocatable :: pslg1(:)
 
     ! se     = dry static energy
     ! rh     = relative humidity
     ! qsat   = saturation specific humidity (g/kg)
-    real, dimension(:, :), allocatable :: se, rh, qsat
+    type(rpe_var), dimension(:, :), allocatable :: se, rh, qsat
 
     ! psg    = surface pressure
     ! ts     = surface temperature
@@ -28,7 +29,7 @@ module mod_physvar
     ! clstr  = stratiform cloud cover (fraction)
     ! cltop  = norm. pressure at cloud top
     ! prtop  = top of precipitation (level index)
-    real, dimension(:), allocatable :: psg, ts, tskin, u0, v0, t0, q0, &
+    type(rpe_var), dimension(:), allocatable :: psg, ts, tskin, u0, v0, t0, q0, &
             cloudc, clstr, cltop, prtop
 
     ! tt_cnv  =  temperature tendency due to convection
@@ -41,7 +42,7 @@ module mod_physvar
     ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
     ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
     ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
-    real, dimension(:, :), allocatable :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, &
+    type(rpe_var), dimension(:, :), allocatable :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, &
             tt_rsw, tt_rlw, ut_pbl, vt_pbl, tt_pbl, qt_pbl
 
     ! precnv = convective precipitation  [g/(m^2 s)], total
@@ -62,10 +63,10 @@ module mod_physvar
     ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
     ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
     ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
-    real, dimension(:), allocatable :: precnv, precls, snowcv, snowls, &
+    type(rpe_var), dimension(:), allocatable :: precnv, precls, snowcv, snowls, &
             cbmf, tsr, ssrd, ssr, slrd, slr, olr
-    real, dimension(:, :), allocatable :: slru, ustr, vstr, shf, evap, hfluxn
-    
+    type(rpe_var), dimension(:, :), allocatable :: slru, ustr, vstr, shf, evap, hfluxn
+
     contains
         subroutine setup_physvar()
             allocate(ug1(ngp, kx))
@@ -116,4 +117,58 @@ module mod_physvar
             allocate(evap(ngp, 3))
             allocate(hfluxn(ngp, 3))
         end subroutine setup_physvar
+
+        subroutine truncate_physvar()
+            ug1 = ug1
+            vg1 = vg1
+            tg1 = tg1
+            qg1 = qg1
+            phig1 = phig1
+            pslg1 = pslg1
+
+            se = se
+            rh = rh
+            qsat = qsat
+
+            psg = psg
+            ts = ts
+            tskin = tskin
+            u0 = u0
+            v0 = v0
+            t0 = t0
+            q0 = q0
+            cloudc = cloudc
+            clstr = clstr
+            cltop = cltop
+            prtop = prtop
+
+            tt_cnv = tt_cnv
+            qt_cnv = qt_cnv
+            tt_lsc = tt_lsc
+            qt_lsc = qt_lsc
+            tt_rsw = tt_rsw
+            tt_rlw = tt_rlw
+            ut_pbl = ut_pbl
+            vt_pbl = vt_pbl
+            tt_pbl = tt_pbl
+            qt_pbl = qt_pbl
+
+            precnv = precnv
+            precls = precls
+            snowcv = snowcv
+            snowls = snowls
+            cbmf = cbmf
+            tsr = tsr
+            ssrd = ssrd
+            ssr = ssr
+            slrd = slrd
+            slr = slr
+            olr = olr
+            slru = slru
+            ustr = ustr
+            vstr = vstr
+            shf = shf
+            evap = evap
+            hfluxn = hfluxn
+        end subroutine truncate_physvar
 end module

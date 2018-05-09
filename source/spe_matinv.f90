@@ -1,12 +1,14 @@
 subroutine ludcmp(a,n,np,indx,d)
+    use rp_emulator
+
     implicit none
 
-    real, intent(inout) :: a(np,np), d
+    type(rpe_var), intent(inout) :: a(np,np), d
     integer, intent(inout) :: indx(n)
     integer, intent(in) :: n, np
-    integer, parameter :: nmax = 100, tiny = 1.0e-20
+    integer, parameter :: nmax = 100, tiniest = 1.0e-20
     integer :: i, j, k, imax
-    real :: vv(nmax), aamax, dum, sum
+    type(rpe_var) :: vv(nmax), aamax, dum, accum
 
     d = 1.0
 
@@ -16,32 +18,32 @@ subroutine ludcmp(a,n,np,indx,d)
             if(abs(a(i,j)).gt.aamax) aamax=abs(a(i,j)) 
         end do
         if(aamax.eq.0.) stop 'singular'
-        vv(i)=1./aamax
+        vv(i)=rpe_literal(1.)/aamax
     end do
 
     do j=1,n
         if(j.gt.1) then
             do i=1,j-1
-                sum=a(i,j)
+                accum=a(i,j)
                 if(i.gt.1) then
                     do k=1,i-1
-                        sum=sum-a(i,k)*a(k,j)
+                        accum=accum-a(i,k)*a(k,j)
                     end do
-                    a(i,j)=sum
+                    a(i,j)=accum
                 end if
             end do
         end if
 
         aamax=0.
         do i=j,n
-            sum=a(i,j)
+            accum=a(i,j)
             if(j.gt.1) then
                 do k=1,j-1
-                  sum=sum-a(i,k)*a(k,j)
+                  accum=accum-a(i,k)*a(k,j)
                 end do
-                a(i,j)=sum
+                a(i,j)=accum
             end if
-            dum=vv(i)*abs(sum)
+            dum=vv(i)*abs(accum)
             if(dum.ge.aamax) then
                 imax=i
                 aamax=dum
@@ -60,7 +62,7 @@ subroutine ludcmp(a,n,np,indx,d)
 
         indx(j)=imax
         if(j.ne.n) then
-            if(a(j,j).eq.0) a(j,j)=tiny
+            if(a(j,j).eq.0) a(j,j)=tiniest
             dum=1./a(j,j)
             do i=j+1,n
                 a(i,j)=a(i,j)*dum
@@ -68,52 +70,56 @@ subroutine ludcmp(a,n,np,indx,d)
         end if
     end do
 
-    if(a(n,n).eq.0.) a(n,n)=tiny
+    if(a(n,n).eq.0.) a(n,n)=tiniest
 end
 
 subroutine lubksb(a,n,np,indx,b)
+    use rp_emulator
+
     implicit none
 
-    real, intent(inout) :: a(np,np), b(n)
+    type(rpe_var), intent(inout) :: a(np,np), b(n)
     integer, intent(in) :: n, np, indx(n)
     integer :: ii, i, ll, j
-    real :: sum
+    type(rpe_var) :: accum
 
     ii=0
 
     do i=1,n
         ll=indx(i)
-        sum=b(ll)
+        accum=b(ll)
         b(ll)=b(i)
         if(ii.ne.0) then
             do j=ii,i-1
-                sum=sum-a(i,j)*b(j)
+                accum=accum-a(i,j)*b(j)
             end do
-        else if(sum.ne.0) then
+        else if(accum.ne.0) then
             ii=i
         end if
-        b(i)=sum
+        b(i)=accum
     end do
 
     do i=n,1,-1
-        sum=b(i)
+        accum=b(i)
         if(i.lt.n) then
           do j=i+1,n
-            sum=sum-a(i,j)*b(j)
+            accum=accum-a(i,j)*b(j)
           end do
         end if
-        b(i)=sum/a(i,i)
+        b(i)=accum/a(i,i)
     end do
 end
 
 subroutine inv(a,y,indx,n)
+    use rp_emulator
+
     implicit none
 
-    real, intent(inout) :: a(n,n), y(n,n)
+    type(rpe_var), intent(inout) :: a(n,n), y(n,n)
     integer, intent(inout) :: indx(n)
     integer, intent(in) :: n
     integer :: i
-    real :: d
+    type(rpe_var) :: d
 
     y = 0.0
 

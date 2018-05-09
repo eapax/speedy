@@ -1,13 +1,14 @@
 module mod_dyncon2
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     ! Temp. profile for semi-imp. scheme (initial. in IMPINT)
-    real, dimension(:),       allocatable :: tref, tref1, tref2, tref3
-    real, dimension(:, :),    allocatable :: xa, xb, xc, xd, xe
-    real, dimension(:, :, :), allocatable :: xf, xg, xh, xj
-    real, allocatable :: dhsx(:), elz(:, :)
+    type(rpe_var), dimension(:),       allocatable :: tref, tref1, tref2, tref3
+    type(rpe_var), dimension(:, :),    allocatable :: xa, xb, xc, xd, xe
+    type(rpe_var), dimension(:, :, :), allocatable :: xf, xg, xh, xj
+    type(rpe_var), allocatable :: dhsx(:), elz(:, :)
 
     contains
         subroutine setup_dyncon2()
@@ -30,4 +31,22 @@ module mod_dyncon2
             allocate(dhsx(kx))
             allocate(elz(mx,nx))
         end subroutine setup_dyncon2
+
+        subroutine truncate_dyncon2()
+            tref = tref
+            tref1 = tref1
+            tref2 = tref2
+            tref3 = tref3
+            xa = xa
+            xb = xb
+            xc = xc
+            xd = xd
+            xe = xe
+            xf = xf
+            xg = xg
+            xh = xh
+            xj = xj
+            dhsx = dhsx
+            elz = elz
+        end subroutine truncate_dyncon2
 end module

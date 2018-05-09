@@ -15,11 +15,12 @@ subroutine indyns
     use mod_atparam
     use mod_hdifcon, only: dmp, dmpd, dmps, tcorv, qcorv
     use spectral, only: sia, cosg, parmtr
+    use rp_emulator
 
     implicit none
 
     integer :: j, k, jj, npowhd
-    real :: elap, elapn, hdifd, hdiff, hdifs, qexp, rad1, rgam, rlap, twn
+    type(rpe_var) :: elap, elapn, hdifd, hdiff, hdifs, qexp, rad1, rgam, rlap, twn
 
     ! 1. Definition of constants
     if (mod(nsteps,2) /= 0) stop ' Invalid no. of time steps'

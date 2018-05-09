@@ -1,71 +1,74 @@
 module phy_suflux
     use mod_atparam
     use humidity, only: shtorh, q_sat
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     private
     public setup_surface_fluxes, suflux, sflset
+    public init_sflcon, truncate_sflcon
 
     namelist /surface_fluxes/ fwind0, ftemp0, fhum0, cdl, cds, chl, chs, &
             vgust, ctday, dtheta, fstab, hdrag, fhdrag, clambda, clambsn
 
     !  Constants for surface fluxes
     ! Ratio of near-sfc wind to lowest-level wind
-    real :: fwind0 = 0.95
+    type(rpe_var) :: fwind0
 
     ! Weight for near-sfc temperature extrapolation (0-1) :
     !          1 : linear extrapolation from two lowest levels
     !          0 : constant potential temperature ( = lowest level)
-    real :: ftemp0 = 1.0
+    type(rpe_var) :: ftemp0
 
     ! Weight for near-sfc specific humidity extrapolation (0-1) :
     !            1 : extrap. with constant relative hum. ( = lowest level)
     !            0 : constant specific hum. ( = lowest level)
-    real :: fhum0 = 0.0
+    type(rpe_var) :: fhum0
 
     ! Drag coefficient for momentum over land
-    real :: cdl = 2.4e-3
+    type(rpe_var) :: cdl
 
     ! Drag coefficient for momentum over sea
-    real :: cds = 1.0e-3
+    type(rpe_var) :: cds
 
     ! Heat exchange coefficient over land
-    real :: chl = 1.2e-3
+    type(rpe_var) :: chl
 
     ! Heat exchange coefficient over sea
-    real :: chs = 0.9e-3
+    type(rpe_var) :: chs
 
     ! Wind speed for sub-grid-scale gusts
-    real :: vgust = 5.0
+    type(rpe_var) :: vgust
 
     ! Daily-cycle correction (dTskin/dSSRad)
-    real :: ctday = 1.0e-2
+    type(rpe_var) :: ctday
 
     ! Potential temp. gradient for stability correction
-    real :: dtheta = 3.0
+    type(rpe_var) :: dtheta
 
     ! Amplitude of stability correction (fraction)
-    real :: fstab = 0.67
+    type(rpe_var) :: fstab
 
     ! Height scale for orographic correction
-    real :: hdrag = 2000.0
+    type(rpe_var) :: hdrag
 
     ! Amplitude of orographic correction (fraction)
-    real :: fhdrag = 0.5
+    type(rpe_var) :: fhdrag
 
     ! Heat conductivity in skin-to-root soil layer
-    real :: clambda = 7.0
+    type(rpe_var) :: clambda
 
     ! Heat conductivity in soil for snow cover = 1
-    real :: clambsn = 7.0
+    type(rpe_var) :: clambsn
 
     ! Time-invariant fields (initial. in SFLSET)
-    real, allocatable :: forog(:)
+    type(rpe_var), allocatable :: forog(:)
 
     ! Save fields from suflux
-    real, dimension(:,:), allocatable :: t1, q1
-    real, allocatable :: denvvs(:,:)
+    type(rpe_var), dimension(:,:), allocatable :: t1, q1
+    type(rpe_var), allocatable :: denvvs(:,:)
     
     contains
         subroutine setup_surface_fluxes(fid)
@@ -80,6 +83,28 @@ module phy_suflux
 
             write(*, surface_fluxes)
         end subroutine setup_surface_fluxes
+
+        subroutine init_sflcon
+            fwind0  = fwind0
+            ftemp0  = ftemp0
+            fhum0   = fhum0
+            cdl     = cdl
+            cds     = cds
+            chl     = chl
+            chs     = chs
+            vgust   = vgust
+            ctday   = ctday
+            dtheta  = dtheta
+            fstab   = fstab
+            hdrag   = hdrag
+            fhdrag  = fhdrag
+            clambda = clambda
+            clambsn = clambsn
+        end subroutine
+
+        subroutine truncate_sflcon()
+            forog = forog
+        end subroutine
 
         subroutine suflux(psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav, &
                 ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,tsfc,tskin,u0,v0,t0, &
@@ -111,7 +136,7 @@ module phy_suflux
             !           SHF    = sensible heat flux              (2-dim)
             !           EVAP   = evaporation [g/(m^2 s)]         (2-dim)
             !           SLRU   = sfc lw radiation (upward flux)  (2-dim)
-            !           HFLUXN = net heat flux into land/sea     (2-dim)           
+            !           HFLUXN = net heat flux into land/sea     (2-dim)
             !           TSFC   = surface temperature (clim.)     (2-dim)
             !           TSKIN  = skin surface temperature        (2-dim)
             !           U0     = near-surface u-wind             (2-dim)
@@ -122,57 +147,57 @@ module phy_suflux
             use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
             use phy_radiat, only: emisfc, alb_l, alb_s, snowc
         
-            real, dimension(ngp,kx), intent(in) :: ua, va, ta, qa, rh, phi
-            real, dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, &
+            type(rpe_var), dimension(ngp,kx), intent(in) :: ua, va, ta, qa, rh, phi
+            type(rpe_var), dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, &
                     swav, ssrd, slrd
-        
-            real, dimension(ngp,3), intent(inout) :: ustr, vstr, shf, evap, slru
-            real, intent(inout) :: hfluxn(ngp,2)
-            real, dimension(ngp), intent(inout) :: tsfc, tskin, u0, v0, t0, q0
-                                            
+
+            type(rpe_var), dimension(ngp,3), intent(inout) :: ustr, vstr, shf, evap, slru
+            type(rpe_var), intent(inout) :: hfluxn(ngp,2)
+            type(rpe_var), dimension(ngp), intent(inout) :: tsfc, tskin, u0, v0, t0, q0
+
             integer :: j, j0, jlat, ks, nl1
 
-            real, dimension(ngp,2) :: t2, qsat0
+            type(rpe_var), dimension(ngp,2) :: t2, qsat0
 
-            real :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, &
+            type(rpe_var) :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, &
                     chlcp, chscp, dhfdt, dlambda, dt1, dthl, dths, esbc, &
                     esbc4, ghum0, gtemp0, prd, rcp, rdphi0, rdth, &
                     sqclat, tsk3, vg2
-        
+
             logical lscasym, lscdrag, lskineb
             logical lfluxland
-        
-            real :: psa(ngp)
-        
+
+            type(rpe_var) :: psa(ngp)
+
             lscasym = .true.   ! true : use an asymmetric stability coefficient
             lscdrag = .true.   ! true : use stability coef. to compute drag
                                !        over sea
             lskineb = .true.   ! true : redefine skin temp. from energy balance
-          
+
             !clambda = 7.       ! Heat conductivity in skin layer
             !clambsn = 7.       ! Heat conductivity for snow cover = 1
-        
+
             esbc  = emisfc*sbc
-            esbc4 = 4.*esbc
-        
-            ghum0 = 1.-fhum0
-         
+            esbc4 = rpe_literal(4.)*esbc
+
+            ghum0 = rpe_literal(1.)-fhum0
+
             dlambda = clambsn-clambda
-        
+
             if (lfluxland)  then
                 ! 1. Extrapolation of wind, temp, hum. and density to the
                 !    surface
-        
+
                 ! 1.1 Wind components
                 u0 = fwind0 * ua(:,kx)
                 v0 = fwind0 * va(:,kx)
-        
+
                 ! 1.2 Temperature
-                gtemp0 = 1.-ftemp0
-                rcp = 1./cp
-                rdphi0 =-1./(rd*288.*sigl(kx))
+                gtemp0 = rpe_literal(1.)-ftemp0
+                rcp = rpe_literal(1.)/cp
+                rdphi0 =-rpe_literal(1.)/(rd*rpe_literal(288.)*sigl(kx))
                 nl1=kx-1
-        
+
                 do j=1,ngp
                     ! Temperature difference between lowest level and sfc
                     dt1 = wvi(kx,2)*(ta(j,kx)-ta(j,nl1))
@@ -185,7 +210,7 @@ module phy_suflux
                     t2(j,2) = ta(j,kx)+rcp*phi(j,kx)
                     t2(j,1) = t2(j,2)-rcp*phi0(j)
                 end do
-        
+
                 do j=1,ngp
                     if (ta(j,kx).gt.ta(j,nl1)) then
                         ! Use extrapolated temp. if dT/dz < 0
@@ -198,27 +223,27 @@ module phy_suflux
                     endif
                     t0(j) = t1(j,2)+fmask(j)*(t1(j,1)-t1(j,2))
                 end do
-        
+
                 ! 1.3 Spec. humidity
                 !ghum0 = 1.-fhum0
-        
+
                 !call shtorh(-1,ngp,t0,psa,1.,q0,rh(1,kx),qsat0)
-        
+
                 !do j=1,ngp
                 !    q0(j)=fhum0*q0(j)+ghum0*qa(j,kx)
                 !end do
-        
+
                 ! 1.3 Density * wind speed (including gustiness factor)
                 prd = p0/rd
                 vg2 = vgust*vgust
-        
+
                 do j=1,ngp
                     denvvs(j,0)=(prd*psa(j)/t0(j))*sqrt(u0(j)*u0(j)+&
                             v0(j)*v0(j)+vg2)
                 end do
-        
+
                 ! 2. Compute land-sfc. fluxes using prescribed skin temperature
-        
+
                 ! 2.1 Define effective skin temperature to compensate for
                 !     non-linearity of heat/moisture fluxes during the daily cycle
                 do jlat=1,il
@@ -229,26 +254,26 @@ module phy_suflux
                                 ctday*sqclat*ssrd(j)*(1.-alb_l(j))*psa(j)
                     end do
                 end do
-        
-                ! 2.2 Stability correction = f[pot.temp.(sfc)-pot.temp.(air)]  
+
+                ! 2.2 Stability correction = f[pot.temp.(sfc)-pot.temp.(air)]
                 rdth  = fstab/dtheta
                 astab = 1.
                 if (lscasym) astab = 0.5
                 ! to get smaller ds/dt in stable conditions
-        
+
                 do j=1,ngp
                     ! Potential temp. difference (land+sea average)
                     !fkdth0 = tsea(j)-t2(j,2)
                     !fkdth0 = dth0+fmask(j)*((tskin(j)-t2(j,1))-dth0)
-                    
+
                     !fkif (dth0.gt.0.0) then
                     !fk   dthl=min(dtheta,dth0)
                     !fkelse
                     !fk   dthl=max(-dtheta,astab*dth0)
                     !fkendif
-                    
+
                     !fkdenvvs(j,1)=denvvs(j,0)*(1.+dthl*rdth)
-        
+
                     if (tskin(j).gt.t2(j,1)) then
                         dthl=min(dtheta,tskin(j)-t2(j,1))
                     else
@@ -256,26 +281,26 @@ module phy_suflux
                     endif
                     denvvs(j,1)=denvvs(j,0)*(1.+dthl*rdth)
                 end do
-        
-                ! 2.3 Wind stress 
+
+                ! 2.3 Wind stress
                 do j=1,ngp
                     cdldv     =  cdl*denvvs(j,0)*forog(j)
                     ustr(j,1) = -cdldv*ua(j,kx)
                     vstr(j,1) = -cdldv*va(j,kx)
                 end do
-        
-                ! 2.4 Sensible heat flux 
+
+                ! 2.4 Sensible heat flux
                 chlcp = chl*cp
-        
+
                 do j=1,ngp
                     shf(j,1) = chlcp*denvvs(j,1)*(tskin(j)-t1(j,1))
                 end do
-        
+
                 ! 2.5 Evaporation
                 if (fhum0.gt.0.) then
-                    call shtorh(-1,ngp,t1(1,1),psa,1., &
+                    call shtorh(-1,ngp,t1(1,1),psa,rpe_literal(1.0), &
                             q1(1,1),rh(1,kx),qsat0(1,1))
-        
+
                     do j=1,ngp
                       q1(j,1) = fhum0*q1(j,1)+ghum0*qa(j,kx)
                     end do
@@ -283,26 +308,26 @@ module phy_suflux
                     q1(:,1) = qa(:,kx)
                 end if
 
-                qsat0(:, 1) = q_sat(ngp, tskin, psa, 1.)
-        
+                qsat0(:, 1) = q_sat(ngp, tskin, psa, rpe_literal(1.0))
+
                 do j=1,ngp
                     evap(j,1) = chl*denvvs(j,1) * &
-                            max(0.,swav(j)*qsat0(j,1)-q1(j,1))
+                            max(0.0_dp,swav(j)*qsat0(j,1)-q1(j,1))
                 end do
-        
+
                 ! 3. Compute land-surface energy balance;
                 !    adjust skin temperature and heat fluxes
-        
+
                 ! 3.1. Emission of lw radiation from the surface
                 !      and net heat fluxes into land surface
                 do j=1,ngp
-                    tsk3        = tskin(j)**3
+                    tsk3        = tskin(j)**rpe_literal(3)
                     dslr(j)     = esbc4*tsk3
                     slru(j,1)   = esbc *tsk3*tskin(j)
                     hfluxn(j,1) = ssrd(j)*(1.-alb_l(j))+slrd(j)-&
                         & (slru(j,1)+shf(j,1)+alhc*evap(j,1))
                 end do
-        
+
                 ! 3.2 Re-definition of skin temperature from energy balance
                 if (lskineb) then
                     ! Compute net heat flux including flux into ground
@@ -311,10 +336,10 @@ module phy_suflux
                       hfluxn(j,1) = hfluxn(j,1)-clamb(j)*(tskin(j)-tland(j))
                       dtskin(j)   = tskin(j)+1.
                     end do
-        
+
                     ! Compute d(Evap) for a 1-degree increment of Tskin
-                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, 1.)
-        
+                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, rpe_literal(1.0))
+
                     do j=1,ngp
                         if (evap(j,1).gt.0) then
                             qsat0(j,2) = swav(j)*(qsat0(j,2)-qsat0(j,1))
@@ -322,15 +347,15 @@ module phy_suflux
                             qsat0(j,2) = 0.
                         endif
                     end do
-        
-                    ! Redefine skin temperature to balance the heat budget 
+
+                    ! Redefine skin temperature to balance the heat budget
                     do j=1,ngp
                         dhfdt = clamb(j) + dslr(j) + &
                                 chl*denvvs(j,1)*(cp+alhc*qsat0(j,2))
                         dtskin(j) = hfluxn(j,1)/dhfdt
                         tskin(j)  = tskin(j)+dtskin(j)
                     end do
-        
+
                     ! Add linear corrections to heat fluxes
                     do j=1,ngp
                         shf(j,1)    = shf(j,1) +chlcp*denvvs(j,1)*dtskin(j)
@@ -341,11 +366,11 @@ module phy_suflux
                     end do
                 end if
         !      ENDIF
-        
+
                 ! 4. Compute sea surface fluxes:
                 !    Note: stability terms and wind stress are NOT re-defined
                 !          if LFLUXLAND = .false.
-           
+
                 ! 4.1 Correct near-sfc. air temperature over coastal sea points
                 !     and compute near-sfc. humidity
                 !fkdo j=1,ngp
@@ -358,12 +383,12 @@ module phy_suflux
                 !fk        endif
                 !fk    endif
                 !fkend do
-        
+
                 rdth  = fstab/dtheta
                 astab = 1.
                 if (lscasym) astab = 0.5
                 ! to get smaller dS/dT in stable conditions
-        
+
                 do j=1,ngp
                     if (tsea(j).gt.t2(j,2)) then
                        dths=min(dtheta,tsea(j)-t2(j,2))
@@ -372,50 +397,50 @@ module phy_suflux
                     end if
                     denvvs(j,2)=denvvs(j,0)*(1.+dths*rdth)
                 end do
-        
+
                 if (fhum0.gt.0.) then
-                    call shtorh(-1,ngp,t1(1,2),psa,1., &
+                    call shtorh(-1,ngp,t1(1,2),psa,rpe_literal(1.0), &
                             q1(1,2),rh(1,kx),qsat0(1,2))
-        
+
                     do j=1,ngp
                       q1(j,2) = fhum0*q1(j,2)+ghum0*qa(j,kx)
                     end do
                 else
                     q1(:,2) = qa(:,kx)
                 end if
-        
+
                 ! 4.2 Wind stress
                 !fkks = 0
                 ks=2
                 !fkif (lscdrag) ks = 1
                 if (lscdrag) ks = 2
-        
+
                 do j=1,ngp
                     cdsdv     =  cds*denvvs(j,ks)
                     ustr(j,2) = -cdsdv*ua(j,kx)
                     vstr(j,2) = -cdsdv*va(j,kx)
                 end do
-        
+
             ! End of 'land-mode' computation
             end if
-        
+
             ! Start of sea-sfc. heat fluxes computation
-            ! 4.3 Sensible heat flux 
+            ! 4.3 Sensible heat flux
             !fkks = 1
             ks=2
             chscp = chs*cp
-        
+
             do j=1,ngp
                 shf(j,2) = chscp*denvvs(j,ks)*(tsea(j)-t1(j,2))
             end do
-        
+
             ! 4.4 Evaporation
-            qsat0(:, 2) = q_sat(ngp, tsea, psa, 1.)
-        
+            qsat0(:, 2) = q_sat(ngp, tsea, psa, rpe_literal(1.0))
+
             do j=1,ngp
                 evap(j,2) = chs*denvvs(j,ks)*(qsat0(j,2)-q1(j,2))
             end do
-        
+
             ! 4.5 Emission of lw radiation from the surface
             !     and net heat fluxes into sea surface
             do j=1,ngp
@@ -423,10 +448,10 @@ module phy_suflux
                 hfluxn(j,2) = ssrd(j)*(1.-alb_s(j))+slrd(j)-&
                     & (slru(j,2)+shf(j,2)+alhc*evap(j,2))
             end do
-        
+
             ! End of sea-sfc. heat fluxes computation
-        
-            ! 3. Weighted average of surface fluxes and temperatures 
+
+            ! 3. Weighted average of surface fluxes and temperatures
             !    according to land-sea mask
             if (lfluxland)  then
                 do j=1,ngp
@@ -436,7 +461,7 @@ module phy_suflux
                   evap(j,3) = evap(j,2)+fmask(j)*(evap(j,1)-evap(j,2))
                   slru(j,3) = slru(j,2)+fmask(j)*(slru(j,1)-slru(j,2))
                 end do
-        
+
                 do j=1,ngp
                   tsfc(j)  = tsea(j)+fmask(j)*(tland(j)-tsea(j))
                   tskin(j) = tsea(j)+fmask(j)*(tskin(j)-tsea(j))
@@ -445,7 +470,7 @@ module phy_suflux
                 end do
             end if
         end
-        
+
         subroutine sflset(phi0)
             ! subroutine sflset (phi0)
             !
@@ -455,14 +480,14 @@ module phy_suflux
 
             use mod_physcon, only: gg
         
-            real, intent(in) :: phi0(ngp)
+            type(rpe_var), intent(in) :: phi0(ngp)
             integer :: j
-            real :: rhdrag
-        
+            type(rpe_var) :: rhdrag
+
             rhdrag = 1./(gg*hdrag)
-        
+
             do j=1,ngp
-                forog(j)=1.+fhdrag*(1.-exp(-max(phi0(j),0.)*rhdrag))
+                forog(j)=1.+fhdrag*(1.-exp(-max(phi0(j),0.0_dp)*rhdrag))
             end do
-        end
+        end subroutine sflset
 end module phy_suflux

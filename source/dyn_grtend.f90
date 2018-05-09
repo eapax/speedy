@@ -21,6 +21,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, uvspec, grid, spec, vdspec
+    use mod_prec, only: set_precision
+    use rp_emulator
 
     implicit none
 
@@ -35,23 +37,24 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     !                              -- Isaac
     !************
 
-    complex, dimension(mx,nx,kx), intent(inout) :: vordt, divdt, tdt
-    complex, intent(inout) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
+    type(rpe_complex_var), dimension(mx,nx,kx), intent(inout) :: vordt, divdt, tdt
+    type(rpe_complex_var), intent(inout) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
     integer, intent(in) :: j1, j2
 
-    complex :: dumc(mx,nx,3), zero
+    type(rpe_complex_var) :: dumc(mx,nx,3), zero
 
-    real, dimension(ix,il,kx) :: utend, vtend, ttend
-    real :: trtend(ix,il,kx,ntr)
+    type(rpe_var), dimension(ix,il,kx) :: utend, vtend, ttend
+    type(rpe_var) :: trtend(ix,il,kx,ntr), half
 
-    real, dimension(ix,il,kx) :: ug, vg, tg, vorg, divg, tgg, puv
-    real, dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
-    real :: trg(ix,il,kx,ntr), sigdt(ix,il,kxp)
-    real :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
+    type(rpe_var), dimension(ix,il,kx) :: ug, vg, tg, vorg, divg, tgg, puv
+    type(rpe_var), dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
+    type(rpe_var) :: trg(ix,il,kx,ntr), sigdt(ix,il,kxp)
+    type(rpe_var) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
 
     integer :: iitest = 0, k, i, itr, j
 
     zero = (0.,0.)
+    half = 0.5
 
     if (iitest.eq.1) print*,'inside GRTEND'
 
@@ -60,6 +63,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     call geop(j1)
 
     ! 1.2 Grid-point variables for physics tendencies
+    call set_precision('Spectral Transform')
     do k=1,kx
       call uvspec(vor(:,:,k, j1),div(:,:,k, j1),ug1(:,k),vg1(:,k))
     end do
@@ -93,31 +97,37 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 2. Parametrized physics tendencies
     if (iitest.eq.1) print*,'Calculating physics tendencies'
+    call set_precision('Grid Physics')
     call phypar(utend, vtend, ttend, trtend)
 
     ! 3. Dynamics tendencies
     if (iitest.eq.1) print*,'Calculating dynamics tendencies'
+    call set_precision('Grid Dynamics')
 
     umean(:,:) = 0.0
     vmean(:,:) = 0.0
     dmean(:,:) = 0.0
 
-    if (iitest.eq.1) print*,'c'
     do k=1,kx
-        umean(:,:) = umean(:,:) + ug(:,:,k) * dhs(k)
-        vmean(:,:) = vmean(:,:) + vg(:,:,k) * dhs(k)
-        dmean(:,:) = dmean(:,:) + divg(:,:,k) * dhs(k)
+        umean = umean + ug(:,:,k) * dhs(k)
+        vmean = vmean + vg(:,:,k) * dhs(k)
+        dmean = dmean + divg(:,:,k) * dhs(k)
     end do
 
     ! Compute tendency of log(surface pressure)
     if (iitest.eq.1) print*,'d'
     ! ps(1,1,j2)=zero
+    call set_precision('Spectral Transform')
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
     call grid(dumc(:,:,2),px,2)
     call grid(dumc(:,:,3),py,2)
+    call set_precision('Grid Dynamics')
 
     dumr(:,:,1) = -umean * px - vmean * py
+
+    call set_precision('Spectral Transform')
     call spec(dumr(:,:,1),psdt)
+    call set_precision('Grid Dynamics')
     psdt(1,1)=zero
 
     ! Compute "vertical" velocity
@@ -145,11 +155,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     if (iitest.eq.1) print*,'f'
 
     do k=1,kx
-        do j=1,il
-            do i=1,ix
-                tgg(i,j,k) = tg(i,j,k)-tref(k)
-            end do
-        end do
+        tgg(:,:,k) = tg(:,:,k)-tref(k)
     end do
 
     px = rgas*px
@@ -164,8 +170,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     end do
 
     do k=1,kx
-        utend(:,:,k) = utend(:, :, k) + vg(:,:,k) * vorg(:,:,k) - tgg(:,:,k)*px&
-            & - (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
+        utend(:,:,k) = utend(:,:,k) + vg(:,:,k) * vorg(:,:,k) - &
+                tgg(:,:,k)*px - (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
     end do
 
     ! Meridional wind tendency
@@ -176,14 +182,14 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     end do
 
     do k=1,kx
-        vtend(:,:,k) = vtend(:, :, k) - ug(:,:,k)*vorg(:,:,k) - tgg(:,:,k)*py&
-            & - (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
+        vtend(:,:,k) = vtend(:,:,k) - ug(:,:,k)*vorg(:,:,k) - &
+                tgg(:,:,k)*py - (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
     end do
 
     ! Temperature tendency
     do k=2,kx
-        temp(:,:,k) = sigdt(:,:,k)*(tgg(:,:,k) - tgg(:,:,k-1))&
-            & + sigm(:,:,k)*(tref(k) - tref(k-1))
+        temp(:,:,k) = sigdt(:,:,k)*(tgg(:,:,k) - tgg(:,:,k-1)) + &
+                        sigm(:,:,k)*(tref(k) - tref(k-1))
     end do
 
     do k=1,kx
@@ -204,11 +210,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     do itr=1,ntr
         do k=2,kx
-            do j=1,il
-                do i=1,ix
-                    temp(i,j,k)=sigdt(i,j,k)*(trg(i,j,k,itr)-trg(i,j,k-1,itr))
-                end do
-            end do
+            temp(:,:,k)=sigdt(:,:,k)*(trg(:,:,k,itr)-trg(:,:,k-1,itr))
         end do
 
         !spj for moisture, vertical advection is not possible between top
@@ -216,22 +218,13 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         !kuch three layers
         !if(iinewtrace.eq.1)then
         do k=2,3
-            do j=1,il
-                do i=1,ix
-                    temp(i,j,k)=0.
-                enddo
-            enddo
+            temp(:,:,k)=0.
         enddo
         !endif
 
         do k=1,kx
-            do j=1,il
-                do i=1,ix
-                    trtend(i,j,k,itr)=trtend(i, j, k, itr) + &
-                            trg(i,j,k,itr)*divg(i,j,k)-(temp(i,j,k+1)&
-                        & +temp(i,j,k))*dhsr(k)
-                end do
-            end do
+            trtend(:,:,k,itr)=trtend(:,:,k,itr) + trg(:,:,k,itr)*divg(:,:,k) - &
+                    (temp(:,:,k+1) + temp(:,:,k))*dhsr(k)
         end do
     end do
 
@@ -242,18 +235,17 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to 
         !  spectral vor and div
+        call set_precision('Spectral Transform')
         call vdspec(utend(:,:,k),vtend(:,:,k),vordt(:,:,k),divdt(:,:,k),2)
+        call set_precision('Grid Dynamics')
 
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
-        do j=1,il
-            do i=1,ix
-                dumr(i,j,1)=0.5*(ug(i,j,k)*ug(i,j,k)+vg(i,j,k)*vg(i,j,k))
-                dumr(i,j,2)=-ug(i,j,k)*tgg(i,j,k)
-                dumr(i,j,3)=-vg(i,j,k)*tgg(i,j,k)
-            end do
-        end do
+        dumr(:,:,1)=half*(ug(:,:,k)*ug(:,:,k)+vg(:,:,k)*vg(:,:,k))
+        dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)
+        dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)
 
+        call set_precision('Spectral Transform')
         !  divergence tendency
         call spec(dumr(:,:,1),dumc(:,:,1))
         call lap (dumc(:,:,1),dumc(:,:,2))
@@ -267,21 +259,20 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
         !fk--   Change to keep dimensions 
         tdt(:,:,k) = tdt(:,:,k) + dumc(:,:,2)
+        call set_precision('Grid Dynamics')
 
         ! tracer tendency
         do itr=1,ntr
-            do j=1,il
-                do i=1,ix
-                    dumr(i,j,2)=-ug(i,j,k)*trg(i,j,k,itr)
-                    dumr(i,j,3)=-vg(i,j,k)*trg(i,j,k,itr)
-                end do
-            end do
- 
+            dumr(:,:,2)=-ug(:,:,k)*trg(:,:,k,itr)
+            dumr(:,:,3)=-vg(:,:,k)*trg(:,:,k,itr)
+
+            call set_precision('Spectral Transform')
             call spec(trtend(:,:,k,itr),dumc(:,:,2))
             call vdspec(dumr(:,:,2),dumr(:,:,3),dumc(:,:,1),trdt(:,:,k,itr),2)
 
             !fk--   Change to keep dimensions 
             trdt(:,:,k,itr) = trdt(:,:,k,itr) + dumc(:,:,2)
+            call set_precision('Grid Dynamics')
         end do
     end do
-end 
+end

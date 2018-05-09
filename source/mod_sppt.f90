@@ -9,6 +9,7 @@ module mod_sppt
     use mod_tsteps, only: nsteps
     use mod_dyncon1, only: rearth
     use spectral, only: el2, grid
+    use rp_emulator
 
     implicit none
 
@@ -38,13 +39,13 @@ module mod_sppt
     real, allocatable :: stddev(:)
 
     ! Time autocorrelation of spectral AR(1) signals
-    real, allocatable :: phi(:)
+    type(rpe_var), allocatable :: phi(:)
 
     ! Total wavenumber-wise standard deviation of spectral signals
-    real, allocatable :: sigma(:, :, :)
+    type(rpe_var), allocatable :: sigma(:, :, :)
 
     ! Perturbations in spectral space
-    complex, allocatable :: sppt_spec(:, :, :)
+    type(rpe_complex_var), allocatable :: sppt_spec(:, :, :)
 
     logical :: first = .true.
 
@@ -73,10 +74,10 @@ module mod_sppt
         !> @return sppt_grid the generated grid point pattern
         function gen_sppt() result(sppt_grid_out)
             integer :: m, n, k
-            real :: sppt_grid(ix, il), sppt_grid_total(ix, il),  &
-                    sppt_grid_out(ngp, kx)
-            complex :: eta(mx, nx, nscales)
-            real :: randreal, randimag
+            type(rpe_var) :: sppt_grid(ix, il), sppt_grid_total(ix, il), &
+                             sppt_grid_out(ngp, kx)
+            type(rpe_complex_var) :: eta(mx, nx, nscales)
+            type(rpe_var) :: randreal, randimag
 
             if (first) then
                 call time_seed()
@@ -102,16 +103,16 @@ module mod_sppt
             if (first) then
                 ! First AR(1) step
                 do n=1, nscales
-                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(-0.5)
+                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(-0.5) * &
+                            sigma(:,:,n) * eta(:,:,n)
                 end do
-                sppt_spec = sppt_spec * sigma * eta
                 first = .false.
             else
                 ! Subsequent AR(1) steps
                 do n=1, nscales
-                    sppt_spec(:,:,n) = phi(n)*sppt_spec(:,:,n)
+                    sppt_spec(:,:,n) = phi(n)*sppt_spec(:,:,n) + &
+                            sigma(:,:,n) * eta(:,:,n)
                 end do
-                sppt_spec = sppt_spec + sigma*eta
             end if
 
             ! Sum SPPT perturbations over correlation scales
@@ -136,7 +137,7 @@ module mod_sppt
         !> from the defined correlation scales and standard deviations
         subroutine init_sppt_parameters()
             integer :: n, sc
-            real :: f0(nscales)
+            type(rpe_var) :: f0(nscales)
 
             ! Calculate time autocorrelation factor as a function of timestep
             phi = exp(-(24/real(nsteps))/time_decorr)
@@ -158,14 +159,14 @@ module mod_sppt
         !> @return randn the generated random number
         function randn(mean, stdev)
             real, intent(in) :: mean, stdev
-            real :: u, v, randn
+            type(rpe_var) :: u, v, randn
             real :: rand(2)
 
             call random_number(rand)
 
             ! Box-Muller method
             u = (-2.0 * log(rand(1))) ** 0.5
-            v =   6.28318530718 * rand(2)
+            v = 6.28318530718 * rand(2)
             randn = mean + stdev * u * sin(v)
         end function
 

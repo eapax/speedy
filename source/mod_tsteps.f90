@@ -1,16 +1,19 @@
 !> @brief
 !> Length of the integration and time stepping constants.
 module mod_tsteps
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
     namelist /timestepping/ nmonts, ndaysl, nsteps, nstdia, nmonrs, iseasc,&
             rob, wil
 
     ! Integration length in months
-    integer :: nmonts = 3
+    integer :: nmonts = 0
 
     ! No. of days in the last month of int. (max=30)
-    integer :: ndaysl = 0
+    integer :: ndaysl = 1
 
     ! No. of time steps in one day
     integer :: nsteps = 36
@@ -41,19 +44,19 @@ module mod_tsteps
     
     ! Time step in seconds
     integer :: idelt
-    real :: delt
+    type(rpe_var) :: delt
     
     ! 2 * time step in seconds
-    real :: delt2
+    type(rpe_var) :: delt2
 
     ! Damping factor in Robert time filter
-    real :: rob = 0.05
+    type(rpe_var) :: rob
 
     ! Parameter of Williams filter
-    real :: wil = 0.53
+    type(rpe_var) :: wil
 
     ! Coefficient for semi-implicit computations
-    real :: alph
+    type(rpe_var) :: alph
 
     contains
         subroutine setup_timestepping(fid)
@@ -66,4 +69,11 @@ module mod_tsteps
 
             write(*, timestepping)
         end subroutine setup_timestepping
+
+        subroutine init_tsteps
+            delt = delt
+            delt2 = delt2
+            rob = rob
+            wil = wil
+        end subroutine
 end module

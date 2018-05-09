@@ -9,10 +9,14 @@ subroutine inphys(hsg,ppl,rlat)
 
     use mod_atparam
     use mod_physcon
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
-    real :: hsg(0:kx), ppl(kx), rlat(il)
+    type(rpe_var) :: hsg(0:kx)
+    real(dp) :: ppl(kx)
+    real(dp) :: rlat(il)
     integer :: j, k
     
     ! 1.2 Functions of sigma and latitude

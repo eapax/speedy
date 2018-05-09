@@ -11,14 +11,16 @@ subroutine diagns(jj,istep)
     use mod_dynvar
     use spectral, only: invlap
     use ppo_output_stream, only: update_output
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     integer, intent(in) :: jj, istep
 
     integer :: k, m, n, kk
-    complex :: temp(mx,nx)
-    real :: diag(kx,3), sqhalf
+    type(rpe_complex_var) :: temp(mx,nx)
+    real(dp) :: diag(kx,3), sqhalf
 
     call update_output(istep)
 
@@ -28,13 +30,13 @@ subroutine diagns(jj,istep)
     do k=1,kx
         diag(k,1)=0.
         diag(k,2)=0.
-        diag(k,3)=sqhalf*real(t(1,1,k,jj))
+        diag(k,3)=sqhalf*realpart(t(1,1,k,jj))
 
         call invlap(vor(1,1,k,jj),temp)
 
         do m=2,mx
             do n=1,nx
-                diag(k,1)=diag(k,1)-real(temp(m,n)*conjg(vor(m,n,k,jj)))
+                diag(k,1)=diag(k,1)-realpart(temp(m,n)*conjg(vor(m,n,k,jj)))
             end do
         end do
 
@@ -42,7 +44,7 @@ subroutine diagns(jj,istep)
 
         do m=2,mx
             do n=1,nx
-                diag(k,2)=diag(k,2)-real(temp(m,n)*conjg(div(m,n,k,jj)))
+                diag(k,2)=diag(k,2)-realpart(temp(m,n)*conjg(div(m,n,k,jj)))
             end do
         end do
     end do

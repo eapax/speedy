@@ -12,17 +12,20 @@ subroutine inbcon(grav0,radlat)
     use mod_surfcon
     use mod_cli_land
     use mod_cli_sea
- 	  							
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
-    real, intent(in) :: grav0, radlat(il)
+    type(rpe_var), intent(in) :: grav0
+    real(dp), intent(in) :: radlat(il)
 
-    real*4 :: r4inp(ix,il), dummy4
-    real   :: inp(ix,il), phis1(ix,il)
-    real   :: veg(ix,il), swl1(ix,il), swl2(ix,il)
+    real(sp) :: r4inp(ix,il), dummy4
+    type(rpe_var) :: inp(ix,il), phis1(ix,il)
+    type(rpe_var) :: veg(ix,il), swl1(ix,il), swl2(ix,il)
 
     integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec
-    real :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
+    type(rpe_var) :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
 
     ! Set threshold for land-sea mask definition
     ! (ie minimum fraction of either land or sea)
@@ -108,7 +111,7 @@ subroutine inbcon(grav0,radlat)
     call load_boundary_file(1,20,inp,4)
 
     ! Combine high and low vegetation fractions
-    veg = max(0.,veg+0.8*inp)
+    veg = max(0.0_dp,veg+0.8_dp*inp)
 
     ! Read soil moisture
     sdep1 = 70.
@@ -126,7 +129,7 @@ subroutine inbcon(grav0,radlat)
         do j = 1,il
             do i = 1,ix
                 swroot = idep2*swl2(i,j)
-                inp(i,j) = min(1.,rsw*(swl1(i,j)+veg(i,j)*max(0.,swroot-swwil2)))		
+                inp(i,j) = min(1.0_dp,rsw*(swl1(i,j)+veg(i,j)*max(0.0_dp,swroot-swwil2)))
             end do
         end do
 
@@ -243,7 +246,7 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking sfc heat fluxes'
 
-        call forchk (bmask_s,hfseacl,ngp,1,-1000.,1000.,0.)
+        call forchk (bmask_s,hfseacl,ngp,1,-1000.0_dp,1000.0_dp,0.0_dp)
     end if
 
     ! 4.2. Ocean model SST climatology:
@@ -273,7 +276,7 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking ocean model SST'
 
-        call forchk (bmask_s,sstom12,ngp,12,100.,400.,273.)
+        call forchk (bmask_s,sstom12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
     end if
 end
 
@@ -281,12 +284,15 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     ! Aux. routine forchk: Check consistency of sfc fields with land-sea mask 
     ! and set undefined values to a constant (to avoid over/underflow)
 
+    use rp_emulator
+    use mod_prec
+
     implicit none
 
-    real, intent(in) :: fmask(ngp)
-    real, intent(inout) :: field(ngp,nf)
+    type(rpe_var), intent(in) :: fmask(ngp)
+    type(rpe_var), intent(inout) :: field(ngp,nf)
     integer, intent(in) :: ngp, nf
-    real, intent(in) :: fmin, fmax, fset
+    real(dp), intent(in) :: fmin, fmax, fset
 
     integer :: jf, jgp, nfault
 
@@ -313,13 +319,14 @@ subroutine ftland (stl,phi0,phis0,fmaskl)
     use mod_dyncon0, only: gamma
     use mod_dyncon1, only: gcos, grav
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
-    real, dimension(ix, il), intent(inout) :: stl, phi0, phis0, fmaskl
-    real :: stl2(ix,il), sumt, sumw
+    type(rpe_var), dimension(ix, il), intent(inout) :: stl, phi0, phis0, fmaskl
+    type(rpe_var) :: stl2(ix,il), sumt, sumw
     integer :: nl8, nlat1, nlat2, i, idtr, itr, j, jband, jfil
-    real :: gam
+    type(rpe_var) :: gam
 
     nl8 = il/8
     gam = 0.001*gamma/grav
@@ -380,13 +387,14 @@ subroutine truncg (itr,fg1,fg2)
 
     USE mod_atparam
     use spectral, only: grid, spec
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: itr
 
-    real, dimension(ix,il), intent(inout) :: fg1 (ix,il), fg2(ix,il)
-    complex :: fsp(mx,nx), zero 
+    type(rpe_var), dimension(ix,il), intent(inout) :: fg1 (ix,il), fg2(ix,il)
+    type(rpe_complex_var) :: fsp(mx,nx), zero
     integer :: n, m, itwn
 
     print *, 'Filter applied at wavenumber ', itr
@@ -410,11 +418,13 @@ subroutine fillsf(sf,ix,il,fmis)
     ! Purpose: replace missing values in surface fields
     ! NB: it is assumed that non-missing values exist near the Equator
 
+    use rp_emulator
+
     implicit none
 
-    real :: sf(ix,il), sf2(0:ix+1)
+    type(rpe_var) :: sf(ix,il), sf2(0:ix+1)
     integer, intent(in) :: ix, il
-    real, intent(in) :: fmis
+    type(rpe_var), intent(in) :: fmis
 
     integer :: khem, j, j1, j2, j3, i, nmis
     real :: fmean
@@ -461,11 +471,12 @@ subroutine load_boundary_file(ioflag,iunit,fld,offset)
     ! if ioflag = 2 : write field on from unit=iunit
 
     use mod_atparam
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: ioflag, iunit, offset
-    real     :: fld(ix,il)
+    type(rpe_var)     :: fld(ix,il)
     real(4) :: inp(ix,il)
     integer :: i
 

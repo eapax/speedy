@@ -1,36 +1,38 @@
 module mod_surfcon
     use mod_atparam
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     namelist /surface/ swcap, swwil, sd2sc
 
+    ! Soil moisture parameters
+    ! Soil wetness at field capacity (volume fraction)
+    type(rpe_var) :: swcap
+
+    ! Soil wetness at wilting point  (volume fraction)
+    type(rpe_var) :: swwil
+
+    ! Snow depth (mm water) corresponding to snow cover = 1
+    type(rpe_var) :: sd2sc
+
     ! Land-sea masks (initial. in INBCON)
     ! Original (fractional) land-sea mask
-    real, allocatable :: fmask(:,:)
+    type(rpe_var), allocatable :: fmask(:,:)
     ! Model-defined land fraction
-    real, allocatable :: fmask1(:,:)
+    type(rpe_var), allocatable :: fmask1(:,:)
 									
     ! Time invariant surface fields 
     ! (initial. in INBCON, phis0 initial. in INVARS)
     ! Unfiltered surface geopotential
-    real, allocatable :: phi0(:,:)
+    type(rpe_var), allocatable :: phi0(:,:)
 
     ! Spectrally-filtered sfc. geopotential
-    real, allocatable :: phis0(:,:)
+    type(rpe_var), allocatable :: phis0(:,:)
 
     ! Bare-land annual-mean albedo
-    real, allocatable :: alb0(:,:)
-
-    ! Soil moisture parameters
-    ! Soil wetness at field capacity (volume fraction)
-    real :: swcap = 0.30 
-
-    ! Soil wetness at wilting point  (volume fraction)
-    real :: swwil = 0.17
-
-    ! Snow depth (mm water) corresponding to snow cover = 1
-    real :: sd2sc = 60.0
+    type(rpe_var), allocatable :: alb0(:,:)
 
     contains
         subroutine setup_surface(fid)
@@ -45,4 +47,18 @@ module mod_surfcon
 
             write(*, surface)
         end subroutine setup_surface
+
+        subroutine init_surfcon
+            swcap = swcap
+            swwil = swwil
+            sd2sc = sd2sc
+        end subroutine
+
+        subroutine truncate_surfcon()
+            fmask = fmask
+            fmask1 = fmask1
+            phi0 = phi0
+            phis0 = phis0
+            alb0 = alb0
+        end subroutine truncate_surfcon
 end module

@@ -1,29 +1,40 @@
 module mod_physcon
     use mod_atparam
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     ! Physical constants
     ! Reference pressure
-    real, parameter :: p0 = 1.e+5
+    real(dp), parameter :: p0_ = 1.e+5
 
     ! Gravity accel.
-    real, parameter :: gg = 9.81
+    real(dp), parameter :: gg_ = 9.81
 
     ! Gas constant for dry air
-    real, parameter :: rd = 287.
+    real(dp), parameter :: rd_ = 287.
 
     ! Specific heat at constant pressure
-    real, parameter :: cp = 1004.
+    real(dp), parameter :: cp_ = 1004.
 
     ! Latent heat of condensation, in J/g for consistency with spec.hum. in g/Kg
-    real, parameter :: alhc = 2501.0
+    real(dp), parameter :: alhc_ = 2501.0
 
     ! Latent heat of sublimation
-    real, parameter :: alhs = 2801.0
+    real(dp), parameter :: alhs_ = 2801.0
 
     ! Stefan-Boltzmann constant
-    real, parameter :: sbc = 5.67e-8
+    real(dp), parameter :: sbc_ = 5.67e-8
+
+    ! Reduced precision versions
+    type(rpe_var) :: p0
+    type(rpe_var) :: gg
+    type(rpe_var) :: rd
+    type(rpe_var) :: cp
+    type(rpe_var) :: alhc
+    type(rpe_var) :: alhs
+    type(rpe_var) :: sbc
 
     !   Functions of sigma and latitude (initial. in INPHYS)
     !    sig    = full-level sigma 
@@ -36,9 +47,10 @@ module mod_physcon
     !    wvi    = weights for vertical interpolation
     !    slat   = sin(lat)
     !    clat   = cos(lat)
-    real, dimension(:), allocatable :: sig, sigl, dsig, pout, grdsig, grdscp
-    real, allocatable :: wvi(:,:), sigh(:)
-    real, dimension(:), allocatable :: slat, clat
+    type(rpe_complex_var), dimension(:), allocatable :: &
+            sig, sigl, dsig, pout, grdsig, grdscp
+    type(rpe_complex_var), allocatable :: wvi(:,:), sigh(:)
+    type(rpe_complex_var), dimension(:), allocatable :: slat, clat
 
     contains
         subroutine setup_physcon()
@@ -53,4 +65,27 @@ module mod_physcon
             allocate(slat(il))
             allocate(clat(il))
         end subroutine setup_physcon
+
+        subroutine init_physcon()
+            p0 = p0_
+            gg = gg_
+            rd = rd_
+            cp = cp_
+            alhc = alhc_
+            alhs = alhs_
+            sbc = sbc_
+        end subroutine init_physcon
+
+        subroutine truncate_physcon()
+            sig = sig
+            sigl = sigl
+            dsig = dsig
+            pout = pout
+            grdsig = grdsig
+            grdscp = grdscp
+            wvi = wvi
+            sigh = sigh
+            slat = slat
+            clat = clat
+        end subroutine truncate_physcon
 end module
