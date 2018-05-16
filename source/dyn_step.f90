@@ -85,9 +85,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call hordif(1,div, divdt,dmps,dmp1s)
     call hordif(1,ctmp,tdt,  dmps,dmp1s)
 
-    ! 3.3 Check for eddy kinetic energy growth rate 
-    ! CALL CGRATE (VOR,DIV,VORDT,DIVDT)
-
     ! 3.4 Diffusion of tracers
     do k=1,kx
         do m=1,mx
@@ -101,7 +98,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     if (ntr.gt.1) then
         do itr=2,ntr
-            call hordif(kx,tr(1,1,1,1,itr),trdt(1,1,1,itr),dmp,dmp1)
+            call hordif(kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),dmp,dmp1)
         enddo
     endif
 
@@ -123,7 +120,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call timint(j1,dt,eps,wil,kx,t,  tdt)
 
     do itr=1,ntr
-        call timint(j1,dt,eps,wil,kx,tr(1,1,1,1,itr),trdt(1,1,1,itr))
+        call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
     enddo
 end   
 
@@ -138,17 +135,19 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
     implicit none
 
     integer, intent(in) :: nlev
-    complex, intent(in) :: field(mxnx,kx)
-    complex, intent(inout) :: fdt(mxnx,kx)
-    real, intent(in) :: dmp(mxnx), dmp1(mxnx)
-    integer :: k, m
+    complex, intent(in) :: field(mx,nx,kx)
+    complex, intent(inout) :: fdt(mx,nx,kx)
+    real, intent(in) :: dmp(mx,nx), dmp1(mx,nx)
+    integer :: k, n, m
 
     do k=1,nlev
-        do m=1,mxnx
-            fdt(m,k)=(fdt(m,k)-dmp(m)*field(m,k))*dmp1(m)
-        enddo
-    enddo
-end
+        do n=1,nx
+            do m=1,mx
+                fdt(m,n,k)=(fdt(m,n,k)-dmp(m,n)*field(m,n,k))*dmp1(m,n)
+            end do
+        end do
+    end do
+end subroutine hordif
 
 subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     !  Aux. subr. timint (j1,dt,eps,wil,nlev,field,fdt)
@@ -161,117 +160,33 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     integer, intent(in) :: j1, nlev
     real, intent(in) :: dt, eps, wil
-    complex, intent(in) :: fdt(mxnx,nlev)
-    complex, intent(inout) :: field(mxnx,nlev,2)
+    complex, intent(in) :: fdt(mx,nx,nlev)
+    complex, intent(inout) :: field(mx,nx,nlev,2)
     real :: eps2
-    complex :: fnew(mxnx)
-    integer :: k, m
+    complex :: fnew(mx,nx)
+    integer :: k, n, m
 
     eps2 = 1.-2.*eps
 
     if (ix.eq.iy*4) then
         do k=1,nlev
-            call trunct(fdt(1,k))
+            call trunct(fdt(:,:,k))
         enddo
     endif
 
     ! The actual leap frog with the robert filter
     do k=1,nlev
-        do m=1,mxnx
-            fnew (m)     = field(m,k,1) + dt*fdt(m,k)
-            field(m,k,1) = field(m,k,j1) +  wil*eps*(field(m,k,1)&
-                & -2*field(m,k,j1)+fnew(m))
-
-            ! and here comes Williams' innovation to the filter
-            field(m,k,2) = fnew(m)-(1-wil)*eps*(field(m,k,1)&
-                &-2*field(m,k,j1)+fnew(m))
-        enddo
-    enddo
-end
-
-subroutine cgrate(vor,div,vordt,divdt)
-    !   SUBROUTINE CGRATE (VOR,DIV,VORDT,DIVDT)
-    !
-    !   Purpose: Check growth rate of eddy kin. energy 
-    !   Input  : VOR    = vorticity
-    !            DIV    = divergence
-    !            VORDT  = time derivative of VOR
-    !            DIVDT  = time derivative of DIV
-    
-    USE mod_atparam
-    use spectral, only: invlap
-
-    implicit none
-
-    complex, dimension(mx,nx,kx), intent(in) :: vor, div
-    complex, dimension(mx,nx,kx), intent(inout) :: vordt, divdt
-    complex :: temp(mx,nx)
-    real :: cdamp, grate, grmax, rnorm
-    integer :: k, m, n
-
-    grmax=0.2/(86400.*2.)
-
-    cdamp=0.
-
-    do k=2,kx
-        grate=0.
-        rnorm=0.
-
-        call invlap (vor(:,:,k),temp)
-
         do n=1,nx
-            do m=2,mx
-                grate=grate-real(vordt(m,n,k)*conjg(temp(m,n)))
-                rnorm=rnorm-real(  vor(m,n,k)*conjg(temp(m,n)))
-            enddo
-        enddo
+            do m=1,mx
+                fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
+                field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)&
+                    &-2*field(m,n,k,j1)+fnew(m,n))
 
-        if (grate.gt.grmax*rnorm) cdamp = max(cdamp,0.8*grate/rnorm)
-        ! if (grate.gt.grmax*rnorm) cdamp =&
-        !     & max(cdamp,(grate*grate)/(grmax*rnorm*rnorm))
-    enddo
+                ! and here comes Williams' innovation to the filter
+                field(m,n,k,2) = fnew(m,n)-(1-wil)*eps*(field(m,n,k,1)&
+                    &-2*field(m,n,k,j1)+fnew(m,n))
 
-    if (cdamp.gt.0.) then
-        print *, ' rot. wind damping enabled'
-
-        do k=1,kx
-            do n=1,nx
-                do m=2,mx
-                    vordt(m,n,k)=vordt(m,n,k)-cdamp*vor(m,n,k)
-                enddo
-            enddo
-        enddo
-    endif
-
-    cdamp=0.
-
-    do k=2,kx
-        grate=0.
-        rnorm=0.
-
-        call invlap (div(:,:,k),temp)
-
-        do n=1,nx
-            do m=2,mx
-                grate=grate-real(divdt(m,n,k)*conjg(temp(m,n)))
-                rnorm=rnorm-real(  div(m,n,k)*conjg(temp(m,n)))
-            enddo
-        enddo
-
-        if (grate.gt.grmax*rnorm) cdamp = max(cdamp,0.8*grate/rnorm)
-        !if (grate.gt.grmax*rnorm) cdamp =&
-        !    & max(cdamp,(grate*grate)/(grmax*rnorm*rnorm))
-    enddo
-
-    if (cdamp.gt.0.) then
-      print *, ' div. wind damping enabled'
-
-      do k=1,kx
-        do n=1,nx
-         do m=2,mx
-           divdt(m,n,k)=divdt(m,n,k)-cdamp*div(m,n,k)
-         enddo
-        enddo
-      enddo
-    endif
-end
+            end do
+        end do
+    end do
+end subroutine timint

@@ -103,7 +103,7 @@ subroutine rest_land(imode)
     use mod_cpl_flags, only: icland
     use mod_atparam
     use mod_var_land, only: stl_am, stl_lm
-    use downscaling, only: ix_in, il_in, regrid
+    use mod_downscaling, only: ix_in, il_in, regrid
 
     implicit none
 

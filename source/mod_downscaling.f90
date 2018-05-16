@@ -1,6 +1,6 @@
 ! Functions and parameters required to start a model run from a different
 ! resolution restart file
-module downscaling
+module mod_downscaling
     use mod_atparam, only: ix, il, iy
     use spectral, only: sia, gaussl
     use interpolation, only: linear_interp_weights, linear_interp
@@ -92,4 +92,4 @@ module downscaling
             end do
 
         end subroutine regrid
-end module downscaling
+end module mod_downscaling

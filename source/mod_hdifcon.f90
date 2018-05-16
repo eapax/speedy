@@ -17,7 +17,6 @@ module mod_hdifcon
 
     contains
         subroutine setup_hdifcon()
-            ! Damping coef. for horizontal diffusion (explicit) (initial. in indyns)
             allocate(dmp(mx,nx))
             allocate(dmpd(mx,nx))
             allocate(dmps(mx,nx))

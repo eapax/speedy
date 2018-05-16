@@ -10,7 +10,8 @@ subroutine restart(jday)
     use mod_atparam
     use mod_dynvar
     use mod_date, only: iyear, imonth, iday, ihour
-    use downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, calc_grid_weights
+    use mod_downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, &
+            calc_grid_weights
 
     implicit none
 
