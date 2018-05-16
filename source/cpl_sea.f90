@@ -248,15 +248,14 @@ subroutine rest_sea(imode)
     end if
 end
 
-subroutine obs_ssta 
+subroutine obs_ssta()
     ! subroutine obs_ssta 
 
     ! Purpose : update observed SST anomaly array
 
     use mod_atparam
     use mod_cli_sea, only: sstan3, bmask_s
-    use mod_date, only: imonth
-    use mod_tsteps, only: iyear0, issty0
+    use mod_date, only: imonth, iyear0, issty0
 
     implicit none
  

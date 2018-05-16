@@ -7,7 +7,7 @@ subroutine inbcon(grav0,radlat)
     !           radlat = grid latitudes in radiants
 
     use mod_cpl_flags, only: icsea, isstan
-    use mod_tsteps, only: isst0
+    use mod_date, only: isst0
     use mod_atparam
     use mod_surfcon
     use mod_cli_land

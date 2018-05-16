@@ -1,5 +1,5 @@
-subroutine invars 
-    !   subroutine invars (istart)
+subroutine invars()
+    !   subroutine invars
     !
     !   Purpose : initialize all spectral variables starting from
     !             either a reference atmosphere or a restart file
@@ -8,13 +8,12 @@ subroutine invars
     !   Initialized common blocks : date1, dynsp1, dynsp2 (phis only),
     !                               sfcanom, sfcflux
 
-    use mod_tsteps, only: iyear0, imont0, istart
     use mod_dyncon0, only: gamma, hscale, hshum, refrh1
     use mod_atparam
     use mod_dynvar
     use mod_dyncon1, only: grav, rgas, fsg
     use mod_surfcon, only: phi0, phis0
-    use mod_date, only: iyear, imonth, iday, ihour
+    use mod_date, only: iyear0, imonth0, istart, iyear, imonth, iday, ihour
     use spectral, only: grid, spec
 
     implicit none
@@ -39,7 +38,7 @@ subroutine invars
         print*, ' starting from rest'
 
         iyear  = iyear0
-        imonth = imont0
+        imonth = imonth0
         iday = 1
         ihour = 0
 

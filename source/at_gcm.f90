@@ -1,16 +1,16 @@
 program agcm_main
     use mod_tsteps, only: nmonrs
-    use mod_date, only: imonth, iday
+    use mod_date, only: imonth, iday, ndays
 
     implicit none
 
     ! program : agcm_main
 
-    integer :: jday, ndays
+    integer :: jday
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init
-    call agcm_init(ndays)
+    call agcm_init()
 
     print *, 'integration length in days: ', ndays
 
