@@ -6,7 +6,7 @@ module phy_convmf
     implicit none
 
     private
-    public convmf, setup_convection, init_cnvcon
+    public convmf, setup_convection, truncate_convmf
 
     namelist /convection/ psmin, trcnv, rhbl, rhil, entmax, smf
 
@@ -36,16 +36,15 @@ module phy_convmf
 
             write(*, convection)
         end subroutine setup_convection
-
-
-        subroutine init_cnvcon
-            psmin = psmin
-            trcnv = trcnv
-            rhbl = rhbl
-            rhil = rhil
-            entmax = entmax
-            smf = smf
-        end subroutine
+        
+        subroutine truncate_convmf()
+            call apply_truncation(psmin)        
+            call apply_truncation(trcnv)        
+            call apply_truncation(rhbl)        
+            call apply_truncation(rhil)        
+            call apply_truncation(entmax)
+            call apply_truncation(smf)
+        end subroutine truncate_convmf
 
         subroutine convmf (psa,se,qa,qsat,itop,cbmf,precnv,dfse,dfqa)
             ! SUBROUTINE CONVMF (PSA,SE,QA,QSAT, ITOP,CBMF,PRECNV,DFSE,DFQA)

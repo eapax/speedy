@@ -119,56 +119,56 @@ module mod_physvar
         end subroutine setup_physvar
 
         subroutine truncate_physvar()
-            ug1 = ug1
-            vg1 = vg1
-            tg1 = tg1
-            qg1 = qg1
-            phig1 = phig1
-            pslg1 = pslg1
+            call apply_truncation(ug1)
+            call apply_truncation(vg1)
+            call apply_truncation(tg1)
+            call apply_truncation(qg1)
+            call apply_truncation(phig1)
+            call apply_truncation(pslg1)
 
-            se = se
-            rh = rh
-            qsat = qsat
+            call apply_truncation(se)
+            call apply_truncation(rh)
+            call apply_truncation(qsat)
 
-            psg = psg
-            ts = ts
-            tskin = tskin
-            u0 = u0
-            v0 = v0
-            t0 = t0
-            q0 = q0
-            cloudc = cloudc
-            clstr = clstr
-            cltop = cltop
-            prtop = prtop
+            call apply_truncation(psg)
+            call apply_truncation(ts)
+            call apply_truncation(tskin)
+            call apply_truncation(u0)
+            call apply_truncation(v0)
+            call apply_truncation(t0)
+            call apply_truncation(q0)
+            call apply_truncation(cloudc)
+            call apply_truncation(clstr)
+            call apply_truncation(cltop)
+            call apply_truncation(prtop)
 
-            tt_cnv = tt_cnv
-            qt_cnv = qt_cnv
-            tt_lsc = tt_lsc
-            qt_lsc = qt_lsc
-            tt_rsw = tt_rsw
-            tt_rlw = tt_rlw
-            ut_pbl = ut_pbl
-            vt_pbl = vt_pbl
-            tt_pbl = tt_pbl
-            qt_pbl = qt_pbl
+            call apply_truncation(tt_cnv)
+            call apply_truncation(qt_cnv)
+            call apply_truncation(tt_lsc)
+            call apply_truncation(qt_lsc)
+            call apply_truncation(tt_rsw)
+            call apply_truncation(tt_rlw)
+            call apply_truncation(ut_pbl)
+            call apply_truncation(vt_pbl)
+            call apply_truncation(tt_pbl)
+            call apply_truncation(qt_pbl)
 
-            precnv = precnv
-            precls = precls
-            snowcv = snowcv
-            snowls = snowls
-            cbmf = cbmf
-            tsr = tsr
-            ssrd = ssrd
-            ssr = ssr
-            slrd = slrd
-            slr = slr
-            olr = olr
-            slru = slru
-            ustr = ustr
-            vstr = vstr
-            shf = shf
-            evap = evap
-            hfluxn = hfluxn
+            call apply_truncation(precnv)
+            call apply_truncation(precls)
+            call apply_truncation(snowcv)
+            call apply_truncation(snowls)
+            call apply_truncation(cbmf)
+            call apply_truncation(tsr)
+            call apply_truncation(ssrd)
+            call apply_truncation(ssr)
+            call apply_truncation(slrd)
+            call apply_truncation(slr)
+            call apply_truncation(olr)
+            call apply_truncation(slru)
+            call apply_truncation(ustr)
+            call apply_truncation(vstr)
+            call apply_truncation(shf)
+            call apply_truncation(evap)
+            call apply_truncation(hfluxn)
         end subroutine truncate_physvar
 end module

@@ -70,10 +70,11 @@ module mod_tsteps
             write(*, timestepping)
         end subroutine setup_timestepping
 
-        subroutine init_tsteps
-            delt = delt
-            delt2 = delt2
-            rob = rob
-            wil = wil
-        end subroutine
+        subroutine truncate_tsteps()
+            call apply_truncation(delt)
+            call apply_truncation(delt2)
+            call apply_truncation(rob)
+            call apply_truncation(wil)
+            call apply_truncation(alph)
+        end subroutine truncate_tsteps
 end module

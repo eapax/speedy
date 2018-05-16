@@ -45,13 +45,12 @@ module mod_cli_sea
         end subroutine setup_cli_sea
 
         subroutine truncate_cli_sea()
-            fmask_s = fmask_s
-            bmask_s = bmask_s
-            deglat_s = deglat_s
-            sst12 = sst12
-            sice12 = sice12
-            sstan3 = sstan3
-            hfseacl = hfseacl
-            sstom12 = sstom12
+            call apply_truncation(fmask_s)
+            call apply_truncation(bmask_s)
+            call apply_truncation(deglat_s)
+            call apply_truncation(sst12)
+            call apply_truncation(sice12)
+            call apply_truncation(sstan3)
+            call apply_truncation(hfseacl)
         end subroutine truncate_cli_sea
 end module

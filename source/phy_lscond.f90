@@ -6,7 +6,7 @@ module phy_lscond
     implicit none
 
     private
-    public lscond, setup_condensation, init_lsccon
+    public lscond, setup_condensation, truncate_lscond
 
     namelist /condensation/ trlsc, rhlsc, drhlsc, rhblsc
 
@@ -30,13 +30,13 @@ module phy_lscond
 
             write(*, condensation)
         end subroutine setup_condensation
-
-        subroutine init_lsccon()
-            trlsc = trlsc
-            rhlsc = rhlsc
-            drhlsc = drhlsc
-            rhblsc = rhblsc
-        end subroutine init_lsccon
+        
+        subroutine truncate_lscond()
+            call apply_truncation(trlsc)        
+            call apply_truncation(rhlsc)        
+            call apply_truncation(drhlsc)        
+            call apply_truncation(rhblsc)            
+        end subroutine truncate_lscond
 
         subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)

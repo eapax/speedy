@@ -31,10 +31,10 @@ module mod_cli_land
         end subroutine setup_cli_land
 
         subroutine truncate_cli_land()
-            fmask_l = fmask_l
-            bmask_l = bmask_l
-            stl12 = stl12
-            snowd12 = snowd12
-            soilw12 = soilw12
+            call apply_truncation(fmask_l)
+            call apply_truncation(bmask_l)
+            call apply_truncation(stl12)
+            call apply_truncation(snowd12)
+            call apply_truncation(soilw12)
         end subroutine truncate_cli_land
 end module

@@ -42,12 +42,12 @@ module mod_dynvar
         end subroutine setup_dynvar
 
         subroutine truncate_prognostics()
-            vor = vor
-            div = div
-            t = t
-            ps = ps
-            tr = tr
-            phi = phi
-            phis = phis
+            call apply_truncation(vor)
+            call apply_truncation(div)
+            call apply_truncation(t)
+            call apply_truncation(ps)
+            call apply_truncation(tr)
+            call apply_truncation(phi)
+            call apply_truncation(phis)
         end subroutine truncate_prognostics
 end module

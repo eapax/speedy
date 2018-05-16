@@ -7,8 +7,8 @@ module spectral
     implicit none
 
     private
-    public setup_spectral, gaussl, parmtr, lap, invlap, grad, uvspec, grid, &
-            spec, vdspec
+    public setup_spectral, truncate_spectral, &
+            gaussl, parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
     public el2, sia, cosg, cosgr
     public cpol, nsh2, wt, trfilt
 
@@ -72,6 +72,36 @@ module spectral
             allocate(vddym(mx, nx))
             allocate(vddyp(mx, nx))
         end subroutine setup_spectral
+
+        subroutine truncate_spectral()
+            call apply_truncation(el2)
+            call apply_truncation(elm2)
+            call apply_truncation(el4)
+            call apply_truncation(trfilt)
+            call apply_truncation(sia)
+            call apply_truncation(coa)
+            call apply_truncation(wt)
+            call apply_truncation(wght)
+            call apply_truncation(cosg)
+            call apply_truncation(cosgr)
+            call apply_truncation(cosgr2)
+            call apply_truncation(gradx)
+            call apply_truncation(gradym)
+            call apply_truncation(gradyp)
+            call apply_truncation(sqrhlf)
+            call apply_truncation(consq)
+            call apply_truncation(epsi)
+            call apply_truncation(repsi)
+            call apply_truncation(emm)
+            call apply_truncation(ell)
+            call apply_truncation(poly)
+            call apply_truncation(cpol)
+            call apply_truncation(uvdx)
+            call apply_truncation(uvdym)
+            call apply_truncation(uvdyp)
+            call apply_truncation(vddym)
+            call apply_truncation(vddyp)
+        end subroutine truncate_spectral
 
 !******************************************************************
 subroutine gaussl(x,w,m)

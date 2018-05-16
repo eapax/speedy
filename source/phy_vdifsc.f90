@@ -6,7 +6,7 @@ module phy_vdifsc
     implicit none
 
     private
-    public vdifsc, setup_vertical_diffusion, init_vdicon
+    public vdifsc, setup_vertical_diffusion, truncate_vdifsc
 
     namelist /vertical_diffusion/ trshc, trvdi, trvds, redshc, rhgrad, segrad
 
@@ -36,15 +36,15 @@ module phy_vdifsc
 
             write(*, vertical_diffusion)
         end subroutine setup_vertical_diffusion
-
-        subroutine init_vdicon
-            trshc = trshc
-            trvdi = trvdi
-            trvds = trvds
-            redshc = redshc
-            rhgrad = rhgrad
-            segrad = segrad
-        end subroutine
+        
+        subroutine truncate_vdifsc()
+            call apply_truncation(trshc)        
+            call apply_truncation(trvdi)        
+            call apply_truncation(trvds)        
+            call apply_truncation(redshc)        
+            call apply_truncation(rhgrad)        
+            call apply_truncation(segrad)            
+        end subroutine truncate_vdifsc
 
         subroutine vdifsc(ua,va,se,rh,qa,qsat,phi,icnv, &
                 utenvd,vtenvd,ttenvd,qtenvd)

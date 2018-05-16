@@ -7,8 +7,7 @@ module phy_suflux
     implicit none
 
     private
-    public setup_surface_fluxes, suflux, sflset
-    public init_sflcon, truncate_sflcon
+    public setup_surface_fluxes, truncate_suflux, suflux, sflset
 
     namelist /surface_fluxes/ fwind0, ftemp0, fhum0, cdl, cds, chl, chs, &
             vgust, ctday, dtheta, fstab, hdrag, fhdrag, clambda, clambsn
@@ -84,27 +83,27 @@ module phy_suflux
             write(*, surface_fluxes)
         end subroutine setup_surface_fluxes
 
-        subroutine init_sflcon
-            fwind0  = fwind0
-            ftemp0  = ftemp0
-            fhum0   = fhum0
-            cdl     = cdl
-            cds     = cds
-            chl     = chl
-            chs     = chs
-            vgust   = vgust
-            ctday   = ctday
-            dtheta  = dtheta
-            fstab   = fstab
-            hdrag   = hdrag
-            fhdrag  = fhdrag
-            clambda = clambda
-            clambsn = clambsn
-        end subroutine
-
-        subroutine truncate_sflcon()
-            forog = forog
-        end subroutine
+        subroutine truncate_suflux()
+            call apply_truncation(fwind0)
+            call apply_truncation(ftemp0)
+            call apply_truncation(fhum0)        
+            call apply_truncation(cdl)        
+            call apply_truncation(cds)        
+            call apply_truncation(chl)        
+            call apply_truncation(chs)        
+            call apply_truncation(vgust)        
+            call apply_truncation(ctday)        
+            call apply_truncation(dtheta)        
+            call apply_truncation(fstab)        
+            call apply_truncation(hdrag)
+            call apply_truncation(fhdrag)
+            call apply_truncation(clambda)
+            call apply_truncation(clambsn)
+            call apply_truncation(forog)
+            call apply_truncation(t1)
+            call apply_truncation(q1)
+            call apply_truncation(denvvs)
+        end subroutine truncate_suflux
 
         subroutine suflux(psa,ua,va,ta,qa,rh,phi,phi0,fmask,tland,tsea,swav, &
                 ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,tsfc,tskin,u0,v0,t0, &
@@ -173,9 +172,6 @@ module phy_suflux
             lscdrag = .true.   ! true : use stability coef. to compute drag
                                !        over sea
             lskineb = .true.   ! true : redefine skin temp. from energy balance
-
-            !clambda = 7.       ! Heat conductivity in skin layer
-            !clambsn = 7.       ! Heat conductivity for snow cover = 1
 
             esbc  = emisfc*sbc
             esbc4 = rpe_literal(4.)*esbc

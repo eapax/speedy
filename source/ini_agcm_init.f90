@@ -20,7 +20,7 @@ subroutine agcm_init(ndays)
 
     ! Initialise reduced precision constants
     call set_precision('Initialisation')
-    call ini_rp
+    call ini_rp()
 
     ! 1. set run initial time, duration, time-stepping and coupling options
     read (2,*) istart
@@ -54,15 +54,13 @@ subroutine agcm_init(ndays)
     call fordate(0)
 
     ! 5. do the initial (2nd-order) time step, initialize the semi-impl. scheme
-    call stepone
+    call stepone()
 
     ! 6. Set up model output
     call initialise_output()
 
-
     ! Truncate parameters and derived constants
     call set_precision('Parameters')
-    call ini_rp
-    call truncate_rp
+    call truncate_rp()
     call set_precision('Default')
 end subroutine

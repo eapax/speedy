@@ -50,15 +50,15 @@ module mod_flx_land
         end subroutine setup_flx_land
 
         subroutine truncate_flx_land()
-            prec_l = prec_l
-            snowf_l = snowf_l
-            evap_l = evap_l
-            ustr_l = ustr_l
-            vstr_l = vstr_l
-            ssr_l = ssr_l
-            slr_l = slr_l
-            shf_l = shf_l
-            ehf_l = ehf_l
-            hflux_l = hflux_l
+            call apply_truncation(prec_l)
+            call apply_truncation(snowf_l)
+            call apply_truncation(evap_l)
+            call apply_truncation(ustr_l)
+            call apply_truncation(vstr_l)
+            call apply_truncation(ssr_l)
+            call apply_truncation(slr_l)
+            call apply_truncation(shf_l)
+            call apply_truncation(ehf_l)
+            call apply_truncation(hflux_l)
         end subroutine truncate_flx_land
 end module

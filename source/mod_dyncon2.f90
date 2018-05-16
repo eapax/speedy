@@ -33,20 +33,20 @@ module mod_dyncon2
         end subroutine setup_dyncon2
 
         subroutine truncate_dyncon2()
-            tref = tref
-            tref1 = tref1
-            tref2 = tref2
-            tref3 = tref3
-            xa = xa
-            xb = xb
-            xc = xc
-            xd = xd
-            xe = xe
-            xf = xf
-            xg = xg
-            xh = xh
-            xj = xj
-            dhsx = dhsx
-            elz = elz
+            call apply_truncation(tref)
+            call apply_truncation(tref1)
+            call apply_truncation(tref2)
+            call apply_truncation(tref3)
+            call apply_truncation(xa)
+            call apply_truncation(xb)
+            call apply_truncation(xc)
+            call apply_truncation(xd)
+            call apply_truncation(xe)
+            call apply_truncation(xf)
+            call apply_truncation(xg)
+            call apply_truncation(xh)
+            call apply_truncation(xj)
+            call apply_truncation(dhsx)
+            call apply_truncation(elz)
         end subroutine truncate_dyncon2
 end module

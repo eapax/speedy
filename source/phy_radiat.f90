@@ -7,8 +7,9 @@ module phy_radiat
     implicit none
 
     private
-    public setup_radiation, sol_oz, cloud, radsw, radlw, radset, &
-            lco2, nstrad, lradsw, &
+    public setup_radiation, truncate_radiat
+    public sol_oz, cloud, radsw, radlw, radset
+    public lco2, nstrad, lradsw, &
             ablco2, ablco2_ref, albsea, albice, albsn, emisfc, &
             alb_l, alb_s, albsfc, snowc
 
@@ -157,6 +158,56 @@ module phy_radiat
             allocate(qcloud(ngp))
             allocate(irhtop(ngp))
         end subroutine setup_radiation
+        
+        subroutine truncate_radiat()
+            call apply_truncation(solc)        
+            call apply_truncation(albsea)
+            call apply_truncation(albice)
+            call apply_truncation(albsn)
+            call apply_truncation(rhcl1)
+            call apply_truncation(rhcl2)
+            call apply_truncation(qacl)
+            call apply_truncation(wpcl)
+            call apply_truncation(pmaxcl)
+            call apply_truncation(clsmax)
+            call apply_truncation(clsminl)
+            call apply_truncation(gse_s0)
+            call apply_truncation(gse_s1)
+            call apply_truncation(albcl)
+            call apply_truncation(albcls)
+            call apply_truncation(epssw)
+            call apply_truncation(epslw)
+            call apply_truncation(emisfc)
+            call apply_truncation(absdry)
+            call apply_truncation(absaer)
+            call apply_truncation(abswv1)
+            call apply_truncation(abswv2)
+            call apply_truncation(abscl1)
+            call apply_truncation(abscl2)
+            call apply_truncation(ablwin)
+            call apply_truncation(ablco2)
+            call apply_truncation(ablwv1)
+            call apply_truncation(ablwv2)
+            call apply_truncation(ablcl1)
+            call apply_truncation(ablcl2)
+            call apply_truncation(ablco2_ref)
+            call apply_truncation(fband)
+            call apply_truncation(fsol)
+            call apply_truncation(ozone)
+            call apply_truncation(ozupp)
+            call apply_truncation(zenit)
+            call apply_truncation(stratz)
+            call apply_truncation(alb_l)
+            call apply_truncation(alb_s)
+            call apply_truncation(albsfc)
+            call apply_truncation(snowc)
+            call apply_truncation(tau2)
+            call apply_truncation(st4a)
+            call apply_truncation(stratc)
+            call apply_truncation(flux)
+            call apply_truncation(qcloud)
+            call apply_truncation(irhtop)
+        end subroutine truncate_radiat
 
         subroutine sol_oz(tyear)
             !  subroutine sol_oz (tyear)

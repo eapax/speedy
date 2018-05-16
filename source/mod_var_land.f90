@@ -29,12 +29,12 @@ module mod_var_land
         end subroutine setup_var_land
 
         subroutine truncate_var_land()
-            stlcl_ob = stlcl_ob
-            snowdcl_ob = snowdcl_ob
-            soilwcl_ob = soilwcl_ob
-            stl_am = stl_am
-            snowd_am = snowd_am
-            soilw_am = soilw_am
-            stl_lm = stl_am
+            call apply_truncation(stlcl_ob)
+            call apply_truncation(snowdcl_ob)
+            call apply_truncation(soilwcl_ob)
+            call apply_truncation(stl_am)
+            call apply_truncation(snowd_am)
+            call apply_truncation(soilw_am)
+            call apply_truncation(stl_lm)
         end subroutine truncate_var_land
 end module

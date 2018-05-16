@@ -54,16 +54,16 @@ module mod_flx_sea
         end subroutine setup_flx_sea
 
         subroutine truncate_flx_sea()
-            prec_s = prec_s
-            snowf_s = snowf_s
-            evap_s = evap_s
-            ustr_s = ustr_s
-            vstr_s = vstr_s
-            ssr_s = ssr_s
-            slr_s = slr_s
-            shf_s = shf_s
-            ehf_s = ehf_s
-            hflux_s = hflux_s
-            hflux_i = hflux_i
+            call apply_truncation(prec_s)
+            call apply_truncation(snowf_s)
+            call apply_truncation(evap_s)
+            call apply_truncation(ustr_s)
+            call apply_truncation(vstr_s)
+            call apply_truncation(ssr_s)
+            call apply_truncation(slr_s)
+            call apply_truncation(shf_s)
+            call apply_truncation(ehf_s)
+            call apply_truncation(hflux_s)
+            call apply_truncation(hflux_i)
         end subroutine truncate_flx_sea
 end module

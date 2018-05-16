@@ -204,14 +204,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
         sppt = gen_sppt()
 
         do k = 1,kx
-            utend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
-                    rpe_literal(mu(k))) * utend(:,k)
-            vtend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
-                    rpe_literal(mu(k))) * vtend(:,k)
-            ttend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
-                    rpe_literal(mu(k))) * ttend(:,k)
-            qtend(:,k) = (rpe_literal(1.0) + sppt(:,k) * &
-                    rpe_literal(mu(k))) * qtend(:,k)
+            utend(:,k) = (rpe_literal(1.0) + sppt(:,k) * mu(k)) * utend(:,k)
+            vtend(:,k) = (rpe_literal(1.0) + sppt(:,k) * mu(k)) * vtend(:,k)
+            ttend(:,k) = (rpe_literal(1.0) + sppt(:,k) * mu(k)) * ttend(:,k)
+            qtend(:,k) = (rpe_literal(1.0) + sppt(:,k) * mu(k)) * qtend(:,k)
         end do
     end if
 end

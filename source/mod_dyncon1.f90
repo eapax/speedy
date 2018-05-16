@@ -61,17 +61,25 @@ module mod_dyncon1
         end subroutine init_dyncon1
 
         subroutine truncate_dyncon1()
-            hsg = hsg
-            dhs = dhs
-            fsg = fsg
-            dhsr = dhsr
-            fsgr = fsgr
-            radang = radang
-            gsin = gsin
-            gcos = gcos
-            coriol = coriol
-            xgeop1 = xgeop1
-            xgeop2 = xgeop2
+            call apply_truncation(rearth)
+            call apply_truncation(omega)
+            call apply_truncation(grav)
+            call apply_truncation(akap)
+            call apply_truncation(rgas)
+            call apply_truncation(pi)
+            call apply_truncation(a)
+            call apply_truncation(g)
+            call apply_truncation(hsg)
+            call apply_truncation(dhs)
+            call apply_truncation(fsg)
+            call apply_truncation(dhsr)
+            call apply_truncation(fsgr)
+            call apply_truncation(radang)
+            call apply_truncation(gsin)
+            call apply_truncation(gcos)
+            call apply_truncation(coriol)
+            call apply_truncation(xgeop1)
+            call apply_truncation(xgeop2)
         end subroutine truncate_dyncon1
 
 end module

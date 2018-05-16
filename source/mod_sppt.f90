@@ -14,7 +14,7 @@ module mod_sppt
     implicit none
 
     private
-    public sppt_on, mu, setup_sppt, gen_sppt
+    public sppt_on, mu, setup_sppt, truncate_sppt, gen_sppt
 
     namelist /sppt/ sppt_on, nscales
     namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev
@@ -24,19 +24,19 @@ module mod_sppt
 
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
-    real, allocatable :: mu(:)
+    type(rpe_var), allocatable :: mu(:)
 
     ! Number of correlation scales for SPPT perturbations
     integer :: nscales = 3
 
     ! Decorrelation time of SPPT perturbation (in hours)
-    real, allocatable :: time_decorr(:)
+    type(rpe_var), allocatable :: time_decorr(:)
 
     ! Correlation length scale of SPPT perturbation (in metres)
-    real, allocatable :: len_decorr(:)
+    type(rpe_var), allocatable :: len_decorr(:)
 
     ! Standard deviation of SPPT perturbation (in grid point space)
-    real, allocatable :: stddev(:)
+    type(rpe_var), allocatable :: stddev(:)
 
     ! Time autocorrelation of spectral AR(1) signals
     type(rpe_var), allocatable :: phi(:)
@@ -68,6 +68,10 @@ module mod_sppt
             write(*, sppt_parameters)
         end subroutine setup_sppt
 
+        subroutine truncate_sppt()
+            call apply_truncation(time_decorr)
+        end subroutine truncate_sppt
+
         !> @brief
         !> Generate grid point space SPPT pattern
         !> distribution.
@@ -88,8 +92,8 @@ module mod_sppt
             do k=1, nscales
                 do n=1, nx
                     do m=1, mx
-                        randreal = randn(0.0, 1.0)
-                        randimag = randn(0.0, 1.0)
+                        randreal = randn(rpe_literal(0.0), rpe_literal(1.0))
+                        randimag = randn(rpe_literal(0.0), rpe_literal(1.0))
 
                         ! Clip noise to +- 10 standard deviations
                         eta(m,n,k) = cmplx(&
@@ -158,7 +162,7 @@ module mod_sppt
         !> @param stdev the standard deviation of the distribution to draw from
         !> @return randn the generated random number
         function randn(mean, stdev)
-            real, intent(in) :: mean, stdev
+            type(rpe_var), intent(in) :: mean, stdev
             type(rpe_var) :: u, v, randn
             real :: rand(2)
 

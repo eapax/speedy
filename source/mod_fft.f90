@@ -12,6 +12,6 @@ module mod_fft
         end subroutine setup_fft
 
         subroutine truncate_fft()
-            wsave(1:2*ix) = wsave(1:2*ix)
+            call apply_truncation(wsave(1:2*ix))
         end subroutine
 end module

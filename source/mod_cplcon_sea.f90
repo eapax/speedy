@@ -73,9 +73,9 @@ module mod_cplcon_sea
         end subroutine setup_sea
 
         subroutine truncate_cplcon_sea()
-            rhcaps = rhcaps
-            rhcapi = rhcapi
-            cdsea = cdsea
-            cdice = cdice
+            call apply_truncation(rhcaps)
+            call apply_truncation(rhcapi)
+            call apply_truncation(cdsea)
+            call apply_truncation(cdice)
         end subroutine truncate_cplcon_sea
 end module

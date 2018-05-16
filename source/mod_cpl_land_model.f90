@@ -51,10 +51,10 @@ module mod_cpl_land_model
         end subroutine setup_land
 
         subroutine truncate_land_model()
-            rhcapl = rhcapl
-            cdland = cdland
-            vland_input = vland_input
-            vland_output = vland_output
+            call apply_truncation(rhcapl)
+            call apply_truncation(cdland)
+            call apply_truncation(vland_input)
+            call apply_truncation(vland_output)
         end subroutine truncate_land_model
 
         subroutine land_model_init(fmask_l,alb0)

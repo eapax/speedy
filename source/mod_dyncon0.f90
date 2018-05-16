@@ -44,15 +44,15 @@ module mod_dyncon0
 
             write(*, dynamics)
         end subroutine setup_dynamics
-
-        subroutine init_dyncon0
-            gamma = gamma
-            hscale = hscale
-            hshum = hshum
-            refrh1 = refrh1
-            thd = thd
-            thdd = thdd
-            thds = thds
-            tdrs = tdrs
-        end subroutine
+    
+        subroutine truncate_dyncon0()
+            call apply_truncation(gamma)
+            call apply_truncation(hscale)
+            call apply_truncation(hshum)
+            call apply_truncation(refrh1)
+            call apply_truncation(thd)
+            call apply_truncation(thdd)
+            call apply_truncation(thds)
+            call apply_truncation(tdrs)
+        end subroutine truncate_dyncon0
 end module

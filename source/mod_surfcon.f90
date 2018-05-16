@@ -48,17 +48,14 @@ module mod_surfcon
             write(*, surface)
         end subroutine setup_surface
 
-        subroutine init_surfcon
-            swcap = swcap
-            swwil = swwil
-            sd2sc = sd2sc
-        end subroutine
-
         subroutine truncate_surfcon()
-            fmask = fmask
-            fmask1 = fmask1
-            phi0 = phi0
-            phis0 = phis0
-            alb0 = alb0
+            call apply_truncation(swcap)
+            call apply_truncation(swwil)
+            call apply_truncation(sd2sc)
+            call apply_truncation(fmask)
+            call apply_truncation(fmask1)
+            call apply_truncation(phi0)
+            call apply_truncation(phis0)
+            call apply_truncation(alb0)
         end subroutine truncate_surfcon
 end module

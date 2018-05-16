@@ -161,8 +161,8 @@ ini_rp.o               : phy_convmf.o phy_lscond.o phy_suflux.o phy_vdifsc.o\
                          mod_dyncon1.o mod_dyncon2.o mod_fft.o mod_flx_land.o\
                          mod_flx_sea.o mod_hdifcon.o mod_physcon.o\
                          mod_physvar.o mod_radcon.o mod_randfor.o\
-                         mod_spectral.o mod_surfcon.o mod_var_land.o\
-                         mod_var_sea.o mod_tsteps.o
+                         mod_surfcon.o mod_sppt.o mod_var_land.o\
+                         mod_var_sea.o mod_tsteps.o spe_spectral.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o
 ini_fordate.o          : ini_fordate.f90 mod_dyncon0.o \
                          mod_atparam.o mod_hdifcon.o mod_physcon.o\

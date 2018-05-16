@@ -31,15 +31,15 @@ module mod_hdifcon
         end subroutine setup_hdifcon
 
         subroutine truncate_hdifcon()
-            dmp = dmp
-            dmpd = dmpd
-            dmps = dmps
-            dmp1 = dmp1
-            dmp1d = dmp1d
-            dmp1s = dmp1s
-            tcorv = tcorv
-            qcorv = qcorv
-            tcorh = tcorh
-            qcorh = qcorh
+            call apply_truncation(dmp)
+            call apply_truncation(dmpd)
+            call apply_truncation(dmps)
+            call apply_truncation(dmp1)
+            call apply_truncation(dmp1d)
+            call apply_truncation(dmp1s)
+            call apply_truncation(tcorv)
+            call apply_truncation(qcorv)
+            call apply_truncation(tcorh)
+            call apply_truncation(qcorh)
         end subroutine truncate_hdifcon
 end module

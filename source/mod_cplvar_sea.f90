@@ -19,7 +19,7 @@ module mod_cplvar_sea
         end subroutine setup_cplvar_sea
 
         subroutine truncate_cplvar_sea()
-            vsea_input = vsea_input
-            vsea_output = vsea_output
+            call apply_truncation(vsea_input)
+            call apply_truncation(vsea_output)
         end subroutine truncate_cplvar_sea
 end module

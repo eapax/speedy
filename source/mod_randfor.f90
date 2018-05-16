@@ -31,7 +31,7 @@ module mod_randfor
         end subroutine setup_randfor
 
         subroutine truncate_randfor()
-            randfh = randfh
-            randfv = randfv
+            call apply_truncation(randfh)
+            call apply_truncation(randfv)
         end subroutine truncate_randfor
 end module

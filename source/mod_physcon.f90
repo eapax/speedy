@@ -77,15 +77,22 @@ module mod_physcon
         end subroutine init_physcon
 
         subroutine truncate_physcon()
-            sig = sig
-            sigl = sigl
-            dsig = dsig
-            pout = pout
-            grdsig = grdsig
-            grdscp = grdscp
-            wvi = wvi
-            sigh = sigh
-            slat = slat
-            clat = clat
+            call apply_truncation(p0)
+            call apply_truncation(gg)
+            call apply_truncation(rd)
+            call apply_truncation(cp)
+            call apply_truncation(alhc)
+            call apply_truncation(alhs)
+            call apply_truncation(sbc)
+            call apply_truncation(sig)
+            call apply_truncation(sigl)
+            call apply_truncation(dsig)
+            call apply_truncation(pout)
+            call apply_truncation(grdsig)
+            call apply_truncation(grdscp)
+            call apply_truncation(wvi)
+            call apply_truncation(sigh)
+            call apply_truncation(slat)
+            call apply_truncation(clat)
         end subroutine truncate_physcon
 end module
