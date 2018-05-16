@@ -30,7 +30,7 @@ module mod_cli_sea
     type(rpe_var), allocatable :: hfseacl(:,:)
 
     ! Ocean model SST climatology
-    real, allocatable :: sstom12(:,:,:)
+    type(rpe_var), allocatable :: sstom12(:,:,:)
 
     contains
         subroutine setup_cli_sea()
@@ -52,5 +52,6 @@ module mod_cli_sea
             call apply_truncation(sice12)
             call apply_truncation(sstan3)
             call apply_truncation(hfseacl)
+            call apply_truncation(sstom12)
         end subroutine truncate_cli_sea
 end module

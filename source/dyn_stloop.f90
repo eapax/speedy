@@ -11,6 +11,7 @@ subroutine stloop(istep)
     use mod_date, only: ihour, iday, update_time
     use phy_radiat, only: lradsw, nstrad
     use mod_randfor, only: lrandf, nstrdf
+    use mod_dynvar, only: truncate_prognostics
     use rp_emulator
     use mod_prec, only: set_precision
 

@@ -40,7 +40,7 @@ module mod_cplcon_sea
     type(rpe_var) :: fseamin
 
     ! Heat flux coef. at sea/ice int.
-    real(dp) :: beta = 1.0
+    type(rpe_var) :: beta
 
     ! Geographical domain
     ! note : more than one regional domain may be set .true.
@@ -77,5 +77,13 @@ module mod_cplcon_sea
             call apply_truncation(rhcapi)
             call apply_truncation(cdsea)
             call apply_truncation(cdice)
+            call apply_truncation(depth_ml)
+            call apply_truncation(dept0_ml)
+            call apply_truncation(depth_ice)
+            call apply_truncation(dept0_ice)
+            call apply_truncation(tdsst)
+            call apply_truncation(tdice)
+            call apply_truncation(fseamin)
+            call apply_truncation(beta)
         end subroutine truncate_cplcon_sea
 end module

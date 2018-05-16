@@ -79,7 +79,7 @@ subroutine inbcon(grav0,radlat)
     do it = 1,12
         call load_boundary_file(1,23,inp,it-1)
 
-        call fillsf(inp,ix,il,0.)
+        call fillsf(inp,ix,il,rpe_literal(0.))
 
        stl12(1:ix,1:il,it) = inp
     end do
@@ -167,7 +167,7 @@ subroutine inbcon(grav0,radlat)
     do it = 1,12
         call load_boundary_file(1,21,inp,it-1)
 
-        call fillsf(inp,ix,il,0.)
+        call fillsf(inp,ix,il,rpe_literal(0.))
 
         sst12(1:ix,1:il,it) = inp
     end do

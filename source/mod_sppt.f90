@@ -69,7 +69,12 @@ module mod_sppt
         end subroutine setup_sppt
 
         subroutine truncate_sppt()
+            call apply_truncation(mu)
             call apply_truncation(time_decorr)
+            call apply_truncation(len_decorr)
+            call apply_truncation(stddev)
+            call apply_truncation(phi)
+            call apply_truncation(sigma)
         end subroutine truncate_sppt
 
         !> @brief

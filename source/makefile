@@ -127,7 +127,7 @@ dyn_sptend.o           : dyn_sptend.f90 mod_atparam.o mod_dynvar.o\
 dyn_step.o             : dyn_step.f90 mod_dyncon0.o mod_atparam.o\
                          mod_dynvar.o mod_hdifcon.o spe_spectral.o mod_prec.o
 dyn_stloop.o           : dyn_stloop.f90 mod_tsteps.o mod_date.o\
-                         phy_radiat.o mod_randfor.o
+                         phy_radiat.o mod_randfor.o mod_dynvar.o
 ini_agcm_init.o        : ini_agcm_init.f90 mod_cpl_flags.o mod_date.o\
                          ppo_output_stream.o\
                          ini_rp.o mod_prec.o
@@ -160,7 +160,7 @@ ini_rp.o               : phy_convmf.o phy_lscond.o phy_suflux.o phy_vdifsc.o\
                          mod_cplcon_sea.o mod_cplvar_sea.o mod_dyncon0.o\
                          mod_dyncon1.o mod_dyncon2.o mod_fft.o mod_flx_land.o\
                          mod_flx_sea.o mod_hdifcon.o mod_physcon.o\
-                         mod_physvar.o mod_radcon.o mod_randfor.o\
+                         mod_physvar.o mod_randfor.o\
                          mod_surfcon.o mod_sppt.o mod_var_land.o\
                          mod_var_sea.o mod_tsteps.o spe_spectral.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o mod_date.o

@@ -49,7 +49,8 @@ subroutine inirdf()
     do nf=1,2
         ! 2. Fill reduced grid with normally-distributed random numbers
         do jlat=0,18
-            call gausts(nlonrg(jlat),0.0_dp,ampl,0.0_dp,0,iseed,redgrd(1,jlat))
+            call gausts(nlonrg(jlat), rpe_literal(0.0), ampl, &
+                    rpe_literal(0.0), 0, iseed, redgrd(1,jlat))
 
             if (freq0.gt.0.) then
                 do jlon=1,nlonrg(jlat)

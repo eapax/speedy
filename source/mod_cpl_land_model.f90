@@ -55,6 +55,10 @@ module mod_cpl_land_model
             call apply_truncation(cdland)
             call apply_truncation(vland_input)
             call apply_truncation(vland_output)
+            call apply_truncation(depth_soil)
+            call apply_truncation(depth_lice)
+            call apply_truncation(tdland)
+            call apply_truncation(flandmin)
         end subroutine truncate_land_model
 
         subroutine land_model_init(fmask_l,alb0)
