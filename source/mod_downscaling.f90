@@ -35,6 +35,7 @@ module mod_downscaling
             allocate(weights_x(ix))
             allocate(weights_y(il))
 
+            write(*, input_resolution)
         end subroutine setup_downscaling
 
         subroutine calc_grid_weights()
