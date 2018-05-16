@@ -17,16 +17,9 @@ mkdir -p ${UT}/output/exp_${2}
 OUT=${UT}/output/exp_${2}
 INP=${UT}/output/exp_${3}
 
-# Start date
-year='1982'
-month='01'
-day='01'
-hour='00'
-
 # Setup files
 executable=${UT}/source/imp.exe
 namelist=${UT}/setup/speedy.nml
-
 
 # Copy files from basic version directory
 mkdir -p ${TMP}
@@ -39,9 +32,8 @@ cp ${UT}/setup/precisions.nml ${TMP}
 
 # Link restart file if needed
 if [ ${3} != 0 ] ; then
-  echo "link restart file ${year}${month}${day}${hour}"
-  ln -s ${INP}/${year}${month}${day}${hour}.rst
-fi 
+  ln -s ${INP}/*.rst ${TMP}
+fi
 
 # Link input files
 SB=${UT}/data/bc/${1}/clim
@@ -56,18 +48,6 @@ ln -sf ${SB}/swet.grd  fort.26
 ln -sf ${SC}/ssta.grd  fort.30
 
 ls -l fort.*
-
-# Write date input file
-# First line is 0 for no restart file and 1 for restart
-if [ ${3} == 0 ] ; then
-    echo 0 > fort.2
-else
-    echo 1 > fort.2
-fi
-echo ${year} >> fort.2
-echo ${month} >> fort.2
-echo ${day} >> fort.2
-echo ${hour} >> fort.2
 
 time ./imp.exe | tee out.lis
 

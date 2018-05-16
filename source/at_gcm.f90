@@ -1,14 +1,14 @@
 program agcm_main
     use mod_tsteps, only: nmonrs
+    use mod_date, only: imonth, iday, ndays
     use rp_emulator
     use mod_prec, only: setup_precision
-    use mod_date, only: imonth, iday
 
     implicit none
 
     ! program : agcm_main
 
-    integer :: jday, ndays
+    integer :: jday
 
     ! Setup reduced precision emulator
     RPE_IEEE_HALF = .false.
@@ -17,7 +17,7 @@ program agcm_main
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init
-    call agcm_init(ndays)
+    call agcm_init()
 
     print *, 'integration length in days: ', ndays
 

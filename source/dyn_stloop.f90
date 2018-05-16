@@ -7,9 +7,8 @@ subroutine stloop(istep)
     !   Updated common block : lflag2
       
 
-    use mod_tsteps
+    use mod_tsteps, only: nsteps, delt2, alph, rob, wil
     use mod_date, only: ihour, iday, update_time
-    use mod_dynvar
     use phy_radiat, only: lradsw, nstrad
     use mod_randfor, only: lrandf, nstrdf
     use rp_emulator

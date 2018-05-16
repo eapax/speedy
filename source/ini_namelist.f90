@@ -4,6 +4,7 @@ subroutine ini_namelist()
     use mod_cpl_flags, only: setup_coupling_flags
     use mod_cpl_land_model, only: setup_land
     use mod_cplcon_sea, only: setup_sea
+    use mod_date, only: setup_date
     use mod_dyncon0, only: setup_dynamics
     use mod_surfcon, only: setup_surface
     use mod_tsteps, only: setup_timestepping
@@ -41,6 +42,7 @@ subroutine ini_namelist()
     call setup_coupling_flags(99)
     call setup_land(99)
     call setup_sea(99)
+    call setup_date(99)
     call setup_dynamics(99)
     call setup_surface(99)
     call setup_timestepping(99)

@@ -90,6 +90,25 @@
     l_indian = .false.,
 /
 
+! mod_date
+&date
+    ! Start flag (0: from rest, 1: from restart file)
+    istart=1,
+    ! Start date
+    ! YYYY
+    iyear0=1982,
+    ! MM
+    imonth0=1,
+    ! DD
+    iday0=1,
+    ! Integration length in months
+    nmonts=3,
+    ! No. of days in the last month of int. (max=30)
+    ndaysl=0,
+    ! Seasonal cycle flag (0=no, 1=yes)
+    iseasc=1,
+/
+
 ! mod_dyncon0
 &dynamics
     ! Ref. temperature lapse rate (-dT/dz in deg/km)
@@ -131,18 +150,12 @@
 
 ! mod_tsteps
 &timestepping
-    ! Integration length in months
-    nmonts=3,
-    ! No. of days in the last month of int. (max=30)
-    ndaysl=0,
     ! No. of time steps in one day
     nsteps=36,
     ! Period (no. of steps) for diagnostic print-out
     nstdia=180,
     ! Period (no. of months) for restart file update
     nmonrs=3,
-    ! Seasonal cycle flag (0=no, 1=yes)
-    iseasc=1,
     ! Damping factor in Robert time filter
     rob=0.05,
     ! Parameter of Williams filter

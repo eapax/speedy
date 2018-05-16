@@ -11,13 +11,13 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !  Modified common blocks:  mod_physvar
 
     use mod_cpl_flags, only: icsea
-    use mod_randfor, only: lrandf
     use mod_atparam
     use mod_physcon, only: sig, sigh, grdsig, grdscp, cp
     use mod_surfcon, only: fmask1, phis0
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
     use mod_physvar
+    use mod_randfor, only: lrandf
     use mod_sppt, only: sppt_on, mu, gen_sppt
     use humidity, only: shtorh
     use phy_convmf, only: convmf
