@@ -194,7 +194,7 @@ subroutine rest_sea(imode)
     use mod_cpl_flags, only: icsea, icice
     use mod_atparam
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
-    use downscaling, only: ix_in, il_in, regrid
+    use mod_downscaling, only: ix_in, il_in, regrid
     use rp_emulator
     use mod_prec, only: set_precision
 

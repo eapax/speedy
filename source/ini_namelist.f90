@@ -1,6 +1,6 @@
 subroutine ini_namelist()
     use mod_atparam, only: setup_resolution
-    use downscaling, only: setup_downscaling
+    use mod_downscaling, only: setup_downscaling
     use mod_cpl_flags, only: setup_coupling_flags
     use mod_cpl_land_model, only: setup_land
     use mod_cplcon_sea, only: setup_sea
