@@ -10,7 +10,6 @@ subroutine stloop(istep)
     use mod_tsteps, only: nsteps, delt2, alph, rob, wil
     use mod_date, only: ihour, iday, update_time
     use phy_radiat, only: lradsw, nstrad
-    use mod_randfor, only: lrandf, nstrdf
 
     implicit none
 
@@ -26,7 +25,6 @@ subroutine stloop(istep)
 
         ! Set logical flags
         lradsw = (mod(istep,nstrad) == 1)
-        lrandf = ((istep <= nstrdf) .or. (nstrdf < 0))
 
         ! Perform one leapfrog time step
         call step(2, 2, delt2, alph, rob, wil)

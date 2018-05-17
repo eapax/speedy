@@ -340,12 +340,3 @@
     ! Standard deviation of SPPT perturbation (in grid point space)
     stddev=0.52, 0.18, 0.06,
 /
-
-! mod_randfor
-&randfor
-    ! Duration of random diabatic forcing ( 0 : no forcing, > 0 : no. of
-    ! initial steps, < 0 : whole integration)
-    nstrdf=0,
-    ! Initialization index for random diabatic forcing
-    indrdf=-1,
-/

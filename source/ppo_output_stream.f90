@@ -484,40 +484,36 @@ module ppo_output_stream
                 case(110)
                 output = qt_pbl
 
-                ! tt_rdf  =  temperature tendency due to random diabatic forcing
-                case(111)
-                output = tt_rdf
-
                 ! ut_phy  =       u-wind tendency due to all physics processes
-                case(112)
+                case(111)
                 output = ut_phy
 
                 ! vt_phy  =       v-wind tendency due to all physics processes
-                case(113)
+                case(112)
                 output = vt_phy
 
                 ! tt_phy  =  temperature tendency due to all physics processes
-                case(114)
+                case(113)
                 output = tt_phy
 
                 ! qt_phy  = sp. humidity tendency due to all physics processes
-                case(115)
+                case(114)
                 output = qt_phy
 
                 ! ut_sppt =       u-wind tendency due to stochastic perturbation
-                case(116)
+                case(115)
                 output = ut_sppt
 
                 ! vt_sppt =       v-wind tendency due to stochastic perturbation
-                case(117)
+                case(116)
                 output = vt_sppt
 
                 ! tt_sppt =  temperature tendency due to stochastic perturbation
-                case(118)
+                case(117)
                 output = tt_sppt
 
                 ! qt_sppt = sp. humidity tendency due to stochastic perturbation
-                case(119)
+                case(118)
                 output = qt_sppt
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total

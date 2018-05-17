@@ -17,7 +17,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_surfcon, only: fmask1, phis0
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
-    use mod_randfor, only: lrandf
     use mod_sppt, only: sppt_on, gen_sppt
     use humidity, only: shtorh
     use phy_convmf, only: convmf
@@ -164,24 +163,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 5. Store all fluxes for coupling and daily-mean output
     call dmflux(1)
 
-    ! 6. Random diabatic forcing 
-    if (lrandf) then
-        ! 6.1 Compute zonal-mean cross sections of diabatic forcing
-        if (lradsw) then
-          call xs_rdf(tt_lsc,tt_cnv,1)
-          call xs_rdf(tt_rsw,tt_rlw,2)
-        end if
-
-        ! 6.2 Compute 3-D pattern of random diabatic forcing
-        call setrdf(tt_rdf)
-    else
-        tt_rdf = 0.
-    end if
-
     ! Sum physics tendencies
     ut_phy = ut_pbl
     vt_phy = vt_pbl
-    tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_rlw + tt_pbl + tt_rdf
+    tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_rlw + tt_pbl
     qt_phy = qt_cnv + qt_lsc + qt_pbl
 
     ! Add SPPT noise
@@ -205,84 +190,4 @@ subroutine phypar(utend,vtend,ttend,qtend)
         ttend = tt_phy
         qtend = qt_phy
     end if
-end
-
-subroutine xs_rdf(tt1,tt2,ivm)
-    !  subroutine xs_rdf (tt1,tt2,ivm)
-    !
-    !  Purpose: compute zonal-mean cross-sec. of random diabatic forcing
-    !  Input: tt1, tt2 = diabatic heating fields
-    !         ivm      = index of vertical mode (1 or 2)
-
-    use mod_atparam
-    use mod_physcon, only: sig
-    use mod_randfor, only: randfv
-
-    implicit none
-
-    real, dimension(ix,il,kx), intent(in) :: tt1, tt2
-    integer, intent(in) :: ivm
-
-    real :: rand1(0:il+1), pigr2, rnlon, rnsig
-    integer :: i, j, k, nsmooth
-
-    rnlon = 1./float(ix)
-    pigr2 = 4.*asin(1.)
-
-    ! 1. Compute cross sections
-    do k=1,kx
-         if (ivm.eq.1) then
-            rnsig = rnlon
-         else
-            rnsig = rnlon*sin(pigr2*sig(k))
-         endif
-
-         do j=1,il
-           randfv(j,k,ivm) = 0.
-           do i=1,ix
-              randfv(j,k,ivm) = randfv(j,k,ivm)+tt1(i,j,k)+tt2(i,j,k)
-           end do
-           randfv(j,k,ivm) = randfv(j,k,ivm)*rnsig 
-         end do
-    end do
-
-    ! 2. Perform smoothing in latitude
-    do nsmooth=1,2
-        do k=1,kx
-
-          do j=1,il
-             rand1(j) = randfv(j,k,ivm)
-          end do
-          rand1(0) = rand1(2)
-          rand1(il+1) = rand1(il-1)
-             
-          do j=1,il
-             randfv(j,k,ivm) = 0.5*rand1(j)+0.25*(rand1(j-1)+rand1(j+1))
-          end do
-        end do
-    end do
-end
-
-subroutine setrdf(tt_rdf)
-    !  subroutine setrdf (tt_rdf)
-    !
-    !  Purpose: compute 3-D pattern of random diabatic forcing
-    !  Output: tt_rdf = random diabatic forcing
-
-    use mod_atparam
-    use mod_randfor
-
-    implicit none
-
-    real :: tt_rdf(ix,il,kx)
-    integer :: i, j, k
-
-    do k=1,kx
-        do j=1,il
-           do i=1,ix
-               tt_rdf(i,j,k) = randfh(i,j,1)*randfv(j,k,1)&
-                   & +randfh(i,j,2)*randfv(j,k,2)
-           end do
-         end do
-     end do
 end

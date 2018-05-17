@@ -41,7 +41,6 @@ module mod_physvar
     ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
     ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
     ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
-    ! tt_rdf  =  temperature tendency due to random diabatic forcing
     ! ut_phy  =       u-wind tendency due to all physics processes
     ! vt_phy  =       v-wind tendency due to all physics processes
     ! tt_phy  =  temperature tendency due to all physics processes
@@ -52,7 +51,7 @@ module mod_physvar
     ! qt_sppt = sp. humidity tendency due to stochastic perturbation
 
     real, dimension(:, :), allocatable :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, &
-            tt_rsw, tt_rlw, ut_pbl, vt_pbl, tt_pbl, qt_pbl, tt_rdf, &
+            tt_rsw, tt_rlw, ut_pbl, vt_pbl, tt_pbl, qt_pbl, &
             ut_phy, vt_phy, tt_phy, qt_phy, ut_sppt, vt_sppt, tt_sppt, qt_sppt
 
     ! precnv = convective precipitation  [g/(m^2 s)], total
@@ -109,7 +108,6 @@ module mod_physvar
             allocate(vt_pbl(ngp, kx))
             allocate(tt_pbl(ngp, kx))
             allocate(qt_pbl(ngp, kx))
-            allocate(tt_rdf(ngp, kx))
             allocate(ut_phy(ngp, kx))
             allocate(vt_phy(ngp, kx))
             allocate(tt_phy(ngp, kx))
