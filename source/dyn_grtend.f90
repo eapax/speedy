@@ -14,47 +14,35 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     !           tdt   = spectral tendency of temperature
     !           psdt  = spectral tendency of log(p_s)
     !           trdt  = spectral tendency of tracers
+    !   Externals: The gridpoint fields stored in mod_physvar are updated in
+    !              this subroutine
+    !
 
-    USE mod_atparam
-    USE mod_dynvar
-    use mod_physvar
-    use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
-    use mod_dyncon2, only: tref, tref3
-    use spectral, only: lap, grad, uvspec, grid, spec, vdspec
+    use mod_atparam
+    use mod_dynvar
+    use mod_physvar, only: ug1, vg1, tg1, qg1, phig1, pslg1
+    use mod_dyncon1, only: coriol
+    use spectral, only: uvspec, grid
     use mod_prec, only: set_precision
     use rp_emulator
 
     implicit none
 
-    !** notes ****
-    ! -- TG does not have to be computed at both time levels every time step,
-    !     I have left it this way to retain parallel structure with subroutine
-    !     using latitude loop
-    ! -- memory can be reduced considerably eliminating TGG, computing VORG
-    !     only when needed, etc -- I have not optimized this subroutine for
-    !     routine use on the YMP
-    ! -- results from grtend1.F should duplicate results from grtend.F
-    !                              -- Isaac
-    !************
-
-    type(rpe_complex_var), dimension(mx,nx,kx), intent(inout) :: vordt, divdt, tdt
-    type(rpe_complex_var), intent(inout) :: psdt(mx,nx), trdt(mx,nx,kx,ntr)
+    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, divdt, tdt
+    type(rpe_complex_var), dimension(mx,nx),        intent(inout) :: psdt
+    type(rpe_complex_var), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
     integer, intent(in) :: j1, j2
 
-    type(rpe_complex_var) :: dumc(mx,nx,3), zero
+    ! Gridpoint tendencies. Updated in phypar and dyntend
+    type(rpe_var), dimension(ix,il,kx)     :: utend, vtend, ttend
+    type(rpe_var), dimension(ix,il,kx,ntr) :: trtend
 
-    type(rpe_var), dimension(ix,il,kx) :: utend, vtend, ttend
-    type(rpe_var) :: trtend(ix,il,kx,ntr), half
-
-    type(rpe_var), dimension(ix,il,kx) :: ug, vg, tg, vorg, divg, tgg, puv
-    type(rpe_var), dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
-    type(rpe_var) :: trg(ix,il,kx,ntr), sigdt(ix,il,kxp)
-    type(rpe_var) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
+    ! Local gridpoint variables from spectral transform for calculating dynamics
+    ! tendencies. Only calculate ug/vg/tg when j1/=j2
+    type(rpe_var), dimension(ix,il,kx)     :: ug, vg, tg, vorg, divg
+    type(rpe_var), dimension(ix,il,kx,ntr) :: trg
 
     integer :: iitest = 0, k, i, itr, j
-
-    zero = (0.,0.)
-    half = 0.5
 
     if (iitest.eq.1) print*,'inside GRTEND'
 
@@ -74,19 +62,16 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
       call grid(phi(:,:,k), phig1(:,k), 1)
     end do
 
-    call grid(ps(1,1,j1),pslg1,1)
+    call grid(ps(:,:,j1),pslg1,1)
 
-    ! 1.3 Grid point variables for dynamics tendencies
+    ! 1.3 Grid-point variables for dynamics tendencies
     do k=1,kx
         call grid(vor(:,:,k,j2),vorg(:,:,k),1)
         call grid(div(:,:,k,j2),divg(:,:,k),1)
-        call grid(  t(:,:,k,j2),  tg(:,:,k),1)
 
         do itr=1,ntr
           call grid(tr(:,:,k,j2,itr),trg(:,:,k,itr),1)
         end do
-
-        call uvspec(vor(:,:,k,j2), div(:,:,k,j2), ug(:,:,k), vg(:,:,k))
 
         do j=1,il
             do i=1,ix
@@ -103,6 +88,78 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     ! 3. Dynamics tendencies
     if (iitest.eq.1) print*,'Calculating dynamics tendencies'
     call set_precision('Grid Dynamics')
+    if (j1 == j2) then
+        call dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
+                     utend, vtend, ttend, trtend, &
+                     ug1, vg1, tg1, vorg, divg, trg)
+    else
+        ! Only recalculate tg, ug and vg if phypar and dyntend use different
+        ! time indices (j1/=j2)
+        do k=1,kx
+            call grid(  t(:,:,k,j2),  tg(:,:,k),1)
+            call uvspec(vor(:,:,k,j2), div(:,:,k,j2), ug(:,:,k), vg(:,:,k))
+        end do
+
+        call dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
+                     utend, vtend, ttend, trtend, &
+                     ug, vg, tg, vorg, divg, trg)
+    end if
+
+end subroutine grtend
+
+subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
+                   utend, vtend, ttend, trtend, &
+                   ug, vg, tg, vorg, divg, trg)
+    !   Purpose: Compute non-linear tendencies in grid-point space from
+    !            dynamics and add to physics tendencies. Convert total
+    !            gridpoint tendencies to spectral tendencies
+    !
+    !   Input:  j2    = time level index for dynamical tendencies
+    !           ug    = Gridpoint field of zonal velocity
+    !           vg    = Gridpoint field of meridional velocity
+    !           tg    = Gridpoint field of temperatur
+    !           vorg  = Gridpoint field of vorticity
+    !           divg  = Gridpoint field of divergence
+    !           trg   = Gridpoint field of tracers
+    !   InOut:  utend = gridpoint tendencity of zonal velocity
+    !           vtend = gridpoint tendencity of meridional velocity
+    !           ttend = gridpoint tendencity of temperature
+    !           qtend = gridpoint tendencity of humidity
+    !   Output: vordt = spectral tendency of vorticity
+    !           divdt = spectral tendency of divergence
+    !           tdt   = spectral tendency of temperature
+    !           psdt  = spectral tendency of log(p_s)
+    !           trdt  = spectral tendency of tracers
+    use mod_atparam
+    use mod_dynvar
+    use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr
+    use mod_dyncon2, only: tref, tref3
+    use spectral, only: lap, grad, grid, spec, vdspec
+
+    implicit none
+
+    integer, intent(in) :: j2
+
+    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, divdt, tdt
+    type(rpe_complex_var), dimension(mx,nx),        intent(inout) :: psdt
+    type(rpe_complex_var), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
+
+    type(rpe_var), dimension(ix,il,kx),     intent(inout) :: utend, vtend, ttend
+    type(rpe_var), dimension(ix,il,kx,ntr), intent(inout) :: trtend
+
+    type(rpe_var), dimension(ix,il,kx),     intent(in) :: ug, vg, tg, vorg, divg
+    type(rpe_var), dimension(ix,il,kx,ntr), intent(in) :: trg
+
+    type(rpe_complex_var) :: dumc(mx,nx,3), zero
+
+    type(rpe_var), dimension(ix,il,kx) :: tgg, puv
+    type(rpe_var), dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
+    type(rpe_var) :: sigdt(ix,il,kxp)
+    type(rpe_var) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
+
+    integer :: iitest = 0, i, j, k, itr
+
+    zero = (0.,0.)
 
     umean(:,:) = 0.0
     vmean(:,:) = 0.0
@@ -241,7 +298,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
-        dumr(:,:,1)=half*(ug(:,:,k)*ug(:,:,k)+vg(:,:,k)*vg(:,:,k))
+        dumr(:,:,1)=rpe_literal(0.5)*(ug(:,:,k)*ug(:,:,k)+vg(:,:,k)*vg(:,:,k))
         dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)
         dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)
 
@@ -275,4 +332,4 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
             call set_precision('Grid Dynamics')
         end do
     end do
-end
+end subroutine dyntend

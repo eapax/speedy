@@ -30,12 +30,9 @@ subroutine ini_atm()
     if (iitest == 1) print *, 'calling inphys'
     call inphys(hsg, ppl, radang)
 
-    ! 5. initialize forcing fields (boundary cond. + random forcing)
+    ! 5. initialize forcing fields (boundary cond.)
     if (iitest == 1) print *, 'calling inbcon'
     call inbcon(grav,radang)
-
-    if (iitest == 1) print *, 'calling inirdf'
-    call inirdf()
 
     ! 6. initialize model variables
     if (iitest == 1) print *, 'calling invars'
