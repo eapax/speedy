@@ -5,28 +5,28 @@ module spectral
     implicit none
 
     private
+    ! Public subroutines
     public setup_spectral, gaussl, parmtr, lap, invlap, grad, uvspec, grid, &
             spec, vdspec
-    public el2, sia, cosg, cosgr
+    ! Public parameters
+    public el2, sia, cosgr
+
+    ! The variables below are declared public as they are used in the spectral
+    ! subroutines at the bottom of this document that are outside the module
+    ! due to issues with passing different types between subroutines but could
+    ! potentially be fixed to private
     public cpol, nsh2, wt, trfilt
 
     ! Initial. in parmtr
-    real, dimension(:,:), allocatable :: el2, elm2, el4, trfilt
-    integer, allocatable :: l2(:,:), ll(:,:), mm(:), nsh2(:)
+    real, dimension(:,:), allocatable :: el2, elm2, trfilt
+    integer, allocatable :: nsh2(:)
 
     ! Initial. in parmtr
-    real, dimension(:), allocatable :: sia, coa, wt, wght
-    real, dimension(:), allocatable :: cosg, cosgr, cosgr2
+    real, dimension(:), allocatable :: sia, wt
+    real, dimension(:), allocatable :: cosgr, cosgr2
 
     ! Initial. in parmtr
     real, allocatable :: gradx(:), gradym(:,:), gradyp(:,:)
-
-    ! Initial. in parmtr
-    real :: sqrhlf
-    real, allocatable :: consq(:), epsi(:,:), repsi(:,:), emm(:), ell(:,:)
-
-    ! Initial. in parmtr
-    real, allocatable :: poly(:,:)
 
     ! Initial. in parmtr
     real, allocatable :: cpol(:,:,:)
@@ -41,28 +41,15 @@ module spectral
         subroutine setup_spectral()
             allocate(el2(mx, nx))
             allocate(elm2(mx, nx))
-            allocate(el4(mx, nx))
             allocate(trfilt(mx, nx))
-            allocate(l2(mx,nx))
-            allocate(ll(mx,nx))
-            allocate(mm(mx))
             allocate(nsh2(nx))
             allocate(sia(iy))
-            allocate(coa(iy))
             allocate(wt(iy))
-            allocate(wght(iy))
-            allocate(cosg(il))
             allocate(cosgr(il))
             allocate(cosgr2(il))
             allocate(gradx(mx))
             allocate(gradym(mx, nx))
             allocate(gradyp(mx, nx))
-            allocate(consq(mxp))
-            allocate(epsi(mxp,nxp))
-            allocate(repsi(mxp,nxp))
-            allocate(emm(mxp))
-            allocate(ell(mxp,nxp))
-            allocate(poly(mx,nx))
             allocate(cpol(mx2,nx,iy))
             allocate(uvdx(mx, nx))
             allocate(uvdym(mx, nx))
@@ -121,7 +108,12 @@ subroutine parmtr(a)
     implicit none
 
     real, intent(in) :: a
+    real :: poly(mx, nx), coa(iy)
+    integer :: l2(mx,nx), ll(mx,nx), mm(mx)
     real :: am1, am2, cosqr, el1, ell2, emm2
+    real :: consq(mxp), epsi(mxp,nxp), repsi(mxp,nxp), emm(mxp), ell(mxp,nxp)
+    real :: sqrhlf
+
 
     integer :: j, jj, m, m1, m2, n
 
@@ -137,20 +129,16 @@ subroutine parmtr(a)
     am1 = 1./a
     am2=  1./(a*a)
 
-    ! COA(IY) = cos(lat); WGHT needed for transforms, 
-    !           saved in mod_spectral
+    ! COA(IY) = cos(lat)
     do j=1,iy
         cosqr = 1.0-sia(j)**2
         coa(j)=sqrt(cosqr)
-        wght(j)=wt(j)/(a*cosqr)
     end do
 
     ! expand cosine and its reciprocal to cover both hemispheres, 
     !    saved in mod_spectral
     do j=1,iy
         jj=il+1-j
-        cosg(j)=coa(j)
-        cosg(jj)=coa(j)
         cosgr(j)=1./coa(j)
         cosgr(jj)=1./coa(j)
         cosgr2(j)=1./(coa(j)*coa(j))
@@ -173,7 +161,6 @@ subroutine parmtr(a)
             ll(m,n)=mm(m)+n-1
             l2(m,n)=ll(m,n)*(ll(m,n)+1)
             el2(m,n)=float(l2(m,n))*am2
-            el4(m,n)=el2(m,n)*el2(m,n)
             if (ll(m,n).le.ntrun1.or.ix.ne.4*iy) nsh2(n)=nsh2(n)+2
             if (ll(m,n).le.ntrun) then
               trfilt(m,n)=1.
@@ -215,7 +202,6 @@ subroutine parmtr(a)
         end do
     end do
 
-    sqrhlf=sqrt(.5)
     do m=2,mxp
         consq(m) = sqrt(.5*(2.*emm(m)+1.)/emm(m))
     end do
@@ -245,11 +231,11 @@ subroutine parmtr(a)
     end do
 
     !  generate associated Legendre polynomial
-    !  LGNDRE computes the polynomials at a particular latitiude, POLY(MX,NX), and stores
-    !  them in mod_spectral
-    !  polynomials and 'clones' stored in mod_spectral
+    !  LGNDRE computes the polynomials at a particular latitiude, POLY(MX,NX)
+    !  These are then stored in cpol
+    sqrhlf=sqrt(.5)
     do j=1,iy
-        call lgndre(j)
+        call lgndre(j, sia(j), coa(j), poly, sqrhlf, consq, epsi, repsi)
         do n=1,nx
             do m=1,mx
                 m1=2*m-1
@@ -261,20 +247,23 @@ subroutine parmtr(a)
     end do
 end
 !****************************************************************
-subroutine lgndre(j)
-    ! follows Leith Holloways code 
+subroutine lgndre(j, x, y, poly, sqrhlf, consq, epsi, repsi)
+    ! follows Leith Holloways code
+    ! Sets the values of poly
 
     use mod_atparam
 
     implicit none
 
     integer, intent(in) :: j
+    real, intent(in) :: x, y
+    real, intent(in) :: sqrhlf
+    real :: consq(mxp), epsi(mxp,nxp), repsi(mxp,nxp)
+    real, intent(out) :: poly(mx, nx)
     real, parameter :: small = 1.e-30
 
     integer :: m, n, mm2
-    real :: alp(mxp,nx), x, y
-    y = coa(j)
-    x = sia(j)
+    real :: alp(mxp,nx)
 
     ! start recursion with N=1 (M=L) diagonal 
     alp(1,1) = sqrhlf

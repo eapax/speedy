@@ -17,7 +17,7 @@ module mod_dyncon1
     real, allocatable :: hsg(:), dhs(:), fsg(:), dhsr(:), fsgr(:)
 
     ! Functions of lat. and lon. (initial. in indyns)
-    real, allocatable :: radang(:), gsin(:), gcos(:), coriol(:)
+    real, allocatable :: radang(:), coriol(:)
 
     ! Constants for hydrostatic eq. (initial. in indyns)
     real, allocatable :: xgeop1(:), xgeop2(:)
@@ -30,8 +30,6 @@ module mod_dyncon1
             allocate(dhsr(kx))
             allocate(fsgr(kx))
             allocate(radang(il))
-            allocate(gsin(il))
-            allocate(gcos(il))
             allocate(coriol(il))
             allocate(xgeop1(kx))
             allocate(xgeop2(kx))
