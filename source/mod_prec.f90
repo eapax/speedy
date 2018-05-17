@@ -27,7 +27,6 @@ module mod_prec
             rp_timestepping=52, &
             rp_prognostics=52, &
             rp_tendencies=52, &
-            rp_initialisation=52, &
             rp_parameters=52
 
     namelist /precisions/ &
@@ -35,8 +34,7 @@ module mod_prec
             rp_grid_physics, rp_convection, rp_condensation, rp_sw_radiation, &
             rp_lw_radiation, rp_surface_fluxes, rp_vertical_diffusion, &
             rp_sppt, rp_grid_dynamics, rp_spectral_dynamics, rp_diffusion, &
-            rp_timestepping, rp_prognostics, rp_tendencies, rp_initialisation, &
-            rp_parameters
+            rp_timestepping, rp_prognostics, rp_tendencies, rp_parameters
 
     contains
 
@@ -48,7 +46,7 @@ module mod_prec
             read(99, precisions)
             close(99)
 
-            call set_precision('Default')
+            call set_precision('Full')
         end subroutine
 
         subroutine set_precision(mode)
@@ -116,9 +114,6 @@ module mod_prec
 
                 case('Tendencies')
                 RPE_DEFAULT_SBITS = rp_tendencies
-
-                case('Initialisation')
-                RPE_DEFAULT_SBITS = rp_initialisation
 
                 case('Parameters')
                 RPE_DEFAULT_SBITS = rp_parameters

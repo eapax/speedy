@@ -15,7 +15,6 @@ subroutine agcm_init()
     call ini_namelist()
 
     ! Initialise reduced precision constants
-    call set_precision('Initialisation')
     call ini_rp()
 
     ! 1. set run initial time, duration, time-stepping and coupling options

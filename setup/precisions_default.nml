@@ -16,6 +16,5 @@
     rp_timestepping=52,
     rp_prognostics=52,
     rp_tendencies=52,
-    rp_initialisation=52,
     rp_parameters=52,
 /

@@ -196,7 +196,7 @@ subroutine rest_sea(imode)
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
     use mod_downscaling, only: ix_in, il_in, regrid
     use rp_emulator
-    use mod_prec, only: set_precision
+    use mod_prec
 
     implicit none
 
@@ -206,41 +206,38 @@ subroutine rest_sea(imode)
     type(rpe_var) :: sstfr
 
     ! Sea variables at input resolution
-    type(rpe_var) :: sst_om_in(ix_in*il_in)
-    type(rpe_var) :: tice_om_in(ix_in*il_in)
-    type(rpe_var) :: sice_om_in(ix_in*il_in)
+    ! Data loaded in at full precision
+    real(dp) :: sst_om_in(ix_in*il_in)
+    real(dp) :: tice_om_in(ix_in*il_in)
+    real(dp) :: sice_om_in(ix_in*il_in)
 
     if (imode.eq.0) then
         ! Load data at full precision
-        call set_precision('Full')
-        read (3)  sst_om_in%val      ! sst
-        read (3) tice_om_in%val      ! sea ice temperature
-        read (3) sice_om_in%val      ! sea ice fraction
+        read (3)  sst_om_in     ! sst
+        read (3) tice_om_in     ! sea ice temperature
+        read (3) sice_om_in     ! sea ice fraction
 
         ! Interpolate to new grid
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(sst_om_in, sst_om)
+            call regrid(sst_om_in, sst_om%val)
+            call apply_truncation(sst_om)
         else
             sst_om = sst_om_in
         end if
 
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(tice_om_in, tice_om)
+            call regrid(tice_om_in, tice_om%val)
+            call apply_truncation(tice_om)
         else
             tice_om = tice_om_in
         end if
 
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(sice_om_in, sice_om)
+            call regrid(sice_om_in, sice_om%val)
+            call apply_truncation(sice_om)
         else
             sice_om = sice_om
         end if
-
-        ! Reduce precision of input fields
-        call set_precision('Initial Values')
-        sst_om = sst_om
-        tice_om = tice_om
-        sice_om = sice_om
     else
         !    write sea/ice model variables from coupled runs,
         !    otherwise write fields used by atmospheric model

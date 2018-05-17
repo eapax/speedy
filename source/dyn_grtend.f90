@@ -82,12 +82,11 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 2. Parametrized physics tendencies
     if (iitest.eq.1) print*,'Calculating physics tendencies'
-    call set_precision('Grid Physics')
     call phypar(utend, vtend, ttend, trtend)
 
     ! 3. Dynamics tendencies
     if (iitest.eq.1) print*,'Calculating dynamics tendencies'
-    call set_precision('Grid Dynamics')
+
     if (j1 == j2) then
         call dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
                      utend, vtend, ttend, trtend, &
@@ -135,6 +134,8 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
+    use mod_prec, only: set_precision
+    use rp_emulator
 
     implicit none
 
@@ -150,7 +151,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     type(rpe_var), dimension(ix,il,kx),     intent(in) :: ug, vg, tg, vorg, divg
     type(rpe_var), dimension(ix,il,kx,ntr), intent(in) :: trg
 
-    type(rpe_complex_var) :: dumc(mx,nx,3), zero
+    type(rpe_complex_var) :: dumc(mx,nx,3)
 
     type(rpe_var), dimension(ix,il,kx) :: tgg, puv
     type(rpe_var), dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
@@ -159,7 +160,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     integer :: iitest = 0, i, j, k, itr
 
-    zero = (0.,0.)
+    call set_precision('Grid Dynamics')
 
     umean(:,:) = 0.0
     vmean(:,:) = 0.0
@@ -173,7 +174,6 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     ! Compute tendency of log(surface pressure)
     if (iitest.eq.1) print*,'d'
-    ! ps(1,1,j2)=zero
     call set_precision('Spectral Transform')
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
     call grid(dumc(:,:,2),px,2)
@@ -185,7 +185,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     call set_precision('Spectral Transform')
     call spec(dumr(:,:,1),psdt)
     call set_precision('Grid Dynamics')
-    psdt(1,1)=zero
+    psdt(1,1)=(0.,0.)
 
     ! Compute "vertical" velocity
     sigdt(:,:,1) = 0.0

@@ -40,6 +40,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     integer :: iitest = 0, n, itr, k, m
 
     if (iitest.eq.1) print*, ' inside step'
+    call set_precision('Default')
 
     ! 1. Computation of grid-point tendencies
     ! (converted to spectral at the end of GRTEND)
@@ -101,11 +102,11 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     if (iitest.eq.1) print*,' time integration'
     call set_precision('Tendencies')
-    psdt = psdt
-    vordt = vordt
-    divdt = divdt
-    tdt = tdt
-    trdt = trdt
+    call apply_truncation(psdt)
+    call apply_truncation(vordt)
+    call apply_truncation(divdt)
+    call apply_truncation(tdt)
+    call apply_truncation(trdt)
 
     call set_precision('Timestepping')
 

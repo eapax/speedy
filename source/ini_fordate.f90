@@ -141,6 +141,7 @@ subroutine outest(iunit,fout)
 
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -148,7 +149,7 @@ subroutine outest(iunit,fout)
     type(rpe_var), intent(in) :: fout(ix, il)
     integer :: i, j
 
-    real*4 :: r4out(ix,il)
+    real(sp) :: r4out(ix,il)
 
     do j = 1, il
         do i = 1, ix

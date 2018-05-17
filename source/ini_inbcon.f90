@@ -18,9 +18,9 @@ subroutine inbcon(grav0,radlat)
     implicit none
 
     type(rpe_var), intent(in) :: grav0
-    real(dp), intent(in) :: radlat(il)
+    type(rpe_var), intent(in) :: radlat(il)
 
-    real(sp) :: r4inp(ix,il), dummy4
+    real(sp) :: r4inp(ix,il)
     type(rpe_var) :: inp(ix,il), phis1(ix,il)
     type(rpe_var) :: veg(ix,il), swl1(ix,il), swl2(ix,il)
 
@@ -472,12 +472,13 @@ subroutine load_boundary_file(ioflag,iunit,fld,offset)
 
     use mod_atparam
     use rp_emulator
+    use mod_prec
 
     implicit none
 
     integer, intent(in) :: ioflag, iunit, offset
     type(rpe_var)     :: fld(ix,il)
-    real(4) :: inp(ix,il)
+    real(sp) :: inp(ix,il)
     integer :: i
 
     open(unit=iunit, form='unformatted', access='direct', recl=ix*4, convert='little_endian')

@@ -1,6 +1,6 @@
 module interpolation
 
-    use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -21,15 +21,15 @@ module interpolation
 
             ! 1d monotononically increasing coordinates of input and output
             integer, intent(in) :: nx_in, nx_out
-            type(rpe_var), intent(in) :: x_in(nx_in), x_out(nx_out)
+            real(dp), intent(in) :: x_in(nx_in), x_out(nx_out)
 
             ! Period for wrapping coordinate (e.g. longitude: period=360)
-            type(rpe_var), intent(in) :: period
+            real(dp), intent(in) :: period
 
             ! One index for each element in x_out with the fractional index to
             ! interpolate to in x_in
             integer, intent(out) :: idx(nx_out)
-            type(rpe_var), intent(out) :: weights(nx_out)
+            real(dp), intent(out) :: weights(nx_out)
 
             integer :: i, n
 
@@ -74,9 +74,9 @@ module interpolation
         function linear_interp(x_in, idx, weights, nx_in, nx_out) result(x_out)
             integer, intent(in) :: nx_in, nx_out
             integer, intent(in) :: idx(nx_out)
-            type(rpe_var), intent(in) :: weights(nx_out)
-            type(rpe_var), intent(in) :: x_in(nx_in)
-            type(rpe_var) :: x_out(nx_out)
+            real(dp), intent(in) :: weights(nx_out)
+            real(dp), intent(in) :: x_in(nx_in)
+            real(dp) :: x_out(nx_out)
             integer :: idxp1, idxm1
             integer :: n
 

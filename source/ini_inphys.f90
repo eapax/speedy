@@ -16,7 +16,7 @@ subroutine inphys(hsg,ppl,rlat)
 
     type(rpe_var) :: hsg(0:kx)
     real(dp) :: ppl(kx)
-    real(dp) :: rlat(il)
+    type(rpe_var) :: rlat(il)
     integer :: j, k
     
     ! 1.2 Functions of sigma and latitude

@@ -7,6 +7,7 @@ module ppo_output_stream
     use mod_date, only: imonth, month_start
     use spectral, only: uvspec, grid
     use ppo_plevs, only: pressure_levels, np
+    use mod_prec
 
     implicit none
 
@@ -258,8 +259,8 @@ module ppo_output_stream
 
         subroutine write_spectral(stream)
             type(output_stream), intent(inout) :: stream
-            complex :: output(mx, nx, kx)
-            real(4) :: re_output(mx, nx, kx), im_output(mx, nx, kx)
+            complex(dp) :: output(mx, nx, kx)
+            real(sp) :: re_output(mx, nx, kx), im_output(mx, nx, kx)
             integer :: n, k
 
             do n=1, stream%nvars
@@ -284,8 +285,8 @@ module ppo_output_stream
         subroutine write_grid(stream)
             type(output_stream), intent(inout) :: stream
             type(rpe_var) :: output(ngp, kx)
-            real(4) :: output_sp(ngp, kx)
-            real(4) :: output_p(ngp, np)
+            real(sp) :: output_sp(ngp, kx)
+            real(sp) :: output_p(ngp, np)
             integer :: n, k
 
             do n=1, stream%nvars
@@ -320,7 +321,7 @@ module ppo_output_stream
         ! TODO implement 2d variables in same interface
         function fetch_output_spectral(varID) result(output)
             integer :: varID
-            complex :: output(mx, nx, kx)
+            complex(dp) :: output(mx, nx, kx)
 
             select case(varID)
                 ! vorticity = vor(mx, nx, kx, 2)
@@ -361,7 +362,7 @@ module ppo_output_stream
         ! TODO implement 2d variables in same interface
         function fetch_output_grid(varID) result(output)
             integer :: varID
-            real :: output(ngp, kx)
+            real(dp) :: output(ngp, kx)
 
             select case(varID)
                 ! ug1    = u-wind

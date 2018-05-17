@@ -99,6 +99,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
+        call set_precision('Grid Physics')
         do j=1,ngp
             gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
@@ -170,6 +171,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 5. Store all fluxes for coupling and daily-mean output
+    call set_precision('Default')
     call dmflux(1)
 
     ! Sum physics tendencies

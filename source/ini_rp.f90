@@ -23,7 +23,6 @@ subroutine truncate_rp()
     use mod_hdifcon, only: truncate_hdifcon
     use mod_physcon, only: truncate_physcon
     use mod_physvar, only: truncate_physvar
-    use mod_randfor, only: truncate_randfor
     use mod_sppt, only: truncate_sppt
     use mod_surfcon, only: truncate_surfcon
     use mod_tsteps, only: truncate_tsteps
@@ -50,7 +49,6 @@ subroutine truncate_rp()
     call truncate_hdifcon()
     call truncate_physcon()
     call truncate_physvar()
-    call truncate_randfor()
     call truncate_sppt()
     call truncate_surfcon()
     call truncate_tsteps()

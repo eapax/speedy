@@ -150,7 +150,7 @@ module mod_sppt
             type(rpe_var) :: f0(nscales)
 
             ! Calculate time autocorrelation factor as a function of timestep
-            phi = exp(-(24/real(nsteps))/time_decorr)
+            phi = exp(-(rpe_literal(24)/rpe_literal(nsteps))/time_decorr)
 
             ! Generate spatial amplitude pattern
             do sc=1, nscales
@@ -168,9 +168,11 @@ module mod_sppt
         !> @param stdev the standard deviation of the distribution to draw from
         !> @return randn the generated random number
         function randn(mean, stdev)
+            use mod_prec
+
             type(rpe_var), intent(in) :: mean, stdev
             type(rpe_var) :: u, v, randn
-            real :: rand(2)
+            real(dp) :: rand(2)
 
             call random_number(rand)
 

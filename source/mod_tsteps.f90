@@ -39,7 +39,7 @@ module mod_tsteps
 
             read(fid, timestepping)
             idelt = 86400 / nsteps
-            delt = real(idelt)
+            delt = rpe_literal(idelt)
             delt2 = 2.0 * idelt
 
             write(*, timestepping)

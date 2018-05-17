@@ -17,7 +17,9 @@ module spectral
     integer, allocatable :: l2(:,:), ll(:,:), mm(:), nsh2(:)
 
     ! Initial. in parmtr
-    type(rpe_var), dimension(:), allocatable :: sia, coa, wt, wght
+    ! sia only used during model setup
+    real(dp), dimension(:), allocatable :: sia
+    type(rpe_var), dimension(:), allocatable :: coa, wt, wght
     type(rpe_var), dimension(:), allocatable :: cosg, cosgr, cosgr2
 
     ! Initial. in parmtr
@@ -78,7 +80,6 @@ module spectral
             call apply_truncation(elm2)
             call apply_truncation(el4)
             call apply_truncation(trfilt)
-            call apply_truncation(sia)
             call apply_truncation(coa)
             call apply_truncation(wt)
             call apply_truncation(wght)
@@ -113,7 +114,7 @@ subroutine gaussl(x,w,m)
     !      x(m) = sin(gaussian latitude) 
     !      w(m) = weights in gaussian quadrature (sum should equal 1.0)
 
-    type(rpe_var), intent(inout) :: x(m),w(m)
+    real(dp), intent(out) :: x(m),w(m)
     integer, intent(in) :: m
     real(dp) :: z,z1,p1,p2,p3,pp
     real(dp), parameter :: eps=3.d-14
@@ -160,7 +161,7 @@ subroutine parmtr(a)
     !     pole to equator
     ! SIA(IY) is sin of latitude, WT(IY) are Gaussian weights for quadratures,
     !   saved in mod_spectral
-    call gaussl(sia,wt,iy)
+    call gaussl(sia,wt%val,iy)
     am1 = 1.0_dp/a
     am2=  1.0_dp/(a*a)
 
@@ -295,7 +296,7 @@ subroutine lgndre(j)
     real(dp), parameter :: small = 1.0d-30
 
     integer :: m, n, mm2
-    type(rpe_var) :: alp(mxp,nx), x, y
+    real(dp) :: alp(mxp,nx), x, y
     y = coa(j)
     x = sia(j)
 
