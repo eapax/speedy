@@ -15,9 +15,9 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     !           psdt  = spectral tendency of log(p_s)
     !           trdt  = spectral tendency of tracers
 
-    USE mod_atparam
-    USE mod_dynvar
-    use mod_physvar
+    use mod_atparam
+    use mod_dynvar
+    use mod_physvar, only: ug1, vg1, tg1, qg1, phig1, pslg1
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr, coriol
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, uvspec, grid, spec, vdspec

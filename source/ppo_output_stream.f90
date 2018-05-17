@@ -445,44 +445,80 @@ module ppo_output_stream
                 !output(:, 1) = prtop
 
                 ! tt_cnv  =  temperature tendency due to convection
-                case(21)
+                case(101)
                 output = tt_cnv
 
                 ! qt_cnv  = sp. humidity tendency due to convection
-                case(22)
+                case(102)
                 output = qt_cnv
 
                 ! tt_lsc  =  temperature tendency due to large-scale condensation
-                case(23)
+                case(103)
                 output = tt_lsc
 
                 ! qt_lsc  = sp. humidity tendency due to large-scale condensation
-                case(24)
+                case(104)
                 output = qt_lsc
 
                 ! tt_rsw  =  temperature tendency due to short-wave radiation
-                case(25)
+                case(105)
                 output = tt_rsw
 
                 ! tt_rlw  =  temperature tendency due to long-wave radiation
-                case(26)
+                case(106)
                 output = tt_rlw
 
                 ! ut_pbl  =       u-wind tendency due to PBL and diffusive processes
-                case(27)
+                case(107)
                 output = ut_pbl
 
                 ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
-                case(28)
+                case(108)
                 output = vt_pbl
 
                 ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
-                case(29)
+                case(109)
                 output = tt_pbl
 
                 ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
-                case(30)
+                case(110)
                 output = qt_pbl
+
+                ! tt_rdf  =  temperature tendency due to random diabatic forcing
+                case(111)
+                output = tt_rdf
+
+                ! ut_phy  =       u-wind tendency due to all physics processes
+                case(112)
+                output = ut_phy
+
+                ! vt_phy  =       v-wind tendency due to all physics processes
+                case(113)
+                output = vt_phy
+
+                ! tt_phy  =  temperature tendency due to all physics processes
+                case(114)
+                output = tt_phy
+
+                ! qt_phy  = sp. humidity tendency due to all physics processes
+                case(115)
+                output = qt_phy
+
+                ! ut_sppt =       u-wind tendency due to stochastic perturbation
+                case(116)
+                output = ut_sppt
+
+                ! vt_sppt =       v-wind tendency due to stochastic perturbation
+                case(117)
+                output = vt_sppt
+
+                ! tt_sppt =  temperature tendency due to stochastic perturbation
+                case(118)
+                output = tt_sppt
+
+                ! qt_sppt = sp. humidity tendency due to stochastic perturbation
+                case(119)
+                output = qt_sppt
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total
                 !case(31)

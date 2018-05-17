@@ -13,7 +13,7 @@ module mod_sppt
     implicit none
 
     private
-    public sppt_on, mu, setup_sppt, gen_sppt
+    public sppt_on, setup_sppt, gen_sppt
 
     namelist /sppt/ sppt_on, nscales
     namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev
@@ -122,13 +122,14 @@ module mod_sppt
                 sppt_grid_total = sppt_grid_total + sppt_grid
             end do
 
-            do k=1,kx
-                ! SPPT perturbations uniform in height
-                sppt_grid_out(:, k) = reshape(sppt_grid_total, (/ngp/))
-            end do
-
             ! Clip to +/- 1.0
             sppt_grid_out = min(1.0, abs(sppt_grid_out)) * sign(1.0,sppt_grid_out)
+
+            ! Apply tapering
+            do k=1,kx
+                sppt_grid_out(:, k) = 1.0 + &
+                        reshape(sppt_grid_total, (/ngp/)) * mu(k)
+            end do
         end function
 
         !> @brief

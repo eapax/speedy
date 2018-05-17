@@ -10,15 +10,15 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !                     qtend  : spec. hum. tendency (gp)
     !  Modified common blocks:  mod_physvar
 
-    use mod_cpl_flags, only: icsea
     use mod_atparam
+    use mod_physvar
+    use mod_cpl_flags, only: icsea
     use mod_physcon, only: sig, sigh, grdsig, grdscp, cp
     use mod_surfcon, only: fmask1, phis0
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
-    use mod_physvar
     use mod_randfor, only: lrandf
-    use mod_sppt, only: sppt_on, mu, gen_sppt
+    use mod_sppt, only: sppt_on, gen_sppt
     use humidity, only: shtorh
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
@@ -90,9 +90,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 !fk      call lscond (psg,qg1,qsat,ts,iptop,precls,snowls,tt_lsc,qt_lsc)
 !fk#end if
 
-    ttend = tt_cnv + tt_lsc
-    qtend = qt_cnv + qt_lsc
-
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
     if (iitest.eq.1) print *, ' 3.1 in PHYPAR'
@@ -149,7 +146,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             tt_rlw(j,k) = tt_rlw(j,k)*rps(j)*grdscp(k)
-            ttend(j,k) = ttend(j,k)+tt_rsw(j,k)+tt_rlw(j,k)
         end do
     end do
 
@@ -165,11 +161,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
         qt_pbl(j,kx)=qt_pbl(j,kx)+evap(j,3)*rps(j)*grdsig(kx)
     end do
 
-    utend = ut_pbl
-    vtend = vt_pbl
-    ttend = ttend + tt_pbl
-    qtend = qtend + qt_pbl
-
     ! 5. Store all fluxes for coupling and daily-mean output
     call dmflux(1)
 
@@ -181,24 +172,38 @@ subroutine phypar(utend,vtend,ttend,qtend)
           call xs_rdf(tt_rsw,tt_rlw,2)
         end if
 
-        ! 6.2 Compute and store 3-D pattern of random diabatic forcing
-        tt_cnv = tt_cnv + tt_lsc
-
-        call setrdf(tt_lsc)
-
-        ttend = ttend + tt_lsc
+        ! 6.2 Compute 3-D pattern of random diabatic forcing
+        call setrdf(tt_rdf)
+    else
+        tt_rdf = 0.
     end if
+
+    ! Sum physics tendencies
+    ut_phy = ut_pbl
+    vt_phy = vt_pbl
+    tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_rlw + tt_pbl + tt_rdf
+    qt_phy = qt_cnv + qt_lsc + qt_pbl
 
     ! Add SPPT noise
     if (sppt_on) then
         sppt = gen_sppt()
 
-        do k = 1,kx
-            utend(:,k) = (1 + sppt(:,k)*mu(k)) * utend(:,k)
-            vtend(:,k) = (1 + sppt(:,k)*mu(k)) * vtend(:,k)
-            ttend(:,k) = (1 + sppt(:,k)*mu(k)) * ttend(:,k)
-            qtend(:,k) = (1 + sppt(:,k)*mu(k)) * qtend(:,k)
-        end do
+        utend = sppt * ut_phy
+        vtend = sppt * vt_phy
+        ttend = sppt * tt_phy
+        qtend = sppt * qt_phy
+
+        ! Store SPPT tendencies
+        ut_sppt = utend - ut_phy
+        vt_sppt = vtend - vt_phy
+        tt_sppt = ttend - tt_phy
+        qt_sppt = qtend - qt_phy
+
+    else
+        utend = ut_phy
+        vtend = vt_phy
+        ttend = tt_phy
+        qtend = qt_phy
     end if
 end
 
