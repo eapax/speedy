@@ -1,4 +1,5 @@
 subroutine ini_namelist()
+    ! Purpose: Read in constants defined in namelist and allocate all arrays
     use mod_atparam, only: setup_resolution
     use mod_downscaling, only: setup_downscaling
     use mod_cpl_flags, only: setup_coupling_flags
