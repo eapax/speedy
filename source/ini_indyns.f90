@@ -1,4 +1,4 @@
-subroutine indyns
+subroutine indyns()
     ! subroutine indyns
     !
     ! Purpose : set time-stepping constants and initialize coefficients
@@ -14,7 +14,7 @@ subroutine indyns
     use mod_dyncon1
     use mod_atparam
     use mod_hdifcon, only: dmp, dmpd, dmps, tcorv, qcorv
-    use spectral, only: sia, cosg, parmtr
+    use spectral, only: sia, parmtr
     use rp_emulator
 
     implicit none
@@ -76,15 +76,9 @@ subroutine indyns
         rad1 = asin(sia(j))
         radang(j)  = -rad1
         radang(jj) =  rad1
-        gsin(j)    = -sia(j)
-        gsin(jj)   =  sia(j)
+        coriol(j)  = -2.*omega*sia(j)
+        coriol(jj) =  2.*omega*sia(j)
     end do
-
-    do j = 1, il
-        gcos(j) = cosg(j)
-        coriol(j) = 2.*omega*gsin(j)
-    end do
-
 
     ! 4. Coefficients to compute geopotential
     do k = 1, kx

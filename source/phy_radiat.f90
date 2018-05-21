@@ -7,11 +7,19 @@ module phy_radiat
     implicit none
 
     private
-    public setup_radiation, truncate_radiat
-    public sol_oz, cloud, radsw, radlw, radset
-    public lco2, nstrad, lradsw, &
-            ablco2, ablco2_ref, albsea, albice, albsn, emisfc, &
-            alb_l, alb_s, albsfc, snowc
+    ! Public subroutines
+    public setup_radiation, truncate_radiat, sol_oz, cloud, radsw, radlw, radset
+    ! Switches used in the model
+    public lco2, nstrad, lradsw
+    ! Arrays of variable forcings (initialised and updated in fordate)
+    ! Used in phy_suflux (except albsfc)
+    public alb_l, alb_s, albsfc, snowc
+    ! Modified forcing in fordate
+    public ablco2
+    ! Constants used to determine forcing in fordate
+    public ablco2_ref, albsea, albice, albsn
+    ! Constant used in phy_suflux
+    public emisfc
 
     namelist /radiation/ lco2, nstrad, solc, albsea, albice, albsn, &
             rhcl1, rhcl2, qacl, wpcl, pmaxcl, &
@@ -158,9 +166,9 @@ module phy_radiat
             allocate(qcloud(ngp))
             allocate(irhtop(ngp))
         end subroutine setup_radiation
-        
+
         subroutine truncate_radiat()
-            call apply_truncation(solc)        
+            call apply_truncation(solc)
             call apply_truncation(albsea)
             call apply_truncation(albice)
             call apply_truncation(albsn)

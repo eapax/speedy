@@ -315,69 +315,6 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     print *, ' undefined values set to', fset
 end
 
-subroutine ftland (stl,phi0,phis0,fmaskl)
-    use mod_dyncon0, only: gamma
-    use mod_dyncon1, only: gcos, grav
-    use mod_atparam
-    use rp_emulator
-
-    implicit none
-
-    type(rpe_var), dimension(ix, il), intent(inout) :: stl, phi0, phis0, fmaskl
-    type(rpe_var) :: stl2(ix,il), sumt, sumw
-    integer :: nl8, nlat1, nlat2, i, idtr, itr, j, jband, jfil
-    type(rpe_var) :: gam
-
-    nl8 = il/8
-    gam = 0.001*gamma/grav
-
-    nlat1 = 1
-    nlat2 = nl8
-
-    do jband=1,8
-        sumt=0.
-        sumw=0.
-
-        do j=nlat1,nlat2
-            do i=1,ix
-                stl(i,j)=stl(i,j)+gam*phi0(i,j)
-                sumt=sumt+gcos(j)*fmaskl(i,j)*stl(i,j)
-                sumw=sumw+gcos(j)*fmaskl(i,j)
-            end do
-        end do
-
-        SUMT=SUMT/SUMW
-
-        do j=nlat1,nlat2
-            do i=1,ix
-                if (fmaskl(i,j).eq.0.) stl(i,j)=sumt
-            end do
-        end do
-  
-        nlat1=nlat1+nl8
-        nlat2=nlat2+nl8
-    end do
-
-    itr=7
-    idtr=(ntrun-6)/3
-
-    do jfil=1,4
-        call truncg (itr,stl,stl2)
-
-        do j=1,il
-            do i=1,ix
-                if (fmaskl(i,j).eq.0.) stl(i,j)=stl2(i,j)
-            end do
-        end do
-
-        itr=min(itr+idtr,ntrun)
-    end do
-
-    call truncg (itr,stl,stl2)
-
-    stl = stl2 - gam * phis0
-end
-
 subroutine truncg (itr,fg1,fg2)
     ! subroutine truncg (itr,fg1,fg2)
     ! Purpose : compute a spectrally-filtered grid-point field
