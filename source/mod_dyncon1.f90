@@ -73,8 +73,6 @@ module mod_dyncon1
             call apply_truncation(dhsr)
             call apply_truncation(fsgr)
             call apply_truncation(radang)
-            call apply_truncation(gsin)
-            call apply_truncation(gcos)
             call apply_truncation(coriol)
             call apply_truncation(xgeop1)
             call apply_truncation(xgeop2)
