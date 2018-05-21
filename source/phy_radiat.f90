@@ -5,10 +5,19 @@ module phy_radiat
     implicit none
 
     private
-    public setup_radiation, sol_oz, cloud, radsw, radlw, radset, &
-            lco2, nstrad, lradsw, &
-            ablco2, ablco2_ref, albsea, albice, albsn, emisfc, &
-            alb_l, alb_s, albsfc, snowc
+    ! Public subroutines
+    public setup_radiation, sol_oz, cloud, radsw, radlw, radset
+    ! Switches used in the model
+    public lco2, nstrad, lradsw
+    ! Arrays of variable forcings (initialised and updated in fordate)
+    ! Used in phy_suflux (except albsfc)
+    public alb_l, alb_s, albsfc, snowc
+    ! Modified forcing in fordate
+    public ablco2
+    ! Constants used to determine forcing in fordate
+    public ablco2_ref, albsea, albice, albsn
+    ! Constant used in phy_suflux
+    public emisfc
 
     namelist /radiation/ lco2, nstrad, solc, albsea, albice, albsn, &
             rhcl1, rhcl2, qacl, wpcl, pmaxcl, &
