@@ -6,7 +6,7 @@ subroutine impint(dt,alph)
     ! Input :   dt   = time step
     !           alph = stepping coefficient for gravity wave scheme
     !                  (0.0 = forward, 0.5 = centred, 1.0 = backward)
-    ! Initialized common blocks : dync5, dync6, hdifc2
+    ! Initialized common blocks : mod_dyncon2
 
     ! IMPINT initializes constants for the implicit gravity wave computation.
     ! It is assumed that that all implicit steps are of length DELT2 and use 

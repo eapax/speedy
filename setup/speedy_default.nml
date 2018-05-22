@@ -320,7 +320,7 @@
     segrad=0.1,
 /
 
-! mod_sppt
+! phy_sppt
 &sppt
     ! Turn on SPPT?
     sppt_on=.false.,

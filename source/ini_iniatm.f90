@@ -5,6 +5,8 @@ subroutine ini_atm()
 
     use mod_atparam
     use mod_dyncon1, only: grav, hsg, fsg, radang
+    use mod_fluxes, only: ini_fluxes
+    use phy_sppt, only: ini_sppt
     use rp_emulator
     use mod_prec
 
@@ -29,6 +31,7 @@ subroutine ini_atm()
     ! 4. initialize constants for physical parametrization
     if (iitest == 1) print *, 'calling inphys'
     call inphys(hsg, ppl, radang)
+    call ini_sppt()
 
     ! 5. initialize forcing fields (boundary cond.)
     if (iitest == 1) print *, 'calling inbcon'
@@ -39,8 +42,8 @@ subroutine ini_atm()
     call invars()
 
     ! 7. initialize time-mean arrays for surface fluxes and output fields
-    if (iitest == 1) print *, 'calling dmflux'
-    call dmflux(0)
+    if (iitest == 1) print *, 'calling ini_fluxes'
+    call ini_fluxes()
 
     contains
         function prlev(siglev)

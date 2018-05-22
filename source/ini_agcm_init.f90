@@ -1,6 +1,5 @@
 subroutine agcm_init()
-    !   purpose: initialization of atmos. model and coupling interface 
-    !
+    !   purpose: initialization of atmos. model and coupling interface
 
     use mod_cpl_flags, only: icsea, isstan
     use mod_date, only: ini_date, istart

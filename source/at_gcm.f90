@@ -36,6 +36,7 @@ subroutine agcm_1day(jday)
 
     use mod_tsteps, only: nsteps, nmonrs
     use mod_date, only: iyear, imonth, iday
+    use mod_fluxes, only: ini_fluxes
 
     implicit none
 
@@ -50,7 +51,7 @@ subroutine agcm_1day(jday)
     call fordate(1)
 
     ! 2. set daily-average flux arrays to zero
-    call dmflux(0)
+    call ini_fluxes()
 
     ! 3. integrate the atmospheric model for 1 day
     call stloop(istep)

@@ -27,7 +27,7 @@ subroutine atm2land(jday)
     use mod_cpl_flags, only: icland
     use mod_atparam
     use mod_cpl_land_model, only: vland_input
-    use mod_flx_land, only: hflux_l
+    use mod_fluxes, only: hflux_l
     use mod_cli_land, only: stl12, snowd12, soilw12
     use mod_date, only: imont1, tmonth
     use mod_var_land, only: stlcl_ob, snowdcl_ob, soilwcl_ob, stl_lm

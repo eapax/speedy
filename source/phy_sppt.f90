@@ -4,17 +4,14 @@
 !> A module for computing SPPT patterns to be used as multiplicative noise applied to physical tendencies
 !> Stochastically Perturbed Parametrization Tendencies (SPPT) is a parametrization of model error.
 !> See ECMWF Tech. Memo. #598 (Palmer et al. 2009)
-module mod_sppt
+module phy_sppt
     use mod_atparam
-    use mod_tsteps, only: nsteps
-    use mod_dyncon1, only: rearth
-    use spectral, only: el2, grid
     use rp_emulator
 
     implicit none
 
     private
-    public sppt_on, setup_sppt, truncate_sppt, gen_sppt
+    public sppt_on, setup_sppt, ini_sppt, truncate_sppt, gen_sppt
 
     namelist /sppt/ sppt_on, nscales
     namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev
@@ -82,16 +79,13 @@ module mod_sppt
         !> distribution.
         !> @return sppt_grid the generated grid point pattern
         function gen_sppt() result(sppt_grid_out)
+            use spectral, only: grid
+
             integer :: m, n, k
             type(rpe_var) :: sppt_grid(ix, il), sppt_grid_total(ix, il), &
                              sppt_grid_out(ngp, kx)
             type(rpe_complex_var) :: eta(mx, nx, nscales)
             type(rpe_var) :: randreal, randimag
-
-            if (first) then
-                call time_seed()
-                call init_sppt_parameters()
-            end if
 
             ! Generate Gaussian noise
             do k=1, nscales
@@ -140,12 +134,16 @@ module mod_sppt
                 sppt_grid_out(:, k) = 1.0 + &
                         reshape(sppt_grid_total, (/ngp/)) * mu(k)
             end do
-        end function
+        end function gen_sppt
 
         !> @brief
         !> Calculates the phi and sigma parameters in the SPPT calculations
         !> from the defined correlation scales and standard deviations
-        subroutine init_sppt_parameters()
+        subroutine ini_sppt()
+            use mod_tsteps, only: nsteps
+            use mod_dyncon1, only: rearth
+            use spectral, only: el2
+
             integer :: n, sc
             type(rpe_var) :: f0(nscales)
 
@@ -159,7 +157,9 @@ module mod_sppt
                 sigma(:,:,sc) = f0(sc) * exp(-0.25*len_decorr(sc)**2 * el2)
             end do
 
-        end subroutine
+            ! Initialise the random number generator
+            call time_seed()
+        end subroutine ini_sppt
 
         !> @brief
         !> Generates a random number drawn for the specified normal
@@ -180,22 +180,22 @@ module mod_sppt
             u = (-2.0 * log(rand(1))) ** 0.5
             v = 6.28318530718 * rand(2)
             randn = mean + stdev * u * sin(v)
-        end function
+        end function randn
 
         !> @brief
         !> Seeds RNG from system clock.
         subroutine time_seed()
             integer :: i, n, clock
             integer, allocatable :: seed(:)
-          
+
             call random_seed(size = n)
             allocate(seed(n))
-          
+
             call system_clock(count=clock)
-          
+
             seed = clock + 37 * (/ (i - 1, i = 1, n) /)
             call random_seed(put = seed)
-          
+
             deallocate(seed)
-        end subroutine
-end module
+        end subroutine time_seed
+end module phy_sppt

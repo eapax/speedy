@@ -1,12 +1,7 @@
 subroutine invars()
-    !   subroutine invars
-    !
     !   Purpose : initialize all spectral variables starting from
     !             either a reference atmosphere or a restart file
-    !   Input :   istart = 0 : reference atmosphere (at rest)
-    !                    = 1 : restart file
-    !   Initialized common blocks : date1, dynsp1, dynsp2 (phis only),
-    !                               sfcanom, sfcflux
+    !   Initialized common blocks : mod_dynvar
 
     use mod_dyncon0, only: gamma, hscale, hshum, refrh1
     use mod_atparam

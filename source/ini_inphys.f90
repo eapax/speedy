@@ -2,7 +2,7 @@ subroutine inphys(hsg,ppl,rlat)
     !
     ! subroutine inphys (hsg,ppl,rlat)
     !
-    ! Purpose: Initialize common blocks for physical parametrization routines 
+    ! Purpose: Initialize mod_physvar
     ! Input :  hsg  : sigma at half levels
     !          ppl  : pressure levels for post-processing
     !          rlat : gaussian-grid latitudes
@@ -18,7 +18,7 @@ subroutine inphys(hsg,ppl,rlat)
     real(dp) :: ppl(kx)
     type(rpe_var) :: rlat(il)
     integer :: j, k
-    
+
     ! 1.2 Functions of sigma and latitude
     sigh(0) = hsg(0)
 
@@ -33,7 +33,7 @@ subroutine inphys(hsg,ppl,rlat)
     end do
 
     ! Weights for vertical interpolation at half-levels(1,kx) and surface
-    ! Note that for phys.par. half-lev(k) is between full-lev k and k+1 
+    ! Note that for phys.par. half-lev(k) is between full-lev k and k+1
     ! Fhalf(k) = Ffull(k)+WVI(K,2)*(Ffull(k+1)-Ffull(k))
     ! Fsurf = Ffull(kx)+WVI(kx,2)*(Ffull(kx)-Ffull(kx-1))
     do k = 1, kx-1
@@ -48,4 +48,4 @@ subroutine inphys(hsg,ppl,rlat)
         slat(j) = sin(rlat(j))
         clat(j) = cos(rlat(j))
     end do
-end
+end subroutine inphys
