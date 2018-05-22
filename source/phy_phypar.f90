@@ -17,6 +17,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_surfcon, only: fmask1, phis0
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
+    use mod_fluxes, only: increment_fluxes
     use humidity, only: shtorh
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
@@ -161,7 +162,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 5. Store all fluxes for coupling and daily-mean output
-    call dmflux(1)
+    call increment_fluxes()
 
     ! Sum physics tendencies
     ut_phy = ut_pbl

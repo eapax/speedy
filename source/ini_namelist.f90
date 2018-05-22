@@ -23,8 +23,7 @@ subroutine ini_namelist()
     use mod_dyncon2, only: setup_dyncon2
     use mod_dynvar, only: setup_dynvar
     use mod_fft, only: setup_fft
-    use mod_flx_land, only: setup_flx_land
-    use mod_flx_sea, only: setup_flx_sea
+    use mod_fluxes, only: setup_fluxes
     use mod_hdifcon, only: setup_hdifcon
     use mod_physcon, only: setup_physcon
     use mod_physvar, only: setup_physvar
@@ -65,8 +64,7 @@ subroutine ini_namelist()
     call setup_dyncon2()
     call setup_dynvar()
     call setup_fft()
-    call setup_flx_land()
-    call setup_flx_sea()
+    call setup_fluxes()
     call setup_hdifcon()
     call setup_physcon()
     call setup_physvar()

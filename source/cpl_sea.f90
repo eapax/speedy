@@ -37,7 +37,7 @@ subroutine atm2sea(jday)
     use mod_atparam
     use mod_cplvar_sea, only: vsea_input
     use mod_date, only: iday, imont1, tmonth
-    use mod_flx_sea, only: hflux_s, hflux_i
+    use mod_fluxes, only: hflux_s, hflux_i
     use mod_cli_sea, only: fmask_s, sst12, sice12, sstan3, hfseacl, sstom12
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
