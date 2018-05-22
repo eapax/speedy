@@ -94,8 +94,6 @@ subroutine fordate(imode)
         pexp = 1./(rd * gamlat(j))
         do i = 1, ix
             ij = ij + 1
-!            tsfc(i,j) = fmask_l(i,j)*stlcl_ob(ij)
-!     &               +fmask_s(i,j)*sstcl_ob(ij)
             tsfc(i,j) = fmask_l(i,j) * stl_am(ij)&
                 & + fmask_s(i,j) * sst_am(ij)
             tref(i,j) = tsfc(i,j) + corh(i,j)

@@ -9,6 +9,7 @@ end subroutine ini_rp
 
 ! Apply truncation to all constants used in speedy
 subroutine truncate_rp()
+    use mod_prec, only: set_precision
     use mod_cli_land, only: truncate_cli_land
     use mod_cli_sea, only: truncate_cli_sea
     use mod_cpl_land_model, only: truncate_land_model
@@ -18,12 +19,8 @@ subroutine truncate_rp()
     use mod_dyncon1, only: truncate_dyncon1
     use mod_dyncon2, only: truncate_dyncon2
     use mod_fft, only: truncate_fft
-    use mod_flx_land, only: truncate_flx_land
-    use mod_flx_sea, only: truncate_flx_sea
     use mod_hdifcon, only: truncate_hdifcon
     use mod_physcon, only: truncate_physcon
-    use mod_physvar, only: truncate_physvar
-    use mod_sppt, only: truncate_sppt
     use mod_surfcon, only: truncate_surfcon
     use mod_tsteps, only: truncate_tsteps
     use mod_var_land, only: truncate_var_land
@@ -33,31 +30,59 @@ subroutine truncate_rp()
     use phy_radiat, only: truncate_radiat
     use phy_suflux, only: truncate_suflux
     use phy_vdifsc, only: truncate_vdifsc
+    use phy_sppt, only: truncate_sppt
     use spectral, only: truncate_spectral
 
+    call set_precision('Default')
+    ! Truncate climatological fields used in surface model
     call truncate_cli_land()
     call truncate_cli_sea()
+    ! Truncate constants and variables in land model
     call truncate_land_model()
+    call truncate_var_land()
+    ! Truncate constants in sea model
     call truncate_cplcon_sea()
+    ! Truncate variables in sea model
     call truncate_cplvar_sea()
+    call truncate_var_sea()
+
+    ! Truncate general dynamics constants used in multiple schemes
+    call set_precision('Default')
     call truncate_dyncon0()
     call truncate_dyncon1()
     call truncate_dyncon2()
-    call truncate_fft()
-    call truncate_flx_land()
-    call truncate_flx_sea()
     call truncate_hdifcon()
-    call truncate_physcon()
-    call truncate_physvar()
-    call truncate_sppt()
-    call truncate_surfcon()
+
+    ! Truncate timestepping constants
+    call set_precision('Timestepping')
     call truncate_tsteps()
-    call truncate_var_land()
-    call truncate_var_sea()
-    call truncate_convmf()
-    call truncate_lscond()
-    call truncate_radiat()
-    call truncate_suflux()
-    call truncate_vdifsc()
+
+    ! Truncate FFT wsave array
+    call set_precision('Spectral Transform')
+    call truncate_fft()
+    ! Truncate spectral transform constants
     call truncate_spectral()
+
+    ! Truncate general physics constants used in multiple schemes
+    call set_precision('Grid Physics')
+    call truncate_physcon()
+    call truncate_surfcon()
+
+    ! Truncate constants in individual physics schemes
+    call set_precision('Convection')
+    call truncate_convmf()
+    call set_precision('Condensation')
+    call truncate_lscond()
+    call set_precision('Grid Physics')
+    ! Todo separate radiation constants between short-wave and long-wave
+    call truncate_radiat()
+    call set_precision('Surface Fluxes')
+    call truncate_suflux()
+    call set_precision('Vertical Diffusion')
+    call truncate_vdifsc()
+    call set_precision('SPPT')
+    call truncate_sppt()
+
+    ! Set default precision to start model run
+    call set_precision('Default')
 end subroutine truncate_rp

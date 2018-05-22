@@ -30,7 +30,7 @@ subroutine sea_model_init(fmask_s,rlat)
     type(rpe_var) :: coslat, crad
 
     ! 1. Set geographical domain, heat capacities and dissipation times
-    !    for sea (mixed layer) and sea-ice 
+    !    for sea (mixed layer) and sea-ice
 
     ! Heat capacities per m^2 (depth*heat_cap/m^3)
     crad=asin(1.)/rpe_literal(90.)
@@ -77,7 +77,7 @@ subroutine sea_model_init(fmask_s,rlat)
     cdice = dmask*tdice/(rpe_literal(1.)+dmask*tdice)
 end
 
-subroutine sea_model 
+subroutine sea_model
     ! subroutine sea_model
 
     ! Purpose : Integrate slab ocean and sea-ice models for one day
@@ -132,7 +132,7 @@ subroutine sea_model
     ! Anomaly at t0 minus climatological temp. tendency
     tanom = sst0 - sstcl1
 
-    ! Time evoloution of temp. anomaly 
+    ! Time evoloution of temp. anomaly
     tanom = cdsea*(tanom+rhcaps*hflux)
 
     ! Full SST at final time
@@ -147,11 +147,11 @@ subroutine sea_model
     tanom = tice0 - ticecl1
 
     ! Definition of non-linear damping coefficient
-    anom0     = 20. 
+    anom0     = 20.
     cdis = cdice*(anom0/(anom0+abs(tanom)))
     !cdis(:,:) = cdice(:,:)
 
-    ! Time evoloution of temp. anomaly 
+    ! Time evoloution of temp. anomaly
     tanom = cdis*(tanom+rhcapi*hflux)
 
     ! Full ice temperature at final time
@@ -165,7 +165,7 @@ subroutine sea_model
     vsea_output(:,3) = reshape(sice1, (/ngp/))
 end
 
-subroutine sea_domain(cdomain,rlat,dmask) 
+subroutine sea_domain(cdomain,rlat,dmask)
     ! subroutine sea_domain (cdomain,rlat,dmask)
 
     ! Purpose : Definition of ocean domains
@@ -181,7 +181,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
     character(len=6), intent(in) :: cdomain           ! domain name
     type(rpe_var), intent(in) :: rlat(il)               ! latitudes in degrees
 
-    ! Output variables (initialized by calling routine) 
+    ! Output variables (initialized by calling routine)
     type(rpe_var), intent(inout) :: dmask(ix,il)         ! domain mask
 
     integer :: i, j
@@ -190,7 +190,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
     print *, 'sea domain : ', cdomain
 
     dlon = rpe_literal(360.)/rpe_literal(ix)
-                                   
+
     if (cdomain.eq.'northe') then
         do j=1,il
             if (rlat(j).gt.20.0) dmask(:,j) = 1.
@@ -247,15 +247,11 @@ subroutine sea_domain(cdomain,rlat,dmask)
                     rlon = (i-1)*dlon
                     if (rlon.gt.165.0.and.rlon.lt.rlonw) then
                         dmask(i,j) = wlat
-                    else if (rlon.gt.155.0.and.rlon.lt.165.0) then 
+                    else if (rlon.gt.155.0.and.rlon.lt.165.0) then
                         dmask(i,j) = wlat*0.1*(rlon-155.)
                     end if
                 end do
             end if
         end do
     end if
-
-    !do j=1,il
-    !    print *, 'lat = ',rlat(j),' sea model domain  = ',dmask(ix/2,j)
-    !end do
 end

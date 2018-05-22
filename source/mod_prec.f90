@@ -26,8 +26,7 @@ module mod_prec
             rp_diffusion=52, &
             rp_timestepping=52, &
             rp_prognostics=52, &
-            rp_tendencies=52, &
-            rp_parameters=52
+            rp_tendencies=52
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, &
@@ -35,7 +34,7 @@ module mod_prec
             rp_grid_physics, rp_convection, rp_condensation, rp_sw_radiation, &
             rp_lw_radiation, rp_surface_fluxes, rp_vertical_diffusion, &
             rp_sppt, rp_grid_dynamics, rp_spectral_dynamics, rp_diffusion, &
-            rp_timestepping, rp_prognostics, rp_tendencies, rp_parameters
+            rp_timestepping, rp_prognostics, rp_tendencies
 
     contains
 
@@ -115,9 +114,6 @@ module mod_prec
 
                 case('Tendencies')
                 RPE_DEFAULT_SBITS = rp_tendencies
-
-                case('Parameters')
-                RPE_DEFAULT_SBITS = rp_parameters
             end select
         end subroutine
 end module

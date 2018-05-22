@@ -20,7 +20,7 @@ subroutine impint(dt,alph)
 
     use mod_dyncon0, only: gamma
     use mod_atparam
-    use mod_dyncon1, only: akap, rgas, hsg, dhs, fsg, fsgr, a, grav
+    use mod_dyncon1, only: rearth, akap, rgas, hsg, dhs, fsg, fsgr, grav
     use mod_dyncon2
     use mod_hdifcon, only: dmp, dmpd, dmps, dmp1, dmp1d, dmp1s
     use rp_emulator
@@ -56,7 +56,7 @@ subroutine impint(dt,alph)
 
     ! Other constants 
     xi=dt*alph
-    xxi = xi/(a*a)
+    xxi = xi/(rearth*rearth)
 
     dhsx = xi * dhs
 
@@ -132,7 +132,7 @@ subroutine impint(dt,alph)
     end do
 
     do l=1,lmax
-        xxx=(float(l)*float(l+1))/(a*a)
+        xxx=(float(l)*float(l+1))/(rearth*rearth)
         do k=1,kx
             do k1=1,kx
                 xf(k,k1,l)=xi*xi*xxx*(rgas*tref(k)*dhs(k1)-xe(k,k1))

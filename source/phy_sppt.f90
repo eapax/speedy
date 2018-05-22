@@ -7,6 +7,7 @@
 module phy_sppt
     use mod_atparam
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -26,18 +27,17 @@ module phy_sppt
     ! Number of correlation scales for SPPT perturbations
     integer :: nscales = 3
 
+    ! Namelist parameters used to setup SPPT constants
     ! Decorrelation time of SPPT perturbation (in hours)
-    type(rpe_var), allocatable :: time_decorr(:)
-
+    real(dp), allocatable :: time_decorr(:)
     ! Correlation length scale of SPPT perturbation (in metres)
-    type(rpe_var), allocatable :: len_decorr(:)
-
+    real(dp), allocatable :: len_decorr(:)
     ! Standard deviation of SPPT perturbation (in grid point space)
-    type(rpe_var), allocatable :: stddev(:)
+    real(dp), allocatable :: stddev(:)
 
+    ! SPPT parameters initialised in ini_sppt
     ! Time autocorrelation of spectral AR(1) signals
     type(rpe_var), allocatable :: phi(:)
-
     ! Total wavenumber-wise standard deviation of spectral signals
     type(rpe_var), allocatable :: sigma(:, :, :)
 
@@ -67,9 +67,6 @@ module phy_sppt
 
         subroutine truncate_sppt()
             call apply_truncation(mu)
-            call apply_truncation(time_decorr)
-            call apply_truncation(len_decorr)
-            call apply_truncation(stddev)
             call apply_truncation(phi)
             call apply_truncation(sigma)
         end subroutine truncate_sppt
@@ -145,10 +142,10 @@ module phy_sppt
             use spectral, only: el2
 
             integer :: n, sc
-            type(rpe_var) :: f0(nscales)
+            real(dp) :: f0(nscales)
 
             ! Calculate time autocorrelation factor as a function of timestep
-            phi = exp(-(rpe_literal(24)/rpe_literal(nsteps))/time_decorr)
+            phi = exp(-(real(24)/real(nsteps))/time_decorr)
 
             ! Generate spatial amplitude pattern
             do sc=1, nscales

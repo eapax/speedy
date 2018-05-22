@@ -154,7 +154,7 @@ ini_rp.o               : phy_convmf.o phy_lscond.o phy_suflux.o phy_vdifsc.o\
                          mod_cplcon_sea.o mod_cplvar_sea.o mod_dyncon0.o\
                          mod_dyncon1.o mod_dyncon2.o mod_fft.o mod_flx_land.o\
                          mod_flx_sea.o mod_hdifcon.o mod_physcon.o\
-                         mod_physvar.o mod_surfcon.o mod_sppt.o mod_var_land.o\
+                         mod_physvar.o mod_surfcon.o phy_sppt.o mod_var_land.o\
                          mod_var_sea.o mod_tsteps.o spe_spectral.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o mod_date.o
 ini_fordate.o          : ini_fordate.f90 mod_dyncon0.o \
@@ -196,7 +196,8 @@ phy_phypar.o           : phy_phypar.f90 mod_cpl_flags.o mod_atparam.o\
                          phy_suflux.o phy_vdifsc.o phy_sppt.o
 phy_radiat.o           : phy_radiat.f90 mod_atparam.o mod_physcon.o
 phy_shtorh.o           : phy_shtorh.f90
-phy_sppt.o             : mod_atparam.o mod_tsteps.o mod_dyncon1.o spe_spectral.o
+phy_sppt.o             : mod_atparam.o mod_tsteps.o mod_dyncon1.o\
+                         spe_spectral.o mod_prec.o
 phy_suflux.o           : phy_suflux.f90 mod_atparam.o mod_physcon.o\
                          phy_radiat.o phy_shtorh.o
 phy_vdifsc.o           : phy_vdifsc.f90 mod_atparam.o mod_physcon.o

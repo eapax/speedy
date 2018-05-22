@@ -1,6 +1,7 @@
 module mod_cpl_land_model
     use mod_atparam
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -10,30 +11,27 @@ module mod_cpl_land_model
 
     namelist /land/ depth_soil, depth_lice, tdland, flandmin
 
+    ! Derived model constants set up in land_model_init
     ! 1./heat_capacity (land)
     type(rpe_var), allocatable :: rhcapl(:, :)
-
     ! 1./dissip_time (land)
     type(rpe_var), allocatable :: cdland(:, :)
 
     ! Input and output land variables exchanged by coupler
     ! Land model input variables
     type(rpe_var), allocatable :: vland_input(:, :)
-
     ! Land model output variables
     type(rpe_var), allocatable :: vland_output(:, :)
 
+    ! Namelist parameters used to set up model constants
     ! Soil layer depth (m)
-    type(rpe_var) :: depth_soil
-
+    real(dp) :: depth_soil
     ! Land-ice depth (m)
-    type(rpe_var) :: depth_lice
-
+    real(dp) :: depth_lice
     ! Dissipation time (days) for land-surface temp. anomalies
-    type(rpe_var) :: tdland
-
+    real(dp) :: tdland
     ! Minimum fraction of land for the definition of anomalies (denominator)
-    type(rpe_var) :: flandmin
+    real(dp) :: flandmin
 
     contains
         subroutine setup_land(fid)
@@ -41,8 +39,8 @@ module mod_cpl_land_model
 
             allocate(rhcapl(ix,il))
             allocate(cdland(ix,il))
-            allocate(vland_input(ngp,4))
-            allocate(vland_output(ngp,2))
+            allocate(vland_input(ngp,3))
+            allocate(vland_output(ngp,1))
 
             read(fid, land)
             flandmin = 1./flandmin
@@ -51,14 +49,12 @@ module mod_cpl_land_model
         end subroutine setup_land
 
         subroutine truncate_land_model()
+            ! Truncate constants
             call apply_truncation(rhcapl)
             call apply_truncation(cdland)
+            ! Truncate variables
             call apply_truncation(vland_input)
             call apply_truncation(vland_output)
-            call apply_truncation(depth_soil)
-            call apply_truncation(depth_lice)
-            call apply_truncation(tdland)
-            call apply_truncation(flandmin)
         end subroutine truncate_land_model
 
         subroutine land_model_init(fmask_l,alb0)
@@ -75,8 +71,8 @@ module mod_cpl_land_model
         
             ! Auxiliary variables
             integer :: i, j
-            type(rpe_var) :: dmask(ix,il)           ! domain mask
-            type(rpe_var) :: tdland, hcapl, hcapli, flandmin
+            real(dp) :: dmask(ix,il)           ! domain mask
+            real(dp) :: hcapl, hcapli
         
             ! 1. Set heat capacities and dissipation times for 
             !    soil and ice-sheet layers

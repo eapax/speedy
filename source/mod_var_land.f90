@@ -5,6 +5,7 @@ module mod_var_land
     implicit none
 
     ! Daily observed climatological fields over land
+    ! Interpolated from climatological fields in cpl_land.atm2land
     type(rpe_var), allocatable :: stlcl_ob(:)     ! clim. land sfc. temperature
     type(rpe_var), allocatable :: snowdcl_ob(:)   ! clim. snow depth (water equiv)
     type(rpe_var), allocatable :: soilwcl_ob(:)   ! clim. soil water availability

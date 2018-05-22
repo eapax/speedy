@@ -12,6 +12,8 @@ module mod_cli_land
     type(rpe_var), allocatable :: bmask_l(:,:)
 
     ! Monthly-mean climatological fields over land
+    ! Loaded in ini_inbcon
+    ! Used to interpolate to current date in cpl_land.atm2land
     ! Land surface temperature
     type(rpe_var), allocatable :: stl12(:,:,:)
 

@@ -8,30 +8,26 @@ module mod_dyncon0
 
     namelist /dynamics/ gamma, hscale, hshum, refrh1, thd, thdd, thds, tdrs
 
+    ! Namelist parameters used to set up model constants
     ! Ref. temperature lapse rate (-dT/dz in deg/km)
-    type(rpe_var) :: gamma
-
+    real(dp) :: gamma
     ! Ref. scale height for pressure (in km)
-    type(rpe_var) :: hscale
-
+    real(dp) :: hscale
     ! Ref. scale height for spec. humidity (in km)
-    type(rpe_var) :: hshum
-
+    real(dp) :: hshum
     ! Ref. relative humidity of near-surface air
-    type(rpe_var) :: refrh1
-
+    real(dp) :: refrh1
     ! Max damping time (in hours) for hor. diffusion (del^6) of temperature and
     ! vorticity
-    type(rpe_var) :: thd
-
+    real(dp) :: thd
     ! Max damping time (in hours) for hor. diffusion (del^6)
     ! of divergence
-    type(rpe_var) :: thdd
-
+    real(dp) :: thdd
     ! Max damping time (in hours) for extra diffusion (del^2)
     ! in the stratosphere 
-    type(rpe_var) :: thds
+    real(dp) :: thds
 
+    ! Namelist parameters used for model integration
     ! Damping time (in hours) for drag on zonal-mean wind
     ! in the stratosphere 
     type(rpe_var) :: tdrs
@@ -46,13 +42,6 @@ module mod_dyncon0
         end subroutine setup_dynamics
     
         subroutine truncate_dyncon0()
-            call apply_truncation(gamma)
-            call apply_truncation(hscale)
-            call apply_truncation(hshum)
-            call apply_truncation(refrh1)
-            call apply_truncation(thd)
-            call apply_truncation(thdd)
-            call apply_truncation(thds)
             call apply_truncation(tdrs)
         end subroutine truncate_dyncon0
 end module

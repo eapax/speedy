@@ -91,7 +91,6 @@ subroutine atm2sea(jday)
         else
             sicecl_ob(j) = max(rpe_literal(0.5),sicecl_ob(j))
             ticecl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/sicecl_ob(j)
-            !ticecl_ob(j) = sstcl_ob(j)
             sstcl_ob(j)  = sstfr
         end if
 
@@ -107,13 +106,10 @@ subroutine atm2sea(jday)
             vsea_input(:,1) = sst_om(:)
             vsea_input(:,2) = tice_om(:)
             vsea_input(:,3) = sicecl_ob(:)
-            !vsea_input(:,4) = hflux_s(:)*fmasks(:)
-            !vsea_input(:,5) = hflux_i(:)*fmasks(:)
             vsea_input(:,4) = hflux_s(:)
             vsea_input(:,5) = hflux_i(:)
             vsea_input(:,6) = sstcl_ob(:)
             vsea_input(:,7) = ticecl_ob(:)
-            !vsea_input(:,8) = hfyearm(:)*fmasks(:)
             vsea_input(:,8) = hfyearm(:)
         end if
 
@@ -142,8 +138,6 @@ subroutine sea2atm(jday)
         sst_om(:)   = vsea_output(:,1)      ! sst
         tice_om(:)  = vsea_output(:,2)      ! sea ice temperature 
         sice_om(:)  = vsea_output(:,3)      ! sea ice fraction
-
-        !sice_om(:)  = sicecl_ob(:)
     end if
 
     ! 3. Compute sea-sfc. anomalies and full fields for atm. model

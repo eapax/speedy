@@ -22,23 +22,21 @@ module mod_cplcon_sea
     ! 1./dissip_time (ice)
     type(rpe_var), allocatable :: cdice(:,:)
 
+    ! Namelist parameters used to set up model constants
     ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
-    type(rpe_var) :: depth_ml  ! High-latitude depth
-    type(rpe_var) :: dept0_ml  ! Minimum depth (tropics)
-
+    real(dp) :: depth_ml  ! High-latitude depth
+    real(dp) :: dept0_ml  ! Minimum depth (tropics)
     ! sea-ice depth : d + (d0-d)*(cos_lat)^2
-    type(rpe_var) :: depth_ice ! High-latitude depth
-    type(rpe_var) :: dept0_ice ! Minimum depth
-
+    real(dp) :: depth_ice ! High-latitude depth
+    real(dp) :: dept0_ice ! Minimum depth
     ! Dissipation time (days) for sea-surface temp. anomalies
-    type(rpe_var) :: tdsst
-
+    real(dp) :: tdsst
     ! Dissipation time (days) for sea-ice temp. anomalies
-    type(rpe_var) :: tdice
-
+    real(dp) :: tdice
     ! Minimum fraction of sea for the definition of anomalies
-    type(rpe_var) :: fseamin
+    real(dp) :: fseamin
 
+    ! Namelist parameters used to integrate sea model
     ! Heat flux coef. at sea/ice int.
     type(rpe_var) :: beta
 
@@ -77,13 +75,6 @@ module mod_cplcon_sea
             call apply_truncation(rhcapi)
             call apply_truncation(cdsea)
             call apply_truncation(cdice)
-            call apply_truncation(depth_ml)
-            call apply_truncation(dept0_ml)
-            call apply_truncation(depth_ice)
-            call apply_truncation(dept0_ice)
-            call apply_truncation(tdsst)
-            call apply_truncation(tdice)
-            call apply_truncation(fseamin)
             call apply_truncation(beta)
         end subroutine truncate_cplcon_sea
 end module
