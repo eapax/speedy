@@ -5,13 +5,15 @@ subroutine agcm_init()
     use mod_cpl_flags, only: icsea, isstan
     use mod_date, only: ini_date, istart
     use ppo_output_stream, only: initialise_output
-    use mod_prec, only: set_precision
+    use mod_prec, only: setup_precision
 
     implicit none
 
     print *, ' hallo from speedy_agcm'
 
     ! 0. Read namelist and allocate arrays
+    ! Setup reduced precision emulator
+    call setup_precision()
     call ini_namelist()
 
     ! Initialise reduced precision constants
@@ -39,7 +41,5 @@ subroutine agcm_init()
     call initialise_output()
 
     ! Truncate parameters and derived constants
-    call set_precision('Parameters')
     call truncate_rp()
-    call set_precision('Default')
 end subroutine

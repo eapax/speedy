@@ -1,19 +1,12 @@
 program agcm_main
     use mod_tsteps, only: nmonrs
     use mod_date, only: imonth, iday, ndays
-    use rp_emulator
-    use mod_prec, only: setup_precision
 
     implicit none
 
     ! program : agcm_main
 
     integer :: jday
-
-    ! Setup reduced precision emulator
-    RPE_IEEE_HALF = .false.
-    RPE_ACTIVE = .true.
-    call setup_precision()
 
     ! 1. initialization
     ! ndays = no. of integration days, set by agcm_init

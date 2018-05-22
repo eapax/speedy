@@ -30,6 +30,7 @@ module mod_prec
             rp_parameters=52
 
     namelist /precisions/ &
+            RPE_ACTIVE, RPE_IEEE_HALF, &
             reduced_precision, rp_initial_values, rp_spectral_transform, &
             rp_grid_physics, rp_convection, rp_condensation, rp_sw_radiation, &
             rp_lw_radiation, rp_surface_fluxes, rp_vertical_diffusion, &

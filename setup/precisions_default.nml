@@ -1,4 +1,6 @@
 &precisions
+    RPE_ACTIVE=.true.,
+    RPE_IEEE_HALF=.false.,
     reduced_precision=52,
     rp_initial_values=52,
     rp_spectral_transform=52,
