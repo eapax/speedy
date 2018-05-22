@@ -17,13 +17,13 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_surfcon, only: fmask1, phis0
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
-    use mod_sppt, only: sppt_on, gen_sppt
     use humidity, only: shtorh
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
     use phy_radiat, only: lradsw, cloud, radsw, radlw
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
+    use phy_sppt, only: sppt_on, gen_sppt
 
     implicit none
 

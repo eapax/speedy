@@ -5,6 +5,7 @@ subroutine ini_atm()
 
     use mod_atparam
     use mod_dyncon1, only: grav, hsg, fsg, radang
+    use phy_sppt, only: ini_sppt
 
     implicit none
 
@@ -27,6 +28,7 @@ subroutine ini_atm()
     ! 4. initialize constants for physical parametrization
     if (iitest == 1) print *, 'calling inphys'
     call inphys(hsg, ppl, radang)
+    call ini_sppt()
 
     ! 5. initialize forcing fields (boundary cond.)
     if (iitest == 1) print *, 'calling inbcon'

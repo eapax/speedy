@@ -14,7 +14,7 @@ subroutine ini_namelist()
     use phy_radiat, only: setup_radiation
     use phy_suflux, only: setup_surface_fluxes
     use phy_vdifsc, only: setup_vertical_diffusion
-    use mod_sppt, only: setup_sppt
+    use phy_sppt, only: setup_sppt
 
     use mod_cli_land, only: setup_cli_land
     use mod_cli_sea, only: setup_cli_sea
