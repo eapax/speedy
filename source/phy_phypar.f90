@@ -47,9 +47,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! gradient of dry static energy (dSE/dPHI)
     type(rpe_var), dimension(ngp) :: gse
 
-    ! 3D Stochastic perturbation pattern
-    type(rpe_var) :: sppt(ngp,kx)
-
     ! 1. Compute thermodynamic variables
     if (iitest.eq.1) print *, ' 1.2 in phypar'
 
@@ -172,7 +169,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 5. Store all fluxes for coupling and daily-mean output
-    call set_precision('Default')
+    call set_precision('Grid Physics')
     call increment_fluxes()
 
     ! Sum physics tendencies

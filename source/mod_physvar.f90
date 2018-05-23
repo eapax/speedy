@@ -77,6 +77,9 @@ module mod_physvar
             cbmf, tsr, ssrd, ssr, slrd, slr, olr
     type(rpe_var), dimension(:, :), allocatable :: slru, ustr, vstr, shf, evap, hfluxn
 
+    ! 3D Stochastic perturbation pattern
+    type(rpe_var), dimension(:,:), allocatable :: sppt(:,:)
+
     contains
         subroutine setup_physvar()
             allocate(ug1(ngp, kx))
@@ -134,6 +137,7 @@ module mod_physvar
             allocate(shf(ngp, 3))
             allocate(evap(ngp, 3))
             allocate(hfluxn(ngp, 3))
+            allocate(sppt(ngp,kx))
         end subroutine setup_physvar
 
         subroutine truncate_physvar()

@@ -93,8 +93,10 @@ module phy_sppt
 
                         ! Clip noise to +- 10 standard deviations
                         eta(m,n,k) = cmplx(&
-                            & min(10.0, abs(randreal)) * sign(1.0,randreal),&
-                            & min(10.0, abs(randimag)) * sign(1.0,randimag))
+                                min(rpe_literal(10.0), abs(randreal)) * &
+                                        sign(rpe_literal(1.0), randreal),&
+                                min(rpe_literal(10.0), abs(randimag)) * &
+                                        sign(rpe_literal(1.0), randimag))
                     end do
                 end do
             end do
@@ -103,7 +105,7 @@ module phy_sppt
             if (first) then
                 ! First AR(1) step
                 do n=1, nscales
-                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(-0.5) * &
+                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(rpe_literal(-0.5)) * &
                             sigma(:,:,n) * eta(:,:,n)
                 end do
                 first = .false.
@@ -124,11 +126,12 @@ module phy_sppt
             end do
 
             ! Clip to +/- 1.0
-            sppt_grid_out = min(1.0, abs(sppt_grid_out)) * sign(1.0,sppt_grid_out)
+            sppt_grid_total = min(rpe_literal(1.0), abs(sppt_grid_total)) * &
+                    sign(rpe_literal(1.0), sppt_grid_total)
 
             ! Apply tapering
             do k=1,kx
-                sppt_grid_out(:, k) = 1.0 + &
+                sppt_grid_out(:, k) = rpe_literal(1.0) + &
                         reshape(sppt_grid_total, (/ngp/)) * mu(k)
             end do
         end function gen_sppt
