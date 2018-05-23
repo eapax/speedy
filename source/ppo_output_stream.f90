@@ -516,6 +516,10 @@ module ppo_output_stream
                 case(118)
                 output = qt_sppt
 
+                ! 3D Stochastic perturbation pattern
+                case(119)
+                output = sppt
+
                 ! precnv = convective precipitation  [g/(m^2 s)], total
                 !case(31)
                 !output(:, 1) = precnv

@@ -117,7 +117,8 @@ module phy_sppt
             end do
 
             ! Clip to +/- 1.0
-            sppt_grid_out = min(1.0, abs(sppt_grid_out)) * sign(1.0,sppt_grid_out)
+            sppt_grid_total = min(1.0, abs(sppt_grid_total)) * &
+                    sign(1.0,sppt_grid_total)
 
             ! Apply tapering
             do k=1,kx

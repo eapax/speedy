@@ -75,6 +75,9 @@ module mod_physvar
     real, dimension(:), allocatable :: precnv, precls, snowcv, snowls, &
             cbmf, tsr, ssrd, ssr, slrd, slr, olr
     real, dimension(:, :), allocatable :: slru, ustr, vstr, shf, evap, hfluxn
+
+    ! 3D Stochastic perturbation pattern
+    real, dimension(:, :), allocatable :: sppt
     
     contains
         subroutine setup_physvar()
@@ -133,5 +136,6 @@ module mod_physvar
             allocate(shf(ngp, 3))
             allocate(evap(ngp, 3))
             allocate(hfluxn(ngp, 3))
+            allocate(sppt(ngp,kx))
         end subroutine setup_physvar
 end module

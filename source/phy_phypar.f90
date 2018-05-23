@@ -45,9 +45,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! gradient of dry static energy (dSE/dPHI)
     real, dimension(ngp) :: gse
 
-    ! 3D Stochastic perturbation pattern
-    real :: sppt(ngp,kx)
-
     ! 1. Compute thermodynamic variables
     if (iitest.eq.1) print *, ' 1.2 in phypar'
 
