@@ -92,6 +92,8 @@ module mod_date
 
             ! Find index of sst anomaly in file
             isst0 = (iyear - issty0) * 12 + imonth
+
+            call set_forcing_date()
         end subroutine
 
         subroutine update_time()
@@ -140,7 +142,11 @@ module mod_date
                 imonth = 1
                 iyear  = iyear+1
             end if
-        
+
+            call set_forcing_date()
+        end subroutine newdate
+
+        subroutine set_forcing_date()
             ! additional variables to define forcing terms and boundary cond.
             if (iseasc >= 1) then
                 imont1 = imonth
@@ -152,5 +158,5 @@ module mod_date
                 tyear  = (ndaycal(imont1,2)&
                     & +0.5*ndaycal(imont1,2))/float(ncal)
             end if
-        end subroutine newdate
+        end subroutine set_forcing_date
 end module
