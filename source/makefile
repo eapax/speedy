@@ -178,7 +178,9 @@ mod_dyncon1.o          : mod_dyncon1.f90 mod_atparam.o
 mod_dyncon2.o          : mod_dyncon2.f90 mod_atparam.o
 mod_dynvar.o           : mod_dynvar.f90 mod_atparam.o
 mod_fft.o              : mod_fft.f90 mod_atparam.o
-mod_fluxes.o           : mod_fluxes.f90 mod_atparam.o
+mod_fluxes.o           : mod_fluxes.f90 mod_atparam.o mod_date.o mod_tsteps.o\
+                         mod_physcon.o mod_surfcon.o mod_physvar.o\
+                         mod_var_sea.o phy_radiat.o
 mod_hdifcon.o          : mod_hdifcon.f90 mod_atparam.o
 mod_physcon.o          : mod_physcon.f90 mod_atparam.o
 mod_physvar.o          : mod_physvar.f90 mod_atparam.o
