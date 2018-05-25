@@ -2,7 +2,7 @@
 !> Length of the integration and time stepping constants.
 module mod_tsteps
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -39,7 +39,7 @@ module mod_tsteps
 
             read(fid, timestepping)
             idelt = 86400 / nsteps
-            delt = rpe_literal(idelt)
+            delt = real(idelt, dp)
             delt2 = 2.0 * idelt
 
             write(*, timestepping)

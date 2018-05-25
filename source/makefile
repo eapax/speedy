@@ -1,21 +1,9 @@
 %.o: %.mod
 
-###COMPILE=f77
-###COMPILE=pgf90 
 COMPILE=gfortran
-
-
- COMLIB1=
-
-#COMOTT1=-dalign -O3 -r8
-###COMOTT1=-dalign -fast -r8
-#COMOTT1=-Ofast -mips4 -IPA -r8
-# COMOTT1=  -fast -O3 -r8
- COMOTT1= -O2 -fdefault-real-8 -fdefault-double-8
-### COMOTT1=  -fast  
-
-# COMCONV= -byteswapio 
- COMCONV= -fconvert=swap
+COMLIB1=
+COMOTT1= -O2
+COMCONV= -fconvert=swap
 
 FILES= \
 	   mod_prec.o \
@@ -157,8 +145,8 @@ ini_namelist.o         : ini_namelist.f90 mod_atparam.o mod_cpl_flags.o\
 ini_rp.o               : phy_convmf.o phy_lscond.o phy_suflux.o phy_vdifsc.o\
                          mod_cli_land.o mod_cli_sea.o mod_cpl_land_model.o\
                          mod_cplcon_sea.o mod_cplvar_sea.o mod_dyncon0.o\
-                         mod_dyncon1.o mod_dyncon2.o mod_fft.o mod_flx_land.o\
-                         mod_flx_sea.o mod_hdifcon.o mod_physcon.o\
+                         mod_dyncon1.o mod_dyncon2.o mod_fft.o mod_fluxes.o\
+                         mod_hdifcon.o mod_physcon.o\
                          mod_physvar.o mod_surfcon.o phy_sppt.o mod_var_land.o\
                          mod_var_sea.o mod_tsteps.o spe_spectral.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o mod_date.o

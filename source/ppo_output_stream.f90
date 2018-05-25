@@ -267,8 +267,8 @@ module ppo_output_stream
                 output = fetch_output_spectral(stream%var_ID(n))
 
                 ! Write real and imaginary parts as separate variables
-                re_output = real(real(output))
-                im_output = real(aimag(output))
+                re_output = REALPART(output)
+                im_output = IMAGPART(output)
 
                 do k=kx, 1, -1
                     write(stream%file_ID, rec=stream%rec) re_output(:, :, k)

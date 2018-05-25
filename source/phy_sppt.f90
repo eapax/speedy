@@ -151,7 +151,7 @@ module phy_sppt
             real(dp) :: f0(nscales)
 
             ! Calculate time autocorrelation factor as a function of timestep
-            phi = exp(-(24.0_dp/real(nsteps))/time_decorr)
+            phi = exp(-(24.0_dp/real(nsteps, dp))/time_decorr)
 
             ! Generate spatial amplitude pattern
             do sc=1, nscales

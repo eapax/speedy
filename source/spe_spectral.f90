@@ -340,8 +340,8 @@ subroutine truncate_spectral()
             integer :: n
 
             do n=1,nx
-                psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n)%val)), &
-                                   gradx*REAL(REAL (psi(:,n)%val)))
+                psdx(:,n) = CMPLX(-gradx*IMAGPART(psi(:,n)%val), &
+                                   gradx*REALPART(psi(:,n)%val))
             end do
 
             psdy(:,1) = gradyp(:,1)*psi(:,2)
@@ -361,10 +361,10 @@ subroutine truncate_spectral()
             integer :: n
 
             do n=1,nx
-                zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n)%val)), &
-                                gradx*REAL(REAL (ucosm(:,n)%val)))
-                zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n)%val)), &
-                                gradx*REAL(REAL (vcosm(:,n)%val)))
+                zp(:,n) = CMPLX(-gradx*IMAGPART(ucosm(:,n)%val), &
+                                 gradx*REALPART(ucosm(:,n)%val))
+                zc(:,n) = CMPLX(-gradx*IMAGPART(vcosm(:,n)%val), &
+                                 gradx*REALPART(vcosm(:,n)%val))
             end do
 
             vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
@@ -389,8 +389,8 @@ subroutine truncate_spectral()
 
             integer :: n
 
-            zp = CMPLX(-uvdx*REAL(AIMAG(vorm%val)), uvdx*REAL(REAL(vorm%val)))
-            zc = CMPLX(-uvdx*REAL(AIMAG(divm%val)), uvdx*REAL(REAL(divm%val)))
+            zp = CMPLX(-uvdx*IMAGPART(vorm%val), uvdx*REALPART(vorm%val))
+            zc = CMPLX(-uvdx*IMAGPART(divm%val), uvdx*REALPART(divm%val))
 
             ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
             ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)
