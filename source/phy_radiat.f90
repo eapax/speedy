@@ -231,50 +231,55 @@ module phy_radiat
             use mod_physcon, only: slat, clat
 
             type(rpe_var), intent(in) :: tyear
-            type(rpe_var) :: topsr(il), alpha, azen, coz1, coz2, czen, dalpha, flat2, fs0
+            type(rpe_var) :: topsr(il), alpha, azen, coz1, coz2, czen, &
+                    dalpha, flat2, fs0
             type(rpe_var) :: nzen, rzen, szen
             integer :: i, j, j0
 
             ! alpha = year phase ( 0 - 2pi, 0 = winter solstice = 22dec.h00 )
-            alpha=4.*asin(1.)*(tyear+10./365.)
-            dalpha=0.
-            !DALPHA=ASIN(0.5)
+            alpha=rpe_literal(4.0_dp)*asin(rpe_literal(1.0_dp))*&
+                    (tyear+rpe_literal(10.0_dp)/rpe_literal(365.0_dp))
+            dalpha=0.0_dp
 
-            coz1= 1.0*max(0.0_dp,cos(alpha-dalpha))
-            coz2= 1.8
+            coz1= rpe_literal(1.0_dp)*max(rpe_literal(0.0_dp),cos(alpha-dalpha))
+            coz2= 1.8_dp
 
-            azen=1.0
+            azen=1.0_dp
             nzen=2
 
-            rzen=-cos(alpha)*23.45*asin(1.)/90.
+            rzen=-cos(alpha)*rpe_literal(23.45_dp)*&
+                    asin(rpe_literal(1.0_dp))/rpe_literal(90.0_dp)
             czen=cos(rzen)
             szen=sin(rzen)
 
-            fs0=6.
+            fs0=6.0_dp
 
             ! Solar radiation at the top
-            call solar(tyear,4.0_dp*solc,il,clat,slat,topsr)
+            call solar(tyear,rpe_literal(4.0_dp)*solc,il,clat,slat,topsr)
 
             do j=1,il
                 j0=1+ix*(j-1)
-                flat2=1.5*slat(j)**2-0.5
+                flat2=rpe_literal(1.5_dp)*slat(j)**2-rpe_literal(0.5_dp)
 
                 ! Solar radiation at the top
                 fsol(j0)=topsr(j)
 
                 ! Ozone depth in upper and lower stratosphere
-                ozupp(j0)=0.5*epssw
-                ozone(j0)=0.4*epssw*(1.0+coz1*slat(j)+coz2*flat2)
+                ozupp(j0)=rpe_literal(0.5_dp)*epssw
+                ozone(j0)=rpe_literal(0.4_dp)*epssw*&
+                        (rpe_literal(1.0_dp)+coz1*slat(j)+coz2*flat2)
 
                 ! Zenith angle correction to (downward) absorptivity
-                zenit(j0)=1.+azen*(1.-(clat(j)*czen+slat(j)*szen))**nzen
+                zenit(j0)=rpe_literal(1.0_dp) + &
+                        azen*(rpe_literal(1.0_dp) - &
+                                (clat(j)*czen+slat(j)*szen))**nzen
 
                 ! Ozone absorption in upper and lower stratosphere
                 ozupp(j0)=fsol(j0)*ozupp(j0)*zenit(j0)
                 ozone(j0)=fsol(j0)*ozone(j0)*zenit(j0)
 
                 ! Polar night cooling in the stratosphere
-                stratz(j0)=max(fs0-fsol(j0),0.0_dp)
+                stratz(j0)=max(fs0-fsol(j0),rpe_literal(0.0_dp))
 
                 do i=1,ix-1
                     fsol  (i+j0) = fsol  (j0)
@@ -295,24 +300,34 @@ module phy_radiat
             type(rpe_var), intent(inout) :: topsr(il)
 
             integer :: j
-            type(rpe_var) :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, h0, alpha, pigr, sa1
+            type(rpe_var) :: ca1, ca2, ca3, cdecl, ch0, csolp, decl, fdis, &
+                    h0, alpha, pigr, sa1
             type(rpe_var) :: sa2, sa3, sdecl, sh0, tdecl
 
             ! 1. Compute declination angle and Earth-Sun distance factor
-            pigr  = 2.*asin(1.)
-            alpha = 2.*pigr*tyear
+            pigr  = rpe_literal(2.0_dp)*asin(rpe_literal(1.0_dp))
+            alpha = rpe_literal(2.0_dp)*pigr*tyear
 
             ca1 = cos(alpha)
             sa1 = sin(alpha)
             ca2 = ca1*ca1-sa1*sa1
-            sa2 = 2.*sa1*ca1
+            sa2 = rpe_literal(2.0_dp)*sa1*ca1
             ca3 = ca1*ca2-sa1*sa2
             sa3 = sa1*ca2+sa2*ca1
 
-            decl = 0.006918-0.399912*ca1+0.070257*sa1-0.006758*ca2+0.000907*sa2&
-                & -0.002697*ca3+0.001480*sa3
+            decl = rpe_literal(0.006918_dp) - &
+                    rpe_literal(0.399912_dp)*ca1 + &
+                    rpe_literal(0.070257_dp)*sa1 - &
+                    rpe_literal(0.006758_dp)*ca2 + &
+                    rpe_literal(0.000907_dp)*sa2 - &
+                    rpe_literal(0.002697_dp)*ca3 + &
+                    rpe_literal(0.001480_dp)*sa3
 
-            fdis = 1.000110+0.034221*ca1+0.001280*sa1+0.000719*ca2+0.000077*sa2
+            fdis = rpe_literal(1.000110_dp) + &
+                    rpe_literal(0.034221_dp)*ca1 + &
+                    rpe_literal(0.001280_dp)*sa1 + &
+                    rpe_literal(0.000719_dp)*ca2 + &
+                    rpe_literal(0.000077_dp)*sa2
 
             cdecl = cos(decl)
             sdecl = sin(decl)
@@ -322,7 +337,8 @@ module phy_radiat
             csolp=csol/pigr
 
             do j=1,il
-                ch0 = min(1.0_dp,max(-1.0_dp,-tdecl*slat(j)/clat(j)))
+                ch0 = min(rpe_literal(1.0_dp), &
+                        max(-rpe_literal(1.0_dp),-tdecl*slat(j)/clat(j)))
                 h0  = acos(ch0)
                 sh0 = sin(h0)
 
@@ -347,17 +363,18 @@ module phy_radiat
             !           clstr  = stratiform cloud cover                  (2-dim)
 
             integer :: iptop(ngp)
-            type(rpe_var), intent(in) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), precls(ngp), gse(ngp),&
-                & fmask(ngp)
+            type(rpe_var), intent(in) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), &
+                    precls(ngp), gse(ngp), fmask(ngp)
             type(rpe_var), intent(inout) :: cloudc(ngp), clstr(ngp)
             integer, intent(inout) :: icltop(ngp)
 
             integer :: inew, j, k, nl1, nlp
-            type(rpe_var) :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, rgse, rrcl
+            type(rpe_var) :: albcor, cl1, clfact, clstrl, drh, fstab, pr1, &
+                    rgse, rrcl
 
             nl1  = kx-1
             nlp  = kx+1
-            rrcl = rpe_literal(1.)/(rhcl2-rhcl1)
+            rrcl = rpe_literal(1.0_dp)/(rhcl2-rhcl1)
 
             ! 1.  Cloud cover, defined as the sum of:
             !     - a term proportional to the square-root of precip. rate
@@ -373,7 +390,7 @@ module phy_radiat
                     cloudc(j) = rh(j,nl1)-rhcl1
                     icltop(j) = nl1
                 else
-                    cloudc(j) = 0.
+                    cloudc(j) = 0.0_dp
                     icltop(j) = nlp
                 end if
             end do
@@ -389,9 +406,9 @@ module phy_radiat
             end do
 
             do j=1,ngp
-                cl1 = min(1.0_dp,cloudc(j)*rrcl)
-                pr1 = min(pmaxcl,rpe_literal(86.4)*(precnv(j)+precls(j)))
-                cloudc(j) = min(1.0_dp,wpcl*sqrt(pr1)+cl1*cl1)
+                cl1 = min(rpe_literal(1.0_dp),cloudc(j)*rrcl)
+                pr1 = min(pmaxcl,rpe_literal(86.4_dp)*(precnv(j)+precls(j)))
+                cloudc(j) = min(rpe_literal(1.0_dp),wpcl*sqrt(pr1)+cl1*cl1)
                 icltop(j) = min(iptop(j),icltop(j))
             end do
 
@@ -407,25 +424,27 @@ module phy_radiat
                 !        GSE_S0  = 0.25
                 !        GSE_S1  = 0.40
 
-                clfact = 1.2
-                rgse   = rpe_literal(1.)/(gse_s1-gse_s0)
+                clfact = 1.2_dp
+                rgse   = rpe_literal(1.0_dp)/(gse_s1-gse_s0)
 
                 do j=1,ngp
                     ! Stratocumulus clouds over sea
-                    fstab    = max(0.0_dp,min(1.0_dp,rgse*(gse(j)-gse_s0)))
-                    clstr(j) = fstab*max(clsmax-clfact*cloudc(j),0.0_dp)
+                    fstab    = max(rpe_literal(0.0_dp), &
+                            min(rpe_literal(1.0_dp), rgse*(gse(j)-gse_s0)))
+                    clstr(j) = fstab*&
+                            max(clsmax-clfact*cloudc(j), rpe_literal(0.0_dp))
                     ! Stratocumulus clouds over land
                     clstrl   = max(clstr(j),clsminl)*rh(j,kx)
                     clstr(j) = clstr(j)+fmask(j)*(clstrl-clstr(j))
                 end do
             else
-                clsmax  = 0.3
-                clsminl = 0.1
-                albcor  = albcl/rpe_literal(0.5)
+                clsmax  = 0.3_dp
+                clsminl = 0.1_dp
+                albcor  = albcl/rpe_literal(0.5_dp)
 
                 do j=1,ngp
                     ! stratocumulus clouds over sea
-                    clstr(j) = max(clsmax-cloudc(j),0.0_dp)
+                    clstr(j) = max(clsmax-cloudc(j),rpe_literal(0.0_dp))
                     ! rescale for consistency with previous albedo values
                     clstr(j) = clstr(j)*albcor
                     ! correction for aerosols over land
@@ -453,8 +472,10 @@ module phy_radiat
             use mod_physcon, only: sig, dsig
 
             integer, intent(in) :: icltop(ngp)
-            type(rpe_var), intent(in) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp)
-            type(rpe_var), intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), dfabs(ngp,kx)
+            type(rpe_var), intent(in) :: psa(ngp), qa(ngp,kx), cloudc(ngp), &
+                    clstr(ngp)
+            type(rpe_var), intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), &
+                    dfabs(ngp,kx)
 
             integer :: j, k, nl1
             type(rpe_var) :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
@@ -462,14 +483,14 @@ module phy_radiat
 
             nl1 = kx-1
 
-            fband2 = 0.05
-            fband1 = rpe_literal(1.)-fband2
+            fband2 = 0.05_dp
+            fband1 = rpe_literal(1.0_dp)-fband2
 
             ! ALBMINL=0.05
             ! ALBCLS = 0.5
 
             ! 1.  Initialization
-            tau2 = 0.0
+            tau2 = 0.0_dp
 
             do j=1,ngp
                 !fk-- change to ensure only icltop <= kx used
@@ -590,8 +611,8 @@ module phy_radiat
                 deltap=psa(j)*dsig(k)
                 tau2(j,k,1)=exp(-deltap*ablwin)
                 tau2(j,k,2)=exp(-deltap*ablco2)
-                tau2(j,k,3)=1.
-                tau2(j,k,4)=1.
+                tau2(j,k,3)=1.0_dp
+                tau2(j,k,4)=1.0_dp
             end do
 
             do k=2,kx,kx-2
@@ -660,16 +681,18 @@ module phy_radiat
             integer, parameter :: nband=4
 
             type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp)
-            type(rpe_var), intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), fsfc(ngp)
+            type(rpe_var), intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), &
+                    fsfc(ngp)
             type(rpe_var), intent(inout) :: dfabs(ngp,kx)
 
             integer :: j, jb, k, nl1
-            type(rpe_var) :: anis, anish, brad, corlw, corlw1, corlw2, emis, eps1, esbc, refsfc
+            type(rpe_var) :: anis, anish, brad, corlw, corlw1, corlw2, emis, &
+                    eps1, esbc, refsfc
             type(rpe_var) :: st3a, tsq
 
             nl1=kx-1
 
-            refsfc=1.-emisfc
+            refsfc=rpe_literal(1.0_dp)-emisfc
 
             if (imode.eq.1) go to 410
             ! 1. Blackbody emission from atmospheric levels.
@@ -687,44 +710,48 @@ module phy_radiat
 
             ! Mean temperature in stratospheric layers
             do j=1,ngp
-                st4a(j,1,2)=rpe_literal(0.75)*ta(j,1)+rpe_literal(0.25)* st4a(j,1,1)
-                st4a(j,2,2)=rpe_literal(0.50)*ta(j,2)+rpe_literal(0.25)*(st4a(j,1,1)+st4a(j,2,1))
+                st4a(j,1,2)=rpe_literal(0.75_dp)*ta(j,1) + &
+                        rpe_literal(0.25_dp)*st4a(j,1,1)
+                st4a(j,2,2)=rpe_literal(0.50_dp)*ta(j,2) + &
+                        rpe_literal(0.25_dp)*(st4a(j,1,1)+st4a(j,2,1))
             end do
 
             ! Temperature gradient in tropospheric layers
-            anis =1.0
-            anish=rpe_literal(0.5)*anis
+            anis =1.0_dp
+            anish=rpe_literal(0.5_dp)*anis
 
             do k=3,nl1
                 do j=1,ngp
-                    st4a(j,k,2)=anish*max(st4a(j,k,1)-st4a(j,k-1,1),0.0_dp)
+                    st4a(j,k,2)=anish* &
+                            max(st4a(j,k,1)-st4a(j,k-1,1), rpe_literal(0.0_dp))
                 end do
             end do
 
             do j=1,ngp
-                st4a(j,kx,2)=anis*max(ta(j,kx)-st4a(j,nl1,1),0.0_dp)
+                st4a(j,kx,2)=anis* &
+                        max(ta(j,kx) - st4a(j,nl1,1), rpe_literal(0.0_dp))
             end do
 
             ! Blackbody emission in the stratosphere
             do k=1,2
                 do j=1,ngp
-                    st4a(j,k,1)=sbc*st4a(j,k,2)**rpe_literal(4)
-                    st4a(j,k,2)=0.
+                    st4a(j,k,1)=sbc*st4a(j,k,2)**4
+                    st4a(j,k,2)=0.0_dp
                 end do
             end do
 
             ! Blackbody emission in the troposphere
             do k=3,kx
                 do j=1,ngp
-                    st3a=sbc*ta(j,k)**rpe_literal(3)
+                    st3a=sbc*ta(j,k)**3
                     st4a(j,k,1)=st3a*ta(j,k)
-                    st4a(j,k,2)=rpe_literal(4.)*st3a*st4a(j,k,2)
+                    st4a(j,k,2)=rpe_literal(4.0_dp)*st3a*st4a(j,k,2)
                 end do
             end do
 
             ! 2. Initialization of fluxes
-            fsfcd = 0.0
-            dfabs = 0.0
+            fsfcd = 0.0_dp
+            dfabs = 0.0_dp
 
             ! 3. Emission ad absorption of longwave downward flux.
             !    For downward emission, a correction term depending on the
@@ -735,21 +762,22 @@ module phy_radiat
             k=1
             do jb=1,2
                 do j=1,ngp
-                    emis=1.-tau2(j,k,jb)
+                    emis=rpe_literal(1.0_dp)-tau2(j,k,jb)
                     brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1)+emis*st4a(j,k,2))
                     flux(j,jb)=emis*brad
                     dfabs(j,k)=dfabs(j,k)-flux(j,jb)
                 end do
             end do
 
-            flux(:,3:nband) = 0.0
+            flux(:,3:nband) = 0.0_dp
 
             ! 3.2  Troposphere
             do jb=1,nband
                 do k=2,kx
                     do j=1,ngp
-                        emis=1.-tau2(j,k,jb)
-                        brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1)+emis*st4a(j,k,2))
+                        emis=rpe_literal(1.0_dp)-tau2(j,k,jb)
+                        brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1) + &
+                                emis*st4a(j,k,2))
                         dfabs(j,k)=dfabs(j,k)+flux(j,jb)
                         flux(j,jb)=tau2(j,k,jb)*flux(j,jb)+emis*brad
                         dfabs(j,k)=dfabs(j,k)-flux(j,jb)
@@ -809,8 +837,9 @@ module phy_radiat
             do jb=1,nband
                 do k=kx,2,-1
                     do j=1,ngp
-                        emis=1.-tau2(j,k,jb)
-                        brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1)-emis*st4a(j,k,2))
+                        emis=rpe_literal(1.0_dp)-tau2(j,k,jb)
+                        brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1) - &
+                                emis*st4a(j,k,2))
                         dfabs(j,k)=dfabs(j,k)+flux(j,jb)
                         flux(j,jb)=tau2(j,k,jb)*flux(j,jb)+emis*brad
                         dfabs(j,k)=dfabs(j,k)-flux(j,jb)
@@ -822,7 +851,7 @@ module phy_radiat
             k=1
             do jb=1,2
                 do j=1,ngp
-                    emis=1.-tau2(j,k,jb)
+                    emis=rpe_literal(1.0_dp)-tau2(j,k,jb)
                     brad=fband(nint(ta(j,k)),jb)*(st4a(j,k,1)-emis*st4a(j,k,2))
                     dfabs(j,k)=dfabs(j,k)+flux(j,jb)
                     flux(j,jb)=tau2(j,k,jb)*flux(j,jb)+emis*brad
@@ -847,22 +876,23 @@ module phy_radiat
             end do
         end subroutine radlw
 
-        subroutine radset
+        subroutine radset()
             ! subroutine radset
             !
             ! Purpose: compute energy fractions in LW bands
             !          as a function of temperature
 
             integer :: jb, jtemp
-            type(rpe_var) :: eps1
+            real(dp) :: eps1
 
-            eps1=1.-epslw
+            eps1=1.0_dp-epslw
 
             do jtemp=200,320
-                fband(jtemp,2)=(0.148-3.0e-6*(jtemp-247)**2)*eps1
-                fband(jtemp,3)=(0.356-5.2e-6*(jtemp-282)**2)*eps1
-                fband(jtemp,4)=(0.314+1.0e-5*(jtemp-315)**2)*eps1
-                fband(jtemp,1)=eps1-(fband(jtemp,2)+fband(jtemp,3)+fband(jtemp,4))
+                fband(jtemp,2)=(0.148_dp-3.0d-6*(jtemp-247)**2)*eps1
+                fband(jtemp,3)=(0.356_dp-5.2d-6*(jtemp-282)**2)*eps1
+                fband(jtemp,4)=(0.314_dp+1.0d-5*(jtemp-315)**2)*eps1
+                fband(jtemp,1)=eps1 - &
+                        (fband(jtemp,2) + fband(jtemp,3) + fband(jtemp,4))
             end do
 
             do jb=1,4

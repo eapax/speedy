@@ -14,6 +14,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
     use mod_dyncon2, only: tref, tref2, tref3
     use spectral, only: lap
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -26,7 +27,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
 
     integer :: k
 
-    zero = (0.,0.)
+    zero = (0.0_dp, 0.0_dp)
 
     ! Vertical mean div and pressure tendency
     dmeanc(:,:) = zero

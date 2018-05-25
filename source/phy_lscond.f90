@@ -1,7 +1,7 @@
 module phy_lscond
 
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -64,15 +64,15 @@ module phy_lscond
             type(rpe_var) :: psa2(ngp), dqa, dqmax, pfact, prg, qsmax, rhref, rtlsc, sig2, tfact
 
             ! 1. Initialization
-            qsmax = 10.
+            qsmax = 10.0_dp
 
-            rtlsc = rpe_literal(1.)/(trlsc*rpe_literal(3600.))
+            rtlsc = rpe_literal(1.0_dp)/(trlsc*rpe_literal(3600.0_dp))
             tfact = alhc/cp
             prg = p0/gg
 
-            dtlsc(:,1) = 0.
-            dqlsc(:,1) = 0.
-            precls  = 0.
+            dtlsc(:,1) = 0.0_dp
+            dqlsc(:,1) = 0.0_dp
+            precls  = 0.0_dp
             do j=1,ngp
                 psa2(j) = psa(j)*psa(j)
             end do
@@ -82,19 +82,19 @@ module phy_lscond
             !        grid-point-storm instability
             do k=2,kx
                 sig2=sig(k)*sig(k)
-                rhref = rhlsc+drhlsc*(sig2-1.)
+                rhref = rhlsc+drhlsc*(sig2-rpe_literal(1.0_dp))
                 if (k.eq.kx) rhref = max(rhref,rhblsc)
                 dqmax = qsmax*sig2*rtlsc
 
                 do j=1,ngp
                     dqa = rhref*qsat(j,k)-qa(j,k)
-                    if (dqa.lt.0.0) then
+                    if (dqa.lt.rpe_literal(0.0_dp)) then
                         itop(j)    = min(k,itop(j))
                         dqlsc(j,k) = dqa*rtlsc
                         dtlsc(j,k) = tfact*min(-dqlsc(j,k),dqmax*psa2(j))
                     else
-                        dqlsc(j,k) = 0.
-                        dtlsc(j,k) = 0.
+                        dqlsc(j,k) = 0.0_dp
+                        dtlsc(j,k) = 0.0_dp
                     endif
                 end do
             end do

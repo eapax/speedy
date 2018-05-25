@@ -1,7 +1,7 @@
 module humidity
 
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -52,12 +52,12 @@ module humidity
 
             integer :: j
 
-            e0 = rpe_literal(6.108e-3)
-            c1 = rpe_literal(17.269)
-            c2 = rpe_literal(21.875)
-            t0 = rpe_literal(273.16)
-            t1 = rpe_literal(35.86)
-            t2 = rpe_literal(7.66)
+            e0 = rpe_literal(6.108d-3)
+            c1 = rpe_literal(17.269_dp)
+            c2 = rpe_literal(21.875_dp)
+            t0 = rpe_literal(273.16_dp)
+            t1 = rpe_literal(35.86_dp)
+            t2 = rpe_literal(7.66_dp)
 
             do j=1,ngp
                 if (ta(j).ge.t0) then
@@ -69,13 +69,15 @@ module humidity
                 end if
             end do
 
-            if (sig.le.rpe_literal(0.0)) then
+            if (sig.le.rpe_literal(0.0_dp)) then
                 do j=1,ngp
-                    q_sat(j)=rpe_literal(622.)*q_sat(j)/(ps(1)-rpe_literal(0.378)*q_sat(j))
+                    q_sat(j)=rpe_literal(622.0_dp)*q_sat(j)/ &
+                            (ps(1)-rpe_literal(0.378_dp)*q_sat(j))
                 end do
             else
                 do j=1,ngp
-                    q_sat(j)=rpe_literal(622.)*q_sat(j)/(sig*ps(j)-rpe_literal(0.378)*q_sat(j))
+                    q_sat(j)=rpe_literal(622.0_dp)*q_sat(j)/ &
+                            (sig*ps(j)-rpe_literal(0.378_dp)*q_sat(j))
                 end do
             end if
 

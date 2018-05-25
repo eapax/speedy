@@ -7,7 +7,7 @@ subroutine stepone()
     use mod_tsteps, only: delt, delt2, alph, rob, wil
     use mod_date, only: istart
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 

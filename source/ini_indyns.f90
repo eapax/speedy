@@ -13,12 +13,12 @@ subroutine indyns()
     use mod_atparam
     use mod_hdifcon, only: dmp, dmpd, dmps, tcorv, qcorv
     use spectral, only: sia, parmtr
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer :: j, k, jj, npowhd
-    type(rpe_var) :: elap, elapn, hdifd, hdiff, hdifs, qexp, rad1, rgam, rlap, twn
+    real(dp) :: elap, elapn, hdifd, hdiff, hdifs, qexp, rad1, rgam, rlap, twn
 
     ! 1. Definition of constants
     if (mod(nsteps,2) /= 0) stop ' Invalid no. of time steps'
@@ -26,7 +26,7 @@ subroutine indyns()
     ! alph = 0 ---- forward step for gravity wave terms
     ! alph = 1 ---- backward implicit -----------------
     ! alph = 0.5 -- centered implicit -----------------
-    alph = 0.5 
+    alph = 0.5_dp
 
     ! Power of Laplacian in horizontal diffusion
     npowhd = 4
@@ -35,11 +35,14 @@ subroutine indyns()
 
     ! 2.1 Half (vertical velocity) levels
     if (kx == 5) then
-        hsg(:6) = (/ 0.000, 0.150, 0.350, 0.650, 0.900, 1.000 /)
+        hsg(:6) = (/ 0.000_dp, 0.150_dp, 0.350_dp, 0.650_dp, 0.900_dp, &
+                1.000_dp /)
     else if (kx == 7) then
-        hsg(:8) = (/ 0.020, 0.140, 0.260, 0.420, 0.600, 0.770, 0.900, 1.000 /)
+        hsg(:8) = (/ 0.020_dp, 0.140_dp, 0.260_dp, 0.420_dp, 0.600_dp, &
+                0.770_dp, 0.900_dp, 1.000_dp /)
     else if (kx == 8) then
-        hsg(:9) = (/ 0.000, 0.050, 0.140, 0.260, 0.420, 0.600, 0.770, 0.900, 1.000 /)
+        hsg(:9) = (/ 0.000_dp, 0.050_dp, 0.140_dp, 0.260_dp, 0.420_dp, &
+                0.600_dp, 0.770_dp, 0.900_dp, 1.000_dp /)
     end if
 
     do k = 1, kxp
@@ -49,7 +52,7 @@ subroutine indyns()
     ! 2.2 Layer thicknesses and full (u,v,T) levels
     do k = 1, kx
         dhs(k) = hsg(k+1)-hsg(k)
-        fsg(k) = 0.5*(hsg(k+1)+hsg(k))
+        fsg(k) = 0.5_dp*(hsg(k+1)+hsg(k))
     end do
 
     do k = 1, kx
@@ -58,8 +61,8 @@ subroutine indyns()
 
     ! 2.3 Additional functions of sigma
     do k = 1, kx
-        dhsr(k) = 0.5/dhs(k)
-        fsgr(k) = akap/(2.*fsg(k))
+        dhsr(k) = 0.5_dp/dhs(k)
+        fsgr(k) = akap/(2.0_dp*fsg(k))
     end do
 
     ! 3. Horizontal functions and spectral operators
@@ -74,8 +77,8 @@ subroutine indyns()
         rad1 = asin(sia(j))
         radang(j)  = -rad1
         radang(jj) =  rad1
-        coriol(j)  = -2.*omega*sia(j)
-        coriol(jj) =  2.*omega*sia(j)
+        coriol(j)  = -2.0_dp*omega*sia(j)
+        coriol(jj) =  2.0_dp*omega*sia(j)
     end do
 
     ! 4. Coefficients to compute geopotential
@@ -87,31 +90,30 @@ subroutine indyns()
     ! 5. Coefficients for horizontal diffusion
 
     ! 5.1 Spectral damping coefficients
-    hdiff = 1./(thd *3600.)
-    hdifd = 1./(thdd*3600.)
-    hdifs = 1./(thds*3600.)
-    rlap  = 1./float(mtrun*(mtrun+1))
+    hdiff = 1.0_dp/(thd *3600.0_dp)
+    hdifd = 1.0_dp/(thdd*3600.0_dp)
+    hdifs = 1.0_dp/(thds*3600.0_dp)
+    rlap  = 1.0_dp/float(mtrun*(mtrun+1))
 
     do j = 1, nx
         do k = 1, mx
             twn = float(isc*(k-1)+j-1)
-            elap = (twn*(twn+1.)*rlap)
+            elap = (twn*(twn+1.0_dp)*rlap)
             elapn = elap**npowhd
             dmp(k,j)  = hdiff*elapn
             dmpd(k,j) = hdifd*elapn
             dmps(k,j) = hdifs*elap
         end do
-        ! dmps(1,j)=0.
     end do
 
     ! 5.2 Orographic correction terms for temperature and humidity
     !     (vertical component) 
-    rgam = rgas*gamma/(1000.*grav)
+    rgam = rgas*gamma/(1000.0_dp*grav)
     qexp = hscale/hshum
  
-    tcorv(1)=0.
-    qcorv(1)=0.
-    qcorv(2)=0.
+    tcorv(1)=0.0_dp
+    qcorv(1)=0.0_dp
+    qcorv(2)=0.0_dp
 
     do k = 2, kx
         tcorv(k) = fsg(k)**rgam

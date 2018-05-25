@@ -4,7 +4,7 @@ module mod_downscaling
     use mod_atparam, only: ix, il, iy
     use spectral, only: sia, gaussl
     use interpolation, only: linear_interp_weights, linear_interp
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -46,10 +46,10 @@ module mod_downscaling
             integer :: n, j, jj
 
             ! Calculate interpolation weights for longitude
-            lons_in =  (/ (n*(360./ix_in), n=1,ix_in) /)
-            lons_out = (/ (n*(360./ix)   , n=1,ix   ) /)
+            lons_in =  (/ (n*(360.0_dp/ix_in), n=1,ix_in) /)
+            lons_out = (/ (n*(360.0_dp/ix)   , n=1,ix   ) /)
             call linear_interp_weights( &
-                    lons_in, lons_out, ix_in, ix, 360., idx_x, weights_x)
+                    lons_in, lons_out, ix_in, ix, 360.0_dp, idx_x, weights_x)
 
             ! Calculate interpolation weights for sin(latitude)
             call gaussl(sin_lat,wt_in,iy_in)
@@ -68,7 +68,7 @@ module mod_downscaling
             end do
 
             call linear_interp_weights( &
-                    sin_lat_in, sin_lat_out, il_in, il, 0., idx_y, weights_y)
+                    sin_lat_in, sin_lat_out, il_in, il, 0.0_dp, idx_y, weights_y)
         end subroutine
 
         ! Regrid an input field to the model resolution

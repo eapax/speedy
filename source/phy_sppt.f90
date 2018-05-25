@@ -88,15 +88,17 @@ module phy_sppt
             do k=1, nscales
                 do n=1, nx
                     do m=1, mx
-                        randreal = randn(rpe_literal(0.0), rpe_literal(1.0))
-                        randimag = randn(rpe_literal(0.0), rpe_literal(1.0))
+                        randreal = randn( &
+                                rpe_literal(0.0_dp), rpe_literal(1.0_dp))
+                        randimag = randn( &
+                                rpe_literal(0.0_dp), rpe_literal(1.0_dp))
 
                         ! Clip noise to +- 10 standard deviations
                         eta(m,n,k) = cmplx(&
-                                min(rpe_literal(10.0), abs(randreal)) * &
-                                        sign(rpe_literal(1.0), randreal),&
-                                min(rpe_literal(10.0), abs(randimag)) * &
-                                        sign(rpe_literal(1.0), randimag))
+                                min(rpe_literal(10.0_dp), abs(randreal)) * &
+                                        sign(rpe_literal(1.0_dp), randreal),&
+                                min(rpe_literal(10.0_dp), abs(randimag)) * &
+                                        sign(rpe_literal(1.0_dp), randimag))
                     end do
                 end do
             end do
@@ -105,8 +107,9 @@ module phy_sppt
             if (first) then
                 ! First AR(1) step
                 do n=1, nscales
-                    sppt_spec(:,:,n) = (1 - phi(n)**2)**(rpe_literal(-0.5)) * &
-                            sigma(:,:,n) * eta(:,:,n)
+                    sppt_spec(:,:,n) = &
+                            (1 - phi(n)**2)**(rpe_literal(-0.5_dp)) * &
+                                    sigma(:,:,n) * eta(:,:,n)
                 end do
                 first = .false.
             else
@@ -118,7 +121,7 @@ module phy_sppt
             end if
 
             ! Sum SPPT perturbations over correlation scales
-            sppt_grid_total = 0.0
+            sppt_grid_total = 0.0_dp
             do n=1, nscales
                 ! Convert to grid point space
                 call grid(sppt_spec(:,:,n), sppt_grid, 1)
@@ -126,12 +129,12 @@ module phy_sppt
             end do
 
             ! Clip to +/- 1.0
-            sppt_grid_total = min(rpe_literal(1.0), abs(sppt_grid_total)) * &
-                    sign(rpe_literal(1.0), sppt_grid_total)
+            sppt_grid_total = min(rpe_literal(1.0_dp), abs(sppt_grid_total)) * &
+                    sign(rpe_literal(1.0_dp), sppt_grid_total)
 
             ! Apply tapering
             do k=1,kx
-                sppt_grid_out(:, k) = rpe_literal(1.0) + &
+                sppt_grid_out(:, k) = rpe_literal(1.0_dp) + &
                         reshape(sppt_grid_total, (/ngp/)) * mu(k)
             end do
         end function gen_sppt
@@ -148,13 +151,15 @@ module phy_sppt
             real(dp) :: f0(nscales)
 
             ! Calculate time autocorrelation factor as a function of timestep
-            phi = exp(-(real(24)/real(nsteps))/time_decorr)
+            phi = exp(-(24.0_dp/real(nsteps))/time_decorr)
 
             ! Generate spatial amplitude pattern
             do sc=1, nscales
-                f0(sc) = sum((/ ((2*n+1)*exp(-0.5*(len_decorr(sc)/rearth)**2*n*(n+1)),n=1,ntrun) /))
+                f0(sc) = sum((/ ((2*n+1)*exp( &
+                        -0.5_dp*(len_decorr(sc)/rearth)**2*n*(n+1) &
+                        ), n=1,ntrun) /))
                 f0(sc) = sqrt((stddev(sc)**2*(1-phi(sc)**2))/f0(sc))
-                sigma(:,:,sc) = f0(sc) * exp(-0.25*len_decorr(sc)**2 * el2)
+                sigma(:,:,sc) = f0(sc) * exp(-0.25_dp*len_decorr(sc)**2 * el2)
             end do
 
             ! Initialise the random number generator
@@ -177,8 +182,8 @@ module phy_sppt
             call random_number(rand)
 
             ! Box-Muller method
-            u = (-2.0 * log(rand(1))) ** 0.5
-            v = 6.28318530718 * rand(2)
+            u = (-rpe_literal(2.0_dp) * log(rand(1))) ** rpe_literal(0.5_dp)
+            v = rpe_literal(6.28318530718_dp) * rand(2)
             randn = mean + stdev * u * sin(v)
         end function randn
 

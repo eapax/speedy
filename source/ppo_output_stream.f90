@@ -7,7 +7,7 @@ module ppo_output_stream
     use mod_date, only: imonth, month_start
     use spectral, only: uvspec, grid
     use ppo_plevs, only: pressure_levels, np
-    use mod_prec
+    use mod_prec, only: sp, dp
 
     implicit none
 
@@ -284,7 +284,7 @@ module ppo_output_stream
 
         subroutine write_grid(stream)
             type(output_stream), intent(inout) :: stream
-            type(rpe_var) :: output(ngp, kx)
+            real(dp) :: output(ngp, kx)
             real(sp) :: output_sp(ngp, kx)
             real(sp) :: output_p(ngp, np)
             integer :: n, k

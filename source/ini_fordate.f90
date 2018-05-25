@@ -23,7 +23,7 @@ subroutine fordate(imode)
     use humidity, only: q_sat
     use spectral, only: spec
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -65,8 +65,8 @@ subroutine fordate(imode)
 
     ! linear trend of co2 absorptivity (del_co2: rate of change per year)
     iyear_ref = 1950
-    del_co2   = 0.005
-    ! del_co2   = 0.0033
+    del_co2   = 0.005_dp
+    ! del_co2   = 0.0033_dp
 
     if (lco2) then
         ablco2 = ablco2_ref * exp(del_co2 * (iyear + tyear - iyear_ref))
@@ -91,7 +91,7 @@ subroutine fordate(imode)
 !   4. humidity correction term for horizontal diffusion
     ij = 0
     do j = 1, il
-        pexp = 1./(rd * gamlat(j))
+        pexp = 1.0_dp/(rd * gamlat(j))
         do i = 1, ix
             ij = ij + 1
             tsfc(i,j) = fmask_l(i,j) * stl_am(ij)&
@@ -101,8 +101,9 @@ subroutine fordate(imode)
         end do
     end do
 
-    qref = q_sat(ngp, reshape(tref, (/ngp/)), (/rpe_literal(1.0)/), rpe_literal(-1.0))
-    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  rpe_literal(1.0))
+    qref = q_sat(ngp, reshape(tref, (/ngp/)), &
+            (/rpe_literal(1.0_dp)/), rpe_literal(-1.0_dp))
+    qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  rpe_literal(1.0_dp))
 
     corh = refrh1 * reshape((qref - qsfc), (/ix, il/))
 
@@ -119,7 +120,7 @@ subroutine setgam(tyear,gamlat)
     use mod_atparam
     use mod_physcon, only: gg
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -128,7 +129,7 @@ subroutine setgam(tyear,gamlat)
                                             
     type(rpe_var), intent(inout) :: gamlat(il)
 
-    gamlat(1) = gamma/(1000. * gg)
+    gamlat(1) = gamma/(rpe_literal(1000.0_dp) * gg)
     do j = 2, il
         gamlat(j) = gamlat(1)
     end do
@@ -139,7 +140,7 @@ subroutine outest(iunit,fout)
 
     use mod_atparam
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: sp
 
     implicit none
 

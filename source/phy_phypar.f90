@@ -58,7 +58,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             ! Remove negative humidity values
-	        qg1(j,k)=max(qg1(j,k),0.0_dp)
+	        qg1(j,k)=max(qg1(j,k),rpe_literal(0.0_dp))
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
     end do

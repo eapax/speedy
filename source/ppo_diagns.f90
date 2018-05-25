@@ -12,7 +12,7 @@ subroutine diagns(jj,istep)
     use spectral, only: invlap
     use ppo_output_stream, only: update_output
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -25,11 +25,11 @@ subroutine diagns(jj,istep)
     call update_output(istep)
 
     ! 1. Get global-mean temperature and compute eddy kinetic energy
-    sqhalf = sqrt(0.5)
+    sqhalf = sqrt(0.5_dp)
 
     do k=1,kx
-        diag(k,1)=0.
-        diag(k,2)=0.
+        diag(k,1)=0.0_dp
+        diag(k,2)=0.0_dp
         diag(k,3)=sqhalf*realpart(t(1,1,k,jj))
 
         call invlap(vor(1,1,k,jj),temp)

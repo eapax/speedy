@@ -2,7 +2,7 @@ module phy_suflux
     use mod_atparam
     use humidity, only: shtorh, q_sat
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -146,21 +146,24 @@ module phy_suflux
             use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
             use phy_radiat, only: emisfc, alb_l, alb_s, snowc
         
-            type(rpe_var), dimension(ngp,kx), intent(in) :: ua, va, ta, qa, rh, phi
-            type(rpe_var), dimension(ngp), intent(in) :: phi0, fmask, tland, tsea, &
-                    swav, ssrd, slrd
+            type(rpe_var), dimension(ngp,kx), intent(in) :: ua, va, ta, qa, &
+                    rh, phi
+            type(rpe_var), dimension(ngp), intent(in) :: phi0, fmask, tland, &
+                    tsea, swav, ssrd, slrd
 
-            type(rpe_var), dimension(ngp,3), intent(inout) :: ustr, vstr, shf, evap, slru
+            type(rpe_var), dimension(ngp,3), intent(inout) :: ustr, vstr, &
+                    shf, evap, slru
             type(rpe_var), intent(inout) :: hfluxn(ngp,2)
-            type(rpe_var), dimension(ngp), intent(inout) :: tsfc, tskin, u0, v0, t0, q0
+            type(rpe_var), dimension(ngp), intent(inout) :: tsfc, tskin, &
+                    u0, v0, t0, q0
 
             integer :: j, j0, jlat, ks, nl1
 
             type(rpe_var), dimension(ngp,2) :: t2, qsat0
 
-            type(rpe_var) :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, cdsdv, &
-                    chlcp, chscp, dhfdt, dlambda, dt1, dthl, dths, esbc, &
-                    esbc4, ghum0, gtemp0, prd, rcp, rdphi0, rdth, &
+            type(rpe_var) :: dslr(ngp), dtskin(ngp), clamb(ngp), astab, cdldv, &
+                    cdsdv, chlcp, chscp, dhfdt, dlambda, dt1, dthl, dths, &
+                    esbc, esbc4, ghum0, gtemp0, prd, rcp, rdphi0, rdth, &
                     sqclat, tsk3, vg2
 
             logical lscasym, lscdrag, lskineb
@@ -174,9 +177,9 @@ module phy_suflux
             lskineb = .true.   ! true : redefine skin temp. from energy balance
 
             esbc  = emisfc*sbc
-            esbc4 = rpe_literal(4.)*esbc
+            esbc4 = rpe_literal(4.0_dp)*esbc
 
-            ghum0 = rpe_literal(1.)-fhum0
+            ghum0 = rpe_literal(1.0_dp)-fhum0
 
             dlambda = clambsn-clambda
 
@@ -189,9 +192,9 @@ module phy_suflux
                 v0 = fwind0 * va(:,kx)
 
                 ! 1.2 Temperature
-                gtemp0 = rpe_literal(1.)-ftemp0
-                rcp = rpe_literal(1.)/cp
-                rdphi0 =-rpe_literal(1.)/(rd*rpe_literal(288.)*sigl(kx))
+                gtemp0 = rpe_literal(1.0_dp)-ftemp0
+                rcp = rpe_literal(1.0_dp)/cp
+                rdphi0 =-rpe_literal(1.0_dp)/(rd*rpe_literal(288.0_dp)*sigl(kx))
                 nl1=kx-1
 
                 do j=1,ngp
@@ -246,15 +249,15 @@ module phy_suflux
                     j0=ix*(jlat-1)
                     sqclat=sqrt(clat(jlat))
                     do j=j0+1,j0+ix
-                        tskin(j)=tland(j)+ &
-                                ctday*sqclat*ssrd(j)*(1.-alb_l(j))*psa(j)
+                        tskin(j)=tland(j) + ctday*sqclat*ssrd(j)*&
+                                (rpe_literal(1.0_dp)-alb_l(j))*psa(j)
                     end do
                 end do
 
                 ! 2.2 Stability correction = f[pot.temp.(sfc)-pot.temp.(air)]
                 rdth  = fstab/dtheta
-                astab = 1.
-                if (lscasym) astab = 0.5
+                astab = 1.0_dp
+                if (lscasym) astab = 0.5_dp
                 ! to get smaller ds/dt in stable conditions
 
                 do j=1,ngp
@@ -275,7 +278,7 @@ module phy_suflux
                     else
                         dthl=max(-dtheta,astab*(tskin(j)-t2(j,1)))
                     endif
-                    denvvs(j,1)=denvvs(j,0)*(1.+dthl*rdth)
+                    denvvs(j,1)=denvvs(j,0)*(rpe_literal(1.0_dp)+dthl*rdth)
                 end do
 
                 ! 2.3 Wind stress
@@ -293,8 +296,8 @@ module phy_suflux
                 end do
 
                 ! 2.5 Evaporation
-                if (fhum0.gt.0.) then
-                    call shtorh(-1,ngp,t1(1,1),psa,rpe_literal(1.0), &
+                if (fhum0.gt.rpe_literal(0.0_dp)) then
+                    call shtorh(-1,ngp,t1(1,1),psa,rpe_literal(1.0_dp), &
                             q1(1,1),rh(1,kx),qsat0(1,1))
 
                     do j=1,ngp
@@ -304,11 +307,11 @@ module phy_suflux
                     q1(:,1) = qa(:,kx)
                 end if
 
-                qsat0(:, 1) = q_sat(ngp, tskin, psa, rpe_literal(1.0))
+                qsat0(:, 1) = q_sat(ngp, tskin, psa, rpe_literal(1.0_dp))
 
                 do j=1,ngp
                     evap(j,1) = chl*denvvs(j,1) * &
-                            max(0.0_dp,swav(j)*qsat0(j,1)-q1(j,1))
+                            max(rpe_literal(0.0_dp),swav(j)*qsat0(j,1)-q1(j,1))
                 end do
 
                 ! 3. Compute land-surface energy balance;
@@ -317,11 +320,11 @@ module phy_suflux
                 ! 3.1. Emission of lw radiation from the surface
                 !      and net heat fluxes into land surface
                 do j=1,ngp
-                    tsk3        = tskin(j)**rpe_literal(3)
+                    tsk3        = tskin(j)**3
                     dslr(j)     = esbc4*tsk3
                     slru(j,1)   = esbc *tsk3*tskin(j)
-                    hfluxn(j,1) = ssrd(j)*(1.-alb_l(j))+slrd(j)-&
-                        & (slru(j,1)+shf(j,1)+alhc*evap(j,1))
+                    hfluxn(j,1) = ssrd(j)*(rpe_literal(1.0_dp) - alb_l(j)) + &
+                            slrd(j) - (slru(j,1) + shf(j,1) + alhc*evap(j,1))
                 end do
 
                 ! 3.2 Re-definition of skin temperature from energy balance
@@ -330,17 +333,17 @@ module phy_suflux
                     do j=1,ngp
                       clamb(j)    = clambda+snowc(j)*dlambda
                       hfluxn(j,1) = hfluxn(j,1)-clamb(j)*(tskin(j)-tland(j))
-                      dtskin(j)   = tskin(j)+1.
+                      dtskin(j)   = tskin(j)+rpe_literal(1.0_dp)
                     end do
 
                     ! Compute d(Evap) for a 1-degree increment of Tskin
-                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, rpe_literal(1.0))
+                    qsat0(:, 2) = q_sat(ngp, dtskin, psa, rpe_literal(1.0_dp))
 
                     do j=1,ngp
                         if (evap(j,1).gt.0) then
                             qsat0(j,2) = swav(j)*(qsat0(j,2)-qsat0(j,1))
                         else
-                            qsat0(j,2) = 0.
+                            qsat0(j,2) = 0.0_dp
                         endif
                     end do
 
@@ -381,8 +384,8 @@ module phy_suflux
                 !fkend do
 
                 rdth  = fstab/dtheta
-                astab = 1.
-                if (lscasym) astab = 0.5
+                astab = 1.0_dp
+                if (lscasym) astab = 0.5_dp
                 ! to get smaller dS/dT in stable conditions
 
                 do j=1,ngp
@@ -391,11 +394,11 @@ module phy_suflux
                     else
                        dths=max(-dtheta,astab*(tsea(j)-t2(j,2)))
                     end if
-                    denvvs(j,2)=denvvs(j,0)*(1.+dths*rdth)
+                    denvvs(j,2)=denvvs(j,0)*(rpe_literal(1.0_dp)+dths*rdth)
                 end do
 
-                if (fhum0.gt.0.) then
-                    call shtorh(-1,ngp,t1(1,2),psa,rpe_literal(1.0), &
+                if (fhum0.gt.rpe_literal(0.0_dp)) then
+                    call shtorh(-1,ngp,t1(1,2),psa,rpe_literal(1.0_dp), &
                             q1(1,2),rh(1,kx),qsat0(1,2))
 
                     do j=1,ngp
@@ -431,7 +434,7 @@ module phy_suflux
             end do
 
             ! 4.4 Evaporation
-            qsat0(:, 2) = q_sat(ngp, tsea, psa, rpe_literal(1.0))
+            qsat0(:, 2) = q_sat(ngp, tsea, psa, rpe_literal(1.0_dp))
 
             do j=1,ngp
                 evap(j,2) = chs*denvvs(j,ks)*(qsat0(j,2)-q1(j,2))
@@ -441,7 +444,7 @@ module phy_suflux
             !     and net heat fluxes into sea surface
             do j=1,ngp
                 slru(j,2)   = esbc*tsea(j)**4
-                hfluxn(j,2) = ssrd(j)*(1.-alb_s(j))+slrd(j)-&
+                hfluxn(j,2) = ssrd(j)*(rpe_literal(1.0_dp)-alb_s(j))+slrd(j)-&
                     & (slru(j,2)+shf(j,2)+alhc*evap(j,2))
             end do
 
@@ -480,10 +483,11 @@ module phy_suflux
             integer :: j
             type(rpe_var) :: rhdrag
 
-            rhdrag = 1./(gg*hdrag)
+            rhdrag = rpe_literal(1.0_dp)/(gg*hdrag)
 
             do j=1,ngp
-                forog(j)=1.+fhdrag*(1.-exp(-max(phi0(j),0.0_dp)*rhdrag))
+                forog(j)=rpe_literal(1.0_dp) + fhdrag*(rpe_literal(1.0_dp) - &
+                        exp(-max(phi0(j),rpe_literal(0.0_dp))*rhdrag))
             end do
         end subroutine sflset
 end module phy_suflux

@@ -1,7 +1,7 @@
 module phy_convmf
 
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -81,16 +81,16 @@ module phy_convmf
             ! 1. Initialization of output and workspace arrays
             nl1=kx-1
             nlp=kx+1
-            fqmax=5.
+            fqmax=5.0_dp
 
-            fm0=p0*dsig(kx)/(gg*trcnv*rpe_literal(3600))
-            rdps=rpe_literal(2.)/(rpe_literal(1.)-psmin)
+            fm0=p0*dsig(kx)/(gg*trcnv*rpe_literal(3600.0_dp))
+            rdps=rpe_literal(2.0_dp)/(rpe_literal(1.0_dp)-psmin)
 
-            dfse = 0.0
-            dfqa = 0.0
+            dfse = 0.0_dp
+            dfqa = 0.0_dp
 
-            cbmf = 0.0
-            precnv = 0.0
+            cbmf = 0.0_dp
+            precnv = 0.0_dp
 
             ! Saturation moist static energy
             do k=2,kx
@@ -100,9 +100,9 @@ module phy_convmf
             end do
 
             ! Entrainment profile (up to sigma = 0.5)
-            sentr=0.
+            sentr=0.0_dp
             do k=2,nl1
-                entr(k)=(max(0.0_dp,sig(k)-rpe_literal(0.5)))**rpe_literal(2)
+                entr(k)=(max(rpe_literal(0.0_dp),sig(k)-rpe_literal(0.5_dp)))**2
                 sentr=sentr+entr(k)
             end do
 
@@ -110,7 +110,7 @@ module phy_convmf
             entr(2:nl1) = entr(2:nl1) * sentr
 
             ! 2. Check of conditions for convection
-            rlhc=1./alhc
+            rlhc=rpe_literal(1.0_dp)/alhc
 
             do j=1,ngp
                 itop(j)=nlp
@@ -170,7 +170,7 @@ module phy_convmf
                 k1=k-1
 
                 ! Maximum specific humidity in the PBL
-                qmax=max(1.01*qa(j,k),qsat(j,k))
+                qmax=max(rpe_literal(1.01_dp)*qa(j,k),qsat(j,k))
 
                 ! Dry static energy and moisture at upper boundary
                 sb=se(j,k1)+wvi(k1,2)*(se(j,k)-se(j,k1))
@@ -179,7 +179,7 @@ module phy_convmf
 
                 ! Cloud-base mass flux, computed to satisfy:
                 ! fmass*(qmax-qb)*(g/dp)=qdif/trcnv
-                fpsa=psa(j)*min(1.0_dp,(psa(j)-psmin)*rdps)
+                fpsa=psa(j)*min(rpe_literal(1.0_dp),(psa(j)-psmin)*rdps)
                 fmass=fm0*fpsa*min(fqmax,qdif(j)/(qmax-qb))
                 cbmf(j)=fmass
 
@@ -223,7 +223,7 @@ module phy_convmf
 
                     ! Secondary moisture flux
                     delq=rhil*qsat(j,k)-qa(j,k)
-                    if (delq.gt.0.0) then
+                    if (delq.gt.rpe_literal(0.0_dp)) then
                         fsq=smf*cbmf(j)*delq
                         dfqa(j,k)   =dfqa(j,k)   +fsq
                         dfqa(j,kx)=dfqa(j,kx)-fsq
@@ -235,7 +235,7 @@ module phy_convmf
 
                 ! Flux of convective precipitation
                 qsatb=qsat(j,k)+wvi(k,2)*(qsat(j,k+1)-qsat(j,k))
-                precnv(j)=max(fuq-fmass*qsatb,0.0_dp)
+                precnv(j)=max(fuq-fmass*qsatb,rpe_literal(0.0_dp))
 
                 ! Net flux of dry static energy and moisture
                 dfse(j,k)=fus-fds+alhc*precnv(j)

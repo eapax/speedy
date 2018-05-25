@@ -11,13 +11,15 @@ subroutine invars()
     use mod_date, only: iyear0, imonth0, istart, iyear, imonth, iday, ihour
     use spectral, only: grid, spec
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_complex_var) :: zero, ccon, surfs(mx,nx)
+    complex(dp) :: zero, ccon
+    type(rpe_complex_var) :: surfs(mx,nx)
     type(rpe_var) :: surfg(ix,il)
-    type(rpe_var) :: gam1, esref, factk, gam2, qexp, qref, rgam, rgamr, rlog0, tref, ttop
+    real(dp) :: gam1, esref, factk, gam2, qexp, qref, rgam, rgamr, rlog0, &
+            tref, ttop
     integer :: i, j, k
 
     gam1 = gamma/(1000.0_dp*grav)

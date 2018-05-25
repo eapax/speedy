@@ -1,6 +1,7 @@
 module mod_fluxes
     use mod_atparam
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -38,9 +39,9 @@ module mod_fluxes
                 close (100)
             else
                 ! Set all daily-mean arrays to zero
-                hflux_l(:) = 0.
-                hflux_s(:) = 0.
-                hflux_i(:) = 0.
+                hflux_l(:) = 0.0_dp
+                hflux_s(:) = 0.0_dp
+                hflux_i(:) = 0.0_dp
             end if
         end subroutine ini_fluxes
 
@@ -59,10 +60,10 @@ module mod_fluxes
             type(rpe_var) :: fland(ngp), esbc, rsteps, sstfr, sstfr4
 
             fland = reshape(fmask1,(/ngp/))
-            rsteps = rpe_literal(1.0)/rpe_literal(nsteps)
+            rsteps = rpe_literal(1.0_dp)/rpe_literal(nsteps)
 
             ! SST at freezing point
-            sstfr  = 273.2-1.8
+            sstfr  = 273.2_dp-1.8_dp
 
             sstfr4 = sstfr**4
             esbc   = emisfc*sbc
@@ -77,13 +78,13 @@ module mod_fluxes
 
             hflux_s(:) = hflux_s(:) + rsteps* hfluxn(:,2)
             hflux_i(:) = hflux_i(:) + &
-                    rsteps*(hfluxn(:,2)+difice(:)*(rpe_literal(1.0)-sice_am(:)))
+                    rsteps*(hfluxn(:,2)+difice(:)*(rpe_literal(1.0_dp)-sice_am(:)))
 
             ! 4.1 Store fluxes for daily-mean output
 
             ! Multiply net heat fluxes by land or sea fractions
             hfluxn(:,1) = hfluxn(:,1)*fland(:)
-            hfluxn(:,2) = hfluxn(:,2)*(rpe_literal(1.0)-fland(:))
+            hfluxn(:,2) = hfluxn(:,2)*(rpe_literal(1.0_dp)-fland(:))
 
             ! End of flux increment
         end subroutine increment_fluxes

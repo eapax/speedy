@@ -8,6 +8,7 @@ subroutine ini_sea(istart)
     use mod_cli_sea, only: deglat_s
     use mod_var_sea
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -22,10 +23,10 @@ subroutine ini_sea(istart)
     tice_om(:) = ticecl_ob(:)     ! sea ice temperature
     sice_om(:) = sicecl_ob(:)     ! sea ice fraction
 
-    if (icsea.le.0) sst_om(:) = rpe_literal(0.0)
+    if (icsea.le.0) sst_om(:) = 0.0_dp
 
     ! 3. Compute additional sea/ice variables
-    wsst_ob(:) = rpe_literal(0.)
+    wsst_ob(:) = 0.0_dp
     if (icsea.ge.4) call sea_domain('elnino',deglat_s,wsst_ob)
 
     call sea2atm(0)
@@ -43,14 +44,14 @@ subroutine atm2sea(jday)
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: jday
 
-    type(rpe_var) :: fmasks(ngp)                  ! sea fraction
-    type(rpe_var) :: hfyearm(ngp)                 ! annual mean heat flux into the ocean
+    type(rpe_var) :: fmasks(ngp)        ! sea fraction
+    type(rpe_var) :: hfyearm(ngp)       ! annual mean heat flux into the ocean
     integer :: j
     type(rpe_var) :: sstcl0, sstfr
 
@@ -77,19 +78,20 @@ subroutine atm2sea(jday)
     ! Adjust climatological fields over sea ice
 
     ! SST at freezing point
-    sstfr = rpe_literal(273.2)-rpe_literal(1.8)
+    sstfr = rpe_literal(273.2_dp)-rpe_literal(1.8_dp)
 
     do j=1,ngp
         sstcl0 = sstcl_ob(j)
 
         if (sstcl_ob(j).gt.sstfr) then
-            sicecl_ob(j) = min(rpe_literal(0.5),sicecl_ob(j))
+            sicecl_ob(j) = min(rpe_literal(0.5_dp),sicecl_ob(j))
             ticecl_ob(j) = sstfr
-            if (sicecl_ob(j).gt.0.) then
-                sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/(1.-sicecl_ob(j))
+            if (sicecl_ob(j).gt.rpe_literal(0.0_dp)) then
+                sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/&
+                        (rpe_literal(1.0_dp)-sicecl_ob(j))
             end if
         else
-            sicecl_ob(j) = max(rpe_literal(0.5),sicecl_ob(j))
+            sicecl_ob(j) = max(rpe_literal(0.5_dp),sicecl_ob(j))
             ticecl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/sicecl_ob(j)
             sstcl_ob(j)  = sstfr
         end if
@@ -124,6 +126,7 @@ subroutine sea2atm(jday)
     use mod_cplvar_sea, only: vsea_output
     use mod_var_sea
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -142,7 +145,7 @@ subroutine sea2atm(jday)
 
     ! 3. Compute sea-sfc. anomalies and full fields for atm. model
     ! 3.1 SST
-    sstan_am(:) = 0.
+    sstan_am(:) = 0.0_dp
 
     if (icsea.le.1) then
         if (isstan.gt.0) sstan_am(:) = sstan_ob(:)
@@ -190,7 +193,7 @@ subroutine rest_sea(imode)
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
     use mod_downscaling, only: ix_in, il_in, regrid
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -235,7 +238,7 @@ subroutine rest_sea(imode)
     else
         !    write sea/ice model variables from coupled runs,
         !    otherwise write fields used by atmospheric model
-        sstfr = 273.2-1.8
+        sstfr = 273.2_dp-1.8_dp
 
         if (icsea.gt.0) then
             write (10) sst_om(:) 
@@ -268,7 +271,7 @@ subroutine obs_ssta()
     implicit none
  
     integer :: i, j, next_month
-    type(rpe_var)   :: inp(ix,il)
+    real(sp)   :: inp(ix,il)
 
     sstan3(:,:,1) = sstan3(:,:,2)
     sstan3(:,:,2) = sstan3(:,:,3)
@@ -277,11 +280,11 @@ subroutine obs_ssta()
     next_month = (iyear0 - issty0) * 12 + imonth
 
     ! Read next month SST anomalies
-    call load_boundary_file(1,30,inp,next_month-1)
+    call load_boundary_file(30,inp,next_month-1)
 
     sstan3(1:ix,1:il,3)   = inp
 
-    call forchk(bmask_s,sstan3(:,:,3),ngp,1,-50.,50.,0.)
+    call forchk(bmask_s,sstan3(:,:,3),ngp,1,-50.0_dp,50.0_dp,0.0_dp)
 
  100  continue
 

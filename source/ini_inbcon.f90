@@ -13,7 +13,7 @@ subroutine inbcon(grav0,radlat)
     use mod_cli_land
     use mod_cli_sea
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: sp, dp
 
     implicit none
 
@@ -21,21 +21,21 @@ subroutine inbcon(grav0,radlat)
     type(rpe_var), intent(in) :: radlat(il)
 
     real(sp) :: r4inp(ix,il)
-    type(rpe_var) :: inp(ix,il), phis1(ix,il)
-    type(rpe_var) :: veg(ix,il), swl1(ix,il), swl2(ix,il)
+    real(sp) :: inp(ix,il)
+    real(sp) :: veg(ix,il), swl1(ix,il), swl2(ix,il)
 
     integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec
-    type(rpe_var) :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
+    real(dp) :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
 
     ! Set threshold for land-sea mask definition
     ! (ie minimum fraction of either land or sea)
 
-    thrsh = 0.1
+    thrsh = 0.1_dp
 
     ! 1. Read topographical fields (orography, land-sea mask)
     if (iitest >= 1) print *,' read orography' 
 
-    call load_boundary_file(1,20,inp,0)
+    call load_boundary_file(20,inp,0)
 
     phi0 = grav0*inp
 
@@ -43,7 +43,7 @@ subroutine inbcon(grav0,radlat)
 
     if (iitest >= 1) print *,' read fractional land-sea mask'  
 
-    call load_boundary_file(1,20,inp,1)
+    call load_boundary_file(20,inp,1)
 
     fmask = inp
 
@@ -55,11 +55,11 @@ subroutine inbcon(grav0,radlat)
             fmask_l(i,j) = fmask(i,j)
 
             if (fmask_l(i,j).ge.thrsh) then
-              bmask_l(i,j) = 1.
-              if (fmask(i,j).gt.(1.-thrsh)) fmask_l(i,j) = 1.
+              bmask_l(i,j) = 1.0_dp
+              if (fmask(i,j).gt.(1.0_dp-thrsh)) fmask_l(i,j) = 1.0_dp
             else
-              bmask_l(i,j) = 0.
-              fmask_l(i,j) = 0.
+              bmask_l(i,j) = 0.0_dp
+              fmask_l(i,j) = 0.0_dp
             end if
 
             fmask1(i,j) = fmask_l(i,j)
@@ -69,7 +69,7 @@ subroutine inbcon(grav0,radlat)
     ! 2.2 Annual-mean surface albedo
     if (iitest >= 1) print *,' read surface albedo' 
  
-    call load_boundary_file(1,20,inp,2)
+    call load_boundary_file(20,inp,2)
 
     alb0 = inp
 
@@ -77,29 +77,29 @@ subroutine inbcon(grav0,radlat)
     if (iitest >= 1) print *,' reading land-surface temp.'
 
     do it = 1,12
-        call load_boundary_file(1,23,inp,it-1)
+        call load_boundary_file(23,inp,it-1)
 
-        call fillsf(inp,ix,il,rpe_literal(0.))
+        call fillsf(inp,ix,il,0.0_dp)
 
        stl12(1:ix,1:il,it) = inp
     end do
 
     if (iitest == 1) print *,' checking land-surface temp.'
 
-    call forchk(bmask_l,stl12,ngp,12,0.,400.,273.)
+    call forchk(bmask_l,stl12,ngp,12,0.0_dp,400.0_dp,273.0_dp)
 
     ! 2.4 Snow depth
     if (iitest >= 1) print *,' reading snow depth'  
 
     do it = 1,12
-        call load_boundary_file(1,24,inp,it-1)
+        call load_boundary_file(24,inp,it-1)
   
         snowd12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking snow depth'
 
-    CALL FORCHK (bmask_l,snowd12,ngp,12,0.,20000.,0.)
+    CALL FORCHK (bmask_l,snowd12,ngp,12,0.0_dp,20000.0_dp,0.0_dp)
        
     ! 2.5 Read soil moisture and compute soil water availability 
     !     using vegetation fraction
@@ -107,29 +107,30 @@ subroutine inbcon(grav0,radlat)
     if (iitest >= 1) print *,' reading soil moisture'  
 
     ! Read vegetation fraction
-    call load_boundary_file(1,20,veg,3)
-    call load_boundary_file(1,20,inp,4)
+    call load_boundary_file(20,veg,3)
+    call load_boundary_file(20,inp,4)
 
     ! Combine high and low vegetation fractions
     veg = max(0.0_dp,veg+0.8_dp*inp)
 
     ! Read soil moisture
-    sdep1 = 70.
+    sdep1 = 70.0_dp
     idep2 = 3
     sdep2 = idep2*sdep1
 
     swwil2= idep2*swwil
-    rsw   = 1./(swcap+idep2*(swcap-swwil))
+    rsw   = 1.0_dp/(swcap+idep2*(swcap-swwil))
 
     do it = 1,12
-        call load_boundary_file(1,26,swl1,3*it-3)
-        call load_boundary_file(1,26,swl2,3*it-2)
+        call load_boundary_file(26,swl1,3*it-3)
+        call load_boundary_file(26,swl2,3*it-2)
 
         ! Combine soil water content from two top layers
         do j = 1,il
             do i = 1,ix
                 swroot = idep2*swl2(i,j)
-                inp(i,j) = min(1.0_dp,rsw*(swl1(i,j)+veg(i,j)*max(0.0_dp,swroot-swwil2)))
+                inp(i,j) = min(1.0_dp, rsw*(swl1(i,j) + &
+                        veg(i,j)*max(0.0_dp, swroot-swwil2)))
             end do
         end do
 
@@ -138,58 +139,58 @@ subroutine inbcon(grav0,radlat)
 
     if (iitest >= 1) print *,' checking soil moisture'
 
-    call forchk(bmask_l,soilw12,ngp,12,0.,10.,0.)
+    call forchk(bmask_l,soilw12,ngp,12,0.0_dp,10.0_dp,0.0_dp)
 
     ! 3. Initialize sea-sfc boundary conditions
     
     ! 3.1 Fractional and binary sea masks
     do j=1,il
         do i=1,ix
-            fmask_s(i,j) = 1.-fmask(i,j)
+            fmask_s(i,j) = 1.0_dp-fmask(i,j)
 
             if (fmask_s(i,j).ge.thrsh) then
-                bmask_s(i,j) = 1.
-                if (fmask_s(i,j).gt.(1.-thrsh)) fmask_s(i,j) = 1.
+                bmask_s(i,j) = 1.0_dp
+                if (fmask_s(i,j).gt.(1.0_dp-thrsh)) fmask_s(i,j) = 1.0_dp
             else
-                bmask_s(i,j) = 0.
-                fmask_s(i,j) = 0.
+                bmask_s(i,j) = 0.0_dp
+                fmask_s(i,j) = 0.0_dp
             end if
         end do
     end do
 
     ! Grid latitudes for sea-sfc. variables
-    rad2deg = 90.0/asin(1.)
+    rad2deg = 90.0_dp/asin(1.0_dp)
     deglat_s = rad2deg*radlat
          
     ! 3.2 SST 
     if (iitest >= 1) print *,' reading sst' 
 
     do it = 1,12
-        call load_boundary_file(1,21,inp,it-1)
+        call load_boundary_file(21,inp,it-1)
 
-        call fillsf(inp,ix,il,rpe_literal(0.))
+        call fillsf(inp,ix,il,0.0_dp)
 
         sst12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking sst'
 
-    call forchk(bmask_s,sst12,ngp,12,100.,400.,273.)
+    call forchk(bmask_s,sst12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
 
     ! 3.3 Sea ice concentration
     if (iitest >= 1) print *,' reading sea ice'  
 
     do it = 1,12
-        call load_boundary_file(1,22,inp,it-1)
+        call load_boundary_file(22,inp,it-1)
 
-        inp = max(inp,0.)
+        inp = max(inp,0.0_dp)
 
         sice12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking sea ice'
 
-    call forchk(bmask_s,sice12,ngp,12,0.,1.,0.)
+    call forchk(bmask_s,sice12,ngp,12,0.0_dp,1.0_dp,0.0_dp)
 
     ! 3.4 SST anomalies for initial and prec./following months
     if (isstan > 0) then
@@ -198,7 +199,7 @@ subroutine inbcon(grav0,radlat)
         print *, 'isst0 = ', isst0
         do it=1,3
             if ((isst0 <= 1 .and. it /= 2) .or. isst0 > 1) then
-                call load_boundary_file(1,30,inp,isst0-2+it-1)
+                call load_boundary_file(30,inp,isst0-2+it-1)
             end if
 
             sstan3(1:ix,1:il,it) = inp
@@ -206,13 +207,13 @@ subroutine inbcon(grav0,radlat)
 
         if (iitest >= 1) print *,' checking sst anomalies'
 
-        call forchk(bmask_s,sstan3,ngp,3,-50.,50.,0.)
+        call forchk(bmask_s,sstan3,ngp,3,-50.0_dp,50.0_dp,0.0_dp)
     end if
 
     ! 4. Climatological fields for the ocean model (TO BE RECODED)
     ! 4.1. Annual-mean heat flux into sea-surface
 
-    hfseacl = 0.0
+    hfseacl = 0.0_dp
 
     if (icsea >= 1) then
         if (iitest >= 1) print *,' reading sfc heat fluxes' 
@@ -236,10 +237,10 @@ subroutine inbcon(grav0,radlat)
 
         do j = 1,il
             do i = 1,ix
-                if (bmask_s(i,j).gt.0.) then
-                    hfseacl(i,j) = hfseacl(i,j)/(12.*fmask_s(i,j))
+                if (bmask_s(i,j).gt.0.0_dp) then
+                    hfseacl(i,j) = hfseacl(i,j)/(12.0_dp*fmask_s(i,j))
                 else
-                    hfseacl(i,j) = 0.
+                    hfseacl(i,j) = 0.0_dp
                 end if
             end do
         end do  
@@ -254,17 +255,9 @@ subroutine inbcon(grav0,radlat)
     !      (bias may be defined in a different period from climatology)
 
     if (icsea >= 3) then
-        if (iitest >= 1) print *,' reading ocean model SST bias' 
-
-        !irecl = 4*ngp
-        !irec = 0
-
-        !open ( unit=32, file='fort.32', status='old',&
-        !   & form='unformatted', access='direct', recl=irecl )
+        if (iitest >= 1) print *,' reading ocean model SST bias'
 
         do it = 1,12
-            ! irec=irec+1
-            ! read (32,rec=irec) r4inp
             read (32) r4inp
 
             do j = 1,il
@@ -285,7 +278,7 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     ! and set undefined values to a constant (to avoid over/underflow)
 
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -300,7 +293,7 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
         nfault=0
 
         do jgp = 1,ngp
-            if (fmask(jgp).gt.0.0) then
+            if (fmask(jgp).gt.0.0_dp) then
                 if (field(jgp,jf).lt.fmin.or.field(jgp,jf).gt.fmax) then
                     nfault = nfault+1
                 end if
@@ -325,18 +318,20 @@ subroutine truncg (itr,fg1,fg2)
     USE mod_atparam
     use spectral, only: grid, spec
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: itr
 
-    type(rpe_var), dimension(ix,il), intent(inout) :: fg1 (ix,il), fg2(ix,il)
+    type(rpe_var), intent(in) :: fg1 (ix,il)
+    type(rpe_var), intent(out) :: fg2(ix,il)
     type(rpe_complex_var) :: fsp(mx,nx), zero
     integer :: n, m, itwn
 
     print *, 'Filter applied at wavenumber ', itr
 
-    zero = (0.,0.)
+    zero = (0.0_dp,0.0_dp)
 
     call spec (fg1,fsp)
 
@@ -355,16 +350,17 @@ subroutine fillsf(sf,ix,il,fmis)
     ! Purpose: replace missing values in surface fields
     ! NB: it is assumed that non-missing values exist near the Equator
 
-    use rp_emulator
+    use mod_prec, only: sp, dp
 
     implicit none
 
-    type(rpe_var) :: sf(ix,il), sf2(0:ix+1)
+    real(sp), intent(inout) :: sf(ix,il)
     integer, intent(in) :: ix, il
-    type(rpe_var), intent(in) :: fmis
+    real(dp), intent(in) :: fmis
 
+    real(dp) :: sf2(0:ix+1)
     integer :: khem, j, j1, j2, j3, i, nmis
-    real :: fmean
+    real(dp) :: fmean
 
     do khem = 1,2
        if (khem == 1) then
@@ -384,7 +380,7 @@ subroutine fillsf(sf,ix,il,fmis)
             do i=1,ix
                 if (sf(i,j) < fmis) then
                     nmis = nmis+1
-                    sf2(i) = 0.
+                    sf2(i) = 0.0_dp
                 end if
             end do
 
@@ -397,42 +393,32 @@ subroutine fillsf(sf,ix,il,fmis)
             sf2(0)      = sf2(ix)
             sf2(ix+1) = sf2(1)
             do i=1,ix
-                if (sf(i,j).lt.fmis) sf(i,j) = 0.5*(sf2(i-1)+sf2(i+1))
+                if (sf(i,j).lt.fmis) sf(i,j) = 0.5_dp*(sf2(i-1)+sf2(i+1))
             end do
         end do
     end do
 end
 
-subroutine load_boundary_file(ioflag,iunit,fld,offset)
-    ! if ioflag = 1 : read  field on from unit=iunit
-    ! if ioflag = 2 : write field on from unit=iunit
+subroutine load_boundary_file(iunit,inp,offset)
+    ! read field on from unit=iunit
 
     use mod_atparam
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: sp
 
     implicit none
 
-    integer, intent(in) :: ioflag, iunit, offset
-    type(rpe_var)     :: fld(ix,il)
-    real(sp) :: inp(ix,il)
+    integer, intent(in) :: iunit, offset
+    real(sp), intent(out) :: inp(ix,il)
     integer :: i
 
-    open(unit=iunit, form='unformatted', access='direct', recl=ix*4, convert='little_endian')
-    if (ioflag <= 1) then
-        do i = 1, il
-            read(iunit,rec=offset*il+i) inp(:,il+1-i)
-        end do
+    open(unit=iunit, form='unformatted', access='direct', recl=ix*4, &
+            convert='little_endian')
+    do i = 1, il
+        read(iunit,rec=offset*il+i) inp(:,il+1-i)
+    end do
 
-        fld = inp
+    ! Fix undefined values
+    where (inp <= -999) inp = 0.0_sp
 
-        ! Fix undefined values
-        where (fld <= -999) fld = 0.0
-    else
-        inp = fld
-        do i = il*offset+1, il*offset+il
-            write(iunit,rec=i) inp(:,i)
-        end do
-    endif
     close(unit=iunit)
 end

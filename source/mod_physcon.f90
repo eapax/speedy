@@ -1,31 +1,31 @@
 module mod_physcon
     use mod_atparam
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     ! Physical constants
     ! Reference pressure
-    real(dp), parameter :: p0_ = 1.e+5
+    real(dp), parameter :: p0_ = 1.d+5
 
     ! Gravity accel.
-    real(dp), parameter :: gg_ = 9.81
+    real(dp), parameter :: gg_ = 9.81_dp
 
     ! Gas constant for dry air
-    real(dp), parameter :: rd_ = 287.
+    real(dp), parameter :: rd_ = 287.0_dp
 
     ! Specific heat at constant pressure
-    real(dp), parameter :: cp_ = 1004.
+    real(dp), parameter :: cp_ = 1004.0_dp
 
     ! Latent heat of condensation, in J/g for consistency with spec.hum. in g/Kg
-    real(dp), parameter :: alhc_ = 2501.0
+    real(dp), parameter :: alhc_ = 2501.0_dp
 
     ! Latent heat of sublimation
-    real(dp), parameter :: alhs_ = 2801.0
+    real(dp), parameter :: alhs_ = 2801.0_dp
 
     ! Stefan-Boltzmann constant
-    real(dp), parameter :: sbc_ = 5.67e-8
+    real(dp), parameter :: sbc_ = 5.67d-8
 
     ! Reduced precision versions
     type(rpe_var) :: p0

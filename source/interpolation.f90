@@ -1,6 +1,6 @@
 module interpolation
 
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -50,7 +50,7 @@ module interpolation
                     else
                         ! Assume continous outside boundary: y(1-...) = y(1)
                         idx(n) = 2
-                        weights(n) = 0.
+                        weights(n) = 0.0_dp
                     end if
                 else if (i > nx_in) then
                     if (period > 0) then
@@ -60,7 +60,7 @@ module interpolation
                     else
                         ! Assume continous outside boundary: y(i+...) = y(i)
                         idx(n) = nx_in
-                        weights(n) = 1.
+                        weights(n) = 1.0_dp
                     end if
                 else
                     idx(n) = i

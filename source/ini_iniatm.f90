@@ -7,8 +7,7 @@ subroutine ini_atm()
     use mod_dyncon1, only: grav, hsg, fsg, radang
     use mod_fluxes, only: ini_fluxes
     use phy_sppt, only: ini_sppt
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -50,7 +49,7 @@ subroutine ini_atm()
             ! function prlev (siglev)
             ! purpose : select the closest standard pressure level for post-proc.
             ! input :   siglev = sigma level
-            use mod_prec
+            use mod_prec, only: dp
 
             implicit none
         
@@ -59,12 +58,13 @@ subroutine ini_atm()
             real(dp) :: prlev, dif, adif
             integer :: k
 
-            plev = (/ 0.925, 0.850, 0.775, 0.700, 0.600, 0.500, 0.400,&
-                & 0.300, 0.250, 0.200, 0.150, 0.100, 0.050, 0.030 /)
+            plev = (/ 0.925_dp, 0.850_dp, 0.775_dp, 0.700_dp, 0.600_dp, &
+                    0.500_dp, 0.400_dp, 0.300_dp, 0.250_dp, 0.200_dp, &
+                    0.150_dp, 0.100_dp, 0.050_dp, 0.030_dp /)
 
-            dif = 1.0 - siglev
+            dif = 1.0_dp - siglev
         
-            prlev = 1.0
+            prlev = 1.0_dp
         
             do k = 1, 14
                 adif = abs(plev(k) - siglev)

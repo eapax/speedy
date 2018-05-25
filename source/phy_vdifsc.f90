@@ -70,7 +70,8 @@ module phy_vdifsc
             use mod_atparam
             use mod_physcon, only: cp, alhc, sig, sigh, dsig
         
-            type(rpe_var), dimension(ngp,kx), intent(in) :: ua, va, se, rh, qa, qsat, phi
+            type(rpe_var), dimension(ngp,kx), intent(in) :: &
+                    ua, va, se, rh, qa, qsat, phi
             integer, intent(in) :: icnv(ngp)
             type(rpe_var), dimension(ngp,kx), intent(inout) :: &
                     utenvd, vtenvd, ttenvd, qtenvd
@@ -80,7 +81,7 @@ module phy_vdifsc
                     fvdiq2, dmse, drh, fluxse, fluxq, fcnv, se0, one
             type(rpe_var), dimension(kx) :: rsig, rsig1
 
-            one = 1.0
+            one = 1.0_dp
 
             ! 1. Initalization
 
@@ -89,8 +90,8 @@ module phy_vdifsc
             !      d_T/dt = d_F'(SE)/d_sigma,  d_Q/dt = d_F'(Q)/d_sigma
 
             nl1  = kx-1
-            cshc = dsig(kx)/rpe_literal(3600.)
-            cvdi = (sigh(nl1)-sigh(1))/((nl1-1)*rpe_literal(3600.))
+            cshc = dsig(kx)/rpe_literal(3600.0_dp)
+            cvdi = (sigh(nl1)-sigh(1))/((nl1-1)*rpe_literal(3600.0_dp))
 
             fshcq  = cshc/trshc
             fshcse = cshc/(trshc*cp)
@@ -104,10 +105,10 @@ module phy_vdifsc
             end do
             rsig(kx)=one/dsig(kx)
 
-            utenvd = 0.0
-            vtenvd = 0.0
-            ttenvd = 0.0
-            qtenvd = 0.0
+            utenvd = 0.0_dp
+            vtenvd = 0.0_dp
+            ttenvd = 0.0_dp
+            qtenvd = 0.0_dp
 
             ! 2. Shallow convection
             drh0   = rhgrad*(sig(kx)-sig(nl1))
@@ -116,16 +117,16 @@ module phy_vdifsc
             do j=1,ngp
                 dmse = (se(j,kx)-se(j,nl1))+alhc*(qa(j,kx)-qsat(j,nl1))
                 drh  = rh(j,kx)-rh(j,nl1)
-                fcnv = 1.
+                fcnv = 1.0_dp
 
-                if (dmse.ge.0.0) then
+                if (dmse.ge.rpe_literal(0.0_dp)) then
                     if (icnv(j).gt.0) fcnv = redshc
 
                     fluxse         = fcnv*fshcse*dmse
                     ttenvd(j,nl1)  = fluxse*rsig(nl1)
                     ttenvd(j,kx) =-fluxse*rsig(kx)
 
-                    if (drh.ge.0.0) then
+                    if (drh.ge.rpe_literal(0.0_dp)) then
                         fluxq          = fcnv*fshcq*qsat(j,kx)*drh
                         qtenvd(j,nl1)  = fluxq*rsig(nl1)
                         qtenvd(j,kx) =-fluxq*rsig(kx)
@@ -139,7 +140,7 @@ module phy_vdifsc
 
             ! 3. Vertical diffusion of moisture above the PBL
             do k=3,kx-2
-                if (sigh(k).gt.0.5) then
+                if (sigh(k).gt.rpe_literal(0.5_dp)) then
                     drh0   = rhgrad*(sig(k+1)-sig(k))
                     fvdiq2 = fvdiq*sigh(k)
 

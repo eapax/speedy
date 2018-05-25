@@ -103,24 +103,24 @@ subroutine truncate_spectral()
             z1 = 2.0_dp
 
             do i=1,m
-                z=cos(3.141592654_dp*(i-.25_dp)/(n+.5_dp))
+                z=cos(3.141592654_dp*(i-0.25_dp)/(n+0.5_dp))
                 do while (abs(z-z1).gt.eps)
-                    p1=1._dp
-                    p2=0._dp
+                    p1=1.0_dp
+                    p2=0.0_dp
 
                     do j=1,n
                       p3=p2
                       p2=p1
-                      p1=((2._dp*j-1._dp)*z*p2-(j-1._dp)*p3)/j
+                      p1=((2.0_dp*j-1.0_dp)*z*p2-(j-1.0_dp)*p3)/j
                     end do
 
-                    pp=n*(z*p1-p2)/(z*z-1._dp)
+                    pp=n*(z*p1-p2)/(z*z-1.0_dp)
                     z1=z
                     z=z1-p1/pp
                 end do
 
                 x(i)=z
-                w(i)=2.d0/((1.d0-z*z)*pp*pp)
+                w(i)=2.0_dp/((1.0_dp-z*z)*pp*pp)
             end do
         end subroutine gaussl
         !****************************************************************

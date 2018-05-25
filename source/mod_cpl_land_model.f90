@@ -43,7 +43,7 @@ module mod_cpl_land_model
             allocate(vland_output(ngp,1))
 
             read(fid, land)
-            flandmin = 1./flandmin
+            flandmin = 1.0_dp/flandmin
 
             write(*, land)
         end subroutine setup_land
@@ -78,12 +78,12 @@ module mod_cpl_land_model
             !    soil and ice-sheet layers
 
             ! Heat capacities per m^2 (depth*heat_cap/m^3)
-            hcapl  = depth_soil*2.50e+6
-            hcapli = depth_lice*1.93e+6
+            hcapl  = depth_soil*2.50d+6
+            hcapli = depth_lice*1.93d+6
         
             ! 2. Compute constant fields
             ! Set domain mask (blank out sea points)
-            dmask(:,:) = 1.
+            dmask(:,:) = 1.0_dp
         
             do j=1,il
                 do i=1,ix
@@ -94,15 +94,15 @@ module mod_cpl_land_model
             ! Set time_step/heat_capacity and dissipation fields
             do j=1,il
                 do i=1,ix
-                    if (alb0(i,j).lt.0.4) then
-                        rhcapl(i,j) = 86400./hcapl
+                    if (alb0(i,j).lt.0.4_dp) then
+                        rhcapl(i,j) = 86400.0_dp/hcapl
                     else
-                        rhcapl(i,j) = 86400./hcapli
+                        rhcapl(i,j) = 86400.0_dp/hcapli
                     endif
                 end do
             end do
         
-            cdland(:,:) = dmask(:,:)*tdland/(1.+dmask(:,:)*tdland)
+            cdland(:,:) = dmask(:,:)*tdland/(1.0_dp+dmask(:,:)*tdland)
         end subroutine land_model_init
         
         subroutine land_model()

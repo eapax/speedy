@@ -1,5 +1,6 @@
 subroutine ludcmp(a,n,np,indx,d)
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -10,15 +11,15 @@ subroutine ludcmp(a,n,np,indx,d)
     integer :: i, j, k, imax
     type(rpe_var) :: vv(nmax), aamax, dum, accum
 
-    d = 1.0
+    d = 1.0_dp
 
     do i=1,n
-        aamax=0.
+        aamax=0.0_dp
         do j=1,n
             if(abs(a(i,j)).gt.aamax) aamax=abs(a(i,j)) 
         end do
-        if(aamax.eq.0.) stop 'singular'
-        vv(i)=rpe_literal(1.)/aamax
+        if(aamax.eq.rpe_literal(0.0_dp)) stop 'singular'
+        vv(i)=rpe_literal(1.0_dp)/aamax
     end do
 
     do j=1,n
@@ -34,7 +35,7 @@ subroutine ludcmp(a,n,np,indx,d)
             end do
         end if
 
-        aamax=0.
+        aamax=0.0_dp
         do i=j,n
             accum=a(i,j)
             if(j.gt.1) then
@@ -63,14 +64,14 @@ subroutine ludcmp(a,n,np,indx,d)
         indx(j)=imax
         if(j.ne.n) then
             if(a(j,j).eq.0) a(j,j)=tiniest
-            dum=1./a(j,j)
+            dum=rpe_literal(1.0_dp)/a(j,j)
             do i=j+1,n
                 a(i,j)=a(i,j)*dum
             end do
         end if
     end do
 
-    if(a(n,n).eq.0.) a(n,n)=tiniest
+    if(a(n,n).eq.rpe_literal(0.0_dp)) a(n,n)=tiniest
 end
 
 subroutine lubksb(a,n,np,indx,b)
@@ -112,6 +113,7 @@ end
 
 subroutine inv(a,y,indx,n)
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -121,10 +123,10 @@ subroutine inv(a,y,indx,n)
     integer :: i
     type(rpe_var) :: d
 
-    y = 0.0
+    y = 0.0_dp
 
     do i=1,n
-        y(i,i)=1.
+        y(i,i)=1.0_dp
     end do
 
     call ludcmp(a,n,n,indx,d)

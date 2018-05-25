@@ -24,12 +24,12 @@ subroutine ini_land(istart)
 end
 
 subroutine atm2land(jday)
-    use mod_cpl_flags, only: icland
     use mod_atparam
+    use mod_date, only: imont1, tmonth
+    use mod_cpl_flags, only: icland
     use mod_cpl_land_model, only: vland_input
     use mod_fluxes, only: hflux_l
     use mod_cli_land, only: stl12, snowd12, soilw12
-    use mod_date, only: imont1, tmonth
     use mod_var_land, only: stlcl_ob, snowdcl_ob, soilwcl_ob, stl_lm
 
     implicit none
@@ -60,8 +60,8 @@ subroutine atm2land(jday)
 end
 
 subroutine land2atm(jday)
-    use mod_cpl_flags, only: icland
     use mod_atparam
+    use mod_cpl_flags, only: icland
     use mod_cpl_land_model, only: land_model, vland_output
     use mod_var_land
 
@@ -100,12 +100,12 @@ subroutine rest_land(imode)
     ! Input :   IMODE = 0 : read model variables from a restart file
     !                 = 1 : write model variables  to a restart file
 
-    use mod_cpl_flags, only: icland
     use mod_atparam
+    use mod_cpl_flags, only: icland
     use mod_var_land, only: stl_am, stl_lm
     use mod_downscaling, only: ix_in, il_in, regrid
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 

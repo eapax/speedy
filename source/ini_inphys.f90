@@ -10,20 +10,20 @@ subroutine inphys(hsg,ppl,rlat)
     use mod_atparam
     use mod_physcon
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var) :: hsg(0:kx)
-    real(dp) :: ppl(kx)
-    type(rpe_var) :: rlat(il)
+    type(rpe_var), intent(in) :: hsg(0:kx)
+    real(dp), intent(in) :: ppl(kx)
+    type(rpe_var), intent(in) :: rlat(il)
     integer :: j, k
 
     ! 1.2 Functions of sigma and latitude
     sigh(0) = hsg(0)
 
     do k = 1, kx
-        sig(k)  = 0.5*(hsg(k)+hsg(k-1))
+        sig(k)  = 0.5_dp*(hsg(k)+hsg(k-1))
         sigl(k) = log(sig(k))
         sigh(k) = hsg(k)
         dsig(k) = hsg(k)-hsg(k-1)
@@ -37,12 +37,12 @@ subroutine inphys(hsg,ppl,rlat)
     ! Fhalf(k) = Ffull(k)+WVI(K,2)*(Ffull(k+1)-Ffull(k))
     ! Fsurf = Ffull(kx)+WVI(kx,2)*(Ffull(kx)-Ffull(kx-1))
     do k = 1, kx-1
-        wvi(k,1) = 1./(sigl(k+1)-sigl(k))
+        wvi(k,1) = 1.0_dp/(sigl(k+1)-sigl(k))
         wvi(k,2) = (log(sigh(k))-sigl(k))*wvi(k,1)
     end do
 
-    wvi(kx,1) = 0.
-    wvi(kx,2) = (log(0.99)-sigl(kx))*wvi(kx-1,1)
+    wvi(kx,1) = 0.0_dp
+    wvi(kx,2) = (log(0.99_dp)-sigl(kx))*wvi(kx-1,1)
 
     do j = 1, il
         slat(j) = sin(rlat(j))

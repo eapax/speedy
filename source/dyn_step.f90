@@ -25,7 +25,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     use mod_dynvar
     use mod_hdifcon
     use rp_emulator
-    use mod_prec, only: set_precision
+    use mod_prec, only: dp, set_precision
 
     implicit none
 
@@ -49,7 +49,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! 2. Computation of spectral tendencies
     call set_precision('Spectral Dynamics')
-    if (alph.eq.0.) then
+    if (alph.eq.rpe_literal(0.0_dp)) then
         if (iitest.eq.1) print*,' call sptend'
         call sptend(divdt,tdt,psdt,j2)
     else
@@ -76,7 +76,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call hordif(kx,ctmp,tdt,dmp,dmp1)
 
     ! 3.2 Stratospheric diffusion and zonal wind damping
-    sdrag = rpe_literal(1.)/(tdrs*rpe_literal(3600.))
+    sdrag = rpe_literal(1.0_dp)/(tdrs*rpe_literal(3600.0_dp))
     vordt(1,:,1) = vordt(1,:,1)-sdrag*vor(1,:,1,1)
     divdt(1,:,1) = divdt(1,:,1)-sdrag*div(1,:,1,1)
 
@@ -98,7 +98,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     endif
 
     ! 4. Time integration with Robert filter
-    if (dt.le.0.) return
+    if (dt.le.rpe_literal(0.0_dp)) return
 
     if (iitest.eq.1) print*,' time integration'
     call set_precision('Tendencies')
@@ -111,7 +111,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call set_precision('Timestepping')
 
     if (j1.eq.1) then
-        eps = 0.
+        eps = 0.0_dp
     else
         eps = rob
     endif
@@ -159,6 +159,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     use mod_atparam
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -166,13 +167,11 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     type(rpe_var), intent(in) :: dt, eps, wil
     type(rpe_complex_var), intent(in) :: fdt(mx,nx,nlev)
     type(rpe_complex_var), intent(inout) :: field(mx,nx,nlev,2)
-    type(rpe_var) :: eps2, two
+    type(rpe_var) :: eps2
     type(rpe_complex_var) :: fnew(mx,nx)
     integer :: k, n, m
 
-    two = 2.0
-
-    eps2 = rpe_literal(1.)-two*eps
+    eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
     if (ix.eq.iy*4) then
         do k=1,nlev
@@ -186,11 +185,11 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
             do m=1,mx
                 fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
                 field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)&
-                    &-rpe_literal(2.)*field(m,n,k,j1)+fnew(m,n))
+                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
                 ! and here comes Williams' innovation to the filter
                 field(m,n,k,2) = fnew(m,n)-(1-wil)*eps*(field(m,n,k,1)&
-                    &-rpe_literal(2.)*field(m,n,k,j1)+fnew(m,n))
+                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
             end do
         end do

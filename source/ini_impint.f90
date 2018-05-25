@@ -24,30 +24,30 @@ subroutine impint(dt,alph)
     use mod_dyncon2
     use mod_hdifcon, only: dmp, dmpd, dmps, dmp1, dmp1d, dmp1s
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 	  								
     type(rpe_var), intent(in) :: dt, alph
-    type(rpe_var) :: dsum(kx), ya(kx,kx)
+    real(dp) :: dsum(kx), ya(kx,kx)
     integer :: indx(kx), m, n, k, k1, k2, l, ll, mm
-    type(rpe_var) :: rgam, xi, xxi, xxx
+    real(dp) :: rgam, xi, xxi, xxx
 
     ! 1. Constants for backwards implicit biharmonic diffusion
     do m=1,mx
         do n=1,nx 
-            dmp1 (m,n)=1./(1.+dmp (m,n)*dt)
-            dmp1d(m,n)=1./(1.+dmpd(m,n)*dt)
-            dmp1s(m,n)=1./(1.+dmps(m,n)*dt)
+            dmp1 (m,n)=1.0_dp/(1.0_dp+dmp (m,n)*dt)
+            dmp1d(m,n)=1.0_dp/(1.0_dp+dmpd(m,n)*dt)
+            dmp1s(m,n)=1.0_dp/(1.0_dp+dmps(m,n)*dt)
         end do
     end do
 
     ! 1. Constants for implicit gravity wave computation
     ! reference atmosphere, function of sigma only
-    rgam = rgas*gamma/(1000.*grav)
+    rgam = rgas*gamma/(1000.0_dp*grav)
 
     do k=1,kx
-        tref(k)=288.*max(0.2_dp,fsg(k))**rgam
+        tref(k)=288.0_dp*max(0.2_dp,fsg(k))**rgam
         print *, '  tref = ', tref(k)
         tref1(k)=rgas*tref(k)
         tref2(k)=akap*tref(k)
@@ -67,10 +67,10 @@ subroutine impint(dt,alph)
             elz(m,n)=float(ll)*float(ll+1)*xxi
         end do
     end do
- 
+
     !T(K) = TEX(K)+YA(K,K')*D(K') + XA(K,K')*SIG(K')
 
-    xa(:kx,:kxm) = 0.0
+    xa(:kx,:kxm) = 0.0_dp
 
     do k=1,kx
         do k1=1,kx
@@ -79,11 +79,11 @@ subroutine impint(dt,alph)
     end do
 
     do k=2,kx
-        xa(k,k-1)=0.5*(akap*tref(k)/fsg(k)-(tref(k)-tref(k-1))/dhs(k))
+        xa(k,k-1)=0.5_dp*(akap*tref(k)/fsg(k)-(tref(k)-tref(k-1))/dhs(k))
     end do
 
     do k=1,kxm
-        xa(k,k)=0.5*(akap*tref(k)/fsg(k)-(tref(k+1)-tref(k))/dhs(k))
+        xa(k,k)=0.5_dp*(akap*tref(k)/fsg(k)-(tref(k+1)-tref(k))/dhs(k))
     end do
 
     !sig(k)=xb(k,k')*d(k')
@@ -110,7 +110,7 @@ subroutine impint(dt,alph)
     end do
 
     !P(K)=XD(K,K')*T(K') 
-    xd = 0.0
+    xd = 0.0_dp
 
     do k=1,kx
         do k1=k+1,kx
@@ -124,7 +124,7 @@ subroutine impint(dt,alph)
     !P(K)=YE(K)+XE(K,K')*D(K')
     do k=1,kx
         do k1=1,kx
-            xe(k,k1)=0.
+            xe(k,k1)=0.0_dp
             do k2=1,kx
                 xe(k,k1)=xe(k,k1)+xd(k,k2)*xc(k2,k1)
             end do
@@ -139,7 +139,7 @@ subroutine impint(dt,alph)
             end do
         end do
         do k=1,kx
-            xf(k,k,l)=xf(k,k,l)+1.
+            xf(k,k,l)=xf(k,k,l)+1.0_dp
         end do
     end do
 

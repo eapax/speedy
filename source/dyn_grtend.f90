@@ -28,7 +28,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     implicit none
 
-    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, divdt, tdt
+    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, &
+            divdt, tdt
     type(rpe_complex_var), dimension(mx,nx),        intent(inout) :: psdt
     type(rpe_complex_var), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
     integer, intent(in) :: j1, j2
@@ -134,14 +135,15 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
-    use mod_prec, only: set_precision
+    use mod_prec, only: dp, set_precision
     use rp_emulator
 
     implicit none
 
     integer, intent(in) :: j2
 
-    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, divdt, tdt
+    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, &
+            divdt, tdt
     type(rpe_complex_var), dimension(mx,nx),        intent(inout) :: psdt
     type(rpe_complex_var), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
 
@@ -162,9 +164,9 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     call set_precision('Grid Dynamics')
 
-    umean(:,:) = 0.0
-    vmean(:,:) = 0.0
-    dmean(:,:) = 0.0
+    umean(:,:) = 0.0_dp
+    vmean(:,:) = 0.0_dp
+    dmean(:,:) = 0.0_dp
 
     do k=1,kx
         umean = umean + ug(:,:,k) * dhs(k)
@@ -185,13 +187,13 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     call set_precision('Spectral Transform')
     call spec(dumr(:,:,1),psdt)
     call set_precision('Grid Dynamics')
-    psdt(1,1)=(0.,0.)
+    psdt(1,1)=(0.0_dp,0.0_dp)
 
     ! Compute "vertical" velocity
-    sigdt(:,:,1) = 0.0
-    sigdt(:,:,kxp) = 0.0
-    sigm(:,:,1) = 0.0
-    sigm(:,:,kxp) = 0.0
+    sigdt(:,:,1) = 0.0_dp
+    sigdt(:,:,kxp) = 0.0_dp
+    sigm(:,:,1) = 0.0_dp
+    sigm(:,:,kxp) = 0.0_dp
 
     ! (The following combination of terms is utilized later in the
     !     temperature equation)
@@ -219,8 +221,8 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     py = rgas*py
 
     ! Zonal wind tendency
-    temp(:,:,1) = 0.0
-    temp(:,:,kxp) = 0.0
+    temp(:,:,1) = 0.0_dp
+    temp(:,:,kxp) = 0.0_dp
 
     do k=2,kx
         temp(:,:,k) = sigdt(:,:,k) * (ug(:,:,k) - ug(:,:,k-1))
@@ -275,7 +277,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         !kuch three layers
         !if(iinewtrace.eq.1)then
         do k=2,3
-            temp(:,:,k)=0.
+            temp(:,:,k)=0.0_dp
         enddo
         !endif
 
@@ -298,7 +300,8 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
-        dumr(:,:,1)=rpe_literal(0.5)*(ug(:,:,k)*ug(:,:,k)+vg(:,:,k)*vg(:,:,k))
+        dumr(:,:,1)=rpe_literal(0.5_dp)* &
+                (ug(:,:,k)*ug(:,:,k) + vg(:,:,k)*vg(:,:,k))
         dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)
         dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)
 

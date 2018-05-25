@@ -19,6 +19,7 @@ subroutine gridx(varm,vorg,kcos)
     use spectral, only: cosgr
     use mod_fft
     use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
@@ -35,7 +36,7 @@ subroutine gridx(varm,vorg,kcos)
           fvar(m-1)=varm(m,j)
         end do
         do m=mx2,ix
-          fvar(m)=0.0
+          fvar(m)=0.0_dp
         end do
 
         ! Inverse FFT
@@ -59,7 +60,7 @@ subroutine specx(vorg,varm)
     use mod_atparam
     use mod_fft
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 

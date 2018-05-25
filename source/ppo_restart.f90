@@ -12,7 +12,6 @@ subroutine restart(jday)
     use mod_date, only: iyear, imonth, iday, ihour
     use mod_downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, &
             calc_grid_weights
-    use rp_emulator
     use mod_prec
 
     implicit none
@@ -78,11 +77,11 @@ subroutine restart(jday)
         mx_tr = min(mx, mx_in)
         nx_tr = min(nx, nx_in)
 
-        vor = CMPLX(0., 0.)
-        div = CMPLX(0., 0.)
-        T   = CMPLX(0., 0.)
-        Ps  = CMPLX(0., 0.)
-        tr  = CMPLX(0., 0.)
+        vor = CMPLX(0.0_dp, 0.0_dp)
+        div = CMPLX(0.0_dp, 0.0_dp)
+        T   = CMPLX(0.0_dp, 0.0_dp)
+        Ps  = CMPLX(0.0_dp, 0.0_dp)
+        tr  = CMPLX(0.0_dp, 0.0_dp)
 
         ! Reduce precision of input fields
         call set_precision('Initial Values')

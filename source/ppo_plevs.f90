@@ -1,7 +1,7 @@
 module ppo_plevs
 
     use rp_emulator
-    use mod_prec
+    use mod_prec, only: sp, dp
 
     implicit none
 
@@ -20,24 +20,24 @@ module ppo_plevs
             use spectral, only: grid
 
             integer, intent(in) :: varid
-            type(rpe_var), dimension(ngp, kx), intent(in) :: x_sigma
+            real(dp), dimension(ngp, kx), intent(in) :: x_sigma
             real(sp), dimension(ngp, kx), intent(out) :: x_pressure
 
-            type(rpe_var), dimension(ngp) :: x_pressure_dp
-            type(rpe_var), dimension(kx) :: zinp, rdzinp
+            real(dp), dimension(ngp) :: x_pressure_dp
+            real(dp), dimension(kx) :: zinp, rdzinp
             integer :: k0(ngp)
-            type(rpe_var) :: w0(ngp)
+            real(dp) :: w0(ngp)
             type(rpe_var), dimension(ngp) :: psgr
-            type(rpe_var), dimension(ngp) :: zout
-            type(rpe_var), dimension(ngp) :: T_pressure
-            type(rpe_var) :: textr, aref, tref, phi1, phi2
+            real(dp), dimension(ngp) :: zout
+            real(dp), dimension(ngp) :: T_pressure
+            real(dp) :: textr, aref, tref, phi1, phi2
             integer :: k, j
 
             ! Vertical interpolation from sigma level to pressure level
             ! sigl is constant so this should only be done once
             zinp = -sigl
             do k=2,kx
-               rdzinp(k) = 1.0d0/(zinp(k-1)-zinp(k))
+               rdzinp(k) = 1.0_dp/(zinp(k-1)-zinp(k))
             end do
 
             ! This should only be done once. Not for each variable
@@ -55,7 +55,7 @@ module ppo_plevs
                 ! This is done for all variables apart from temperature
                 if (varid /= 3 .and. varid /=5) then
                     do j=1,ngp
-                        w0(j) = max(w0(j),0.0d0)
+                        w0(j) = max(w0(j),0.0_dp)
                     end do
                 end if
 
@@ -68,35 +68,37 @@ module ppo_plevs
                     do j=1,ngp
                         if(zout(j)<zinp(kx)) then
                             textr = max(x_pressure_dp(j), x_sigma(j,kx))
-                            aref = rd*0.006d0/gg * (zinp(kx)-zout(j))
-                            tref = x_sigma(j,kx)*(1.0d0+aref+0.5*aref*aref)
-                            x_pressure_dp(j) = textr + 0.7d0*(tref-textr)
+                            aref = rd*0.006_dp/gg * (zinp(kx)-zout(j))
+                            tref = x_sigma(j,kx)*(1.0_dp+aref+0.5_dp*aref*aref)
+                            x_pressure_dp(j) = textr + 0.7_dp*(tref-textr)
                         end if
                     end do
                     x_pressure(:,k) = x_pressure_dp
 
                 else if (varid == 5) then
-                    call verint(T_pressure,Tg1,ngp,kx,k0,w0)
+                    call verint(T_pressure,Tg1%val,ngp,kx,k0,w0)
                     ! Corrections applied to temperature
                     do j=1,ngp
                         if(zout(j)<zinp(kx)) then
                             textr = max(T_pressure(j), Tg1(j,kx))
-                            aref = rd*0.006d0/gg * (zinp(kx)-zout(j))
-                            tref = Tg1(j,kx)*(1.0d0+aref+0.5*aref*aref)
-                            T_pressure(j) = textr + 0.7d0*(tref-textr)
+                            aref = rd*0.006_dp/gg * (zinp(kx)-zout(j))
+                            tref = Tg1(j,kx)*(1.0_dp+aref+0.5_dp*aref*aref)
+                            T_pressure(j) = textr + 0.7_dp*(tref-textr)
                         end if
                     end do
 
                     do j=1,ngp
-                        w0(j) = max(w0(j),0.0d0)
+                        w0(j) = max(w0(j),0.0_dp)
                     end do
 
                     ! Corrections applied to geopotential height
                     do j=1,ngp
-                        phi1 = x_sigma(j,k0(j))&
-                           & +0.5*rd*(T_pressure(j)+Tg1(j,k0(j)))*(zout(j)-zinp(k0(j)))
-                        phi2 = x_sigma(j,k0(j)-1)&
-                           & +0.5*rd*(T_pressure(j)+Tg1(j,k0(j)-1))*(zout(j)-zinp(k0(j)-1))
+                        phi1 = x_sigma(j,k0(j)) &
+                           & +0.5_dp*rd*(T_pressure(j)+Tg1(j,k0(j)))* &
+                                        (zout(j)-zinp(k0(j)))
+                        phi2 = x_sigma(j,k0(j)-1) &
+                           & +0.5_dp*rd*(T_pressure(j)+Tg1(j,k0(j)-1))* &
+                                        (zout(j)-zinp(k0(j)-1))
                         x_pressure_dp(j) = phi1 + w0(j)*(phi2-phi1)
                     end do
                     x_pressure(:,k) = x_pressure_dp / gg
@@ -110,9 +112,9 @@ module ppo_plevs
         subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
             implicit none
 
-            type(rpe_var), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
+            real(dp), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
             integer, intent(in) :: ngp, nlev
-            type(rpe_var), intent(out) :: w0(ngp)
+            real(dp), intent(out) :: w0(ngp)
             integer, intent(out) :: k0(ngp)
             integer :: j, k
 
@@ -138,8 +140,8 @@ module ppo_plevs
 
             ! *** 1. Perform vertical interpolation
             integer, intent(in) :: ngp, nlev, k0(ngp)
-            type(rpe_var), intent(in) :: f3d(ngp,nlev), w0(ngp)
-            type(rpe_var), intent(out) :: f2d(ngp)
+            real(dp), intent(in) :: f3d(ngp,nlev), w0(ngp)
+            real(dp), intent(out) :: f2d(ngp)
             integer :: j
 
             do j=1,ngp
