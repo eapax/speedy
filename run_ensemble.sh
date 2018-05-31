@@ -1,24 +1,21 @@
 #!/bin/bash
 
 # $1 = resolution (eg t21, t30)
-# $2 = experiment no. (eg 111)
-# $3 = experiment no. for restart file ( 0 = no restart )
+# $2 = experiment no. for restart file ( 0 = no restart )
 
 
-if [ $# -ne 3 ] ; then
-    echo 'Usage: '${0}' resol. exp_no. restart_no' 1>&2
+if [ $# -ne 2 ] ; then
+    echo 'Usage: '${0}' resol. restart_no' 1>&2
     exit 1
 fi
 
 # Define precisions to test
 pmin=5
-pmax=23
+pmax=52
 # Define directory names
 UT=`pwd`
 TMP=/home/saffin/temp/
-mkdir -p ${UT}/output/exp_${2}
-OUT=${UT}/output/exp_${2}
-INP=${UT}/output/exp_${3}
+INP=${UT}/output/exp_${2}
 CTL=${UT}/output/exp_000
 
 # Setup files
@@ -36,7 +33,7 @@ cp ${UT}/setup/output_requests.nml ${TMP}
 cp ${UT}/setup/precisions.nml ${TMP}
 
 # Link restart file if needed
-if [ ${3} != 0 ] ; then
+if [ ${2} != 0 ] ; then
   ln -s ${INP}/*.rst ${TMP}
 fi
 
@@ -54,24 +51,24 @@ ln -sf ${SC}/ssta.grd  fort.30
 
 
 # Loop over precisions being tested
-for i in $(seq ${pmin} ${pmax})
+for i in $(seq -w ${pmax} -1 ${pmin})
 do
     echo ${i}
     # Write precision to input file
     # reduced_precision
     sed -i "s/rp_convection=.*/rp_convection=${i},/" precisions.nml
-    cat precisions.nml
 
     # Run the model
-    time ./imp.exe | tee out.lis
+    time ./imp.exe > out.lis
 
     # Convert .grd output to .nc
     grd2nc_p.sh prognostics_pressure.ctl
     grd2nc.sh tendencies.ctl
 
     # Move to a unique file labelled by the precision
-    mv prognostics_pressure.nc ${OUT}/prognostics_pressure_${i}.nc
-    mv tendencies.nc ${OUT}/tendencies_${i}.nc
+    mv prognostics_pressure.nc prognostics_pressure_${i}.nc
+    mv tendencies.nc tendencies_${i}.nc
+    mv out.lis out_p${i}.lis
 
     # Remove model output
     rm *.grd
