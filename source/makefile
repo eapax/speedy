@@ -6,7 +6,7 @@ COMOTT1= -O2
 COMCONV= -fconvert=swap
 
 FILES= \
-	   mod_prec.o \
+       mod_prec.o \
        cpl_bcinterp.o \
        cpl_land.o \
        cpl_main_interface.o \
@@ -26,32 +26,32 @@ FILES= \
        ini_inphys.o \
        ini_invars.o \
        ini_namelist.o \
-	   ini_rp.o \
+       ini_rp.o \
        ini_stepone.o \
        ini_fordate.o \
        interpolation.o \
-	   mod_atparam.o \
-	   mod_cli_land.o \
-	   mod_cli_sea.o \
-	   mod_cplcon_sea.o \
-	   mod_cplvar_sea.o \
-	   mod_cpl_flags.o \
+       mod_atparam.o \
+       mod_cli_land.o \
+       mod_cli_sea.o \
+       mod_cplcon_sea.o \
+       mod_cplvar_sea.o \
+       mod_cpl_flags.o \
        mod_cpl_land_model.o \
-	   mod_date.o \
-	   mod_downscaling.o \
-	   mod_dyncon0.o \
-	   mod_dyncon1.o \
-	   mod_dyncon2.o \
-	   mod_dynvar.o \
-	   mod_fft.o \
-	   mod_fluxes.o \
-	   mod_hdifcon.o \
-	   mod_physcon.o \
-	   mod_physvar.o \
-	   mod_surfcon.o \
-	   mod_tsteps.o \
-	   mod_var_land.o \
-	   mod_var_sea.o \
+       mod_date.o \
+       mod_downscaling.o \
+       mod_dyncon0.o \
+       mod_dyncon1.o \
+       mod_dyncon2.o \
+       mod_dynvar.o \
+       mod_fft.o \
+       mod_fluxes.o \
+       mod_hdifcon.o \
+       mod_physcon.o \
+       mod_physvar.o \
+       mod_surfcon.o \
+       mod_tsteps.o \
+       mod_var_land.o \
+       mod_var_sea.o \
        phy_convmf.o \
        phy_lscond.o \
        phy_phypar.o \
@@ -91,10 +91,10 @@ cpl_land.o             : cpl_land.f90 mod_atparam.o mod_var_land.o mod_date.o\
                          mod_prec.o
 cpl_main_interface.o   : cpl_main_interface.f90 mod_atparam.o\
                          mod_cpl_land_model.o mod_surfcon.o\
-	                     mod_cli_land.o mod_cli_sea.o
+                         mod_cli_land.o mod_cli_sea.o
 cpl_sea.o              : cpl_sea.f90 mod_cpl_flags.o mod_atparam.o\
                          mod_cplvar_sea.o mod_date.o mod_fluxes.o\
-	                     mod_cli_sea.o mod_var_sea.o mod_downscaling.o mod_prec.o
+                         mod_cli_sea.o mod_var_sea.o mod_downscaling.o mod_prec.o
 cpl_sea_model.o        : cpl_sea_model.f90 mod_atparam.o mod_cplcon_sea.o\
                          mod_cplvar_sea.o mod_prec.o
 dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
@@ -117,19 +117,20 @@ ini_fordate.o          : ini_fordate.f90 mod_dyncon0.o \
                          mod_atparam.o mod_hdifcon.o mod_physcon.o\
                          mod_surfcon.o mod_cli_land.o mod_date.o\
                          mod_var_land.o mod_cli_sea.o mod_var_sea.o\
-						 phy_radiat.o phy_suflux.o phy_shtorh.o spe_spectral.o\
-						 mod_prec.o
+                         phy_radiat.o phy_suflux.o phy_shtorh.o spe_spectral.o\
+                         mod_prec.o
 ini_impint.o           : ini_impint.f90 mod_dyncon0.o mod_atparam.o\
                          mod_dyncon1.o mod_dyncon2.o mod_hdifcon.o mod_prec.o
 ini_indyns.o           : ini_indyns.f90 mod_tsteps.o mod_dyncon0.o\
                          mod_atparam.o mod_dyncon1.o mod_hdifcon.o\
-	                     spe_spectral.o mod_prec.o
+                         spe_spectral.o mod_prec.o
 ini_inbcon.o           : ini_inbcon.f90 mod_cpl_flags.o mod_date.o\
                          mod_atparam.o mod_surfcon.o mod_cli_land.o\
                          mod_cli_sea.o mod_prec.o
 ini_iniatm.o           : ini_iniatm.f90 mod_atparam.o mod_dyncon1.o\
                          mod_fluxes.o phy_sppt.o mod_prec.o
-ini_inphys.o           : ini_inphys.f90 mod_atparam.o mod_physcon.o mod_prec.o
+ini_inphys.o           : ini_inphys.f90 mod_atparam.o mod_physcon.o\
+                         phy_convmf.o mod_prec.o
 ini_invars.o           : ini_invars.f90 mod_dyncon0.o mod_atparam.o\
                          mod_dynvar.o mod_dyncon1.o mod_surfcon.o mod_date.o\
                          spe_spectral.o mod_prec.o

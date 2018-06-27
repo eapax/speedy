@@ -9,6 +9,7 @@ subroutine inphys(hsg,ppl,rlat)
 
     use mod_atparam
     use mod_physcon
+    use phy_convmf, only: ini_convmf
     use rp_emulator
     use mod_prec, only: dp
 
@@ -48,4 +49,7 @@ subroutine inphys(hsg,ppl,rlat)
         slat(j) = sin(rlat(j))
         clat(j) = cos(rlat(j))
     end do
+
+    ! Call setup routines for individual physics schemes
+    call ini_convmf()
 end subroutine inphys

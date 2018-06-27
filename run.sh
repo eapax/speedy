@@ -4,6 +4,7 @@
 # $2 = experiment no. (eg 111)
 # $3 = experiment no. for restart file ( 0 = no restart )
 
+set -e
 
 if [ $# -ne 3 ] ; then
     echo 'Usage: '${0}' resol. exp_no. restart_no' 1>&2
@@ -24,7 +25,7 @@ namelist=${UT}/setup/speedy.nml
 # Copy files from basic version directory
 mkdir -p ${TMP}
 cd ${TMP}
-rm *
+rm ${TMP}/*
 cp ${executable} ${TMP}/imp.exe
 cp ${namelist}   ${TMP}/speedy.nml
 cp ${UT}/setup/output_requests.nml ${TMP}
@@ -32,7 +33,7 @@ cp ${UT}/setup/precisions.nml ${TMP}
 
 # Link restart file if needed
 if [ ${3} != 0 ] ; then
-  ln -s ${INP}/*.rst ${TMP}
+  cp ${INP}/*.rst ${TMP}
 fi
 
 # Link input files
@@ -49,10 +50,12 @@ ln -sf ${SC}/ssta.grd  fort.30
 
 ls -l fort.*
 
+# Link rpe shared library
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${UT}/rpe/lib/
+
 time ./imp.exe | tee out.lis
 
 # Copy output to experiment directory
 mv out.lis ${OUT}/atgcm${2}.lis
 mv *.rst ${OUT}
 mv *.grd ${OUT}
-mv *.ctl ${OUT}
