@@ -130,7 +130,7 @@ ini_inbcon.o           : ini_inbcon.f90 mod_cpl_flags.o mod_date.o\
 ini_iniatm.o           : ini_iniatm.f90 mod_atparam.o mod_dyncon1.o\
                          mod_fluxes.o phy_sppt.o mod_prec.o
 ini_inphys.o           : ini_inphys.f90 mod_atparam.o mod_physcon.o\
-                         phy_convmf.o mod_prec.o
+                         phy_convmf.o phy_lscond.o mod_prec.o
 ini_invars.o           : ini_invars.f90 mod_dyncon0.o mod_atparam.o\
                          mod_dynvar.o mod_dyncon1.o mod_surfcon.o mod_date.o\
                          spe_spectral.o mod_prec.o

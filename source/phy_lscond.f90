@@ -1,97 +1,128 @@
 module phy_lscond
-
+    use mod_atparam
     use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     private
-    public lscond, setup_condensation, truncate_lscond
+    public lscond, setup_condensation, ini_lscond, truncate_lscond
 
+    ! Variables loaded in by namelist
     namelist /condensation/ trlsc, rhlsc, drhlsc, rhblsc
 
-    ! Relaxation time (in hours) for specific humidity 
-    type(rpe_var) :: trlsc
+    real(dp), parameter :: qsmax = 10.0_dp
+
+    ! Relaxation time (in hours) for specific humidity
+    real(dp) :: trlsc
 
     ! Maximum relative humidity threshold (at sigma=1)
-    type(rpe_var) :: rhlsc
+    real(dp) :: rhlsc
 
     ! Vertical range of relative humidity threshold
-    type(rpe_var) :: drhlsc
+    real(dp) :: drhlsc
 
     ! Relative humidity threshold for boundary layer
-    type(rpe_var) :: rhblsc
-    
+    real(dp) :: rhblsc
+
+    ! Local derived variables
+    type(rpe_var) :: rtlsc, tfact
+    type(rpe_var), allocatable :: pfact(:), rhref(:), dqmax(:)
+
     contains
         subroutine setup_condensation(fid)
+            ! Read namelist variables
             integer, intent(in) :: fid
 
             read(fid, condensation)
 
             write(*, condensation)
+
+            allocate(pfact(kx))
+            allocate(rhref(2:kx))
+            allocate(dqmax(2:kx))
         end subroutine setup_condensation
-        
+
+        subroutine ini_lscond()
+            ! Calculate local variables for condensation scheme
+            use mod_physcon, only: p0, gg, cp, alhc, sig, dsig
+
+            real(dp) :: sig2
+            integer :: k
+
+            rtlsc = 1.0_dp/(trlsc*3600.0_dp)
+            tfact = alhc/cp
+            pfact = dsig*p0/gg
+
+            do k=2,kx
+                sig2=sig(k)*sig(k)
+                rhref(k) = rhlsc+drhlsc*(sig2-1.0_dp)
+                dqmax(k) = qsmax*sig2*rtlsc
+            end do
+            rhref(kx) = max(rhref(kx)%val, rhblsc)
+
+        end subroutine ini_lscond
+
         subroutine truncate_lscond()
-            call apply_truncation(trlsc)        
-            call apply_truncation(rhlsc)        
-            call apply_truncation(drhlsc)        
-            call apply_truncation(rhblsc)            
+            ! Truncate local variables for condensation scheme
+            ! Derived variables
+            call apply_truncation(rtlsc)
+            call apply_truncation(tfact)
+            call apply_truncation(pfact)
+            call apply_truncation(rhref)
+            call apply_truncation(dqmax)
         end subroutine truncate_lscond
 
-        subroutine lscond(psa,qa,qsat,itop,precls,dtlsc,dqlsc)
+        subroutine lscond(psa_in,qa_in,qsat_in,itop,precls,dtlsc,dqlsc)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !
             !  Purpose: Compute large-scale precipitation and
             !           associated tendencies of temperature and moisture
             !  Input:   psa    = norm. surface pressure [p/p0]           (2-dim)
+            type(rpe_var), intent(in) :: psa_in(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
+            type(rpe_var), intent(in) :: qa_in(ngp,kx)
             !           qsat   = saturation spec. hum. [g/kg]            (3-dim)
+            type(rpe_var), intent(in) :: qsat_in(ngp,kx)
+
             !           itop   = top of convection (layer index)         (2-dim)
             !  Output:  itop   = top of conv+l.s.condensat.(layer index) (2-dim)
-            !           precls = large-scale precipitation [g/(m^2 s)]   (2-dim)
-            !           dtlsc  = temperature tendency from l.s. cond     (3-dim)
-            !           dqlsc  = hum. tendency [g/(kg s)] from l.s. cond (3-dim)
-
-            use mod_atparam
-            use mod_physcon, only: p0, gg, cp, alhc, alhs, sig, dsig
-
-            type(rpe_var), intent(in) :: psa(ngp), qa(ngp,kx), qsat(ngp,kx)
-        
             integer, intent(inout) :: itop(ngp)
-            type(rpe_var), intent(inout) :: precls(ngp), dtlsc(ngp,kx), dqlsc(ngp,kx)
+            !           precls = large-scale precipitation [g/(m^2 s)]   (2-dim)
+            type(rpe_var), intent(out) :: precls(ngp)
+            !           dtlsc  = temperature tendency from l.s. cond     (3-dim)
+            type(rpe_var), intent(out) :: dtlsc(ngp,kx)
+            !           dqlsc  = hum. tendency [g/(kg s)] from l.s. cond (3-dim)
+            type(rpe_var), intent(out) :: dqlsc(ngp,kx)
 
+            ! Local copies of input variables (to be truncated)
+            type(rpe_var) :: psa(ngp), qa(ngp,kx), qsat(ngp,kx)
+
+            ! Local variables
             integer :: j, k
-            type(rpe_var) :: psa2(ngp), dqa, dqmax, pfact, prg, qsmax, rhref, rtlsc, sig2, tfact
+            type(rpe_var) ::  dqa
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            psa = psa_in
+            qa = qa_in
+            qsat = qsat_in
 
             ! 1. Initialization
-            qsmax = 10.0_dp
-
-            rtlsc = rpe_literal(1.0_dp)/(trlsc*rpe_literal(3600.0_dp))
-            tfact = alhc/cp
-            prg = p0/gg
-
             dtlsc(:,1) = 0.0_dp
             dqlsc(:,1) = 0.0_dp
             precls  = 0.0_dp
-            do j=1,ngp
-                psa2(j) = psa(j)*psa(j)
-            end do
 
             ! 2. Tendencies of temperature and moisture
             !    NB. A maximum heating rate is imposed to avoid
             !        grid-point-storm instability
             do k=2,kx
-                sig2=sig(k)*sig(k)
-                rhref = rhlsc+drhlsc*(sig2-rpe_literal(1.0_dp))
-                if (k.eq.kx) rhref = max(rhref,rhblsc)
-                dqmax = qsmax*sig2*rtlsc
-
                 do j=1,ngp
-                    dqa = rhref*qsat(j,k)-qa(j,k)
-                    if (dqa.lt.rpe_literal(0.0_dp)) then
+                    dqa = rhref(k)*qsat(j,k)-qa(j,k)
+                    if (dqa < rpe_literal(0.0_dp)) then
                         itop(j)    = min(k,itop(j))
                         dqlsc(j,k) = dqa*rtlsc
-                        dtlsc(j,k) = tfact*min(-dqlsc(j,k),dqmax*psa2(j))
+                        dtlsc(j,k) = tfact*min(-dqlsc(j,k), dqmax(k)*psa(j)**2)
                     else
                         dqlsc(j,k) = 0.0_dp
                         dtlsc(j,k) = 0.0_dp
@@ -101,9 +132,8 @@ module phy_lscond
 
             ! 3. Large-scale precipitation
             do k=2,kx
-                pfact = dsig(k)*prg
                 do j=1,ngp
-                    precls(j) = precls(j)-pfact*dqlsc(j,k)
+                    precls(j) = precls(j)-pfact(k)*dqlsc(j,k)
                 end do
             end do
 

@@ -10,6 +10,7 @@ subroutine inphys(hsg,ppl,rlat)
     use mod_atparam
     use mod_physcon
     use phy_convmf, only: ini_convmf
+    use phy_lscond, only: ini_lscond
     use rp_emulator
     use mod_prec, only: dp
 
@@ -52,4 +53,5 @@ subroutine inphys(hsg,ppl,rlat)
 
     ! Call setup routines for individual physics schemes
     call ini_convmf()
+    call ini_lscond()
 end subroutine inphys
