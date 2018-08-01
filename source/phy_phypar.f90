@@ -58,7 +58,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             ! Remove negative humidity values
-	        qg1(j,k)=max(qg1(j,k),rpe_literal(0.0_dp))
+            qg1(j,k)=max(qg1(j,k),rpe_literal(0.0_dp))
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
     end do
@@ -67,7 +67,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         call shtorh(1,ngp,tg1(1,k),psg,sig(k),qg1(1,k),rh(1,k),qsat(1,k))
     end do
 
-    ! 2. Precipitation 
+    ! 2. Precipitation
     ! 2.1 Deep convection
     call set_precision('Convection')
     call convmf(psg,se,qg1,qsat,iptop,cbmf,precnv,tt_cnv,qt_cnv)
@@ -84,12 +84,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 2.2 Large-scale condensation
-!fk#if !defined(KNMI)
     call set_precision('Condensation')
     call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
-!fk#else
-!fk      call lscond (psg,qg1,qsat,ts,iptop,precls,snowls,tt_lsc,qt_lsc)
-!fk#end if
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
@@ -101,9 +97,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
         do j=1,ngp
             gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
-  
+
         call cloud(qg1,rh,precnv,precls,iptop,gse,fmask1,icltop,cloudc,clstr)
-  
+
         do j=1,ngp
             cltop(j)=sigh(icltop(j)-1)*psg(j)
             prtop(j)=float(iptop(j))
@@ -111,7 +107,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
         call set_precision('SW Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,ssrd,ssr,tsr,tt_rsw)
-  
+
         do k=1,kx
             do j=1,ngp
                 tt_rsw(j,k)=tt_rsw(j,k)*rps(j)*grdscp(k)
@@ -124,7 +120,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call radlw(-1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     ! 3.3. Compute surface fluxes and land skin temperature
-    if (iitest.eq.1) then 
+    if (iitest.eq.1) then
         print *, ' 3.3 in PHYPAR'
         print *, 'mean(STL_AM) =', sum(STL_AM(:))/ngp
         print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
@@ -134,15 +130,15 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,sst_am,&
         & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,t0,&
         & q0,.true.)
-     
+
     ! 3.3.1. Recompute sea fluxes in case of anomaly coupling
-    if (icsea .gt. 0) then 
+    if (icsea .gt. 0) then
        call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,ssti_om,&
            & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,&
            & t0,q0,.false.)
     end if
 
-    ! 3.4 Compute upward longwave fluxes, convert them to tendencies 
+    ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
 
@@ -160,7 +156,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call set_precision('Vertical Diffusion')
     call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
-    ! 4.2 Add tendencies due to surface fluxes 
+    ! 4.2 Add tendencies due to surface fluxes
     do j=1,ngp
         ut_pbl(j,kx)=ut_pbl(j,kx)+ustr(j,3)*rps(j)*grdsig(kx)
         vt_pbl(j,kx)=vt_pbl(j,kx)+vstr(j,3)*rps(j)*grdsig(kx)
