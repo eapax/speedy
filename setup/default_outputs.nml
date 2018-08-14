@@ -1,5 +1,5 @@
 &output
-    nstreams=1,
+    nstreams=2,
 /
 
 &output_file
@@ -17,11 +17,11 @@
 /
 
 &output_file
-    filename='gridpoint_prognostics_p.grd',
+    filename='prognostics_pressure.grd',
     spectral=.false.,
     plevs=.true.,
-    nstpinc=36,
-    nstpout=36,
+    nstpinc=9,
+    nstpout=9,
     nstpopen=12500,
     nvars=5,
 /

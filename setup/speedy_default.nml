@@ -102,7 +102,7 @@
     ! DD
     iday0=1,
     ! Integration length in months
-    nmonts=3,
+    nmonts=1,
     ! No. of days in the last month of int. (max=30)
     ndaysl=0,
     ! Seasonal cycle flag (0=no, 1=yes)
@@ -130,12 +130,31 @@
     tdrs=720.0,
 /
 
-!mod_physics
-&physics
+!mod_fordate
+&forcing
     ! Flag for CO2 optical thickness increase
     lco2=.false.,
-    ! Period (no. of steps) for shortwave radiation
-    nstrad=3,
+    ! If lco2=.true., the year corresponding to ablco2 baseline
+    iyear_ref=1950,
+    ! If lco2=.true., the yearly increase in co2 absorbtion from
+    del_co2=0.005,
+    ! ablco2 = abs. of air in CO2 band
+    ablco2 =  6.0,
+
+    ! albsea = Albedo over sea
+    albsea = 0.07,
+    ! albice = Albedo over sea ice (for ice fraction = 1)
+    albice = 0.60,
+    ! albsn  = Albedo over snow (for snow cover = 1)
+    albsn  = 0.60,
+/
+
+!mod_solar
+&solar_forcing
+    ! solc   = Solar constant (area averaged) in W/m^2
+    solc = 342.0,
+    ! epssw  = fraction of incoming solar radiation absorbed by ozone
+    epssw  =  0.020,
 /
 
 ! mod_surfcon
@@ -190,18 +209,8 @@
     rhblsc=0.95,
 /
 
-! phy_radiat
-&radiation
-    ! solc   = Solar constant (area averaged) in W/m^2
-    solc = 342.0,
-
-    ! albsea = Albedo over sea
-    albsea = 0.07,
-    ! albice = Albedo over sea ice (for ice fraction = 1)
-    albice = 0.60,
-    ! albsn  = Albedo over snow (for snow cover = 1)
-    albsn  = 0.60,
-
+!phy_cloud
+&cloud_parameters
     ! rhcl1  = relative hum. threshold corr. to cloud cover = 0
     rhcl1  =  0.30,
     ! rhcl2  = relative hum. corr. to cloud cover = 1
@@ -226,13 +235,12 @@
     albcl  =  0.43,
     ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
     albcls =  0.50,
+/
 
-    ! epssw  = fraction of incoming solar radiation absorbed by ozone
-    epssw  =  0.020,
-    ! epslw  = fraction of blackbody spectrum absorbed/emitted by PBL only
-    epslw  =  0.05,
-    ! emisfc = longwave surface emissivity
-    emisfc =  0.98,
+!phy_radsw
+&sw_radiation
+    ! Period (no. of steps) for shortwave radiation
+    nstrad=3,
 
     !          shortwave absorptivities (for dp = 10^5 Pa) :
     ! absdry = abs. of dry air      (visible band)
@@ -252,8 +260,6 @@
     !          longwave absorptivities (per dp = 10^5 Pa) :
     ! ablwin = abs. of air in "window" band
     ablwin =  0.3,
-    ! ablco2 = abs. of air in CO2 band
-    ablco2 =  6.0,
     ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
     ablwv1 =  0.7,
     ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
@@ -263,6 +269,14 @@
     ablcl1 = 12.0,
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
     ablcl2 =  0.6,
+/
+
+!phy_radlw
+&lw_radiation
+    ! epslw  = fraction of blackbody spectrum absorbed/emitted by PBL only
+    epslw  =  0.05,
+    ! emisfc = longwave surface emissivity
+    emisfc =  0.98,
 /
 
 ! phy_suflux

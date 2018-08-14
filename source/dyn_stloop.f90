@@ -1,16 +1,16 @@
 subroutine stloop(istep)
     !   subroutine stloop (istep)
     !
-    !   Purpose: Perform a series of time steps calling 
+    !   Purpose: Perform a series of time steps calling
     !            post-processing/output routines at selected steps
     !   Input/output : istep = time step index
     !   Updated common block : lflag2
-      
+
 
     use mod_tsteps, only: nsteps, delt2, alph, rob, wil
     use mod_date, only: ihour, iday, update_time
-    use phy_radiat, only: lradsw, nstrad
     use mod_dynvar, only: truncate_prognostics
+    use phy_radsw, only: lradsw, nstrad
     use rp_emulator
     use mod_prec, only: set_precision
 

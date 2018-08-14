@@ -3,7 +3,7 @@
 !> Initialised in invars.
 module mod_dynvar
     use mod_atparam
-	use rp_emulator
+    use rp_emulator
 
     implicit none
 
@@ -11,7 +11,7 @@ module mod_dynvar
     ! Vorticity
     type(rpe_complex_var), allocatable :: vor(:,:,:,:)
 
-    ! Divergence 
+    ! Divergence
     type(rpe_complex_var), allocatable :: div(:,:,:,:)
 
     ! Absolute temperature

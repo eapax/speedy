@@ -13,7 +13,7 @@ module mod_fluxes
 
     ! Net heat flux into sea-ice sfc.
     type(rpe_var), allocatable :: hflux_i(:)
-    
+
     contains
         subroutine setup_fluxes()
             allocate(hflux_l(ngp))
@@ -54,7 +54,8 @@ module mod_fluxes
             use mod_surfcon, only: fmask1
             use mod_physvar, only: hfluxn, ssrd, shf, evap
             use mod_var_sea, only: tice_am, sice_am
-            use phy_radiat, only: albsea, albice, emisfc
+            use mod_fordate, only: albsea, albice
+            use phy_radlw, only: emisfc
 
             type(rpe_var) :: difice(ngp)
             type(rpe_var) :: fland(ngp), esbc, rsteps, sstfr, sstfr4

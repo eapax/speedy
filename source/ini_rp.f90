@@ -19,18 +19,24 @@ subroutine truncate_rp()
     use mod_dyncon1, only: truncate_dyncon1
     use mod_dyncon2, only: truncate_dyncon2
     use mod_fft, only: truncate_fft
+    use mod_fordate, only: truncate_fordate
     use mod_hdifcon, only: truncate_hdifcon
     use mod_physcon, only: truncate_physcon
+    use mod_solar, only: truncate_solar
     use mod_surfcon, only: truncate_surfcon
     use mod_tsteps, only: truncate_tsteps
     use mod_var_land, only: truncate_var_land
     use mod_var_sea, only: truncate_var_sea
+
     use phy_convmf, only: truncate_convmf
     use phy_lscond, only: truncate_lscond
-    use phy_radiat, only: truncate_radiat
+    use phy_cloud, only: truncate_cloud
+    use phy_radsw, only: truncate_radsw
+    use phy_radlw, only: truncate_radlw
     use phy_suflux, only: truncate_suflux
     use phy_vdifsc, only: truncate_vdifsc
     use phy_sppt, only: truncate_sppt
+
     use spectral, only: truncate_spectral
 
     call set_precision('Default')
@@ -45,6 +51,9 @@ subroutine truncate_rp()
     ! Truncate variables in sea model
     call truncate_cplvar_sea()
     call truncate_var_sea()
+    ! Truncate constants for determining forcing
+    call truncate_fordate()
+    call truncate_solar()
 
     ! Truncate general dynamics constants used in multiple schemes
     call set_precision('Default')
@@ -73,9 +82,12 @@ subroutine truncate_rp()
     call truncate_convmf()
     call set_precision('Condensation')
     call truncate_lscond()
-    call set_precision('Grid Physics')
-    ! Todo separate radiation constants between short-wave and long-wave
-    call truncate_radiat()
+    call set_precision('Cloud')
+    call truncate_cloud()
+    call set_precision('Short-Wave Radiation')
+    call truncate_radsw()
+    call set_precision('Long-Wave Radiation')
+    call truncate_radlw()
     call set_precision('Surface Fluxes')
     call truncate_suflux()
     call set_precision('Vertical Diffusion')

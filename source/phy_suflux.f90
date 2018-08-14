@@ -7,7 +7,7 @@ module phy_suflux
     implicit none
 
     private
-    public setup_surface_fluxes, truncate_suflux, suflux, sflset
+    public setup_surface_fluxes, ini_suflux, truncate_suflux, suflux
 
     namelist /surface_fluxes/ fwind0, ftemp0, fhum0, cdl, cds, chl, chs, &
             vgust, ctday, dtheta, fstab, hdrag, fhdrag, clambda, clambsn
@@ -68,7 +68,7 @@ module phy_suflux
     ! Save fields from suflux
     type(rpe_var), dimension(:,:), allocatable :: t1, q1
     type(rpe_var), allocatable :: denvvs(:,:)
-    
+
     contains
         subroutine setup_surface_fluxes(fid)
             integer, intent(in) :: fid
@@ -83,18 +83,22 @@ module phy_suflux
             write(*, surface_fluxes)
         end subroutine setup_surface_fluxes
 
+        subroutine ini_suflux()
+            call sflset()
+        end subroutine ini_suflux
+
         subroutine truncate_suflux()
             call apply_truncation(fwind0)
             call apply_truncation(ftemp0)
-            call apply_truncation(fhum0)        
-            call apply_truncation(cdl)        
-            call apply_truncation(cds)        
-            call apply_truncation(chl)        
-            call apply_truncation(chs)        
-            call apply_truncation(vgust)        
-            call apply_truncation(ctday)        
-            call apply_truncation(dtheta)        
-            call apply_truncation(fstab)        
+            call apply_truncation(fhum0)
+            call apply_truncation(cdl)
+            call apply_truncation(cds)
+            call apply_truncation(chl)
+            call apply_truncation(chs)
+            call apply_truncation(vgust)
+            call apply_truncation(ctday)
+            call apply_truncation(dtheta)
+            call apply_truncation(fstab)
             call apply_truncation(hdrag)
             call apply_truncation(fhdrag)
             call apply_truncation(clambda)
@@ -144,8 +148,9 @@ module phy_suflux
             !           Q0     = near-surface sp. humidity [g/kg](2-dim)
 
             use mod_physcon, only: p0, rd, cp, alhc, sbc, sigl, wvi, clat
-            use phy_radiat, only: emisfc, alb_l, alb_s, snowc
-        
+            use mod_fordate, only: alb_l, alb_s, snowc
+            use phy_radlw, only: emisfc
+
             type(rpe_var), dimension(ngp,kx), intent(in) :: ua, va, ta, qa, &
                     rh, phi
             type(rpe_var), dimension(ngp), intent(in) :: phi0, fmask, tland, &
@@ -470,24 +475,31 @@ module phy_suflux
             end if
         end
 
-        subroutine sflset(phi0)
-            ! subroutine sflset (phi0)
+        subroutine sflset()
+            ! subroutine sflset ()
             !
             ! Purpose: compute orographic factor for land surface drag
             ! Input:   phi0   = surface geopotential            (2-dim)
             !          Initialized common blocks: sflfix
 
+            use mod_surfcon, only: phis0
             use mod_physcon, only: gg
-        
-            type(rpe_var), intent(in) :: phi0(ngp)
-            integer :: j
+
+            integer :: i, j, ij
             type(rpe_var) :: rhdrag
 
             rhdrag = rpe_literal(1.0_dp)/(gg*hdrag)
 
-            do j=1,ngp
-                forog(j)=rpe_literal(1.0_dp) + fhdrag*(rpe_literal(1.0_dp) - &
-                        exp(-max(phi0(j),rpe_literal(0.0_dp))*rhdrag))
+            ij = 0
+            do j = 1, il
+                do i = 1, ix
+                    ij = ij + 1
+                    forog(ij) = rpe_literal(1.0_dp) + fhdrag*&
+                            (rpe_literal(1.0_dp) - &
+                                    exp(-max(phis0(i, j), rpe_literal(0.0_dp))*&
+                                            rhdrag))
+
+                end do
             end do
         end subroutine sflset
 end module phy_suflux

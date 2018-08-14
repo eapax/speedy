@@ -29,8 +29,8 @@ subroutine gridx(varm,vorg,kcos)
     integer :: j, m
     type(rpe_var) :: fvar(ix)
 
-	do j = 1,il
-		fvar(1) = varm(1,j)
+    do j = 1,il
+        fvar(1) = varm(1,j)
 
         do m=3,mx2
           fvar(m-1)=varm(m,j)

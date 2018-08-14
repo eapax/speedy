@@ -1,9 +1,7 @@
 subroutine phypar(utend,vtend,ttend,qtend)
-    !  subroutine phypar(vor1,div1,t1,q1,phi1,psl1,
-    ! &                   utend,vtend,ttend,qtend)
+    !  subroutine phypar(utend,vtend,ttend,qtend)
     !
     !  Purpose: compute physical parametrization tendencies for u, v, t, q
-    !  and add them to dynamical grid-point tendencies
     !  Output arguments:  utend  : u-wind tendency (gp)
     !                     vtend  : v-wind tendency (gp)
     !                     ttend  : temp. tendency (gp)
@@ -21,7 +19,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use humidity, only: shtorh
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
-    use phy_radiat, only: lradsw, cloud, radsw, radlw
+    use phy_cloud, only: cloud
+    use phy_radsw, only: lradsw, radsw
+    use phy_radlw, only: radlw
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
     use phy_sppt, only: sppt_on, gen_sppt
@@ -93,7 +93,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
-        call set_precision('Grid Physics')
+        call set_precision('Cloud')
         do j=1,ngp
             gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
@@ -105,7 +105,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
             prtop(j)=float(iptop(j))
         end do
 
-        call set_precision('SW Radiation')
+        call set_precision('Short-Wave Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,ssrd,ssr,tsr,tt_rsw)
 
         do k=1,kx
@@ -116,7 +116,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end if
 
     ! 3.2 Compute downward longwave fluxes
-    call set_precision('LW Radiation')
+    call set_precision('Long-Wave Radiation')
     call radlw(-1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     ! 3.3. Compute surface fluxes and land skin temperature
@@ -141,8 +141,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
-
-    call set_precision('LW Radiation')
+    call set_precision('Long-Wave Radiation')
     call radlw (1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     do k=1,kx

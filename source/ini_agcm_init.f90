@@ -4,6 +4,7 @@ subroutine agcm_init()
     use mod_cpl_flags, only: icsea, isstan
     use mod_date, only: ini_date, istart
     use ppo_output_stream, only: initialise_output
+    use mod_fordate, only: ini_fordate
     use mod_prec, only: setup_precision
 
     implicit none
@@ -31,7 +32,7 @@ subroutine agcm_init()
     call ini_coupler(istart)
 
     ! 4. set up the forcing fields for the first time step
-    call fordate(0)
+    call ini_fordate()
 
     ! 5. do the initial (2nd-order) time step, initialize the semi-impl. scheme
     call stepone()

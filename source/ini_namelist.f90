@@ -7,11 +7,15 @@ subroutine ini_namelist()
     use mod_cplcon_sea, only: setup_sea
     use mod_date, only: setup_date
     use mod_dyncon0, only: setup_dynamics
+    use mod_fordate, only: setup_forcing
+    use mod_solar, only: setup_solar_forcing
     use mod_surfcon, only: setup_surface
     use mod_tsteps, only: setup_timestepping
     use phy_convmf, only: setup_convection
     use phy_lscond, only: setup_condensation
-    use phy_radiat, only: setup_radiation
+    use phy_cloud, only: setup_cloud_parameters
+    use phy_radsw, only: setup_sw_radiation
+    use phy_radlw, only: setup_lw_radiation
     use phy_suflux, only: setup_surface_fluxes
     use phy_vdifsc, only: setup_vertical_diffusion
     use phy_sppt, only: setup_sppt
@@ -43,11 +47,16 @@ subroutine ini_namelist()
     call setup_sea(99)
     call setup_date(99)
     call setup_dynamics(99)
+    call setup_forcing(99)
+    call setup_solar_forcing(99)
     call setup_surface(99)
     call setup_timestepping(99)
+
     call setup_convection(99)
     call setup_condensation(99)
-    call setup_radiation(99)
+    call setup_cloud_parameters(99)
+    call setup_sw_radiation(99)
+    call setup_lw_radiation(99)
     call setup_surface_fluxes(99)
     call setup_vertical_diffusion(99)
     call setup_sppt(99)

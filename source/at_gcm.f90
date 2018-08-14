@@ -31,11 +31,12 @@ end
 subroutine agcm_1day(jday)
     ! subroutine agcm_1day (jday)
     !
-    ! perform atm. model integration for 1 day, 
-    ! post-proc. and i/o at selected times 
+    ! perform atm. model integration for 1 day,
+    ! post-proc. and i/o at selected times
 
     use mod_tsteps, only: nsteps, nmonrs
     use mod_date, only: iyear, imonth, iday
+    use mod_fordate, only: fordate
     use mod_fluxes, only: ini_fluxes
 
     implicit none
@@ -48,7 +49,7 @@ subroutine agcm_1day(jday)
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
-    call fordate(1)
+    call fordate()
 
     ! 2. set daily-average flux arrays to zero
     call ini_fluxes()

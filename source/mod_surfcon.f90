@@ -22,8 +22,8 @@ module mod_surfcon
     type(rpe_var), allocatable :: fmask(:,:)
     ! Model-defined land fraction
     type(rpe_var), allocatable :: fmask1(:,:)
-									
-    ! Time invariant surface fields 
+
+    ! Time invariant surface fields
     ! (initial. in INBCON, phis0 initial. in INVARS)
     ! Unfiltered surface geopotential
     type(rpe_var), allocatable :: phi0(:,:)

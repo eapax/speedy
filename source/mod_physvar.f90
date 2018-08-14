@@ -50,7 +50,6 @@ module mod_physvar
     ! vt_sppt =       v-wind tendency due to stochastic perturbation
     ! tt_sppt =  temperature tendency due to stochastic perturbation
     ! qt_sppt = sp. humidity tendency due to stochastic perturbation
-
     type(rpe_var), dimension(:, :), allocatable :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, &
             tt_rsw, tt_rlw, ut_pbl, vt_pbl, tt_pbl, qt_pbl, &
             ut_phy, vt_phy, tt_phy, qt_phy, ut_sppt, vt_sppt, tt_sppt, qt_sppt
@@ -59,12 +58,12 @@ module mod_physvar
     ! precls = large-scale precipitation [g/(m^2 s)], total
     ! snowcv = convective precipitation  [g/(m^2 s)], snow only
     ! snowls = large-scale precipitation [g/(m^2 s)], snow only
-    ! cbmf   = cloud-base mass flux 
+    ! cbmf   = cloud-base mass flux
     ! tsr    = top-of-atm. shortwave radiation (downward)
     ! ssrd   = surface shortwave radiation (downward-only)
     ! ssr    = surface shortwave radiation (net downward)
     ! slrd   = surface longwave radiation  (downward-only)
-    ! slr    = surface longwave radiation  (net upward) 
+    ! slr    = surface longwave radiation  (net upward)
     ! olr    = outgoing longwave radiation (upward)
     ! slru   = surface longwave emission   (upward)
     !                                   (1:land, 2:sea, 3: wgt. average)
@@ -76,6 +75,14 @@ module mod_physvar
     type(rpe_var), dimension(:), allocatable :: precnv, precls, snowcv, snowls, &
             cbmf, tsr, ssrd, ssr, slrd, slr, olr
     type(rpe_var), dimension(:, :), allocatable :: slru, ustr, vstr, shf, evap, hfluxn
+
+    ! Transmissivity and blackbody rad. (updated in radsw)
+    ! tau2   = transmissivity of atmospheric layers
+    ! stratc = stratospheric correction term
+    type(rpe_var), allocatable :: tau2(:,:,:), stratc(:,:)
+    ! Transmissivity and blackbody rad. (updated in radsw/radlw)
+    ! flux   = radiative flux in different spectral bands
+    type(rpe_var), allocatable :: flux(:,:)
 
     ! 3D Stochastic perturbation pattern
     type(rpe_var), dimension(:,:), allocatable :: sppt(:,:)
@@ -137,60 +144,9 @@ module mod_physvar
             allocate(shf(ngp, 3))
             allocate(evap(ngp, 3))
             allocate(hfluxn(ngp, 3))
+            allocate(tau2(ngp,kx,4))
+            allocate(stratc(ngp,2))
+            allocate(flux(ngp, 4))
             allocate(sppt(ngp,kx))
         end subroutine setup_physvar
-
-        subroutine truncate_physvar()
-            call apply_truncation(ug1)
-            call apply_truncation(vg1)
-            call apply_truncation(tg1)
-            call apply_truncation(qg1)
-            call apply_truncation(phig1)
-            call apply_truncation(pslg1)
-
-            call apply_truncation(se)
-            call apply_truncation(rh)
-            call apply_truncation(qsat)
-
-            call apply_truncation(psg)
-            call apply_truncation(ts)
-            call apply_truncation(tskin)
-            call apply_truncation(u0)
-            call apply_truncation(v0)
-            call apply_truncation(t0)
-            call apply_truncation(q0)
-            call apply_truncation(cloudc)
-            call apply_truncation(clstr)
-            call apply_truncation(cltop)
-            call apply_truncation(prtop)
-
-            call apply_truncation(tt_cnv)
-            call apply_truncation(qt_cnv)
-            call apply_truncation(tt_lsc)
-            call apply_truncation(qt_lsc)
-            call apply_truncation(tt_rsw)
-            call apply_truncation(tt_rlw)
-            call apply_truncation(ut_pbl)
-            call apply_truncation(vt_pbl)
-            call apply_truncation(tt_pbl)
-            call apply_truncation(qt_pbl)
-
-            call apply_truncation(precnv)
-            call apply_truncation(precls)
-            call apply_truncation(snowcv)
-            call apply_truncation(snowls)
-            call apply_truncation(cbmf)
-            call apply_truncation(tsr)
-            call apply_truncation(ssrd)
-            call apply_truncation(ssr)
-            call apply_truncation(slrd)
-            call apply_truncation(slr)
-            call apply_truncation(olr)
-            call apply_truncation(slru)
-            call apply_truncation(ustr)
-            call apply_truncation(vstr)
-            call apply_truncation(shf)
-            call apply_truncation(evap)
-            call apply_truncation(hfluxn)
-        end subroutine truncate_physvar
 end module
