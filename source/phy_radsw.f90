@@ -17,7 +17,8 @@ module phy_radsw
             absdry, absaer, abswv1, abswv2, &
             abscl1, abscl2, &
             ablwin, ablwv1, ablwv2, &
-            ablcl1, ablcl2
+            ablcl1, ablcl2, &
+            albcl, albcls
 
     ! Period (no. of steps) for shortwave radiation
     integer :: nstrad
@@ -50,6 +51,11 @@ module phy_radsw
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
     type(rpe_var) :: ablcl2
 
+    ! albcl  = cloud albedo (for cloud cover = 1)
+    type(rpe_var) :: albcl
+    ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
+    type(rpe_var) :: albcls
+
     contains
         subroutine setup_sw_radiation(fid)
             ! Read namelist variables
@@ -77,6 +83,8 @@ module phy_radsw
             call apply_truncation(ablwv2)
             call apply_truncation(ablcl1)
             call apply_truncation(ablcl2)
+            call apply_truncation(albcl)
+            call apply_truncation(albcls)
         end subroutine truncate_radsw
 
         subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
@@ -99,7 +107,7 @@ module phy_radsw
             use mod_physvar, only: tau2, stratc, flux
             use mod_fordate, only: albsfc, ablco2
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
-            use phy_cloud, only: albcl, albcls, qcloud
+            use phy_cloud, only: qcloud
             use phy_radlw, only: epslw
 
             integer, intent(in) :: icltop(ngp)

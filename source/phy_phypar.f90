@@ -52,7 +52,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     do j=1,ngp
         psg(j)=exp(pslg1(j))
-        rps(j)=1./psg(j)
+        rps(j)=rpe_literal(1.0_dp)/psg(j)
     end do
 
     do k=1,kx
@@ -64,7 +64,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     do k=1,kx
-        call shtorh(1,ngp,tg1(1,k),psg,sig(k),qg1(1,k),rh(1,k),qsat(1,k))
+        call shtorh(1,ngp,tg1(:,k),psg,sig(k),qg1(:,k),rh(:,k),qsat(:,k))
     end do
 
     ! 2. Precipitation

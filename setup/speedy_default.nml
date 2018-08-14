@@ -230,11 +230,6 @@
     gse_s0  = 0.25,
     ! gse_s1 = gradient of dry static energy corresp. to strat.c.c. = 1
     gse_s1  = 0.40,
-
-    ! albcl  = cloud albedo (for cloud cover = 1)
-    albcl  =  0.43,
-    ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
-    albcls =  0.50,
 /
 
 !phy_radsw
@@ -269,6 +264,11 @@
     ablcl1 = 12.0,
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
     ablcl2 =  0.6,
+
+    ! albcl  = cloud albedo (for cloud cover = 1)
+    albcl  =  0.43,
+    ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
+    albcls =  0.50,
 /
 
 !phy_radlw
