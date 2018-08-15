@@ -7,7 +7,6 @@ module phy_cloud
 
     private
     public setup_cloud_parameters, ini_cloud, truncate_cloud, cloud
-    public qcloud
 
     namelist /cloud_parameters/ &
             rhcl1, rhcl2, qacl, wpcl, pmaxcl, &
@@ -33,10 +32,6 @@ module phy_cloud
     ! gse_s1 = gradient of dry static energy corresp. to strat.c.c. = 1
     type(rpe_var) :: gse_s1
 
-    ! Radiative properties of clouds (updated in cloud)
-    ! qcloud = Equivalent specific humidity of clouds
-    type(rpe_var), dimension(:), allocatable :: qcloud
-
     ! Local derived variables
     type(rpe_var) :: rrcl, clfact
 
@@ -47,8 +42,6 @@ module phy_cloud
 
             read(fid, cloud_parameters)
             write(*, cloud_parameters)
-
-            allocate(qcloud(ngp))
         end subroutine setup_cloud_parameters
 
         subroutine ini_cloud()
@@ -155,9 +148,6 @@ module phy_cloud
                 cloudc(j) = min(rpe_literal(1.0_dp),wpcl*sqrt(pr1)+cl1*cl1)
                 icltop(j) = min(iptop(j),icltop(j))
             end do
-
-            ! 2.  Equivalent specific humidity of clouds
-            qcloud = qa(:,kxm)
 
             ! 3. Stratiform clouds at the top of PBL
             rgse   = rpe_literal(1.0_dp)/(gse_s1-gse_s0)

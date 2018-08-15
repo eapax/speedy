@@ -198,8 +198,7 @@ phy_phypar.o           : phy_phypar.f90 mod_atparam.o mod_physvar.o\
 phy_radlw.o            : phy_radlw.f90 mod_atparam.o mod_prec.o mod_physcon.o\
                          mod_physvar.o
 phy_radsw.o            : phy_radsw.f90 mod_atparam.o mod_prec.o mod_physcon.o\
-                         mod_physvar.o mod_fordate.o mod_solar.o phy_cloud.o\
-                         phy_radlw.o
+                         mod_physvar.o mod_fordate.o mod_solar.o phy_radlw.o
 phy_shtorh.o           : phy_shtorh.f90 mod_prec.o
 phy_sppt.o             : mod_atparam.o mod_prec.o mod_tsteps.o mod_dyncon1.o\
                          spe_spectral.o

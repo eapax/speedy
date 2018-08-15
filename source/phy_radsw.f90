@@ -107,7 +107,6 @@ module phy_radsw
             use mod_physvar, only: tau2, stratc, flux
             use mod_fordate, only: albsfc, ablco2
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
-            use phy_cloud, only: qcloud
             use phy_radlw, only: epslw
 
             integer, intent(in) :: icltop(ngp)
@@ -146,7 +145,7 @@ module phy_radsw
 
             do j=1,ngp
                 psaz(j)=psa(j)*zenit(j)
-                acloud(j)=cloudc(j)*min(abscl1*qcloud(j),abscl2)
+                acloud(j)=cloudc(j)*min(abscl1*qa(j,kxm),abscl2)
             end do
 
             do j=1,ngp
