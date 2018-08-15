@@ -83,14 +83,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 2. Precipitation
     ! 2.1 Deep convection
     call set_precision('Convection')
-    call convmf(psg,se,qg1,qsat,iptop,cbmf,precnv,tt_cnv,qt_cnv)
-
-    do k=2,kx
-       do j=1,ngp
-        tt_cnv(j,k) = tt_cnv(j,k)*rps(j)*grdscp(k)
-        qt_cnv(j,k) = qt_cnv(j,k)*rps(j)*grdsig(k)
-       end do
-    end do
+    call convmf(psg,se,qg1,qsat,hflx2tend,flx2tend,&
+            iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
     do j=1,ngp
         icnv(j)=kx-iptop(j)

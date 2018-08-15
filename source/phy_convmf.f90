@@ -78,8 +78,9 @@ module phy_convmf
             call apply_truncation(wvi_cnv)
         end subroutine truncate_convmf
 
-        subroutine convmf (psa_in,se_in,qa_in,qsat_in, &
-                           itop,cbmf,precnv,dfse,dfqa)
+        subroutine convmf (&
+                psa_in,se_in,qa_in,qsat_in, hflx2tend_in, flx2tend_in, &
+                itop,cbmf,precnv,dfse,dfqa)
             ! SUBROUTINE CONVMF (PSA,SE,QA,QSAT, ITOP,CBMF,PRECNV,DFSE,DFQA)
             !
             ! Purpose: Compute convective fluxes of dry static energy and
@@ -93,6 +94,10 @@ module phy_convmf
             type(rpe_var), intent(in) :: qa_in(ngp, kx)
             !         QSAT   = saturation spec. hum. [g/kg]             (3-dim)
             type(rpe_var), intent(in) :: qsat_in(ngp, kx)
+            !         hflx2tend = Conversion factor between heat fluxes and T tendency
+            type(rpe_var), intent(in) :: hflx2tend_in(ngp,kx)
+            !         flx2tend = Conversion factor between fluxes and tendencies
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
 
             ! Output: ITOP   = top of convection (layer index)          (2-dim)
             integer, intent(out) :: itop(ngp)
@@ -106,7 +111,8 @@ module phy_convmf
             type(rpe_var), intent(out) :: dfqa(ngp,kx)
 
             ! Local copies of input variables (to be truncated)
-            type(rpe_var) :: psa(ngp), se(ngp,kx), qa(ngp,kx), qsat(ngp,kx)
+            type(rpe_var) :: psa(ngp), se(ngp,kx), qa(ngp,kx), qsat(ngp,kx), &
+                    hflx2tend(ngp,kx), flx2tend(ngp,kx)
 
             ! Local variables
             integer :: j, k, k1, ktop1, ktop2, nl1, nlp
@@ -122,6 +128,8 @@ module phy_convmf
             se = se_in
             qa = qa_in
             qsat = qsat_in
+            hflx2tend = hflx2tend_in
+            flx2tend = flx2tend_in
 
             ! 1. Initialization of output and workspace arrays
             nl1=kx-1
@@ -286,5 +294,9 @@ module phy_convmf
                 dfse(j,k)=fus-fds+alhc_cnv*precnv(j)
                 dfqa(j,k)=fuq-fdq-precnv(j)
             end do
+
+            ! Convert fluxes to temperature tendencies
+            dfse = dfse*hflx2tend
+            dfqa = dfqa*flx2tend
         end subroutine convmf
 end module phy_convmf
