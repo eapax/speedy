@@ -39,8 +39,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! Index of cloud top for radiation scheme (diagnosed in cloud)
     integer :: icltop(ngp), icnv(ngp)
 
-    ! Conversion constant between fluxes and tendencies
+    ! Conversion constant between (heat) fluxes and tendencies
     type(rpe_var) :: flx2tend(ngp,kx)
+    type(rpe_var) :: hflx2tend(ngp,kx)
 
     integer :: iitest=0, j, k
 
@@ -60,7 +61,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     do k=1,kx
         do j=1,ngp
-            flx2tend(j,k) = rps(j)*grdscp(k)
+            ! Conversion for fluxes->tendencies
+            flx2tend(j,k)  = rps(j)*grdsig(k)
+            ! Conversion for heat fluxes->tendencies
+            hflx2tend(j,k) = rps(j)*grdscp(k)
         end do
     end do
 
@@ -115,7 +119,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
 
         call set_precision('Short-Wave Radiation')
-        call radsw(psg,qg1,icltop,cloudc,clstr,flx2tend,ssrd,ssr,tsr,tt_rsw)
+        call radsw(psg,qg1,icltop,cloudc,clstr,hflx2tend,ssrd,ssr,tsr,tt_rsw)
     end if
 
     ! 3.2 Compute downward longwave fluxes
@@ -141,34 +145,34 @@ subroutine phypar(utend,vtend,ttend,qtend)
            & t0,q0,.false.)
     end if
 
+    ! Convert surface fluxes to tendencies
+    do j=1,ngp
+        ut_sflx(j,kx)=ustr(j,3)* flx2tend(j,kx)
+        vt_sflx(j,kx)=vstr(j,3)* flx2tend(j,kx)
+        tt_sflx(j,kx)= shf(j,3)*hflx2tend(j,kx)
+        qt_sflx(j,kx)=evap(j,3)* flx2tend(j,kx)
+    end do
+
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
     call set_precision('Long-Wave Radiation')
-    call radlw_up(tg1,ts,slrd,slru(:,3),flx2tend,slr,olr,tt_rlw)
+    call radlw_up(tg1,ts,slrd,slru(:,3),hflx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
     call set_precision('Vertical Diffusion')
     call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
-    ! 4.2 Add tendencies due to surface fluxes
-    do j=1,ngp
-        ut_pbl(j,kx)=ut_pbl(j,kx)+ustr(j,3)*rps(j)*grdsig(kx)
-        vt_pbl(j,kx)=vt_pbl(j,kx)+vstr(j,3)*rps(j)*grdsig(kx)
-        tt_pbl(j,kx)=tt_pbl(j,kx)+ shf(j,3)*rps(j)*grdscp(kx)
-        qt_pbl(j,kx)=qt_pbl(j,kx)+evap(j,3)*rps(j)*grdsig(kx)
-    end do
-
     ! 5. Store all fluxes for coupling and daily-mean output
     call set_precision('Grid Physics')
     call increment_fluxes()
 
     ! Sum physics tendencies
-    ut_phy = ut_pbl
-    vt_phy = vt_pbl
-    tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_rlw + tt_pbl
-    qt_phy = qt_cnv + qt_lsc + qt_pbl
+    ut_phy = ut_sflx + ut_pbl
+    vt_phy = vt_sflx + vt_pbl
+    tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_sflx + tt_rlw + tt_pbl
+    qt_phy = qt_cnv + qt_lsc + qt_sflx + qt_pbl
 
     ! Add SPPT noise
     if (sppt_on) then

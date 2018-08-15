@@ -469,56 +469,72 @@ module ppo_output_stream
                 case(106)
                 output = tt_rlw
 
-                ! ut_pbl  =       u-wind tendency due to PBL and diffusive processes
+                ! ut_sflx  =       u-wind tendency due to surface fluxes
                 case(107)
+                output = ut_sflx
+
+                ! vt_sflx  =       v-wind tendency due to surface fluxes
+                case(108)
+                output = vt_sflx
+
+                ! tt_sflx  =  temperature tendency due to surface fluxes
+                case(109)
+                output = tt_sflx
+
+                ! qt_sflx  = sp. humidity tendency due to surface fluxes
+                case(110)
+                output = qt_sflx
+
+                ! ut_pbl  =       u-wind tendency due to PBL and diffusive processes
+                case(111)
                 output = ut_pbl
 
                 ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
-                case(108)
+                case(112)
                 output = vt_pbl
 
                 ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
-                case(109)
+                case(113)
                 output = tt_pbl
 
                 ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
-                case(110)
+                case(114)
                 output = qt_pbl
 
                 ! ut_phy  =       u-wind tendency due to all physics processes
-                case(111)
+                case(115)
                 output = ut_phy
 
                 ! vt_phy  =       v-wind tendency due to all physics processes
-                case(112)
+                case(116)
                 output = vt_phy
 
                 ! tt_phy  =  temperature tendency due to all physics processes
-                case(113)
+                case(117)
                 output = tt_phy
 
                 ! qt_phy  = sp. humidity tendency due to all physics processes
-                case(114)
+                case(118)
                 output = qt_phy
 
                 ! ut_sppt =       u-wind tendency due to stochastic perturbation
-                case(115)
+                case(119)
                 output = ut_sppt
 
                 ! vt_sppt =       v-wind tendency due to stochastic perturbation
-                case(116)
+                case(120)
                 output = vt_sppt
 
                 ! tt_sppt =  temperature tendency due to stochastic perturbation
-                case(117)
+                case(121)
                 output = tt_sppt
 
                 ! qt_sppt = sp. humidity tendency due to stochastic perturbation
-                case(118)
+                case(122)
                 output = qt_sppt
 
                 ! 3D Stochastic perturbation pattern
-                case(119)
+                case(123)
                 output = sppt
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total

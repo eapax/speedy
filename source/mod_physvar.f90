@@ -38,6 +38,10 @@ module mod_physvar
     ! qt_lsc  = sp. humidity tendency due to large-scale condensation
     ! tt_rsw  =  temperature tendency due to short-wave radiation
     ! tt_rlw  =  temperature tendency due to long-wave radiation
+    ! ut_sflx =       u-wind tendency due to surface fluxes
+    ! vt_sflx =       v-wind tendency due to surface fluxes
+    ! tt_sflx =  temperature tendency due to surface fluxes
+    ! qt_sflx = sp. humidity tendency due to surface fluxes
     ! ut_pbl  =       u-wind tendency due to PBL and diffusive processes
     ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
     ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
@@ -50,9 +54,15 @@ module mod_physvar
     ! vt_sppt =       v-wind tendency due to stochastic perturbation
     ! tt_sppt =  temperature tendency due to stochastic perturbation
     ! qt_sppt = sp. humidity tendency due to stochastic perturbation
-    type(rpe_var), dimension(:, :), allocatable :: tt_cnv, qt_cnv, tt_lsc, qt_lsc, &
-            tt_rsw, tt_rlw, ut_pbl, vt_pbl, tt_pbl, qt_pbl, &
-            ut_phy, vt_phy, tt_phy, qt_phy, ut_sppt, vt_sppt, tt_sppt, qt_sppt
+    type(rpe_var), dimension(:, :), allocatable :: &
+                              tt_cnv,  qt_cnv,  &
+                              tt_lsc,  qt_lsc,  &
+                              tt_rsw,           &
+                              tt_rlw, &
+            ut_sflx, vt_sflx, tt_sflx, qt_sflx, &
+            ut_pbl,  vt_pbl,  tt_pbl,  qt_pbl,  &
+            ut_phy,  vt_phy,  tt_phy,  qt_phy,  &
+            ut_sppt, vt_sppt, tt_sppt, qt_sppt
 
     ! precnv = convective precipitation  [g/(m^2 s)], total
     ! precls = large-scale precipitation [g/(m^2 s)], total
@@ -112,6 +122,10 @@ module mod_physvar
             allocate(qt_lsc(ngp, kx))
             allocate(tt_rsw(ngp, kx))
             allocate(tt_rlw(ngp, kx))
+            allocate(ut_sflx(ngp, kx))
+            allocate(vt_sflx(ngp, kx))
+            allocate(tt_sflx(ngp, kx))
+            allocate(qt_sflx(ngp, kx))
             allocate(ut_pbl(ngp, kx))
             allocate(vt_pbl(ngp, kx))
             allocate(tt_pbl(ngp, kx))
