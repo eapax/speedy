@@ -80,9 +80,6 @@ module mod_physvar
     ! tau2   = transmissivity of atmospheric layers
     ! stratc = stratospheric correction term
     type(rpe_var), allocatable :: tau2(:,:,:), stratc(:,:)
-    ! Transmissivity and blackbody rad. (updated in radsw/radlw)
-    ! flux   = radiative flux in different spectral bands
-    type(rpe_var), allocatable :: flux(:,:)
 
     ! 3D Stochastic perturbation pattern
     type(rpe_var), dimension(:,:), allocatable :: sppt(:,:)
@@ -146,7 +143,6 @@ module mod_physvar
             allocate(hfluxn(ngp, 3))
             allocate(tau2(ngp,kx,4))
             allocate(stratc(ngp,2))
-            allocate(flux(ngp, 4))
             allocate(sppt(ngp,kx))
         end subroutine setup_physvar
 end module

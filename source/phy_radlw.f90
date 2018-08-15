@@ -27,6 +27,10 @@ module phy_radlw
     ! Transmissivity and blackbody rad. (updated in radlw)
     ! st4a   = blackbody emission from full and half atmospheric levels
     type(rpe_var), allocatable :: st4a(:,:,:)
+    ! flux   = radiative flux in different spectral bands
+    type(rpe_var), allocatable :: flux(:,:)
+    !  dfabs  = flux of lw rad. absorbed by each atm. layer (3-dim)
+    type(rpe_var), allocatable :: dfabs(:,:)
 
     ! Local derived variables
     type(rpe_var) :: refsfc
@@ -40,6 +44,8 @@ module phy_radlw
             write(*, lw_radiation)
 
             allocate(st4a(ngp,kx,2))
+            allocate(flux(ngp,4))
+            allocate(dfabs(ngp,kx))
         end subroutine setup_lw_radiation
 
         subroutine ini_radlw()
@@ -89,22 +95,20 @@ module phy_radlw
             end do
         end subroutine radset
 
-        subroutine radlw_down(ta,fsfcd,dfabs)
-            !  subroutine radlw(ta,
-            !                   fsfcd,dfabs)
+        subroutine radlw_down(ta,fsfcd)
+            !  subroutine radlw(ta,fsfcd)
             !
             !  Purpose: Compute the absorption of longwave radiation
             !           downward flux only
             use mod_physcon, only: sbc, wvi
-            use mod_physvar, only: tau2, flux
+            use mod_physvar, only: tau2
 
             !  input:  ta     = absolute temperature (3-dim)
             type(rpe_var), intent(in) :: ta(ngp,kx)
 
-            !  output:  fsfcd  = downward flux of lw rad. at the sfc.[if imode=-1,0]
+            !  output:  fsfcd  = downward flux of lw rad. at the sfc.
             type(rpe_var), intent(out) :: fsfcd(ngp)
-            !           dfabs  = flux of lw rad. absorbed by each atm. layer (3-dim)
-            type(rpe_var), intent(out) :: dfabs(ngp,kx)
+
 
             integer :: j, jb, k
             type(rpe_var) :: anis, anish, brad, corlw, emis, &
@@ -218,25 +222,24 @@ module phy_radlw
 
         end subroutine radlw_down
 
-
-        subroutine radlw_up(ta, ts, fsfcd, fsfcu, fsfc, ftop, dfabs)
+        subroutine radlw_up(ta, ts, fsfcd, fsfcu, flx2tend, &
+                fsfc, ftop, tt_rlw)
             !  Purpose: Compute the absorption of longwave radiation
             !           upward flux only
             !           ta     = absolute temperature (3-dim)
-            !           ts     = surface temperature                    [if imode=0]
-            !           fsfcd  = downward flux of lw rad. at the sfc.   [if imode=1]
-            !           fsfcu  = surface blackbody emission (upward)    [if imode=1]
-            !           dfabs  = DFABS output from RADLW(-1,... )       [if imode=1]
-            !  Output:  fsfc   = net upw. flux of lw rad. at the sfc. [if imode=0,1]
-            !           ftop   = outgoing flux of lw rad. at the top  [if imode=0,1]
-            !           dfabs  = flux of lw rad. absorbed by each atm. layer (3-dim)
+            !           ts     = surface temperature
+            !           fsfcd  = downward flux of lw rad. at the sfc.
+            !           fsfcu  = surface blackbody emission (upward)
+            !           flx2tend = Conversion from fluxes to temperature tendencies
+            !  Output:  fsfc   = net upw. flux of lw rad. at the sfc.
+            !           ftop   = outgoing flux of lw rad. at the top
+            !           tt_rlw = Temperature tendency due to LW radiation
 
             use mod_physcon, only: dsig
-            use mod_physvar, only: tau2, stratc, flux
+            use mod_physvar, only: tau2, stratc
 
-            type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp), fsfcd(ngp), fsfcu(ngp)
-            type(rpe_var), intent(out) :: ftop(ngp), fsfc(ngp)
-            type(rpe_var), intent(inout) :: dfabs(ngp,kx)
+            type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp), fsfcd(ngp), fsfcu(ngp), flx2tend(ngp,kx)
+            type(rpe_var), intent(out) :: ftop(ngp), fsfc(ngp), tt_rlw(ngp,kx)
 
             integer :: j, jb, k
             type(rpe_var) :: brad, corlw, corlw1, corlw2, emis
@@ -296,5 +299,8 @@ module phy_radlw
                     ftop(j)=ftop(j)+flux(j,jb)
                 end do
             end do
+
+            ! Convert fluxes to temperature tendencies
+            tt_rlw = dfabs*flx2tend
         end subroutine radlw_up
 end module phy_radlw

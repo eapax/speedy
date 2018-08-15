@@ -39,6 +39,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! Index of cloud top for radiation scheme (diagnosed in cloud)
     integer :: icltop(ngp), icnv(ngp)
 
+    ! Conversion constant between fluxes and tendencies
+    type(rpe_var) :: flx2tend(ngp,kx)
+
     integer :: iitest=0, j, k
 
     ! Reciprocal of surface pressure 1/psg
@@ -53,6 +56,12 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do j=1,ngp
         psg(j)=exp(pslg1(j))
         rps(j)=rpe_literal(1.0_dp)/psg(j)
+    end do
+
+    do k=1,kx
+        do j=1,ngp
+            flx2tend(j,k) = rps(j)*grdscp(k)
+        end do
     end do
 
     do k=1,kx
@@ -106,18 +115,12 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
 
         call set_precision('Short-Wave Radiation')
-        call radsw(psg,qg1,icltop,cloudc,clstr,ssrd,ssr,tsr,tt_rsw)
-
-        do k=1,kx
-            do j=1,ngp
-                tt_rsw(j,k)=tt_rsw(j,k)*rps(j)*grdscp(k)
-            end do
-        end do
+        call radsw(psg,qg1,icltop,cloudc,clstr,flx2tend,ssrd,ssr,tsr,tt_rsw)
     end if
 
     ! 3.2 Compute downward longwave fluxes
     call set_precision('Long-Wave Radiation')
-    call radlw_down(tg1,slrd,tt_rlw)
+    call radlw_down(tg1,slrd)
 
     ! 3.3. Compute surface fluxes and land skin temperature
     if (iitest.eq.1) then
@@ -142,13 +145,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
     call set_precision('Long-Wave Radiation')
-    call radlw_up(tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
-
-    do k=1,kx
-        do j=1,ngp
-            tt_rlw(j,k) = tt_rlw(j,k)*rps(j)*grdscp(k)
-        end do
-    end do
+    call radlw_up(tg1,ts,slrd,slru(:,3),flx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection

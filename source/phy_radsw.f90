@@ -1,7 +1,7 @@
 module phy_radsw
     use mod_atparam
     use rp_emulator
-    use mod_prec, only: dp
+    use mod_prec
 
     implicit none
 
@@ -109,7 +109,8 @@ module phy_radsw
             call apply_truncation(dsig_sw)
         end subroutine truncate_radsw
 
-        subroutine radsw(psa_in, qa_in, icltop, cloudc_in, clstr_in, &
+        subroutine radsw(&
+                psa_in, qa_in, icltop, cloudc_in, clstr_in, flx2tend_in, &
                 fsfcd, fsfc, ftop, dfabs)
             !  subroutine radsw (psa,qa,icltop,cloudc,clstr,
             ! &                  fsfcd,fsfc,ftop,dfabs)
@@ -121,7 +122,7 @@ module phy_radsw
             ! Since radsw is not called every timestep they need to be stored in
             ! mod_physvar. Therefore they are truncated at the end of this
             ! subroutine to the precision matching radlw
-            use mod_physvar, only: tau2, stratc, flux
+            use mod_physvar, only: tau2, stratc
 
             ! The following variables are derived once per day in other
             ! subroutines and are only used here. Therefore they are truncated
@@ -139,6 +140,8 @@ module phy_radsw
             type(rpe_var), intent(in) :: cloudc_in(ngp)
             !           clstr  = stratiform cloud cover                  (2-dim)
             type(rpe_var), intent(in) :: clstr_in(ngp)
+            !         flx2tend = Conversion factor between fluxes and T tendency
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
             !  output:  fsfcd  = downward-only flux of sw rad. at the surface (2-dim)
             type(rpe_var), intent(out) :: fsfcd(ngp)
             !           fsfc   = net (downw.) flux of sw rad. at the surface  (2-dim)
@@ -149,7 +152,10 @@ module phy_radsw
             type(rpe_var), intent(out) :: dfabs(ngp,kx)
 
             ! Local copies of input variables (to be truncated)
-            type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp)
+            type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp), &
+                    flx2tend(ngp,kx)
+            ! flux   = radiative flux in different spectral bands
+            type(rpe_var) :: flux(ngp,2)
 
             ! Local variables
             integer :: j, k
@@ -161,6 +167,7 @@ module phy_radsw
             qa = qa_in
             cloudc = cloudc_in
             clstr = clstr_in
+            flx2tend = flx2tend_in
 
             ! 1.  Initialization
             tau2 = 0.0_dp
@@ -321,5 +328,14 @@ module phy_radsw
                 stratc(j,1)=stratz(j)*psa(j)
                 stratc(j,2)=eps1*psa(j)
             end do
+
+            ! Convert SW fluxes to temperature tendencies
+            dfabs = dfabs*flx2tend
+
+            ! Truncate saved outputs for radlw
+            call set_precision('Long-Wave Radiation')
+            call apply_truncation(tau2)
+            call apply_truncation(stratc)
+            call set_precision('Previous')
         end subroutine radsw
 end module phy_radsw
