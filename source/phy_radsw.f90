@@ -56,6 +56,10 @@ module phy_radsw
     ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
     type(rpe_var) :: albcls
 
+    ! Local derived variables
+    type(rpe_var) :: fband1, fband2, eps1
+    type(rpe_var), allocatable :: abs1(:), dsig_sw(:)
+
     contains
         subroutine setup_sw_radiation(fid)
             ! Read namelist variables
@@ -63,10 +67,21 @@ module phy_radsw
 
             read(fid, sw_radiation)
             write(*, sw_radiation)
+
+            allocate(abs1(2:kx))
+            allocate(dsig_sw(kx))
         end subroutine setup_sw_radiation
 
         subroutine ini_radsw()
             ! Calculate local variables for short-wave radiation scheme
+            use mod_physcon, only: sig, dsig
+            use phy_radlw, only: epslw
+
+            fband2 = 0.05_dp
+            fband1 = 1.0_dp-fband2
+            abs1(2:kx)=absdry+absaer*sig(2:kx)**2
+            eps1=epslw/(dsig(1)+dsig(2))
+            dsig_sw(1:kx) = dsig(1:kx)
         end subroutine ini_radsw
 
         subroutine truncate_radsw()
@@ -85,54 +100,74 @@ module phy_radsw
             call apply_truncation(ablcl2)
             call apply_truncation(albcl)
             call apply_truncation(albcls)
+
+            ! Locally derived variables
+            call apply_truncation(fband1)
+            call apply_truncation(fband2)
+            call apply_truncation(abs1)
+            call apply_truncation(eps1)
+            call apply_truncation(dsig_sw)
         end subroutine truncate_radsw
 
-        subroutine radsw(psa,qa,icltop,cloudc,clstr,fsfcd,fsfc,ftop,dfabs)
+        subroutine radsw(psa_in, qa_in, icltop, cloudc_in, clstr_in, &
+                fsfcd, fsfc, ftop, dfabs)
             !  subroutine radsw (psa,qa,icltop,cloudc,clstr,
             ! &                  fsfcd,fsfc,ftop,dfabs)
             !
             !  purpose: compute the absorption of shortwave radiation and
             !           initialize arrays for longwave-radiation routines
-            !  input:   psa    = norm. surface pressure [p/p0]           (2-dim)
-            !           qa     = specific humidity [g/kg]                (3-dim)
-            !           icltop = cloud top level                         (2-dim)
-            !           cloudc = total cloud cover                       (2-dim)
-            !           clstr  = stratiform cloud cover                  (2-dim)
-            !  output:  fsfcd  = downward-only flux of sw rad. at the surface (2-dim)
-            !           fsfc   = net (downw.) flux of sw rad. at the surface  (2-dim)
-            !           ftop   = net (downw.) flux of sw rad. at the atm. top (2-dim)
-            !           dfabs  = flux of sw rad. absorbed by each atm. layer  (3-dim)
 
-            use mod_physcon, only: sig, dsig
+            ! The following variables are initialised here and used in radlw.
+            ! Since radsw is not called every timestep they need to be stored in
+            ! mod_physvar. Therefore they are truncated at the end of this
+            ! subroutine to the precision matching radlw
             use mod_physvar, only: tau2, stratc, flux
+
+            ! The following variables are derived once per day in other
+            ! subroutines and are only used here. Therefore they are truncated
+            ! after being calculated to the precision of radsw
             use mod_fordate, only: albsfc, ablco2
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
-            use phy_radlw, only: epslw
 
+            !  input:   psa    = norm. surface pressure [p/p0]           (2-dim)
+            type(rpe_var), intent(in) :: psa_in(ngp)
+            !           qa     = specific humidity [g/kg]                (3-dim)
+            type(rpe_var), intent(in) :: qa_in(ngp,kx)
+            !           icltop = cloud top level                         (2-dim)
             integer, intent(in) :: icltop(ngp)
-            type(rpe_var), intent(in) :: psa(ngp), qa(ngp,kx), cloudc(ngp), &
-                    clstr(ngp)
-            type(rpe_var), intent(inout) :: ftop(ngp), fsfc(ngp), fsfcd(ngp), &
-                    dfabs(ngp,kx)
+            !           cloudc = total cloud cover                       (2-dim)
+            type(rpe_var), intent(in) :: cloudc_in(ngp)
+            !           clstr  = stratiform cloud cover                  (2-dim)
+            type(rpe_var), intent(in) :: clstr_in(ngp)
+            !  output:  fsfcd  = downward-only flux of sw rad. at the surface (2-dim)
+            type(rpe_var), intent(out) :: fsfcd(ngp)
+            !           fsfc   = net (downw.) flux of sw rad. at the surface  (2-dim)
+            type(rpe_var), intent(out) :: fsfc(ngp)
+            !           ftop   = net (downw.) flux of sw rad. at the atm. top (2-dim)
+            type(rpe_var), intent(out) :: ftop(ngp)
+            !           dfabs  = flux of sw rad. absorbed by each atm. layer  (3-dim)
+            type(rpe_var), intent(out) :: dfabs(ngp,kx)
 
-            integer :: j, k, nl1
-            type(rpe_var) :: acloud(ngp), psaz(ngp), abs1, acloud1, deltap, eps1
-            type(rpe_var) :: fband1, fband2
+            ! Local copies of input variables (to be truncated)
+            type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp)
 
-            nl1 = kx-1
+            ! Local variables
+            integer :: j, k
+            type(rpe_var) :: acloud(ngp), psaz(ngp), acloud1, deltap
 
-            fband2 = 0.05_dp
-            fband1 = rpe_literal(1.0_dp)-fband2
-
-            ! ALBMINL=0.05
-            ! ALBCLS = 0.5
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            psa = psa_in
+            qa = qa_in
+            cloudc = cloudc_in
+            clstr = clstr_in
 
             ! 1.  Initialization
             tau2 = 0.0_dp
 
             do j=1,ngp
                 !fk-- change to ensure only icltop <= kx used
-                if(icltop(j) .le. kx) then
+                if(icltop(j) <= kx) then
                   tau2(j,icltop(j),3)= albcl*cloudc(j)
                 endif
                 !fk-- end change
@@ -149,31 +184,31 @@ module phy_radsw
             end do
 
             do j=1,ngp
-                deltap=psaz(j)*dsig(1)
+                deltap=psaz(j)*dsig_sw(1)
                 tau2(j,1,1)=exp(-deltap*absdry)
             end do
 
-            do k=2,nl1
-                abs1=absdry+absaer*sig(k)**2
+            do k=2,kxm
+
                 do j=1,ngp
-                    deltap=psaz(j)*dsig(k)
-                    if (k.ge.icltop(j)) then
-                        tau2(j,k,1)=exp(-deltap*(abs1+abswv1*qa(j,k)+acloud(j)))
+                    deltap=psaz(j)*dsig_sw(k)
+                    if (k >= icltop(j)) then
+                        tau2(j,k,1)=exp(-deltap*(abs1(k)+abswv1*qa(j,k)+acloud(j)))
                     else
-                      tau2(j,k,1)=exp(-deltap*(abs1+abswv1*qa(j,k)))
+                      tau2(j,k,1)=exp(-deltap*(abs1(k)+abswv1*qa(j,k)))
                     endif
                 end do
             end do
 
-            abs1=absdry+absaer*sig(kx)**2
+
             do j=1,ngp
-                deltap=psaz(j)*dsig(kx)
-                tau2(j,kx,1)=exp(-deltap*(abs1+abswv1*qa(j,kx)))
+                deltap=psaz(j)*dsig_sw(kx)
+                tau2(j,kx,1)=exp(-deltap*(abs1(kx)+abswv1*qa(j,kx)))
             end do
 
             do k=2,kx
                 do j=1,ngp
-                  deltap=psaz(j)*dsig(k)
+                  deltap=psaz(j)*dsig_sw(k)
                   tau2(j,k,2)=exp(-deltap*abswv2*qa(j,k))
                 end do
             end do
@@ -246,7 +281,7 @@ module phy_radsw
             ! Cloud-free levels (stratosphere + PBL)
             k=1
             do j=1,ngp
-                deltap=psa(j)*dsig(k)
+                deltap=psa(j)*dsig_sw(k)
                 tau2(j,k,1)=exp(-deltap*ablwin)
                 tau2(j,k,2)=exp(-deltap*ablco2)
                 tau2(j,k,3)=1.0_dp
@@ -255,7 +290,7 @@ module phy_radsw
 
             do k=2,kx,kx-2
                 do j=1,ngp
-                    deltap=psa(j)*dsig(k)
+                    deltap=psa(j)*dsig_sw(k)
                     tau2(j,k,1)=exp(-deltap*ablwin)
                     tau2(j,k,2)=exp(-deltap*ablco2)
                     tau2(j,k,3)=exp(-deltap*ablwv1*qa(j,k))
@@ -266,10 +301,10 @@ module phy_radsw
             ! Cloudy layers (free troposphere)
             acloud = cloudc * ablcl2
 
-            do k=3,nl1
+            do k=3,kxm
                do j=1,ngp
-                 deltap=psa(j)*dsig(k)
-                 if (k.lt.icltop(j)) then
+                 deltap=psa(j)*dsig_sw(k)
+                 if (k < icltop(j)) then
                    acloud1=acloud(j)
                  else
                    acloud1=ablcl1*cloudc(j)
@@ -282,7 +317,6 @@ module phy_radsw
             end do
 
             ! 5.2  Stratospheric correction terms
-            eps1=epslw/(dsig(1)+dsig(2))
             do j=1,ngp
                 stratc(j,1)=stratz(j)*psa(j)
                 stratc(j,2)=eps1*psa(j)

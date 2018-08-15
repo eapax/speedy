@@ -1,7 +1,7 @@
 module mod_fordate
     use mod_atparam
     use rp_emulator
-    use mod_prec, only: dp
+    use mod_prec
 
     implicit none
 
@@ -124,6 +124,12 @@ module mod_fordate
             if (lco2) then
                 ablco2 = ablco2_ref * exp(del_co2 * (iyear + tyear - iyear_ref))
             end if
+
+            ! Truncate derived variables used exclusively in radsw
+            call set_precision('Short-Wave Radiation')
+            call apply_truncation(albsfc)
+            call apply_truncation(ablco2)
+            call set_precision('Previous')
 
             ! 2. temperature correction term for horizontal diffusion
             corh = gamlat * phis0

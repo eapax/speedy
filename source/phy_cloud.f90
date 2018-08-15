@@ -96,7 +96,7 @@ module phy_cloud
             !           clstr  = stratiform cloud cover                  (2-dim)
             type(rpe_var), intent(out) :: clstr(ngp)
 
-            ! Local copies of input variables
+            ! Local copies of input variables (to be truncated)
             type(rpe_var) :: qa(ngp,kx), rh(ngp,kx), &
                     precnv(ngp), precls(ngp), gse(ngp), fmask(ngp)
 

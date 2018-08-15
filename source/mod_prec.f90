@@ -38,6 +38,9 @@ module mod_prec
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies
 
+    ! Track previous precision
+    integer :: rp_previous = 52
+
     contains
 
         subroutine setup_precision()
@@ -55,6 +58,9 @@ module mod_prec
             ! Set the global precision 'RPE_DEFAULT_SBITS' for specific parts of
             ! the model.
             character (len=*), intent(in) :: mode
+
+            ! Save current precision before switching
+            rp_previous = RPE_DEFAULT_SBITS
 
             select case(mode)
                 case('Default')
@@ -116,6 +122,9 @@ module mod_prec
 
                 case('Tendencies')
                 RPE_DEFAULT_SBITS = rp_tendencies
+
+                case('Previous')
+                RPE_DEFAULT_SBITS = rp_previous
             end select
         end subroutine
 end module
