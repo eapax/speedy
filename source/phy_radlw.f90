@@ -6,8 +6,11 @@ module phy_radlw
     implicit none
 
     private
-    public setup_lw_radiation, ini_radlw, truncate_radlw, radlw
+    public setup_lw_radiation, ini_radlw, truncate_radlw, radlw_down, radlw_up
     public epslw, emisfc
+
+    ! Number of radiation bands with tau < 1
+    integer, parameter :: nband=4
 
     ! Variables loaded in by namelist
     namelist /lw_radiation/ epslw, emisfc
@@ -25,6 +28,9 @@ module phy_radlw
     ! st4a   = blackbody emission from full and half atmospheric levels
     type(rpe_var), allocatable :: st4a(:,:,:)
 
+    ! Local derived variables
+    type(rpe_var) :: refsfc
+
     contains
         subroutine setup_lw_radiation(fid)
             ! Read namelist variables
@@ -38,6 +44,7 @@ module phy_radlw
 
         subroutine ini_radlw()
             ! Calculate local variables for long-wave radiation scheme
+            refsfc=1.0_dp-emisfc
             call radset()
 
         end subroutine ini_radlw
@@ -50,6 +57,7 @@ module phy_radlw
 
             ! Derived variables
             call apply_truncation(fband)
+            call apply_truncation(refsfc)
         end subroutine truncate_radlw
 
         subroutine radset()
@@ -81,51 +89,28 @@ module phy_radlw
             end do
         end subroutine radset
 
-        subroutine radlw(imode,ta,ts,fsfcd,fsfcu,fsfc,ftop,dfabs)
-            !  subroutine radlw(imode,ta,ts,
-            ! &                  fsfcd,fsfcu,
-            ! &                  fsfc,ftop,dfabs)
+        subroutine radlw_down(ta,fsfcd,dfabs)
+            !  subroutine radlw(ta,
+            !                   fsfcd,dfabs)
             !
             !  Purpose: Compute the absorption of longwave radiation
-            !  Input:   imode  = index for operation mode
-            !                    -1 : downward flux only
-            !                     0 : downward + upward flux
-            !                    +1 : upward flux only
-            !           ta     = absolute temperature (3-dim)
-            !           ts     = surface temperature                    [if imode=0]
-            !           fsfcd  = downward flux of lw rad. at the sfc.   [if imode=1]
-            !           fsfcu  = surface blackbody emission (upward)    [if imode=1]
-            !           dfabs  = DFABS output from RADLW(-1,... )       [if imode=1]
-            !  Output:  fsfcd  = downward flux of lw rad. at the sfc.[if imode=-1,0]
-            !           fsfcu  = surface blackbody emission (upward)  [if imode=  0]
-            !           fsfc   = net upw. flux of lw rad. at the sfc. [if imode=0,1]
-            !           ftop   = outgoing flux of lw rad. at the top  [if imode=0,1]
+            !           downward flux only
+            use mod_physcon, only: sbc, wvi
+            use mod_physvar, only: tau2, flux
+
+            !  input:  ta     = absolute temperature (3-dim)
+            type(rpe_var), intent(in) :: ta(ngp,kx)
+
+            !  output:  fsfcd  = downward flux of lw rad. at the sfc.[if imode=-1,0]
+            type(rpe_var), intent(out) :: fsfcd(ngp)
             !           dfabs  = flux of lw rad. absorbed by each atm. layer (3-dim)
-            !
+            type(rpe_var), intent(out) :: dfabs(ngp,kx)
 
-            use mod_physcon, only: sbc, dsig, wvi
-            use mod_physvar, only: tau2, stratc, flux
+            integer :: j, jb, k
+            type(rpe_var) :: anis, anish, brad, corlw, emis, &
+                    eps1, esbc
+            type(rpe_var) :: st3a
 
-            integer, intent(in) :: imode
-
-            ! Number of radiation bands with tau < 1
-            integer, parameter :: nband=4
-
-            type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp)
-            type(rpe_var), intent(inout) :: fsfcd(ngp), fsfcu(ngp), ftop(ngp), &
-                    fsfc(ngp)
-            type(rpe_var), intent(inout) :: dfabs(ngp,kx)
-
-            integer :: j, jb, k, nl1
-            type(rpe_var) :: anis, anish, brad, corlw, corlw1, corlw2, emis, &
-                    eps1, esbc, refsfc
-            type(rpe_var) :: st3a, tsq
-
-            nl1=kx-1
-
-            refsfc=rpe_literal(1.0_dp)-emisfc
-
-            if (imode.eq.1) go to 410
             ! 1. Blackbody emission from atmospheric levels.
             ! The linearized gradient of the blakbody emission is computed
             ! from temperatures at layer boundaries, which are interpolated
@@ -133,7 +118,7 @@ module phy_radlw
             ! Above the first (top) level, the atmosphere is assumed isothermal.
 
             ! Temperature at level boundaries
-            do k=1,nl1
+            do k=1,kxm
                 do j=1,ngp
                     st4a(j,k,1)=ta(j,k)+wvi(k,2)*(ta(j,k+1)-ta(j,k))
                 end do
@@ -151,7 +136,7 @@ module phy_radlw
             anis =1.0_dp
             anish=rpe_literal(0.5_dp)*anis
 
-            do k=3,nl1
+            do k=3,kxm
                 do j=1,ngp
                     st4a(j,k,2)=anish* &
                             max(st4a(j,k,1)-st4a(j,k-1,1), rpe_literal(0.0_dp))
@@ -160,7 +145,7 @@ module phy_radlw
 
             do j=1,ngp
                 st4a(j,kx,2)=anis* &
-                        max(ta(j,kx) - st4a(j,nl1,1), rpe_literal(0.0_dp))
+                        max(ta(j,kx) - st4a(j,kxm,1), rpe_literal(0.0_dp))
             end do
 
             ! Blackbody emission in the stratosphere
@@ -231,24 +216,30 @@ module phy_radlw
                 fsfcd(j)     =fsfcd(j)     +corlw
             end do
 
-            if (imode.eq.-1) return
+        end subroutine radlw_down
 
-            ! 4. Emission ad absorption of longwave upward flux.
-            !    For upward emission, a correction term depending on the
-            !    local temperature gradient and on the layer transmissivity is
-            !    subtracted from the average (full-level) emission of each layer.
 
-            ! 4.1  Surface
+        subroutine radlw_up(ta, ts, fsfcd, fsfcu, fsfc, ftop, dfabs)
+            !  Purpose: Compute the absorption of longwave radiation
+            !           upward flux only
+            !           ta     = absolute temperature (3-dim)
+            !           ts     = surface temperature                    [if imode=0]
+            !           fsfcd  = downward flux of lw rad. at the sfc.   [if imode=1]
+            !           fsfcu  = surface blackbody emission (upward)    [if imode=1]
+            !           dfabs  = DFABS output from RADLW(-1,... )       [if imode=1]
+            !  Output:  fsfc   = net upw. flux of lw rad. at the sfc. [if imode=0,1]
+            !           ftop   = outgoing flux of lw rad. at the top  [if imode=0,1]
+            !           dfabs  = flux of lw rad. absorbed by each atm. layer (3-dim)
 
-            ! Black-body (or grey-body) emission
-            esbc=emisfc*sbc
-            do j=1,ngp
-                tsq=ts(j)*ts(j)
-                fsfcu(j)=esbc*tsq*tsq
-            end do
+            use mod_physcon, only: dsig
+            use mod_physvar, only: tau2, stratc, flux
 
-            ! Entry point for upward-only mode (IMODE=1)
-         410  continue
+            type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp), fsfcd(ngp), fsfcu(ngp)
+            type(rpe_var), intent(out) :: ftop(ngp), fsfc(ngp)
+            type(rpe_var), intent(inout) :: dfabs(ngp,kx)
+
+            integer :: j, jb, k
+            type(rpe_var) :: brad, corlw, corlw1, corlw2, emis
 
             fsfc = fsfcu - fsfcd
 
@@ -305,6 +296,5 @@ module phy_radlw
                     ftop(j)=ftop(j)+flux(j,jb)
                 end do
             end do
-        end subroutine radlw
-
+        end subroutine radlw_up
 end module phy_radlw

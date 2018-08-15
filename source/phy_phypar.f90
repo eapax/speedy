@@ -21,7 +21,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_lscond, only: lscond
     use phy_cloud, only: cloud
     use phy_radsw, only: lradsw, radsw
-    use phy_radlw, only: radlw
+    use phy_radlw, only: radlw_down, radlw_up
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
     use phy_sppt, only: sppt_on, gen_sppt
@@ -117,7 +117,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 3.2 Compute downward longwave fluxes
     call set_precision('Long-Wave Radiation')
-    call radlw(-1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
+    call radlw_down(tg1,slrd,tt_rlw)
 
     ! 3.3. Compute surface fluxes and land skin temperature
     if (iitest.eq.1) then
@@ -142,7 +142,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
     call set_precision('Long-Wave Radiation')
-    call radlw (1,tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
+    call radlw_up(tg1,ts,slrd,slru(1,3),slr,olr,tt_rlw)
 
     do k=1,kx
         do j=1,ngp
