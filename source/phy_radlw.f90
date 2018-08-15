@@ -35,6 +35,10 @@ module phy_radlw
     ! Local derived variables
     type(rpe_var) :: refsfc
 
+    ! Local copies of mod_physcon variables
+    type(rpe_var) :: sbc_lw
+    type(rpe_var), allocatable :: wvi_lw(:,:), dsig_lw(:)
+
     contains
         subroutine setup_lw_radiation(fid)
             ! Read namelist variables
@@ -46,13 +50,22 @@ module phy_radlw
             allocate(st4a(ngp,kx,2))
             allocate(flux(ngp,4))
             allocate(dfabs(ngp,kx))
+            allocate(wvi_lw(kx,2))
+            allocate(dsig_lw(kx))
         end subroutine setup_lw_radiation
 
         subroutine ini_radlw()
             ! Calculate local variables for long-wave radiation scheme
+            use mod_physcon, only: sbc, wvi, dsig
+
+            ! Derived variables
             refsfc=1.0_dp-emisfc
             call radset()
 
+            ! Local copies of mod_physcon
+            sbc_lw = sbc
+            wvi_lw = wvi
+            dsig_lw = dsig
         end subroutine ini_radlw
 
         subroutine truncate_radlw()
@@ -64,6 +77,11 @@ module phy_radlw
             ! Derived variables
             call apply_truncation(fband)
             call apply_truncation(refsfc)
+
+            ! Local copies of mod_physcon
+            call apply_truncation(sbc_lw)
+            call apply_truncation(wvi_lw)
+            call apply_truncation(dsig_lw)
         end subroutine truncate_radlw
 
         subroutine radset()
@@ -95,25 +113,32 @@ module phy_radlw
             end do
         end subroutine radset
 
-        subroutine radlw_down(ta,fsfcd)
-            !  subroutine radlw(ta,fsfcd)
-            !
+        subroutine radlw_down(ta_in,fsfcd)
             !  Purpose: Compute the absorption of longwave radiation
             !           downward flux only
-            use mod_physcon, only: sbc, wvi
+
+            ! Variables calculated only on sub set of timesteps in radsw and
+            ! truncated to radlw precision there
             use mod_physvar, only: tau2
 
             !  input:  ta     = absolute temperature (3-dim)
-            type(rpe_var), intent(in) :: ta(ngp,kx)
+            type(rpe_var), intent(in) :: ta_in(ngp,kx)
 
             !  output:  fsfcd  = downward flux of lw rad. at the sfc.
             type(rpe_var), intent(out) :: fsfcd(ngp)
 
+            ! Local copies of input variables (to be truncated)
+            type(rpe_var) :: ta(ngp,kx)
 
+            ! Local variables
             integer :: j, jb, k
             type(rpe_var) :: anis, anish, brad, corlw, emis, &
                     eps1, esbc
             type(rpe_var) :: st3a
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            ta = ta_in
 
             ! 1. Blackbody emission from atmospheric levels.
             ! The linearized gradient of the blakbody emission is computed
@@ -124,7 +149,7 @@ module phy_radlw
             ! Temperature at level boundaries
             do k=1,kxm
                 do j=1,ngp
-                    st4a(j,k,1)=ta(j,k)+wvi(k,2)*(ta(j,k+1)-ta(j,k))
+                    st4a(j,k,1)=ta(j,k)+wvi_lw(k,2)*(ta(j,k+1)-ta(j,k))
                 end do
             end do
 
@@ -155,7 +180,7 @@ module phy_radlw
             ! Blackbody emission in the stratosphere
             do k=1,2
                 do j=1,ngp
-                    st4a(j,k,1)=sbc*st4a(j,k,2)**4
+                    st4a(j,k,1)=sbc_lw*st4a(j,k,2)**4
                     st4a(j,k,2)=0.0_dp
                 end do
             end do
@@ -163,7 +188,7 @@ module phy_radlw
             ! Blackbody emission in the troposphere
             do k=3,kx
                 do j=1,ngp
-                    st3a=sbc*ta(j,k)**3
+                    st3a=sbc_lw*ta(j,k)**3
                     st4a(j,k,1)=st3a*ta(j,k)
                     st4a(j,k,2)=rpe_literal(4.0_dp)*st3a*st4a(j,k,2)
                 end do
@@ -222,27 +247,48 @@ module phy_radlw
 
         end subroutine radlw_down
 
-        subroutine radlw_up(ta, ts, fsfcd, fsfcu, flx2tend, &
+        subroutine radlw_up(ta_in, ts_in, fsfcd_in, fsfcu_in, flx2tend_in, &
                 fsfc, ftop, tt_rlw)
             !  Purpose: Compute the absorption of longwave radiation
             !           upward flux only
-            !           ta     = absolute temperature (3-dim)
-            !           ts     = surface temperature
-            !           fsfcd  = downward flux of lw rad. at the sfc.
-            !           fsfcu  = surface blackbody emission (upward)
-            !           flx2tend = Conversion from fluxes to temperature tendencies
-            !  Output:  fsfc   = net upw. flux of lw rad. at the sfc.
-            !           ftop   = outgoing flux of lw rad. at the top
-            !           tt_rlw = Temperature tendency due to LW radiation
 
-            use mod_physcon, only: dsig
+            ! Variables calculated only on sub set of timesteps in radsw and
+            ! truncated to radlw precision there
             use mod_physvar, only: tau2, stratc
 
-            type(rpe_var), intent(in) :: ta(ngp,kx), ts(ngp), fsfcd(ngp), fsfcu(ngp), flx2tend(ngp,kx)
-            type(rpe_var), intent(out) :: ftop(ngp), fsfc(ngp), tt_rlw(ngp,kx)
+            !           ta     = absolute temperature (3-dim)
+            type(rpe_var), intent(in) :: ta_in(ngp,kx)
+            !           ts     = surface temperature
+            type(rpe_var), intent(in) :: ts_in(ngp)
+            !           fsfcd  = downward flux of lw rad. at the sfc.
+            type(rpe_var), intent(in) :: fsfcd_in(ngp)
+            !           fsfcu  = surface blackbody emission (upward)
+            type(rpe_var), intent(in) :: fsfcu_in(ngp)
+            !           flx2tend = Conversion from fluxes to temperature tendencies
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
 
+            !  Output:  fsfc   = net upw. flux of lw rad. at the sfc.
+            type(rpe_var), intent(out) :: fsfc(ngp)
+            !           ftop   = outgoing flux of lw rad. at the top
+            type(rpe_var), intent(out) :: ftop(ngp)
+            !           tt_rlw = Temperature tendency due to LW radiation
+            type(rpe_var), intent(out) :: tt_rlw(ngp,kx)
+
+            ! Local copies of input variables (to be truncated)
+            type(rpe_var) :: ta(ngp,kx), ts(ngp), fsfcd(ngp), fsfcu(ngp), &
+                    flx2tend(ngp,kx)
+
+            ! Local variables
             integer :: j, jb, k
             type(rpe_var) :: brad, corlw, corlw1, corlw2, emis
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            ta = ta_in
+            ts = ts_in
+            fsfcd = fsfcd_in
+            fsfcu = fsfcu_in
+            flx2tend = flx2tend_in
 
             fsfc = fsfcu - fsfcd
 
@@ -286,8 +332,8 @@ module phy_radlw
 
             ! Correction for "black" band and polar night cooling
             do j=1,ngp
-                corlw1=dsig(1)*stratc(j,2)*st4a(j,1,1)+stratc(j,1)
-                corlw2=dsig(2)*stratc(j,2)*st4a(j,2,1)
+                corlw1=dsig_lw(1)*stratc(j,2)*st4a(j,1,1)+stratc(j,1)
+                corlw2=dsig_lw(2)*stratc(j,2)*st4a(j,2,1)
                 dfabs(j,1)=dfabs(j,1)-corlw1
                 dfabs(j,2)=dfabs(j,2)-corlw2
                 ftop(j)   =corlw1+corlw2

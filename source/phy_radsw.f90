@@ -106,6 +106,8 @@ module phy_radsw
             call apply_truncation(fband2)
             call apply_truncation(abs1)
             call apply_truncation(eps1)
+
+            ! Local copies of mod_physcon
             call apply_truncation(dsig_sw)
         end subroutine truncate_radsw
 
