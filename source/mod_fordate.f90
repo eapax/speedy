@@ -131,6 +131,14 @@ module mod_fordate
             call apply_truncation(ablco2)
             call set_precision('Previous')
 
+            ! Truncate derived variables used exclusively in suflux
+            call set_precision('Surface Fluxes')
+            call apply_truncation(snowc)
+            call apply_truncation(alb_l)
+            call apply_truncation(alb_s)
+            call set_precision('Previous')
+
+
             ! 2. temperature correction term for horizontal diffusion
             corh = gamlat * phis0
 

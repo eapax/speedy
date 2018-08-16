@@ -128,16 +128,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end if
 
     call set_precision('Surface Fluxes')
-    call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,sst_am,&
+    call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,sst_am,ssti_om,&
         & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,t0,&
-        & q0,.true.)
-
-    ! 3.3.1. Recompute sea fluxes in case of anomaly coupling
-    if (icsea .gt. 0) then
-       call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,ssti_om,&
-           & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,&
-           & t0,q0,.false.)
-    end if
+        & q0,icsea > 0)
 
     ! Convert surface fluxes to tendencies
     do j=1,ngp
