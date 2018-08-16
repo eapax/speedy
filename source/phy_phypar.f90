@@ -128,17 +128,12 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end if
 
     call set_precision('Surface Fluxes')
-    call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,phis0,fmask1,stl_am,sst_am,ssti_om,&
-        & soilw_am,ssrd,slrd,ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,t0,&
-        & q0,icsea > 0)
-
-    ! Convert surface fluxes to tendencies
-    do j=1,ngp
-        ut_sflx(j,kx)=ustr(j,3)* flx2tend(j,kx)
-        vt_sflx(j,kx)=vstr(j,3)* flx2tend(j,kx)
-        tt_sflx(j,kx)= shf(j,3)*hflx2tend(j,kx)
-        qt_sflx(j,kx)=evap(j,3)* flx2tend(j,kx)
-    end do
+    call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,&
+            phis0,fmask1,stl_am,sst_am,ssti_om,soilw_am,ssrd,slrd,&
+            hflx2tend, flx2tend, &
+            ustr,vstr,shf,evap,slru,hfluxn,ts,tskin,u0,v0,t0,q0,&
+            ut_sflx, vt_sflx, tt_sflx, qt_sflx, &
+            icsea > 0)
 
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies

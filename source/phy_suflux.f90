@@ -185,8 +185,10 @@ module phy_suflux
                 psa_in, ua_in, va_in, ta_in, qa_in, rh_in, phi_in, &
                 phi0_in, fmask_in, tland_in, tsea_lm_in, tsea_om_in, &
                 swav_in, ssrd_in, slrd_in, &
+                hflx2tend_in, flx2tend_in, &
                 ustr, vstr, shf, evap, slru, hfluxn, &
                 tsfc, tskin, u0, v0, t0, q0, &
+                ut_sflx, vt_sflx, tt_sflx, qt_sflx, &
                 lfluxsea)
             !  Purpose: Compute surface fluxes of momentum, energy and moisture,
             !           and define surface skin temperature from energy balance
@@ -228,40 +230,55 @@ module phy_suflux
             !           SLRD   = sfc lw radiation (downw. flux)  (2-dim)
             type(rpe_var), intent(in) :: slrd_in(ngp)
 
+            ! hflx2tend = Conversion factor between heat fluxes and T tendency
+            type(rpe_var), intent(in) :: hflx2tend_in(ngp,kx)
+            ! flx2tend = Conversion factor between fluxes and tendencies
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
+
             !           LFLUXSEA   = Logical related to flux-correction
             logical, intent(in) :: lfluxsea
 
             !  Output:  USTR   = u stress                        (2-dim)
-            type(rpe_var), intent(inout) :: ustr(ngp,3)
+            type(rpe_var), intent(out) :: ustr(ngp,3)
             !           VSTR   = v stress                        (2-dim)
-            type(rpe_var), intent(inout) :: vstr(ngp,3)
+            type(rpe_var), intent(out) :: vstr(ngp,3)
             !           SHF    = sensible heat flux              (2-dim)
-            type(rpe_var), intent(inout) :: shf(ngp,3)
+            type(rpe_var), intent(out) :: shf(ngp,3)
             !           EVAP   = evaporation [g/(m^2 s)]         (2-dim)
-            type(rpe_var), intent(inout) :: evap(ngp,3)
+            type(rpe_var), intent(out) :: evap(ngp,3)
             !           SLRU   = sfc lw radiation (upward flux)  (2-dim)
-            type(rpe_var), intent(inout) :: slru(ngp,3)
+            type(rpe_var), intent(out) :: slru(ngp,3)
             !           HFLUXN = net heat flux into land/sea     (2-dim)
-            type(rpe_var), intent(inout) :: hfluxn(ngp,2)
+            type(rpe_var), intent(out) :: hfluxn(ngp,2)
 
             !           TSFC   = surface temperature (clim.)     (2-dim)
-            type(rpe_var), intent(inout) :: tsfc(ngp)
+            type(rpe_var), intent(out) :: tsfc(ngp)
             !           TSKIN  = skin surface temperature        (2-dim)
-            type(rpe_var), intent(inout) :: tskin(ngp)
+            type(rpe_var), intent(out) :: tskin(ngp)
             !           U0     = near-surface u-wind             (2-dim)
-            type(rpe_var), intent(inout) :: u0(ngp)
+            type(rpe_var), intent(out) :: u0(ngp)
             !           V0     = near-surface v-wind             (2-dim)
-            type(rpe_var), intent(inout) :: v0(ngp)
+            type(rpe_var), intent(out) :: v0(ngp)
             !           T0     = near-surface air temperature    (2-dim)
-            type(rpe_var), intent(inout) :: t0(ngp)
+            type(rpe_var), intent(out) :: t0(ngp)
             !           Q0     = near-surface sp. humidity [g/kg](2-dim)
-            type(rpe_var), intent(inout) :: q0(ngp)
+            type(rpe_var), intent(out) :: q0(ngp)
+
+            ! ut_sflx = Zonal wind tendency due to surface fluxes
+            type(rpe_var), intent(out) :: ut_sflx(ngp,kx)
+            ! vt_sflx = Meridional wind tendency due to surface fluxes
+            type(rpe_var), intent(out) :: vt_sflx(ngp,kx)
+            ! tt_sflx = Temperature tendency due to surface fluxes
+            type(rpe_var), intent(out) :: tt_sflx(ngp,kx)
+            ! qt_sflx = Specific humidity tendency due to surface fluxes
+            type(rpe_var), intent(out) :: qt_sflx(ngp,kx)
 
             ! Local copies of input variables (to be truncated)
             type(rpe_var) :: psa(ngp)
             type(rpe_var), dimension(ngp,kx) :: ua, va, ta, qa, rh, phi
             type(rpe_var), dimension(ngp) :: &
                     phi0, fmask, tland, tsea_lm, tsea_om, swav, ssrd, slrd
+            type(rpe_var), dimension(ngp,kx) :: hflx2tend, flx2tend
 
             ! Local variables
             integer :: j, j0, jlat
@@ -289,6 +306,8 @@ module phy_suflux
             swav = swav_in
             ssrd = ssrd_in
             slrd = slrd_in
+            hflx2tend = hflx2tend_in
+            flx2tend = flx2tend_in
 
             ! Initialisation
             ghum0 = rpe_literal(1.0_dp)-fhum0
@@ -513,6 +532,14 @@ module phy_suflux
                         denvvs(:,ks), t1(:,2), q1(:,2), &
                         shf(:,2), evap(:,2), slru(:,2), hfluxn(:,2))
             end if
+
+            ! Convert surface fluxes to tendencies
+            do j=1,ngp
+                ut_sflx(j,kx)=ustr(j,3)* flx2tend(j,kx)
+                vt_sflx(j,kx)=vstr(j,3)* flx2tend(j,kx)
+                tt_sflx(j,kx)= shf(j,3)*hflx2tend(j,kx)
+                qt_sflx(j,kx)=evap(j,3)* flx2tend(j,kx)
+            end do
         end subroutine suflux
 
         subroutine sea_fluxes(psa, tsea, ssrd, slrd, denvvs, t1, q1, &
