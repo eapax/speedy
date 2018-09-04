@@ -1,12 +1,11 @@
 module mod_fordate
     use mod_atparam
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     private
-    public setup_forcing, ini_fordate, truncate_fordate, fordate
+    public setup_forcing, ini_fordate, fordate
     public ablco2, albsea, albice
     public alb_l, alb_s, albsfc, snowc
 
@@ -19,17 +18,17 @@ module mod_fordate
     ! If lco2=.true., the year corresponding to ablco2 baseline
     integer :: iyear_ref
     ! If lco2=.true., the yearly increase in co2 absorbtion from iyear_ref
-    type(rpe_var) :: del_co2
+    real(dp) :: del_co2
     ! ablco2 = abs. of air in CO2 band
-    type(rpe_var) :: ablco2, ablco2_ref
+    real(dp) :: ablco2, ablco2_ref
 
     ! Constants for surface albedos
     ! albsea = Albedo over sea
-    type(rpe_var) :: albsea
+    real(dp) :: albsea
     ! albice = Albedo over sea ice (for ice fraction = 1)
-    type(rpe_var) :: albice
+    real(dp) :: albice
     ! albsn  = Albedo over snow (for snow cover = 1)
-    type(rpe_var) :: albsn
+    real(dp) :: albsn
 
     ! Radiative properties of the surface (updated in fordate)
     ! alb_l, alb_s and snowc used in phy_suflux. albsfc used in phy_radsw
@@ -37,9 +36,9 @@ module mod_fordate
     ! alb_s  = daily-mean albedo over sea  (open sea + sea ice)
     ! albsfc = combined surface albedo (land + sea)
     ! snowc  = effective snow cover (fraction)
-    type(rpe_var), dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
+    real(dp), dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
 
-    type(rpe_var) :: gamlat, pexp
+    real(dp) :: gamlat, pexp
 
     contains
         subroutine setup_forcing(fid)
@@ -67,17 +66,6 @@ module mod_fordate
             call fordate()
         end subroutine ini_fordate
 
-        subroutine truncate_fordate()
-            call apply_truncation(del_co2)
-            call apply_truncation(ablco2)
-            call apply_truncation(ablco2_ref)
-            call apply_truncation(gamlat)
-            call apply_truncation(pexp)
-            call apply_truncation(albsea)
-            call apply_truncation(albice)
-            call apply_truncation(albsn)
-        end subroutine truncate_fordate
-
         subroutine fordate()
             !
             !   subroutine fordate (imode)
@@ -97,9 +85,9 @@ module mod_fordate
             use humidity, only: q_sat
             use spectral, only: spec
 
-            type(rpe_var), dimension(ix, il) :: corh, tsfc, tref, psfc
-            type(rpe_var), dimension(ngp) :: qsfc, qref
-            type(rpe_var) :: fland(ngp), alb_0(ngp)
+            real(dp), dimension(ix, il) :: corh, tsfc, tref, psfc
+            real(dp), dimension(ngp) :: qsfc, qref
+            real(dp) :: fland(ngp), alb_0(ngp)
 
             integer :: i, j, ij, iitest = 0, iyear_ref
 
@@ -110,7 +98,7 @@ module mod_fordate
 
             ! 1. daily-mean radiative forcing
             ! incoming solar radiation
-            call sol_oz(rpe_literal(tyear))
+            call sol_oz(tyear)
 
             ! total surface albedo
             do j = 1, ngp
@@ -124,20 +112,6 @@ module mod_fordate
             if (lco2) then
                 ablco2 = ablco2_ref * exp(del_co2 * (iyear + tyear - iyear_ref))
             end if
-
-            ! Truncate derived variables used exclusively in radsw
-            call set_precision('Short-Wave Radiation')
-            call apply_truncation(albsfc)
-            call apply_truncation(ablco2)
-            call set_precision('Previous')
-
-            ! Truncate derived variables used exclusively in suflux
-            call set_precision('Surface Fluxes')
-            call apply_truncation(snowc)
-            call apply_truncation(alb_l)
-            call apply_truncation(alb_s)
-            call set_precision('Previous')
-
 
             ! 2. temperature correction term for horizontal diffusion
             corh = gamlat * phis0
@@ -157,8 +131,8 @@ module mod_fordate
             end do
 
             qref = q_sat(ngp, reshape(tref, (/ngp/)), &
-                    (/rpe_literal(1.0_dp)/), rpe_literal(-1.0_dp))
-            qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  rpe_literal(1.0_dp))
+                    (/1.0_dp/), -1.0_dp)
+            qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  1.0_dp)
 
             corh = refrh1 * reshape((qref - qsfc), (/ix, il/))
 

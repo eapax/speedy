@@ -1,7 +1,7 @@
 subroutine diagns(jj,istep)
     ! subroutine diagns(jj,istep)
 
-    ! Purpose: print global means of eddy kinetic energy and temperature 
+    ! Purpose: print global means of eddy kinetic energy and temperature
     ! Input : jj    = time level index (1 or 2)
     !         istep = time step index
 
@@ -11,7 +11,6 @@ subroutine diagns(jj,istep)
     use mod_dynvar
     use spectral, only: invlap
     use ppo_output_stream, only: update_output
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -19,7 +18,7 @@ subroutine diagns(jj,istep)
     integer, intent(in) :: jj, istep
 
     integer :: k, m, n, kk
-    type(rpe_complex_var) :: temp(mx,nx)
+    complex(dp) :: temp(mx,nx)
     real(dp) :: diag(kx,3), sqhalf
 
     call update_output(istep)

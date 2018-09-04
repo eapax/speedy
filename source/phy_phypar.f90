@@ -25,13 +25,12 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
     use phy_sppt, only: sppt_on, gen_sppt
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     ! Physics tendencies of prognostic variables
-    type(rpe_var), dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
+    real(dp), dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
 
     ! Index of the top layer of deep convection (diagnosed in convmf)
     integer :: iptop(ngp)
@@ -40,23 +39,23 @@ subroutine phypar(utend,vtend,ttend,qtend)
     integer :: icltop(ngp), icnv(ngp)
 
     ! Conversion constant between (heat) fluxes and tendencies
-    type(rpe_var) :: flx2tend(ngp,kx)
-    type(rpe_var) :: hflx2tend(ngp,kx)
+    real(dp) :: flx2tend(ngp,kx)
+    real(dp) :: hflx2tend(ngp,kx)
 
     integer :: iitest=0, j, k
 
     ! Reciprocal of surface pressure 1/psg
-    type(rpe_var), dimension(ngp) :: rps
+    real(dp), dimension(ngp) :: rps
 
     ! gradient of dry static energy (dSE/dPHI)
-    type(rpe_var), dimension(ngp) :: gse
+    real(dp), dimension(ngp) :: gse
 
     ! 1. Compute thermodynamic variables
     if (iitest.eq.1) print *, ' 1.2 in phypar'
 
     do j=1,ngp
         psg(j)=exp(pslg1(j))
-        rps(j)=rpe_literal(1.0_dp)/psg(j)
+        rps(j)=1.0_dp/psg(j)
     end do
 
     do k=1,kx
@@ -71,7 +70,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             ! Remove negative humidity values
-            qg1(j,k)=max(qg1(j,k),rpe_literal(0.0_dp))
+            qg1(j,k)=max(qg1(j,k),0.0_dp)
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
     end do
@@ -82,7 +81,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2. Precipitation
     ! 2.1 Deep convection
-    call set_precision('Convection')
     call convmf(psg,se,qg1,qsat,hflx2tend,flx2tend,&
             iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
@@ -91,7 +89,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 2.2 Large-scale condensation
-    call set_precision('Condensation')
     call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
@@ -100,7 +97,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
-        call set_precision('Cloud')
         do j=1,ngp
             gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
@@ -112,12 +108,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
             prtop(j)=float(iptop(j))
         end do
 
-        call set_precision('Short-Wave Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,hflx2tend,ssrd,ssr,tsr,tt_rsw)
     end if
 
     ! 3.2 Compute downward longwave fluxes
-    call set_precision('Long-Wave Radiation')
     call radlw_down(tg1,slrd)
 
     ! 3.3. Compute surface fluxes and land skin temperature
@@ -127,7 +121,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
         print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
     end if
 
-    call set_precision('Surface Fluxes')
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,&
             phis0,fmask1,stl_am,sst_am,ssti_om,soilw_am,ssrd,slrd,&
             hflx2tend, flx2tend, &
@@ -138,16 +131,13 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
     if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
-    call set_precision('Long-Wave Radiation')
     call radlw_up(tg1,ts,slrd,slru(:,3),hflx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
-    call set_precision('Vertical Diffusion')
     call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 5. Store all fluxes for coupling and daily-mean output
-    call set_precision('Grid Physics')
     call increment_fluxes()
 
     ! Sum physics tendencies
@@ -158,7 +148,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Add SPPT noise
     if (sppt_on) then
-        call set_precision('SPPT')
         sppt = gen_sppt()
 
         utend = sppt * ut_phy

@@ -1,6 +1,5 @@
 module ppo_plevs
 
-    use rp_emulator
     use mod_prec, only: sp, dp
 
     implicit none
@@ -27,7 +26,7 @@ module ppo_plevs
             real(dp), dimension(kx) :: zinp, rdzinp
             integer :: k0(ngp)
             real(dp) :: w0(ngp)
-            type(rpe_var), dimension(ngp) :: psgr
+            real(dp), dimension(ngp) :: psgr
             real(dp), dimension(ngp) :: zout
             real(dp), dimension(ngp) :: T_pressure
             real(dp) :: textr, aref, tref, phi1, phi2
@@ -76,7 +75,7 @@ module ppo_plevs
                     x_pressure(:,k) = x_pressure_dp
 
                 else if (varid == 5) then
-                    call verint(T_pressure,Tg1%val,ngp,kx,k0,w0)
+                    call verint(T_pressure,Tg1,ngp,kx,k0,w0)
                     ! Corrections applied to temperature
                     do j=1,ngp
                         if(zout(j)<zinp(kx)) then

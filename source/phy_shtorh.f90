@@ -1,6 +1,5 @@
 module humidity
 
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -28,8 +27,8 @@ module humidity
             !         qa    : specific humidity in g/kg [if imode < 0]
 
             integer, intent(in) :: imode, ngp
-            type(rpe_var), intent(in) :: ta(ngp), ps(*), sig
-            type(rpe_var) :: qsat(ngp), qa(ngp), rh(ngp)
+            real(dp), intent(in) :: ta(ngp), ps(*), sig
+            real(dp) :: qsat(ngp), qa(ngp), rh(ngp)
 
             ! 2. Compute rel.hum. RH=Q/Qsat (imode>0), or Q=RH*Qsat (imode<0)
             qsat = q_sat(ngp, ta, ps, sig)
@@ -46,18 +45,18 @@ module humidity
             ! If sig > 0, P = Ps * sigma, otherwise P = Ps(1) = const.
 
             integer, intent(in) :: ngp
-            type(rpe_var), intent(in) :: ta(ngp), ps(*), sig
-            type(rpe_var) :: e0, c1, c2, t0, t1, t2
-            type(rpe_var) :: q_sat(ngp)
+            real(dp), intent(in) :: ta(ngp), ps(*), sig
+            real(dp) :: e0, c1, c2, t0, t1, t2
+            real(dp) :: q_sat(ngp)
 
             integer :: j
 
-            e0 = rpe_literal(6.108d-3)
-            c1 = rpe_literal(17.269_dp)
-            c2 = rpe_literal(21.875_dp)
-            t0 = rpe_literal(273.16_dp)
-            t1 = rpe_literal(35.86_dp)
-            t2 = rpe_literal(7.66_dp)
+            e0 = 6.108d-3
+            c1 = 17.269_dp
+            c2 = 21.875_dp
+            t0 = 273.16_dp
+            t1 = 35.86_dp
+            t2 = 7.66_dp
 
             do j=1,ngp
                 if (ta(j).ge.t0) then
@@ -69,15 +68,15 @@ module humidity
                 end if
             end do
 
-            if (sig.le.rpe_literal(0.0_dp)) then
+            if (sig.le.0.0_dp) then
                 do j=1,ngp
-                    q_sat(j)=rpe_literal(622.0_dp)*q_sat(j)/ &
-                            (ps(1)-rpe_literal(0.378_dp)*q_sat(j))
+                    q_sat(j)=622.0_dp*q_sat(j)/ &
+                            (ps(1)-0.378_dp*q_sat(j))
                 end do
             else
                 do j=1,ngp
-                    q_sat(j)=rpe_literal(622.0_dp)*q_sat(j)/ &
-                            (sig*ps(j)-rpe_literal(0.378_dp)*q_sat(j))
+                    q_sat(j)=622.0_dp*q_sat(j)/ &
+                            (sig*ps(j)-0.378_dp*q_sat(j))
                 end do
             end if
 

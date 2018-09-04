@@ -1,14 +1,13 @@
 module spectral
 
     use mod_atparam
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     private
     ! Public subroutines
-    public setup_spectral, truncate_spectral, &
+    public setup_spectral, &
             gaussl, parmtr, lap, invlap, grad, uvspec, grid, spec, vdspec
     ! Public parameters
     public el2, sia, cosgr
@@ -20,26 +19,26 @@ module spectral
     public cpol, nsh2, wt, trfilt
 
     ! Initial. in parmtr
-    type(rpe_var), dimension(:,:), allocatable :: el2, elm2, trfilt
+    real(dp), dimension(:,:), allocatable :: el2, elm2, trfilt
     integer, allocatable :: nsh2(:)
 
     ! Initial. in parmtr
     ! sia only used during model setup
     real(dp), dimension(:), allocatable :: sia
-    type(rpe_var), dimension(:), allocatable ::  wt
-    type(rpe_var), dimension(:), allocatable :: cosgr, cosgr2
+    real(dp), dimension(:), allocatable ::  wt
+    real(dp), dimension(:), allocatable :: cosgr, cosgr2
 
     ! Initial. in parmtr
-    type(rpe_var), allocatable :: gradx(:), gradym(:,:), gradyp(:,:)
+    real(dp), allocatable :: gradx(:), gradym(:,:), gradyp(:,:)
 
     ! Initial. in parmtr
-    type(rpe_var), allocatable :: cpol(:,:,:)
+    real(dp), allocatable :: cpol(:,:,:)
 
     ! Initial. in parmtr
-    type(rpe_var), dimension(:,:), allocatable :: uvdx, uvdym, uvdyp
+    real(dp), dimension(:,:), allocatable :: uvdx, uvdym, uvdyp
 
     ! Initial. in parmtr
-    type(rpe_var), dimension(:,:), allocatable :: vddym, vddyp
+    real(dp), dimension(:,:), allocatable :: vddym, vddyp
 
     contains
         subroutine setup_spectral()
@@ -61,24 +60,6 @@ module spectral
             allocate(vddym(mx, nx))
             allocate(vddyp(mx, nx))
         end subroutine setup_spectral
-
-subroutine truncate_spectral()
-            call apply_truncation(el2)
-            call apply_truncation(elm2)
-            call apply_truncation(trfilt)
-            call apply_truncation(wt)
-            call apply_truncation(cosgr)
-            call apply_truncation(cosgr2)
-            call apply_truncation(gradx)
-            call apply_truncation(gradym)
-            call apply_truncation(gradyp)
-            call apply_truncation(cpol)
-            call apply_truncation(uvdx)
-            call apply_truncation(uvdym)
-            call apply_truncation(uvdyp)
-            call apply_truncation(vddym)
-            call apply_truncation(vddyp)
-        end subroutine truncate_spectral
 
         !******************************************************************
         subroutine gaussl(x,w,m)
@@ -142,7 +123,7 @@ subroutine truncate_spectral()
 
             integer :: j, jj, m, m1, m2, n
 
-            call gaussl(sia,wt%val,iy)
+            call gaussl(sia,wt,iy)
             am1 = 1.0_dp/a
             am2=  1.0_dp/(a*a)
 
@@ -316,8 +297,8 @@ subroutine truncate_spectral()
         subroutine lap(strm,vorm)
             ! Laplacian in spectral space
 
-            type(rpe_complex_var), intent(in) :: strm(mx,nx)
-            type(rpe_complex_var), intent(inout) :: vorm(mx,nx)
+            complex(dp), intent(in) :: strm(mx,nx)
+            complex(dp), intent(inout) :: vorm(mx,nx)
 
             vorm = -strm * el2
         end subroutine lap
@@ -325,8 +306,8 @@ subroutine truncate_spectral()
         subroutine invlap(vorm,strm)
             ! Inverse Laplacian in spectral space
 
-            type(rpe_complex_var), intent(in) :: vorm(mx,nx)
-            type(rpe_complex_var), intent(inout) :: strm(mx,nx)
+            complex(dp), intent(in) :: vorm(mx,nx)
+            complex(dp), intent(inout) :: strm(mx,nx)
 
             strm = -vorm * elm2
         end subroutine invlap
@@ -334,14 +315,14 @@ subroutine truncate_spectral()
         subroutine grad(psi,psdx,psdy)
             ! Gradient in spectral space
 
-            type(rpe_complex_var), dimension(mx,nx), intent(inout) :: psi
-            type(rpe_complex_var), dimension(mx,nx), intent(inout) :: psdx, psdy
+            complex(dp), dimension(mx,nx), intent(inout) :: psi
+            complex(dp), dimension(mx,nx), intent(inout) :: psdx, psdy
 
             integer :: n
 
             do n=1,nx
-                psdx(:,n) = CMPLX(-gradx*IMAGPART(psi(:,n)%val), &
-                                   gradx*REALPART(psi(:,n)%val))
+                psdx(:,n) = CMPLX(-gradx*IMAGPART(psi(:,n)), &
+                                   gradx*REALPART(psi(:,n)))
             end do
 
             psdy(:,1) = gradyp(:,1)*psi(:,2)
@@ -354,17 +335,17 @@ subroutine truncate_spectral()
         end subroutine grad
         !******************************************************************
         subroutine vds(ucosm,vcosm,vorm,divm)
-            type(rpe_complex_var), dimension(mx,nx) :: ucosm, vcosm
-            type(rpe_complex_var), dimension(mx,nx), intent(inout) :: vorm, divm
-            type(rpe_complex_var), dimension(mx,nx) :: zc, zp
+            complex(dp), dimension(mx,nx) :: ucosm, vcosm
+            complex(dp), dimension(mx,nx), intent(inout) :: vorm, divm
+            complex(dp), dimension(mx,nx) :: zc, zp
 
             integer :: n
 
             do n=1,nx
-                zp(:,n) = CMPLX(-gradx*IMAGPART(ucosm(:,n)%val), &
-                                 gradx*REALPART(ucosm(:,n)%val))
-                zc(:,n) = CMPLX(-gradx*IMAGPART(vcosm(:,n)%val), &
-                                 gradx*REALPART(vcosm(:,n)%val))
+                zp(:,n) = CMPLX(-gradx*IMAGPART(ucosm(:,n)), &
+                                 gradx*REALPART(ucosm(:,n)))
+                zc(:,n) = CMPLX(-gradx*IMAGPART(vcosm(:,n)), &
+                                 gradx*REALPART(vcosm(:,n)))
             end do
 
             vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
@@ -382,15 +363,15 @@ subroutine truncate_spectral()
             ! Calculate u and v in grid-point space from vorticity and
             ! divergence in spectral space
 
-            type(rpe_complex_var), dimension(mx,nx), intent(in) :: vorm, divm
-            type(rpe_var), dimension(ix,il), intent(out) :: um, vm
-            type(rpe_complex_var), dimension(mx,nx) :: ucosm, vcosm
-            type(rpe_complex_var), dimension(mx,nx) :: zc, zp
+            complex(dp), dimension(mx,nx), intent(in) :: vorm, divm
+            real(dp), dimension(ix,il), intent(out) :: um, vm
+            complex(dp), dimension(mx,nx) :: ucosm, vcosm
+            complex(dp), dimension(mx,nx) :: zc, zp
 
             integer :: n
 
-            zp = CMPLX(-uvdx*IMAGPART(vorm%val), uvdx*REALPART(vorm%val))
-            zc = CMPLX(-uvdx*IMAGPART(divm%val), uvdx*REALPART(divm%val))
+            zp = CMPLX(-uvdx*IMAGPART(vorm), uvdx*REALPART(vorm))
+            zc = CMPLX(-uvdx*IMAGPART(divm), uvdx*REALPART(divm))
 
             ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
             ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)
@@ -409,10 +390,10 @@ subroutine truncate_spectral()
         subroutine grid(vorm,vorg,kcos)
             ! Transform from spectral to gridpoint space
 
-            type(rpe_var), intent(out) :: vorg(ix,il)
-            type(rpe_complex_var), intent(in) :: vorm(mx,nx)
+            real(dp), intent(out) :: vorg(ix,il)
+            complex(dp), intent(in) :: vorm(mx,nx)
             integer, intent(in) :: kcos
-            type(rpe_complex_var) :: varm(mx,il)
+            complex(dp) :: varm(mx,il)
 
             call gridy(vorm,varm)
             call gridx(varm,vorg,kcos)
@@ -421,9 +402,9 @@ subroutine truncate_spectral()
         subroutine spec(vorg,vorm)
             ! Transform from gridpoint to spectral space
 
-            type(rpe_var), intent(in) :: vorg(ix,il)
-            type(rpe_complex_var), intent(out) :: vorm(mx,nx)
-            type(rpe_complex_var) :: varm(mx,il)
+            real(dp), intent(in) :: vorg(ix,il)
+            complex(dp), intent(out) :: vorm(mx,nx)
+            complex(dp) :: varm(mx,il)
 
             call specx(vorg,varm)
             call specy(varm,vorm)
@@ -433,12 +414,12 @@ subroutine truncate_spectral()
             ! Calculate vorticity and divergence in spectral space from u and v
             ! in gridpoint space
 
-            type(rpe_var), intent(in) :: ug(ix,il), vg(ix,il)
-            type(rpe_complex_var), intent(out) :: vorm(mx,nx), divm(mx,nx)
+            real(dp), intent(in) :: ug(ix,il), vg(ix,il)
+            complex(dp), intent(out) :: vorm(mx,nx), divm(mx,nx)
             integer, intent(in) :: kcos
             integer :: i, j
-            type(rpe_var) :: ug1(ix,il), vg1(ix,il)
-            type(rpe_complex_var) :: um(mx,il), vm(mx,il), dumc1(mx,nx), dumc2(mx,nx)
+            real(dp) :: ug1(ix,il), vg1(ix,il)
+            complex(dp) :: um(mx,il), vm(mx,il), dumc1(mx,nx), dumc2(mx,nx)
 
             if (kcos.eq.2) then
                 do j=1,il
@@ -467,14 +448,13 @@ end module spectral
 subroutine gridy(v,varm)
     use mod_atparam
     use spectral, only: cpol, nsh2
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: v(mx2,nx)
-    type(rpe_var), intent(inout) :: varm(mx2,il)
-    type(rpe_var) :: vm1(mx2),vm2(mx2)
+    real(dp), intent(in) :: v(mx2,nx)
+    real(dp), intent(inout) :: varm(mx2,il)
+    real(dp) :: vm1(mx2),vm2(mx2)
 
     integer :: j, j1, m, n
 
@@ -508,14 +488,13 @@ end
 subroutine specy(varm,vorm)
     use mod_atparam
     use spectral, only: wt, cpol, nsh2
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: varm(mx2,il)
-    type(rpe_var), intent(inout) :: vorm(mx2,nx)
-    type(rpe_var) :: svarm(mx2,iy), dvarm(mx2,iy)
+    real(dp), intent(in) :: varm(mx2,il)
+    real(dp), intent(inout) :: vorm(mx2,nx)
+    real(dp) :: svarm(mx2,iy), dvarm(mx2,iy)
 
     integer :: j, j1, m, n
 
@@ -548,11 +527,11 @@ end
 subroutine trunct(vor)
     use mod_atparam
     use spectral, only: trfilt
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_complex_var), intent(inout) :: vor(mx,nx)
+    complex(dp), intent(inout) :: vor(mx,nx)
 
     vor = vor * trfilt
 end

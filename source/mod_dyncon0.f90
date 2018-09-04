@@ -1,8 +1,7 @@
 !> @brief
 !> Constants for initialization of dynamics.
 module mod_dyncon0
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -24,13 +23,13 @@ module mod_dyncon0
     ! of divergence
     real(dp) :: thdd
     ! Max damping time (in hours) for extra diffusion (del^2)
-    ! in the stratosphere 
+    ! in the stratosphere
     real(dp) :: thds
 
     ! Namelist parameters used for model integration
     ! Damping time (in hours) for drag on zonal-mean wind
-    ! in the stratosphere 
-    type(rpe_var) :: tdrs
+    ! in the stratosphere
+    real(dp) :: tdrs
 
     contains
         subroutine setup_dynamics(fid)
@@ -40,8 +39,4 @@ module mod_dyncon0
 
             write(*, dynamics)
         end subroutine setup_dynamics
-    
-        subroutine truncate_dyncon0()
-            call apply_truncation(tdrs)
-        end subroutine truncate_dyncon0
 end module

@@ -23,12 +23,11 @@ subroutine impint(dt,alph)
     use mod_dyncon1, only: rearth, akap, rgas, hsg, dhs, fsg, fsgr, grav
     use mod_dyncon2
     use mod_hdifcon, only: dmp, dmpd, dmps, dmp1, dmp1d, dmp1s
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: dt, alph
+    real(dp), intent(in) :: dt, alph
     real(dp) :: dsum(kx), ya(kx,kx)
     integer :: indx(kx), m, n, k, k1, k2, l, ll, mm
     real(dp) :: rgam, xi, xxi, xxx

@@ -18,16 +18,15 @@ subroutine gridx(varm,vorg,kcos)
     use mod_atparam
     use spectral, only: cosgr
     use mod_fft
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: varm(mx2,il)
-    type(rpe_var), intent(inout) :: vorg(ix,il)
+    real(dp), intent(in) :: varm(mx2,il)
+    real(dp), intent(inout) :: vorg(ix,il)
     integer, intent(in) :: kcos
     integer :: j, m
-    type(rpe_var) :: fvar(ix)
+    real(dp) :: fvar(ix)
 
     do j = 1,il
         fvar(1) = varm(1,j)
@@ -59,15 +58,14 @@ subroutine specx(vorg,varm)
 
     use mod_atparam
     use mod_fft
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: vorg(ix,il)
-    type(rpe_var), intent(inout) :: varm(mx2,il)
+    real(dp), intent(in) :: vorg(ix,il)
+    real(dp), intent(inout) :: varm(mx2,il)
     integer :: j, m
-    type(rpe_var) :: fvar(ix), scale
+    real(dp) :: fvar(ix), scale
 
     ! Copy grid-point data into working array
     do j=1,il
@@ -78,7 +76,7 @@ subroutine specx(vorg,varm)
         !CALL DFFTF (IX,FVAR,WSAVE)
 
         ! Copy output into spectral field, dividing by no. of long.
-        scale=rpe_literal(1.0_dp)/rpe_literal(ix)
+        scale=1.0_dp/ix
 
         ! Mean value (a(0))
         varm(1,j)=fvar(1)*scale

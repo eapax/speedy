@@ -1,17 +1,13 @@
 module mod_fft
     use mod_atparam, only: ix
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), allocatable :: wsave(:)
+    real(dp), allocatable :: wsave(:)
 
     contains
         subroutine setup_fft()
             allocate(wsave(2*ix+15))
         end subroutine setup_fft
-
-        subroutine truncate_fft()
-            call apply_truncation(wsave(1:2*ix))
-        end subroutine
 end module

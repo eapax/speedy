@@ -7,23 +7,22 @@ subroutine sptend (divdt,tdt,psdt,j4)
     !                  tdt   = temperature tendency (spec.)
     !                  psdt  = tendency of log_surf.pressure (spec.)
     !                  j4    = time level index (1 or 2)
-    
+
     use mod_atparam
     use mod_dynvar
     use mod_dyncon1, only: rgas, dhs, dhsr
     use mod_dyncon2, only: tref, tref2, tref3
     use spectral, only: lap
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_complex_var), intent(inout) :: psdt(mx,nx), divdt(mx,nx,kx), tdt(mx,nx,kx)
+    complex(dp), intent(inout) :: psdt(mx,nx), divdt(mx,nx,kx), tdt(mx,nx,kx)
     integer, intent(in) :: j4
 
-    type(rpe_complex_var) :: dumk(mx,nx,kxp), dmeanc(mx,nx), sigdtc(mx,nx,kxp)
-    type(rpe_complex_var) :: tempc(mx,nx,3)
-    type(rpe_complex_var) :: dumc(mx,nx,2), zero
+    complex(dp) :: dumk(mx,nx,kxp), dmeanc(mx,nx), sigdtc(mx,nx,kxp)
+    complex(dp) :: tempc(mx,nx,3)
+    complex(dp) :: dumc(mx,nx,2), zero
 
     integer :: k
 
@@ -67,4 +66,4 @@ subroutine sptend (divdt,tdt,psdt,j4)
         call lap(dumc(:,:,1),dumc(:,:,2))
         divdt(:,:,k) = divdt(:,:,k) - dumc(:,:,2)
     end do
-end   
+end

@@ -17,14 +17,13 @@ subroutine inphys(hsg,ppl,rlat)
     use phy_suflux, only: ini_suflux
     use phy_vdifsc, only: ini_vdifsc
     use phy_sppt, only: ini_sppt
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: hsg(0:kx)
+    real(dp), intent(in) :: hsg(0:kx)
     real(dp), intent(in) :: ppl(kx)
-    type(rpe_var), intent(in) :: rlat(il)
+    real(dp), intent(in) :: rlat(il)
     integer :: j, k
 
     ! 1.2 Functions of sigma and latitude

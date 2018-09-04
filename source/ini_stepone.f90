@@ -1,18 +1,17 @@
 subroutine stepone()
     ! subroutine stepone
     !
-    ! purpose : call initialization of semi-implicit scheme 
+    ! purpose : call initialization of semi-implicit scheme
     !           and perform initial time step
 
     use mod_tsteps, only: delt, delt2, alph, rob, wil
     use mod_date, only: istart
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer :: iitest = 1
-    type(rpe_var) :: delth
+    real(dp) :: delth
 
     if (iitest == 1) print *, ' instep: initial time step'
 

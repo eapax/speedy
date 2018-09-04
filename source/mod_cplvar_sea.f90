@@ -1,15 +1,15 @@
 module mod_cplvar_sea
     use mod_atparam
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     ! Input and output sea variables exchanged by coupler
     ! Ocean model input variables
-    type(rpe_var), allocatable :: vsea_input(:,:)
+    real(dp), allocatable :: vsea_input(:,:)
 
     ! Ocean model output variablesend module
-    type(rpe_var), allocatable :: vsea_output(:,:)
+    real(dp), allocatable :: vsea_output(:,:)
 
     contains
 
@@ -17,9 +17,4 @@ module mod_cplvar_sea
             allocate(vsea_input(ngp,8))
             allocate(vsea_output(ngp,3))
         end subroutine setup_cplvar_sea
-
-        subroutine truncate_cplvar_sea()
-            call apply_truncation(vsea_input)
-            call apply_truncation(vsea_output)
-        end subroutine truncate_cplvar_sea
 end module

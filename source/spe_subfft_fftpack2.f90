@@ -21,12 +21,12 @@ subroutine rffti(n, wsave)
 !            as long as n remains unchanged. different wsave arrays
 !            are required for different values of n. the contents of
 !            wsave must not be changed between calls of rfftf or rfftb.
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: wsave(*)
+    real(dp), intent(inout) :: wsave(*)
 
     !***first executable statement  rffti
     if (n .eq. 1) return
@@ -91,13 +91,12 @@ subroutine rfftb(n, r, wsave)
 !
 !    wsave   contains results which must not be destroyed between
 !            calls of rfftb or rfftf.
-
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: r(*), wsave(*)
+    real(dp), intent(inout) :: r(*), wsave(*)
 
     !***first executable statement  rfftb
     if (n .eq. 1) return
@@ -163,13 +162,12 @@ subroutine rfftf(n, r, wsave)
 !
 !    wsave   contains results which must not be destroyed between
 !            calls of rfftf or rfftb.
-
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: r(*), wsave(*)
+    real(dp), intent(inout) :: r(*), wsave(*)
 
     !***first executable statement  rfftf
     if (n .eq. 1) return
@@ -178,18 +176,17 @@ subroutine rfftf(n, r, wsave)
 end
 
 subroutine rffti1(n, wa, ifac)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: wa(*)
+    real(dp), intent(inout) :: wa(*)
     integer, intent(inout) :: ifac(*)
     integer, save :: ntryh(4) = (/ 4, 2, 3, 5 /)
     integer :: nl, nf, i, j, ib, ido, ii, ip, ipm, is, k1, l1, l2, ld, nfm1,&
         & nq, nr, ntry
-    type(rpe_var) :: arg, argh, argld, fi, tpi
+    real(dp) :: arg, argh, argld, fi, tpi
 
     !***first executable statement  rffti1
       nl = n
@@ -216,7 +213,7 @@ subroutine rffti1(n, wa, ifac)
   107 if (nl .ne. 1) go to 104
       ifac(1) = n
       ifac(2) = nf
-      tpi = rpe_literal(8.0_dp)*atan(rpe_literal(1.0_dp))
+      tpi = 8.0_dp*atan(1.0_dp)
       argh = tpi/n
       is = 0
       nfm1 = nf-1
@@ -235,7 +232,7 @@ subroutine rffti1(n, wa, ifac)
             fi = 0.0_dp
             do 108 ii=3,ido,2
                i = i+2
-               fi = fi+rpe_literal(1.0_dp)
+               fi = fi+1.0_dp
                arg = fi*argld
                wa(i-1) = cos(arg)
                wa(i) = sin(arg)
@@ -247,12 +244,12 @@ subroutine rffti1(n, wa, ifac)
 end
 
 subroutine rfftb1(n, c, ch, wa, ifac)
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n, ifac(*)
-    type(rpe_var), intent(inout) :: ch(*), c(*), wa(*)
+    real(dp), intent(inout) :: ch(*), c(*), wa(*)
     integer :: nf, na, l1, iw, ip, l2, ido, idl1, ix2, ix3, ix4, i, k1
 
     !***first executable statement  rfftb1
@@ -314,13 +311,13 @@ subroutine rfftb1(n, c, ch, wa, ifac)
 end
 
 subroutine rfftf1 (n, c, ch, wa, ifac)
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n, ifac(*)
-    type(rpe_var), intent(inout) :: ch(*), wa(*)
-    type(rpe_var), intent(inout) :: c(*)
+    real(dp), intent(inout) :: ch(*), wa(*)
+    real(dp), intent(inout) :: c(*)
     integer :: nf, na, l2, iw, k1, kh, ip, l1, ido, idl1, ix2, ix3, ix4, i
 
     !***FIRST EXECUTABLE STATEMENT  RFFTF1
@@ -382,15 +379,15 @@ subroutine rfftf1 (n, c, ch, wa, ifac)
 end
 
 subroutine radb2 (ido, l1, cc, ch, wa1)
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,2,*)
-    type(rpe_var), intent(inout) :: ch(ido,l1,2), wa1(*)
+    real(dp), intent(in) :: cc(ido,2,*)
+    real(dp), intent(inout) :: ch(ido,l1,2), wa1(*)
     integer :: k, idp2, ic, i
-    type(rpe_var) :: tr2, ti2
+    real(dp) :: tr2, ti2
 
     !***FIRST EXECUTABLE STATEMENT  RADB2
       do 101 k=1,l1
@@ -434,20 +431,19 @@ subroutine radb2 (ido, l1, cc, ch, wa1)
 end
 
 subroutine radb3(ido, l1, cc, ch, wa1, wa2)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,3,*), wa1(*), wa2(*)
-    type(rpe_var), intent(inout) :: ch(ido,l1,3)
+    real(dp), intent(in) :: cc(ido,3,*), wa1(*), wa2(*)
+    real(dp), intent(inout) :: ch(ido,l1,3)
     integer :: idp2, ic, i, k
-    type(rpe_var) :: taur, taui, tr2, cr2, ci3, ti2, ci2, cr3, dr2, dr3, di2, di3
+    real(dp) :: taur, taui, tr2, cr2, ci3, ti2, ci2, cr3, dr2, dr3, di2, di3
 
     !***FIRST EXECUTABLE STATEMENT  RADB3
       taur = -0.5_dp
-      taui = rpe_literal(0.5_dp)*sqrt(rpe_literal(3.0_dp))
+      taui = 0.5_dp*sqrt(3.0_dp)
       do 101 k=1,l1
          tr2 = cc(ido,2,k)+cc(ido,2,k)
          cr2 = cc(1,1,k)+taur*tr2
@@ -507,20 +503,19 @@ subroutine radb3(ido, l1, cc, ch, wa1, wa2)
 end
 
 subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,4,*), wa1(*), wa2(*), wa3(*)
-    type(rpe_var), intent(inout) :: ch(ido,l1,4)
-    type(rpe_var) :: sqrt2, tr1, tr2, tr3, tr4, ti1, ti2, ti3, ti4, cr3, ci3, cr2, cr4,&
+    real(dp), intent(in) :: cc(ido,4,*), wa1(*), wa2(*), wa3(*)
+    real(dp), intent(inout) :: ch(ido,l1,4)
+    real(dp) :: sqrt2, tr1, tr2, tr3, tr4, ti1, ti2, ti3, ti4, cr3, ci3, cr2, cr4,&
         & ci2, di4, ci4
     integer :: i, k, idp2, ic
 
     !***First executable statement  radb4
-      sqrt2 = sqrt(rpe_literal(2.0_dp))
+      sqrt2 = sqrt(2.0_dp)
       do 101 k=1,l1
          tr1 = cc(1,1,k)-cc(ido,4,k)
          tr2 = cc(1,1,k)+cc(ido,4,k)
@@ -606,25 +601,24 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
 end
 
 subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,5,*), wa1(*), wa2(*), wa3(*), wa4(*)
-    type(rpe_var), intent(inout) :: ch(ido,l1,5)
-    type(rpe_var) :: pi, tr11, ti11, tr12, ti12, ti5, ti4, tr2, tr3, cr2, cr3, ci5, ci4,&
+    real(dp), intent(in) :: cc(ido,5,*), wa1(*), wa2(*), wa3(*), wa4(*)
+    real(dp), intent(inout) :: ch(ido,l1,5)
+    real(dp) :: pi, tr11, ti11, tr12, ti12, ti5, ti4, tr2, tr3, cr2, cr3, ci5, ci4,&
         & ti2, ti3, tr5, tr4, ci2, ci3, cr5, cr4, dr3, dr4, di3, di4, dr5,&
         & dr2, di5, di2
     integer :: i, k, ic, idp2
 
     !***First executable statement  radb5
-      pi = rpe_literal(4.0_dp)*atan(rpe_literal(1.0_dp))
-      tr11 = sin(rpe_literal(0.1_dp)*pi)
-      ti11 = sin(rpe_literal(0.4_dp)*pi)
-      tr12 = -sin(rpe_literal(0.3_dp)*pi)
-      ti12 = sin(rpe_literal(0.2_dp)*pi)
+      pi = 4.0_dp*atan(1.0_dp)
+      tr11 = sin(0.1_dp*pi)
+      ti11 = sin(0.4_dp*pi)
+      tr12 = -sin(0.3_dp*pi)
+      ti12 = sin(0.2_dp*pi)
       do 101 k=1,l1
          ti5 = cc(1,3,k)+cc(1,3,k)
          ti4 = cc(1,5,k)+cc(1,5,k)
@@ -728,21 +722,20 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
 end
 
 subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, ip, l1, idl1
-    type(rpe_var), intent(in) :: cc(ido,ip,*), wa(*)
-    type(rpe_var), intent(inout) :: ch(ido,l1,*), c1(ido,l1,*), c2(idl1,*),&
+    real(dp), intent(in) :: cc(ido,ip,*), wa(*)
+    real(dp), intent(inout) :: ch(ido,l1,*), c1(ido,l1,*), c2(idl1,*),&
           & ch2(idl1,*)
-    type(rpe_var) :: tpi, arg, dcp, dsp, ar1, ai1, ar1h, ds2, dc2, ar2, ai2, ar2h
+    real(dp) :: tpi, arg, dcp, dsp, ar1, ai1, ar1h, ds2, dc2, ar2, ai2, ar2h
     integer :: idp2, nbd, ipp2, ipph, i, j, k, jc, j2, lca, is, idij, ic, ik,&
         & l, lc
 
     !***First executable statement  radbg
-      tpi = rpe_literal(8.0_dp)*atan(rpe_literal(1.0_dp))
+      tpi = 8.0_dp*atan(1.0_dp)
       arg = tpi/ip
       dcp = cos(arg)
       dsp = sin(arg)
@@ -904,14 +897,14 @@ subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
       end
 
 subroutine radf2(ido, l1, cc, ch, wa1)
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,l1,2), wa1(*)
-    type(rpe_var), intent(inout) :: ch(ido,2,*)
-    type(rpe_var) :: tr2, ti2
+    real(dp), intent(in) :: cc(ido,l1,2), wa1(*)
+    real(dp), intent(inout) :: ch(ido,2,*)
+    real(dp) :: tr2, ti2
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf2
@@ -956,20 +949,19 @@ subroutine radf2(ido, l1, cc, ch, wa1)
 end
 
 subroutine radf3(ido, l1, cc, ch, wa1, wa2)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,l1,3), wa1(*), wa2(*)
-    type(rpe_var), intent(inout) :: ch(ido,3,*)
-    type(rpe_var) :: taur, taui, cr2, dr2, di2, dr3, di3, ci2, tr2, ti2, tr3, ti3
+    real(dp), intent(in) :: cc(ido,l1,3), wa1(*), wa2(*)
+    real(dp), intent(inout) :: ch(ido,3,*)
+    real(dp) :: taur, taui, cr2, dr2, di2, dr3, di3, ci2, tr2, ti2, tr3, ti3
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf3
       taur = -0.5_dp
-      taui = rpe_literal(0.5_dp)*sqrt(rpe_literal(3.0_dp))
+      taui = 0.5_dp*sqrt(3.0_dp)
       do 101 k=1,l1
          cr2 = cc(1,k,2)+cc(1,k,3)
          ch(1,1,k) = cc(1,k,1)+cr2
@@ -1027,20 +1019,19 @@ subroutine radf3(ido, l1, cc, ch, wa1, wa2)
 end
 
 subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,l1,4), wa1(*), wa2(*), wa3(*)
-    type(rpe_var), intent(inout) :: ch(ido,4,*)
-    type(rpe_var) :: hsqt2, tr1, tr2, tr3, tr4, cr2, ci2, cr3, ci3, cr4, ci4, ti1, ti2,&
+    real(dp), intent(in) :: cc(ido,l1,4), wa1(*), wa2(*), wa3(*)
+    real(dp), intent(inout) :: ch(ido,4,*)
+    real(dp) :: hsqt2, tr1, tr2, tr3, tr4, cr2, ci2, cr3, ci3, cr4, ci4, ti1, ti2,&
         & ti3, ti4
     integer :: i, k, ic, idp2
 
     !***First executable statement  radf4
-      hsqt2 = rpe_literal(0.5_dp)*sqrt(rpe_literal(2.0_dp))
+      hsqt2 = 0.5_dp*sqrt(2.0_dp)
       do 101 k=1,l1
          tr1 = cc(1,k,2)+cc(1,k,4)
          tr2 = cc(1,k,1)+cc(1,k,3)
@@ -1122,25 +1113,24 @@ subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
 end
 
 subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, l1
-    type(rpe_var), intent(in) :: cc(ido,l1,5), wa1(*), wa2(*), wa3(*), wa4(*)
-    type(rpe_var), intent(inout) :: ch(ido,5,*)
-    type(rpe_var) :: pi, tr11, ti11, tr12, ti12, cr2, cr3, cr4, cr5, ci2, ci3, ci4, ci5,&
+    real(dp), intent(in) :: cc(ido,l1,5), wa1(*), wa2(*), wa3(*), wa4(*)
+    real(dp), intent(inout) :: ch(ido,5,*)
+    real(dp) :: pi, tr11, ti11, tr12, ti12, cr2, cr3, cr4, cr5, ci2, ci3, ci4, ci5,&
         & dr2, dr3, dr4, dr5, di2, di3, di4, di5, tr2, tr3, tr4, tr5, ti2, ti3,&
         & ti4, ti5
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf5
-      pi = rpe_literal(4.0_dp)*atan(rpe_literal(1.0_dp))
-      tr11 = sin(rpe_literal(0.1_dp)*pi)
-      ti11 = sin(rpe_literal(0.4_dp)*pi)
-      tr12 = -sin(rpe_literal(0.3_dp)*pi)
-      ti12 = sin(rpe_literal(0.2_dp)*pi)
+      pi = 4.0_dp*atan(1.0_dp)
+      tr11 = sin(0.1_dp*pi)
+      ti11 = sin(0.4_dp*pi)
+      tr12 = -sin(0.3_dp*pi)
+      ti12 = sin(0.2_dp*pi)
       do 101 k=1,l1
          cr2 = cc(1,k,5)+cc(1,k,2)
          ci5 = cc(1,k,5)-cc(1,k,2)
@@ -1239,21 +1229,20 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
 end
 
 subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ido, ip, l1, idl1
-    type(rpe_var), intent(in) :: wa(*)
-    type(rpe_var), intent(inout) :: ch(ido,l1,*), cc(ido,ip,*), c1(ido,l1,*),&
+    real(dp), intent(in) :: wa(*)
+    real(dp), intent(inout) :: ch(ido,l1,*), cc(ido,ip,*), c1(ido,l1,*),&
         & c2(idl1,*), ch2(idl1,*)
-    type(rpe_var) :: tpi, arg, dcp, dsp, ar1h, ar2h, ai1, ai2, ar1, ar2, dc2, ds2
+    real(dp) :: tpi, arg, dcp, dsp, ar1h, ar2h, ai1, ai2, ar1, ar2, dc2, ds2
     integer :: ipph, ipp2, idp2, nbd, is, idif, ik, j, j2, jc, i, ic, idij, k,&
         & l, lc
 
     !***First executable statement  radfg
-      tpi = rpe_literal(8.0_dp)*atan(rpe_literal(1.0_dp))
+      tpi = 8.0_dp*atan(1.0_dp)
       arg = tpi/ip
       dcp = cos(arg)
       dsp = sin(arg)

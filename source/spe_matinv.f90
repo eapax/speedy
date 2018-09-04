@@ -1,25 +1,24 @@
 subroutine ludcmp(a,n,np,indx,d)
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(inout) :: a(np,np), d
+    real(dp), intent(inout) :: a(np,np), d
     integer, intent(inout) :: indx(n)
     integer, intent(in) :: n, np
     integer, parameter :: nmax = 100, tiniest = 1.0e-20
     integer :: i, j, k, imax
-    type(rpe_var) :: vv(nmax), aamax, dum, accum
+    real(dp) :: vv(nmax), aamax, dum, accum
 
     d = 1.0_dp
 
     do i=1,n
         aamax=0.0_dp
         do j=1,n
-            if(abs(a(i,j)).gt.aamax) aamax=abs(a(i,j)) 
+            if(abs(a(i,j)).gt.aamax) aamax=abs(a(i,j))
         end do
-        if(aamax.eq.rpe_literal(0.0_dp)) stop 'singular'
-        vv(i)=rpe_literal(1.0_dp)/aamax
+        if(aamax.eq.0.0_dp) stop 'singular'
+        vv(i)=1.0_dp/aamax
     end do
 
     do j=1,n
@@ -64,25 +63,25 @@ subroutine ludcmp(a,n,np,indx,d)
         indx(j)=imax
         if(j.ne.n) then
             if(a(j,j).eq.0) a(j,j)=tiniest
-            dum=rpe_literal(1.0_dp)/a(j,j)
+            dum=1.0_dp/a(j,j)
             do i=j+1,n
                 a(i,j)=a(i,j)*dum
             end do
         end if
     end do
 
-    if(a(n,n).eq.rpe_literal(0.0_dp)) a(n,n)=tiniest
+    if(a(n,n).eq.0.0_dp) a(n,n)=tiniest
 end
 
 subroutine lubksb(a,n,np,indx,b)
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(inout) :: a(np,np), b(n)
+    real(dp), intent(inout) :: a(np,np), b(n)
     integer, intent(in) :: n, np, indx(n)
     integer :: ii, i, ll, j
-    type(rpe_var) :: accum
+    real(dp) :: accum
 
     ii=0
 
@@ -112,16 +111,15 @@ subroutine lubksb(a,n,np,indx,b)
 end
 
 subroutine inv(a,y,indx,n)
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(inout) :: a(n,n), y(n,n)
+    real(dp), intent(inout) :: a(n,n), y(n,n)
     integer, intent(inout) :: indx(n)
     integer, intent(in) :: n
     integer :: i
-    type(rpe_var) :: d
+    real(dp) :: d
 
     y = 0.0_dp
 

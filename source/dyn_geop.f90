@@ -9,14 +9,13 @@ subroutine geop(jj)
     use mod_atparam
     use mod_dynvar
     use mod_dyncon1, only: xgeop1, xgeop2, hsg, fsg
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: jj
     integer :: k, m, n
-    type(rpe_var) :: corf
+    real(dp) :: corf
 
     ! 1. Bottom layer (integration over half a layer)
     phi(:,:,kx) = phis + xgeop1(kx) * t(:,:,kx,jj)
@@ -29,7 +28,7 @@ subroutine geop(jj)
 
     ! 3. lapse-rate correction in the free troposphere
     do k = 2,kx-1
-        corf=xgeop1(k)*rpe_literal(0.5_dp)* &
+        corf=xgeop1(k)*0.5_dp* &
                 log(hsg(k+1)/fsg(k)) / log(fsg(k+1)/fsg(k-1))
         phi(1,:,k) = phi(1,:,k) + corf*(t(1,:,k+1,jj) - t(1,:,k-1,jj))
     end do

@@ -16,7 +16,7 @@ subroutine ini_land(istart)
     ! 2. Initialize prognostic variables of land model
     !    in case of no restart or no coupling
     if (istart.le.0 .or. istart == 2) then
-        stl_lm(:)  = stlcl_ob(:)      ! land sfc. temperature 
+        stl_lm(:)  = stlcl_ob(:)      ! land sfc. temperature
     end if
 
     ! 3. Compute additional land variables
@@ -70,9 +70,9 @@ subroutine land2atm(jday)
     integer, intent(in) :: jday
 
     if (jday.gt.0.and.icland.gt.0) then
-        ! 1. Run ocean mixed layer or 
+        ! 1. Run ocean mixed layer or
         !    call message-passing routines to receive data from ocean model
-        call land_model 
+        call land_model
 
         ! 2. Get updated variables for mixed-layer/ocean model
         stl_lm(:) = vland_output(:,1)      ! land sfc. temperature
@@ -104,7 +104,6 @@ subroutine rest_land(imode)
     use mod_cpl_flags, only: icland
     use mod_var_land, only: stl_am, stl_lm
     use mod_downscaling, only: ix_in, il_in, regrid
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -112,14 +111,12 @@ subroutine rest_land(imode)
     integer, intent(in) :: imode
 
     ! land surface temperature at input resolution
-    ! Data loaded in at full precision
     real(dp) :: stl_lm_in(ix_in*il_in)
 
     if (imode.eq.0) then
         read (3)  stl_lm_in
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(stl_lm_in, stl_lm%val)
-            call apply_truncation(stl_lm)
+            call regrid(stl_lm_in, stl_lm)
         else
             stl_lm = stl_lm_in
         end if
@@ -127,7 +124,7 @@ subroutine rest_land(imode)
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model
         if (icland.gt.0) then
-            write (10) stl_lm(:) 
+            write (10) stl_lm(:)
         else
             write (10) stl_am(:)
         end if

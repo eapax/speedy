@@ -7,7 +7,6 @@ subroutine ini_sea(istart)
     use mod_atparam
     use mod_cli_sea, only: deglat_s
     use mod_var_sea
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -19,7 +18,7 @@ subroutine ini_sea(istart)
 
     ! 2. Initialize prognostic variables of ocean/ice model
     !    in case of no restart or no coupling
-    sst_om(:)  = sstcl_ob(:)      ! SST 
+    sst_om(:)  = sstcl_ob(:)      ! SST
     tice_om(:) = ticecl_ob(:)     ! sea ice temperature
     sice_om(:) = sicecl_ob(:)     ! sea ice fraction
 
@@ -43,17 +42,16 @@ subroutine atm2sea(jday)
     use mod_cli_sea, only: fmask_s, sst12, sice12, sstan3, hfseacl, sstom12
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: jday
 
-    type(rpe_var) :: fmasks(ngp)        ! sea fraction
-    type(rpe_var) :: hfyearm(ngp)       ! annual mean heat flux into the ocean
+    real(dp) :: fmasks(ngp)        ! sea fraction
+    real(dp) :: hfyearm(ngp)       ! annual mean heat flux into the ocean
     integer :: j
-    type(rpe_var) :: sstcl0, sstfr
+    real(dp) :: sstcl0, sstfr
 
     ! 1. Interpolate climatological fields and obs. SST anomaly
     !    to actual date
@@ -65,7 +63,7 @@ subroutine atm2sea(jday)
     call forint(ngp,imont1,tmonth,sice12,sicecl_ob)
 
     ! SST anomaly
-    if (isstan.gt.0) then 
+    if (isstan.gt.0) then
         if (iday.eq.1.and.jday.gt.0) call OBS_SSTA
         call forint (ngp,2,tmonth,sstan3,sstan_ob)
     end if
@@ -78,20 +76,20 @@ subroutine atm2sea(jday)
     ! Adjust climatological fields over sea ice
 
     ! SST at freezing point
-    sstfr = rpe_literal(273.2_dp)-rpe_literal(1.8_dp)
+    sstfr = 273.2_dp-1.8_dp
 
     do j=1,ngp
         sstcl0 = sstcl_ob(j)
 
         if (sstcl_ob(j).gt.sstfr) then
-            sicecl_ob(j) = min(rpe_literal(0.5_dp),sicecl_ob(j))
+            sicecl_ob(j) = min(0.5_dp,sicecl_ob(j))
             ticecl_ob(j) = sstfr
-            if (sicecl_ob(j).gt.rpe_literal(0.0_dp)) then
+            if (sicecl_ob(j).gt.0.0_dp) then
                 sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/&
-                        (rpe_literal(1.0_dp)-sicecl_ob(j))
+                        (1.0_dp-sicecl_ob(j))
             end if
         else
-            sicecl_ob(j) = max(rpe_literal(0.5_dp),sicecl_ob(j))
+            sicecl_ob(j) = max(0.5_dp,sicecl_ob(j))
             ticecl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/sicecl_ob(j)
             sstcl_ob(j)  = sstfr
         end if
@@ -125,7 +123,6 @@ subroutine sea2atm(jday)
     use mod_atparam
     use mod_cplvar_sea, only: vsea_output
     use mod_var_sea
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -133,13 +130,13 @@ subroutine sea2atm(jday)
     integer, intent(in) :: jday
 
     if (jday.gt.0.and.(icsea.gt.0.or.icice.gt.0)) then
-        ! 1. Run ocean mixed layer or 
+        ! 1. Run ocean mixed layer or
         !    call message-passing routines to receive data from ocean model
-        call sea_model 
+        call sea_model
 
         ! 2. Get updated variables for mixed-layer/ocean model
         sst_om(:)   = vsea_output(:,1)      ! sst
-        tice_om(:)  = vsea_output(:,2)      ! sea ice temperature 
+        tice_om(:)  = vsea_output(:,2)      ! sea ice temperature
         sice_om(:)  = vsea_output(:,3)      ! sea ice fraction
     end if
 
@@ -156,7 +153,7 @@ subroutine sea2atm(jday)
         ! Use full ocean model SST
         sst_am(:) = sst_om(:)
     else if (icsea.ge.3) then
-        ! Define SST anomaly from ocean model ouput and climatology 
+        ! Define SST anomaly from ocean model ouput and climatology
         sstan_am(:) = sst_om(:) - sstcl_om(:)
 
         ! Merge with observed SST anomaly in selected area
@@ -164,7 +161,7 @@ subroutine sea2atm(jday)
             sstan_am(:) = sstan_am(:) + wsst_ob(:)*(sstan_ob(:)-sstan_am(:))
         end if
 
-        ! Add observed SST climatology to model SST anomaly 
+        ! Add observed SST climatology to model SST anomaly
         sst_am(:) = sstcl_ob(:) + sstan_am(:)
     end if
 
@@ -192,46 +189,41 @@ subroutine rest_sea(imode)
     use mod_atparam
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
     use mod_downscaling, only: ix_in, il_in, regrid
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: imode
 
-    type(rpe_var) :: sst_c(ngp)              ! sst corrected for sea-ice values
-    type(rpe_var) :: sstfr
+    real(dp) :: sst_c(ngp)              ! sst corrected for sea-ice values
+    real(dp) :: sstfr
 
     ! Sea variables at input resolution
-    ! Data loaded in at full precision
     real(dp) :: sst_om_in(ix_in*il_in)
     real(dp) :: tice_om_in(ix_in*il_in)
     real(dp) :: sice_om_in(ix_in*il_in)
 
     if (imode.eq.0) then
-        ! Load data at full precision
+        ! Load data on iput grid
         read (3)  sst_om_in     ! sst
         read (3) tice_om_in     ! sea ice temperature
         read (3) sice_om_in     ! sea ice fraction
 
         ! Interpolate to new grid
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(sst_om_in, sst_om%val)
-            call apply_truncation(sst_om)
+            call regrid(sst_om_in, sst_om)
         else
             sst_om = sst_om_in
         end if
 
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(tice_om_in, tice_om%val)
-            call apply_truncation(tice_om)
+            call regrid(tice_om_in, tice_om)
         else
             tice_om = tice_om_in
         end if
 
         if (ix_in /= ix .or. il_in /= il) then
-            call regrid(sice_om_in, sice_om%val)
-            call apply_truncation(sice_om)
+            call regrid(sice_om_in, sice_om)
         else
             sice_om = sice_om
         end if
@@ -241,35 +233,34 @@ subroutine rest_sea(imode)
         sstfr = 273.2_dp-1.8_dp
 
         if (icsea.gt.0) then
-            write (10) sst_om(:) 
+            write (10) sst_om(:)
         else
             sst_c(:) = max(sst_am(:),sstfr)
             write (10) sst_c(:)
         end if
 
         if (icice.gt.0) then
-            write (10) tice_om(:) 
-            write (10) sice_om(:) 
+            write (10) tice_om(:)
+            write (10) sice_om(:)
         else
             write (10) tice_am(:)
-            write (10) sice_am(:) 
+            write (10) sice_am(:)
         end if
     end if
 end
 
 subroutine obs_ssta()
-    ! subroutine obs_ssta 
+    ! subroutine obs_ssta
 
     ! Purpose : update observed SST anomaly array
 
     use mod_atparam
     use mod_cli_sea, only: sstan3, bmask_s
     use mod_date, only: imonth, iyear0, issty0
-    use rp_emulator
-    use mod_prec
+    use mod_prec, only: sp, dp
 
     implicit none
- 
+
     integer :: i, j, next_month
     real(sp)   :: inp(ix,il)
 
@@ -290,4 +281,4 @@ subroutine obs_ssta()
 
     print *, ' warning: end-of-file reached on ssT anomaly file'
     print *, ' sst anomaly will be kept constant'
-end  
+end

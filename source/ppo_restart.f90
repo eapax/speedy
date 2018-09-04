@@ -4,7 +4,7 @@ subroutine restart(jday)
     !  Purpose : read or write a restart file
     !  Input :   JDAY  = 0 : read model variables from a restart file
     !                  > 0 : write model variables  to a restart file
-    !                        at selected dates and at the end of run 
+    !                        at selected dates and at the end of run
     !
 
     use mod_atparam
@@ -12,7 +12,7 @@ subroutine restart(jday)
     use mod_date, only: iyear, imonth, iday, ihour
     use mod_downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, &
             calc_grid_weights
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 
@@ -59,7 +59,7 @@ subroutine restart(jday)
                 'Read restart dataset for year/month/date/hour: ', &
                 iyear,'/',imonth,'/',iday,'/',ihour
 
-        ! Load data in full precision
+        ! Load data at input resolution
         read (3) vor_in
         read (3) div_in
         read (3) T_in
@@ -83,8 +83,7 @@ subroutine restart(jday)
         Ps  = CMPLX(0.0_dp, 0.0_dp)
         tr  = CMPLX(0.0_dp, 0.0_dp)
 
-        ! Reduce precision of input fields
-        call set_precision('Initial Values')
+        ! Pass input fields to resolution of run (truncate)
         vor(1:mx_tr, 1:nx_tr, :, :)    = vor_in(1:mx_tr, 1:nx_tr, :, :)
         div(1:mx_tr, 1:nx_tr, :, :)    = div_in(1:mx_tr, 1:nx_tr, :, :)
         T  (1:mx_tr, 1:nx_tr, :, :)    = T_in  (1:mx_tr, 1:nx_tr, :, :)

@@ -2,7 +2,7 @@ subroutine inbcon(grav0,radlat)
     !
     ! subroutine inbcon (grav0,radlat)
     !
-    ! Purpose : Read topography and climatological boundary conditions 
+    ! Purpose : Read topography and climatological boundary conditions
     ! Input :   grav0  = gravity accel.
     !           radlat = grid latitudes in radiants
 
@@ -12,13 +12,12 @@ subroutine inbcon(grav0,radlat)
     use mod_surfcon
     use mod_cli_land
     use mod_cli_sea
-    use rp_emulator
     use mod_prec, only: sp, dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: grav0
-    type(rpe_var), intent(in) :: radlat(il)
+    real(dp), intent(in) :: grav0
+    real(dp), intent(in) :: radlat(il)
 
     real(sp) :: r4inp(ix,il)
     real(sp) :: inp(ix,il)
@@ -33,7 +32,7 @@ subroutine inbcon(grav0,radlat)
     thrsh = 0.1_dp
 
     ! 1. Read topographical fields (orography, land-sea mask)
-    if (iitest >= 1) print *,' read orography' 
+    if (iitest >= 1) print *,' read orography'
 
     call load_boundary_file(20,inp,0)
 
@@ -41,7 +40,7 @@ subroutine inbcon(grav0,radlat)
 
     call truncg (ntrun,phi0,phis0)
 
-    if (iitest >= 1) print *,' read fractional land-sea mask'  
+    if (iitest >= 1) print *,' read fractional land-sea mask'
 
     call load_boundary_file(20,inp,1)
 
@@ -67,8 +66,8 @@ subroutine inbcon(grav0,radlat)
     end do
 
     ! 2.2 Annual-mean surface albedo
-    if (iitest >= 1) print *,' read surface albedo' 
- 
+    if (iitest >= 1) print *,' read surface albedo'
+
     call load_boundary_file(20,inp,2)
 
     alb0 = inp
@@ -89,22 +88,22 @@ subroutine inbcon(grav0,radlat)
     call forchk(bmask_l,stl12,ngp,12,0.0_dp,400.0_dp,273.0_dp)
 
     ! 2.4 Snow depth
-    if (iitest >= 1) print *,' reading snow depth'  
+    if (iitest >= 1) print *,' reading snow depth'
 
     do it = 1,12
         call load_boundary_file(24,inp,it-1)
-  
+
         snowd12(1:ix,1:il,it) = inp
     end do
 
     if (iitest >= 1) print *,' checking snow depth'
 
     CALL FORCHK (bmask_l,snowd12,ngp,12,0.0_dp,20000.0_dp,0.0_dp)
-       
-    ! 2.5 Read soil moisture and compute soil water availability 
+
+    ! 2.5 Read soil moisture and compute soil water availability
     !     using vegetation fraction
 
-    if (iitest >= 1) print *,' reading soil moisture'  
+    if (iitest >= 1) print *,' reading soil moisture'
 
     ! Read vegetation fraction
     call load_boundary_file(20,veg,3)
@@ -142,7 +141,7 @@ subroutine inbcon(grav0,radlat)
     call forchk(bmask_l,soilw12,ngp,12,0.0_dp,10.0_dp,0.0_dp)
 
     ! 3. Initialize sea-sfc boundary conditions
-    
+
     ! 3.1 Fractional and binary sea masks
     do j=1,il
         do i=1,ix
@@ -161,9 +160,9 @@ subroutine inbcon(grav0,radlat)
     ! Grid latitudes for sea-sfc. variables
     rad2deg = 90.0_dp/asin(1.0_dp)
     deglat_s = rad2deg*radlat
-         
-    ! 3.2 SST 
-    if (iitest >= 1) print *,' reading sst' 
+
+    ! 3.2 SST
+    if (iitest >= 1) print *,' reading sst'
 
     do it = 1,12
         call load_boundary_file(21,inp,it-1)
@@ -178,7 +177,7 @@ subroutine inbcon(grav0,radlat)
     call forchk(bmask_s,sst12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
 
     ! 3.3 Sea ice concentration
-    if (iitest >= 1) print *,' reading sea ice'  
+    if (iitest >= 1) print *,' reading sea ice'
 
     do it = 1,12
         call load_boundary_file(22,inp,it-1)
@@ -194,7 +193,7 @@ subroutine inbcon(grav0,radlat)
 
     ! 3.4 SST anomalies for initial and prec./following months
     if (isstan > 0) then
-        if (iitest >= 1) print *,' reading sst anomalies' 
+        if (iitest >= 1) print *,' reading sst anomalies'
 
         print *, 'isst0 = ', isst0
         do it=1,3
@@ -216,7 +215,7 @@ subroutine inbcon(grav0,radlat)
     hfseacl = 0.0_dp
 
     if (icsea >= 1) then
-        if (iitest >= 1) print *,' reading sfc heat fluxes' 
+        if (iitest >= 1) print *,' reading sfc heat fluxes'
 
         irecl = 4*ngp
         irec = 0
@@ -243,7 +242,7 @@ subroutine inbcon(grav0,radlat)
                     hfseacl(i,j) = 0.0_dp
                 end if
             end do
-        end do  
+        end do
 
         if (iitest >= 1) print *,' checking sfc heat fluxes'
 
@@ -264,7 +263,7 @@ subroutine inbcon(grav0,radlat)
                 do i = 1,ix
                     sstom12(i,j,it) = sst12(i,j,it)+r4inp(i,j)
                 end do
-            end do  
+            end do
         end do
 
         if (iitest >= 1) print *,' checking ocean model SST'
@@ -274,16 +273,15 @@ subroutine inbcon(grav0,radlat)
 end
 
 subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
-    ! Aux. routine forchk: Check consistency of sfc fields with land-sea mask 
+    ! Aux. routine forchk: Check consistency of sfc fields with land-sea mask
     ! and set undefined values to a constant (to avoid over/underflow)
 
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    type(rpe_var), intent(in) :: fmask(ngp)
-    type(rpe_var), intent(inout) :: field(ngp,nf)
+    real(dp), intent(in) :: fmask(ngp)
+    real(dp), intent(inout) :: field(ngp,nf)
     integer, intent(in) :: ngp, nf
     real(dp), intent(in) :: fmin, fmax, fset
 
@@ -317,16 +315,15 @@ subroutine truncg (itr,fg1,fg2)
 
     USE mod_atparam
     use spectral, only: grid, spec
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: itr
 
-    type(rpe_var), intent(in) :: fg1 (ix,il)
-    type(rpe_var), intent(out) :: fg2(ix,il)
-    type(rpe_complex_var) :: fsp(mx,nx), zero
+    real(dp), intent(in) :: fg1 (ix,il)
+    real(dp), intent(out) :: fg2(ix,il)
+    complex(dp) :: fsp(mx,nx), zero
     integer :: n, m, itwn
 
     print *, 'Filter applied at wavenumber ', itr

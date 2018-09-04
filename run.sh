@@ -13,7 +13,7 @@ fi
 
 # Define directory names
 UT=`pwd`
-TMP=/home/saffin/temp/
+TMP=${HOME}/temp/
 OUT=${UT}/output/exp_${2}
 INP=${UT}/output/exp_${3}
 
@@ -21,7 +21,6 @@ INP=${UT}/output/exp_${3}
 executable=${UT}/source/imp.exe
 namelist=${UT}/setup/speedy_default.nml
 output=${UT}/setup/default_outputs.nml
-precisions=${UT}/setup/precisions_default.nml
 
 # Copy files from basic version directory
 mkdir -p ${TMP}
@@ -29,7 +28,6 @@ find ${TMP}/* -type f -delete
 cp ${executable} ${TMP}/imp.exe
 cp ${namelist}   ${TMP}/speedy.nml
 cp ${output}     ${TMP}/output_requests.nml
-cp ${precisions} ${TMP}/precisions.nml
 
 # Link restart file if needed
 if [ ${3} != 0 ] ; then

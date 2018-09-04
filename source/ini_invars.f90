@@ -10,14 +10,13 @@ subroutine invars()
     use mod_surfcon, only: phi0, phis0
     use mod_date, only: iyear0, imonth0, istart, iyear, imonth, iday, ihour
     use spectral, only: grid, spec
-    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     complex(dp) :: zero, ccon
-    type(rpe_complex_var) :: surfs(mx,nx)
-    type(rpe_var) :: surfg(ix,il)
+    complex(dp) :: surfs(mx,nx)
+    real(dp) :: surfg(ix,il)
     real(dp) :: gam1, esref, factk, gam2, qexp, qref, rgam, rgamr, rlog0, &
             tref, ttop
     integer :: i, j, k
@@ -33,7 +32,7 @@ subroutine invars()
     call grid(phis,phis0,1)
 
     if (istart.eq.0) then
-        ! 2. Start from reference atmosphere (at rest) 
+        ! 2. Start from reference atmosphere (at rest)
         print*, ' starting from rest'
 
         iyear  = iyear0
@@ -71,7 +70,7 @@ subroutine invars()
         end do
 
         ! 2.3 Set log(ps) consistent with temperature profile
-        !     p_ref = 1013 hPa at z = 0   
+        !     p_ref = 1013 hPa at z = 0
         rlog0 = log(1.013_dp)
 
         do j=1,il
@@ -90,7 +89,7 @@ subroutine invars()
         qref = refrh1*0.622_dp*esref
         qexp = hscale/hshum
 
-        ! Spec. humidity at the surface 
+        ! Spec. humidity at the surface
         do j=1,il
             do i=1,ix
                 surfg(i,j)=qref*exp(qexp*surfg(i,j))
@@ -101,7 +100,7 @@ subroutine invars()
         call spec(surfg,surfs)
         if (ix.eq.iy*4) call trunct (surfs)
 
-        ! Spec. humidity at tropospheric levels      
+        ! Spec. humidity at tropospheric levels
         do k=3,kx
             factk=fsg(k)**qexp
             print *, 'vertical scale factor at level ', k, factk
@@ -111,7 +110,7 @@ subroutine invars()
         ! Print diagnostics from initial conditions
         call diagns (1,0)
     else if (istart .eq. 1) then
-        ! 3. Start from restart file 
+        ! 3. Start from restart file
         print*,' reading a restart file'
 
         call restart(0)

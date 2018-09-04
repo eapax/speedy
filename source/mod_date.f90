@@ -1,5 +1,5 @@
 module mod_date
-    use mod_prec
+    use mod_prec, only: dp
 
     implicit none
 

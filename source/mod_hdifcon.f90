@@ -1,20 +1,20 @@
 module mod_hdifcon
     use mod_atparam
-    use rp_emulator
+    use mod_prec, only: dp
 
     implicit none
 
     ! Damping coef. for horizontal diffusion (explicit) (initial. in indyns)
-    type(rpe_var), allocatable, dimension(:,:) :: dmp, dmpd, dmps
+    real(dp), allocatable, dimension(:,:) :: dmp, dmpd, dmps
 
     ! Damping coef. for horizontal diffusion (implicit) (initial. in indyns)
-    type(rpe_var), allocatable, dimension(:,:) :: dmp1, dmp1d, dmp1s
+    real(dp), allocatable, dimension(:,:) :: dmp1, dmp1d, dmp1s
 
     ! Vertical comp. of orographic correction (initial. in INDYNS)
-    type(rpe_var), allocatable, dimension(:) :: tcorv, qcorv
+    real(dp), allocatable, dimension(:) :: tcorv, qcorv
 
     ! Horizontal component of orographic correction (updated in FORDATE)
-    type(rpe_complex_var), allocatable, dimension(:,:) :: tcorh, qcorh
+    complex(dp), allocatable, dimension(:,:) :: tcorh, qcorh
 
     contains
         subroutine setup_hdifcon()
@@ -29,17 +29,4 @@ module mod_hdifcon
             allocate(tcorh(mx,nx))
             allocate(qcorh(mx,nx))
         end subroutine setup_hdifcon
-
-        subroutine truncate_hdifcon()
-            call apply_truncation(dmp)
-            call apply_truncation(dmpd)
-            call apply_truncation(dmps)
-            call apply_truncation(dmp1)
-            call apply_truncation(dmp1d)
-            call apply_truncation(dmp1s)
-            call apply_truncation(tcorv)
-            call apply_truncation(qcorv)
-            call apply_truncation(tcorh)
-            call apply_truncation(qcorh)
-        end subroutine truncate_hdifcon
 end module
