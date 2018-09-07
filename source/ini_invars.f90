@@ -27,11 +27,11 @@ subroutine invars()
 
     ! 1. Compute spectral surface geopotential
     call spec(phi0,phis)
-    if (ix.eq.iy*4) call trunct(phis)
+    if (ix==iy*4) call trunct(phis)
 
     call grid(phis,phis0,1)
 
-    if (istart.eq.0) then
+    if (istart==0) then
         ! 2. Start from reference atmosphere (at rest)
         print*, ' starting from rest'
 
@@ -81,7 +81,7 @@ subroutine invars()
 
 
         call spec(surfg,ps)
-        if (ix.eq.iy*4) call trunct(ps)
+        if (ix==iy*4) call trunct(ps)
 
         ! 2.4 Set tropospheric spec. humidity in g/kg
         !     Qref = RHref * Qsat(288K, 1013hPa)
@@ -98,7 +98,7 @@ subroutine invars()
         end do
 
         call spec(surfg,surfs)
-        if (ix.eq.iy*4) call trunct (surfs)
+        if (ix==iy*4) call trunct (surfs)
 
         ! Spec. humidity at tropospheric levels
         do k=3,kx
@@ -109,7 +109,7 @@ subroutine invars()
 
         ! Print diagnostics from initial conditions
         call diagns (1,0)
-    else if (istart .eq. 1) then
+    else if (istart==1) then
         ! 3. Start from restart file
         print*,' reading a restart file'
 
@@ -117,7 +117,7 @@ subroutine invars()
 
         ! Print diagnostics from initial conditions
         call diagns (2,0)
-    else if (istart .eq. 2) then
+    else if (istart==2) then
         ! 4. Start from grid initial condition
 
         !TODO reimplement starting from gridded data
@@ -129,4 +129,4 @@ subroutine invars()
         print *, 'IMPOSSIBLE!! check the fort.2 file!'
         stop
     endif
-end
+end subroutine invars

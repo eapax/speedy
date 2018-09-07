@@ -41,7 +41,7 @@ subroutine restart(jday)
     integer :: mx_tr, nx_tr
 
     !---------------------------------------------------------------------------
-    if (jday.eq.0) then
+    if (jday==0) then
         ! 1. Read the restart dataset corresponding to the specified initial date
         write (filename(1:4),'(i4.4)') iyear
         write (filename(5:6),'(i2.2)') imonth
@@ -67,7 +67,7 @@ subroutine restart(jday)
         read (3) tr_in
 
         ! If input vertical levels are different, interpolate
-        if (kx /= kx_in) then
+        if (kx/=kx_in) then
             ! TODO
             stop 'Input must have same vertical levels as output'
         end if
@@ -91,7 +91,7 @@ subroutine restart(jday)
         tr (1:mx_tr, 1:nx_tr, :, :, :) = tr_in (1:mx_tr, 1:nx_tr, :, :, :)
 
         ! Initialise gridded surface fields
-        if (ix_in /= ix .or. il_in /= il) call calc_grid_weights()
+        if (ix_in/=ix .or. il_in/=il) call calc_grid_weights()
         call rest_land(0)
         call rest_sea(0)
         close (3)
@@ -132,4 +132,4 @@ subroutine restart(jday)
     print*, ' No restart dataset for the specified initial date'
 
     stop 'invalid restart'
-end
+end subroutine restart

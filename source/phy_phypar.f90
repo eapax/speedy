@@ -1,12 +1,13 @@
 subroutine phypar(utend,vtend,ttend,qtend)
-    !  subroutine phypar(utend,vtend,ttend,qtend)
+    ! Compute physical parametrization tendencies for u, v, t, q
     !
-    !  Purpose: compute physical parametrization tendencies for u, v, t, q
-    !  Output arguments:  utend  : u-wind tendency (gp)
-    !                     vtend  : v-wind tendency (gp)
-    !                     ttend  : temp. tendency (gp)
-    !                     qtend  : spec. hum. tendency (gp)
-    !  Modified common blocks:  mod_physvar
+    ! Output arguments:
+    !     utend: u-wind tendency (gp)
+    !     vtend: v-wind tendency (gp)
+    !     ttend: temp. tendency (gp)
+    !     qtend: spec. hum. tendency (gp)
+    !
+    ! Modified common blocks:  mod_physvar
 
     use mod_atparam
     use mod_physvar
@@ -51,7 +52,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     real(dp), dimension(ngp) :: gse
 
     ! 1. Compute thermodynamic variables
-    if (iitest.eq.1) print *, ' 1.2 in phypar'
+    if (iitest==1) print *, ' 1.2 in phypar'
 
     do j=1,ngp
         psg(j)=exp(pslg1(j))
@@ -93,7 +94,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
-    if (iitest.eq.1) print *, ' 3.1 in PHYPAR'
+    if (iitest==1) print *, ' 3.1 in PHYPAR'
 
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
@@ -115,7 +116,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call radlw_down(tg1,slrd)
 
     ! 3.3. Compute surface fluxes and land skin temperature
-    if (iitest.eq.1) then
+    if (iitest==1) then
         print *, ' 3.3 in PHYPAR'
         print *, 'mean(STL_AM) =', sum(STL_AM(:))/ngp
         print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
@@ -130,7 +131,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
-    if (iitest.eq.1) print *, ' 3.4 in PHYPAR'
+    if (iitest==1) print *, ' 3.4 in PHYPAR'
     call radlw_up(tg1,ts,slrd,slru(:,3),hflx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
@@ -167,4 +168,4 @@ subroutine phypar(utend,vtend,ttend,qtend)
         ttend = tt_phy
         qtend = qt_phy
     end if
-end
+end subroutine phypar

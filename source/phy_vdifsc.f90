@@ -122,14 +122,14 @@ module phy_vdifsc
                 drh  = rh(j,kx)-rh(j,kxm)
                 fcnv = 1.0_dp
 
-                if (dmse >= 0.0_dp) then
-                    if (icnv(j) > 0) fcnv = redshc
+                if (dmse>=0.0_dp) then
+                    if (icnv(j)>0) fcnv = redshc
 
                     fluxse         = fcnv*fshcse*dmse
                     ttenvd(j,kxm)  = fluxse*rsig(kxm)
                     ttenvd(j,kx) =-fluxse*rsig(kx)
 
-                    if (drh >= 0.0_dp) then
+                    if (drh>=0.0_dp) then
                         fluxq          = fcnv*fshcq*qsat(j,kx)*drh
                         qtenvd(j,kxm)  = fluxq*rsig(kxm)
                         qtenvd(j,kx) =-fluxq*rsig(kx)
@@ -143,10 +143,10 @@ module phy_vdifsc
 
             ! 3. Vertical diffusion of moisture above the PBL
             do k=3,kx-2
-                if (sigh(k) > 0.5_dp) then
+                if (sigh(k)>0.5_dp) then
                     do j=1,ngp
                         drh=rh(j,k+1)-rh(j,k)
-                        if (drh >= drh0(k)) then
+                        if (drh>=drh0(k)) then
                             fluxq        = fvdiq2(k)*qsat(j,k)*drh
                             qtenvd(j,k)  = qtenvd(j,k)  +fluxq*rsig(k)
                             qtenvd(j,k+1)= qtenvd(j,k+1)-fluxq*rsig(k+1)
@@ -160,7 +160,7 @@ module phy_vdifsc
                 do j=1,ngp
                     se0 = se(j,k+1)+segrad*(phi(j,k)-phi(j,k+1))
 
-                    if (se(j,k) < se0) then
+                    if (se(j,k)<se0) then
                         fluxse      = fvdise*(se0-se(j,k))
                         ttenvd(j,k) = ttenvd(j,k)+fluxse*rsig(k)
                         do k1=k+1,kx

@@ -3,7 +3,7 @@
 COMPILE=gfortran
 COMLIB1=
 COMOTT1= -O2
-COMCONV= -fconvert=swap
+COMCONV= -fconvert=swap -std=gnu
 
 FILES= \
        mod_prec.o \
@@ -70,12 +70,9 @@ FILES= \
        spe_spectral.o \
        spe_subfft_fftpack.o
 
-.SUFFIXES: .f .f90 .o
+.SUFFIXES: .f90 .o
 
 .f90.o:
-	$(COMPILE) $(COMCONV) $(COMOTT1) -c $<
-
-.f.o:
 	$(COMPILE) $(COMCONV) $(COMOTT1) -c $<
 
 imp.exe: $(FILES)  at_gcm.o

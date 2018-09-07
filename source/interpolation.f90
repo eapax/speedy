@@ -43,7 +43,7 @@ module interpolation
 
                 ! Handle boundary issues
                 if (i==1) then
-                    if (period > 0) then
+                    if (period>0) then
                         idx(n) = 1
                         weights(n) = (x_out(n) - x_in(nx_in) + period) / &
                                      (x_in (1) - x_in(nx_in) + period)
@@ -53,7 +53,7 @@ module interpolation
                         weights(n) = 0.0_dp
                     end if
                 else if (i > nx_in) then
-                    if (period > 0) then
+                    if (period>0) then
                         idx(n) = 1
                         weights(n) = (x_out(n) - x_in(nx_in) + period) / &
                                      (x_in (1) - x_in(nx_in) + period)
@@ -82,7 +82,7 @@ module interpolation
 
             do n=1, nx_out
                 ! Check for wrapping coordinates in index
-                if (idx(n) == 1) then
+                if (idx(n)==1) then
                     idxp1 = 1
                     idxm1 = nx_in
                 else

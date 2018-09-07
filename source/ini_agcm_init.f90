@@ -17,7 +17,7 @@ subroutine agcm_init()
     call ini_date()
 
     ! check consistency of coupling and prescribed SST anomaly flags
-    if (icsea >= 4) isstan = 1
+    if (icsea>=4) isstan = 1
 
     ! 2. initialization of atmospheric model constants and variables
     call ini_atm()

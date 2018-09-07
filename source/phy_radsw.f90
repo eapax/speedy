@@ -1,4 +1,5 @@
 module phy_radsw
+    ! Put this in the documentation please
     use mod_atparam
     use mod_prec, only: dp
 
@@ -86,11 +87,8 @@ module phy_radsw
         subroutine radsw(&
                 psa, qa, icltop, cloudc, clstr, flx2tend, &
                 fsfcd, fsfc, ftop, dfabs)
-            !  subroutine radsw (psa,qa,icltop,cloudc,clstr,
-            ! &                  fsfcd,fsfc,ftop,dfabs)
-            !
-            !  purpose: compute the absorption of shortwave radiation and
-            !           initialize arrays for longwave-radiation routines
+            ! Compute the absorption of shortwave radiation and initialize
+            ! arrays for longwave-radiation routines
 
             ! The following variables are initialised here and used in radlw.
             ! Since radsw is not called every timestep they need to be stored in
@@ -102,8 +100,9 @@ module phy_radsw
             use mod_fordate, only: albsfc, ablco2
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
 
-            !  input:   psa    = norm. surface pressure [p/p0]           (2-dim)
-            real(dp), intent(in) :: psa(ngp)
+
+            real(dp), intent(in) :: psa(ngp)  !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
+
             !           qa     = specific humidity [g/kg]                (3-dim)
             real(dp), intent(in) :: qa(ngp,kx)
             !           icltop = cloud top level                         (2-dim)
@@ -135,7 +134,7 @@ module phy_radsw
 
             do j=1,ngp
                 !fk-- change to ensure only icltop <= kx used
-                if(icltop(j) <= kx) then
+                if(icltop(j)<=kx) then
                   tau2(j,icltop(j),3)= albcl*cloudc(j)
                 endif
                 !fk-- end change
@@ -160,7 +159,7 @@ module phy_radsw
 
                 do j=1,ngp
                     deltap=psaz(j)*dsig_sw(k)
-                    if (k >= icltop(j)) then
+                    if (k>=icltop(j)) then
                         tau2(j,k,1)=exp(-deltap*(abs1(k)+abswv1*qa(j,k)+acloud(j)))
                     else
                       tau2(j,k,1)=exp(-deltap*(abs1(k)+abswv1*qa(j,k)))
@@ -272,7 +271,7 @@ module phy_radsw
             do k=3,kxm
                do j=1,ngp
                  deltap=psa(j)*dsig_sw(k)
-                 if (k < icltop(j)) then
+                 if (k<icltop(j)) then
                    acloud1=acloud(j)
                  else
                    acloud1=ablcl1*cloudc(j)

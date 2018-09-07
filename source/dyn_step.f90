@@ -38,28 +38,28 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     integer :: iitest = 0, n, itr, k, m
 
-    if (iitest.eq.1) print*, ' inside step'
+    if (iitest==1) print*, ' inside step'
 
     ! 1. Computation of grid-point tendencies
     ! (converted to spectral at the end of GRTEND)
-    if (iitest.eq.1) print*,' call grtend'
+    if (iitest==1) print*,' call grtend'
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
 
     ! 2. Computation of spectral tendencies
-    if (alph.eq.0.0_dp) then
-        if (iitest.eq.1) print*,' call sptend'
+    if (alph==0.0_dp) then
+        if (iitest==1) print*,' call sptend'
         call sptend(divdt,tdt,psdt,j2)
     else
-        if (iitest.eq.1) print*,' call sptend'
+        if (iitest==1) print*,' call sptend'
         call sptend(divdt,tdt,psdt,1)
 
         ! implicit correction
-        if (iitest.eq.1) print*,' call implic'
+        if (iitest==1) print*,' call implic'
         call implic(divdt,tdt,psdt)
     endif
 
     ! 3. Horizontal diffusion
-    if (iitest.eq.1) print*, ' biharmonic damping '
+    if (iitest==1) print*, ' biharmonic damping '
 
     ! 3.1 Diffusion of wind and temperature
     call hordif(kx,vor,vordt,dmp, dmp1)
@@ -87,17 +87,17 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     call hordif(kx,ctmp,trdt,dmpd,dmp1d)
 
-    if (ntr.gt.1) then
+    if (ntr>1) then
         do itr=2,ntr
             call hordif(kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),dmp,dmp1)
         enddo
     endif
 
     ! 4. Time integration with Robert filter
-    if (dt.le.0.0_dp) return
+    if (dt<=0.0_dp) return
 
-    if (iitest.eq.1) print*,' time integration'
-    if (j1.eq.1) then
+    if (iitest==1) print*,' time integration'
+    if (j1==1) then
         eps = 0.0_dp
     else
         eps = rob
@@ -111,7 +111,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
     enddo
-end
+end subroutine step
 
 subroutine hordif(nlev,field,fdt,dmp,dmp1)
     !   Aux. subr. HORDIF (NLEV,FIELD,FDT,DMP,DMP1)
@@ -159,7 +159,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     eps2 = 1.0_dp-2.0_dp*eps
 
-    if (ix.eq.iy*4) then
+    if (ix==iy*4) then
         do k=1,nlev
             call trunct(fdt(:,:,k))
         enddo

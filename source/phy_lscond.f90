@@ -99,7 +99,7 @@ module phy_lscond
             do k=2,kx
                 do j=1,ngp
                     dqa = rhref(k)*qsat(j,k)-qa(j,k)
-                    if (dqa < 0.0_dp) then
+                    if (dqa<0.0_dp) then
                         itop(j)    = min(k,itop(j))
                         dqlsc(j,k) = dqa*rtlsc
                         dtlsc(j,k) = tfact*min(-dqlsc(j,k), dqmax(k)*psa(j)**2)

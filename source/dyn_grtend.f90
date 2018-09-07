@@ -43,7 +43,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     integer :: iitest = 0, k, i, itr, j
 
-    if (iitest.eq.1) print*,'inside GRTEND'
+    if (iitest==1) print*,'inside GRTEND'
 
     ! 1. Compute grid-point fields
     ! 1.1 Update geopotential in spectral space
@@ -79,13 +79,13 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     end do
 
     ! 2. Parametrized physics tendencies
-    if (iitest.eq.1) print*,'Calculating physics tendencies'
+    if (iitest==1) print*,'Calculating physics tendencies'
     call phypar(utend, vtend, ttend, trtend)
 
     ! 3. Dynamics tendencies
-    if (iitest.eq.1) print*,'Calculating dynamics tendencies'
+    if (iitest==1) print*,'Calculating dynamics tendencies'
 
-    if (j1 == j2) then
+    if (j1==j2) then
         call dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
                      utend, vtend, ttend, trtend, &
                      ug1, vg1, tg1, vorg, divg, trg)
@@ -169,7 +169,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     end do
 
     ! Compute tendency of log(surface pressure)
-    if (iitest.eq.1) print*,'d'
+    if (iitest==1) print*,'d'
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
     call grid(dumc(:,:,2),px,2)
     call grid(dumc(:,:,3),py,2)
@@ -191,7 +191,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         puv(:,:,k) = (ug(:,:,k) - umean) * px + (vg(:,:,k) - vmean) * py
     end do
 
-    if (iitest.eq.1) print*,'e'
+    if (iitest==1) print*,'e'
 
     do k=1,kx
         !cspj sigdt is the vertical velocity (in sigma coords)
@@ -201,7 +201,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     ! Subtract part of temperature field that is used as reference for
     ! implicit terms
-    if (iitest.eq.1) print*,'f'
+    if (iitest==1) print*,'f'
 
     do k=1,kx
         tgg(:,:,k) = tg(:,:,k)-tref(k)
@@ -224,7 +224,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     end do
 
     ! Meridional wind tendency
-    if (iitest.eq.1) print*,'g'
+    if (iitest==1) print*,'g'
 
     do k=2,kx
         temp(:,:,k) = sigdt(:,:,k) * (vg(:,:,k) - vg(:,:,k-1))
@@ -254,7 +254,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         end do
     end do
 
-    if (iitest.eq.1) print*,'h'
+    if (iitest==1) print*,'h'
     ! Tracer tendency
 
     do itr=1,ntr
@@ -265,7 +265,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         !spj for moisture, vertical advection is not possible between top
         !spj two layers
         !kuch three layers
-        !if(iinewtrace.eq.1)then
+        !if(iinewtrace==1)then
         do k=2,3
             temp(:,:,k)=0.0_dp
         enddo
@@ -279,7 +279,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     ! 4. Conversion of grid-point tendencies to spectral space and calculation
     !    of terms using grid-point and spectral components
-    if (iitest.eq.1) print*,'Converting grid-point tendencies to spectral space'
+    if (iitest==1) print*,'Converting grid-point tendencies to spectral space'
     do k=1,kx
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to

@@ -90,7 +90,7 @@ module phy_cloud
             !       the level of maximum relative humidity.
 
             do j=1,ngp
-                if (rh(j,kxm) > rhcl1) then
+                if (rh(j,kxm)>rhcl1) then
                     cloudc(j) = rh(j,kxm)-rhcl1
                     icltop(j) = kxm
                 else
@@ -102,7 +102,7 @@ module phy_cloud
             do k=3,kx-2
                 do j=1,ngp
                     drh = rh(j,k)-rhcl1
-                    if (drh > cloudc(j).and.qa(j,k) > qacl) then
+                    if (drh>cloudc(j) .and. qa(j,k)>qacl) then
                         cloudc(j) = drh
                         icltop(j) = k
                     end if

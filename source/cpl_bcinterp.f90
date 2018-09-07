@@ -13,18 +13,18 @@ subroutine forint(ngp,imon,fmon,for12,for1)
 
     half = 0.5_dp
 
-    if (fmon.le.half) then
+    if (fmon<=half) then
         imon2 = imon-1
-        if (imon.eq.1) imon2 = 12
+        if (imon==1) imon2 = 12
         wmon = half-fmon
     else
         imon2 = imon+1
-        if (imon.eq.12) imon2 = 1
+        if (imon==12) imon2 = 1
         wmon = fmon-half
     end if
 
     for1 = for12(:,imon) + wmon*(for12(:,imon2) - for12(:,imon))
-end
+end subroutine forint
 
 subroutine forin5(ngp,imon,fmon,for12,for1)
     ! Aux. routine FORIN5 : non-linear, mean-conserving interpolation
@@ -47,10 +47,10 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     ip1 = imon+1
     ip2 = imon+2
 
-    if (im2.lt.1)  im2 = im2+12
-    if (im1.lt.1)  im1 = im1+12
-    if (ip1.gt.12) ip1 = ip1-12
-    if (ip2.gt.12) ip2 = ip2-12
+    if (im2<1)  im2 = im2+12
+    if (im1<1)  im1 = im1+12
+    if (ip1>12) ip1 = ip1-12
+    if (ip2>12) ip2 = ip2-12
 
     c0 = one/12.0_dp
     t0 = c0*fmon
@@ -65,4 +65,4 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
 
     for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
         & wp1*for12(:,ip1) + wp2*for12(:,ip2)
-end
+end subroutine forin5

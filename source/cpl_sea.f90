@@ -22,14 +22,14 @@ subroutine ini_sea(istart)
     tice_om(:) = ticecl_ob(:)     ! sea ice temperature
     sice_om(:) = sicecl_ob(:)     ! sea ice fraction
 
-    if (icsea.le.0) sst_om(:) = 0.0_dp
+    if (icsea<=0) sst_om(:) = 0.0_dp
 
     ! 3. Compute additional sea/ice variables
     wsst_ob(:) = 0.0_dp
-    if (icsea.ge.4) call sea_domain('elnino',deglat_s,wsst_ob)
+    if (icsea>=4) call sea_domain('elnino',deglat_s,wsst_ob)
 
     call sea2atm(0)
-end
+end subroutine ini_sea
 
 subroutine atm2sea(jday)
     ! subroutine atm2sea(jday)
@@ -63,13 +63,13 @@ subroutine atm2sea(jday)
     call forint(ngp,imont1,tmonth,sice12,sicecl_ob)
 
     ! SST anomaly
-    if (isstan.gt.0) then
-        if (iday.eq.1.and.jday.gt.0) call OBS_SSTA
+    if (isstan>0) then
+        if (iday==1 .and. jday>0) call OBS_SSTA
         call forint (ngp,2,tmonth,sstan3,sstan_ob)
     end if
 
     ! Ocean model climatological SST
-    if (icsea.ge.3) then
+    if (icsea>=3) then
         call forin5 (ngp,imont1,tmonth,sstom12,sstcl_om)
     end if
 
@@ -81,10 +81,10 @@ subroutine atm2sea(jday)
     do j=1,ngp
         sstcl0 = sstcl_ob(j)
 
-        if (sstcl_ob(j).gt.sstfr) then
+        if (sstcl_ob(j)>sstfr) then
             sicecl_ob(j) = min(0.5_dp,sicecl_ob(j))
             ticecl_ob(j) = sstfr
-            if (sicecl_ob(j).gt.0.0_dp) then
+            if (sicecl_ob(j)>0.0_dp) then
                 sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/&
                         (1.0_dp-sicecl_ob(j))
             end if
@@ -94,15 +94,15 @@ subroutine atm2sea(jday)
             sstcl_ob(j)  = sstfr
         end if
 
-        if (icsea.ge.3) sstcl_om(j) = sstcl_om(j)+(sstcl_ob(j)-sstcl0)
+        if (icsea>=3) sstcl_om(j) = sstcl_om(j)+(sstcl_ob(j)-sstcl0)
     end do
 
     hfyearm = reshape(hfseacl, (/ngp/))
     fmasks = reshape(fmask_s, (/ngp/))
 
-    if (jday.le.0) return
+    if (jday<=0) return
         ! 2. Set input variables for mixed-layer/ocean model
-        if (icsea.gt.0.or.icice.gt.0) then
+        if (icsea>0 .or. icice>0) then
             vsea_input(:,1) = sst_om(:)
             vsea_input(:,2) = tice_om(:)
             vsea_input(:,3) = sicecl_ob(:)
@@ -114,7 +114,7 @@ subroutine atm2sea(jday)
         end if
 
         ! 3. Call message-passing routines to send data (if needed)
-end
+end subroutine atm2sea
 
 subroutine sea2atm(jday)
     ! subroutine sea2atm(jday)
@@ -129,7 +129,7 @@ subroutine sea2atm(jday)
 
     integer, intent(in) :: jday
 
-    if (jday.gt.0.and.(icsea.gt.0.or.icice.gt.0)) then
+    if (jday>0 .and. (icsea>0 .or. icice>0)) then
         ! 1. Run ocean mixed layer or
         !    call message-passing routines to receive data from ocean model
         call sea_model
@@ -144,20 +144,20 @@ subroutine sea2atm(jday)
     ! 3.1 SST
     sstan_am(:) = 0.0_dp
 
-    if (icsea.le.1) then
-        if (isstan.gt.0) sstan_am(:) = sstan_ob(:)
+    if (icsea<=1) then
+        if (isstan>0) sstan_am(:) = sstan_ob(:)
 
         ! Use observed SST (climatological or full field)
         sst_am(:) = sstcl_ob(:) + sstan_am(:)
-    else if (icsea.eq.2) then
+    else if (icsea==2) then
         ! Use full ocean model SST
         sst_am(:) = sst_om(:)
-    else if (icsea.ge.3) then
+    else if (icsea >= 3) then
         ! Define SST anomaly from ocean model ouput and climatology
         sstan_am(:) = sst_om(:) - sstcl_om(:)
 
         ! Merge with observed SST anomaly in selected area
-        if (icsea.ge.4) then
+        if (icsea>=4) then
             sstan_am(:) = sstan_am(:) + wsst_ob(:)*(sstan_ob(:)-sstan_am(:))
         end if
 
@@ -166,7 +166,7 @@ subroutine sea2atm(jday)
     end if
 
     ! 3.2 Sea ice fraction and temperature
-    if (icice.gt.0) then
+    if (icice>0) then
         sice_am(:) = sice_om(:)
         tice_am(:) = tice_om(:)
     else
@@ -176,7 +176,7 @@ subroutine sea2atm(jday)
 
     sst_am(:)  = sst_am(:)+sice_am(:)*(tice_am(:)-sst_am(:))
     ssti_om(:) = sst_om(:)+sice_am(:)*(tice_am(:)-sst_om(:))
-end
+end subroutine sea2atm
 
 subroutine rest_sea(imode)
     ! subroutine rest_sea(imode)
@@ -203,26 +203,26 @@ subroutine rest_sea(imode)
     real(dp) :: tice_om_in(ix_in*il_in)
     real(dp) :: sice_om_in(ix_in*il_in)
 
-    if (imode.eq.0) then
+    if (imode==0) then
         ! Load data on iput grid
         read (3)  sst_om_in     ! sst
         read (3) tice_om_in     ! sea ice temperature
         read (3) sice_om_in     ! sea ice fraction
 
         ! Interpolate to new grid
-        if (ix_in /= ix .or. il_in /= il) then
+        if (ix_in/=ix .or. il_in/=il) then
             call regrid(sst_om_in, sst_om)
         else
             sst_om = sst_om_in
         end if
 
-        if (ix_in /= ix .or. il_in /= il) then
+        if (ix_in/=ix .or. il_in/=il) then
             call regrid(tice_om_in, tice_om)
         else
             tice_om = tice_om_in
         end if
 
-        if (ix_in /= ix .or. il_in /= il) then
+        if (ix_in/=ix .or. il_in/=il) then
             call regrid(sice_om_in, sice_om)
         else
             sice_om = sice_om
@@ -232,14 +232,14 @@ subroutine rest_sea(imode)
         !    otherwise write fields used by atmospheric model
         sstfr = 273.2_dp-1.8_dp
 
-        if (icsea.gt.0) then
+        if (icsea>0) then
             write (10) sst_om(:)
         else
             sst_c(:) = max(sst_am(:),sstfr)
             write (10) sst_c(:)
         end if
 
-        if (icice.gt.0) then
+        if (icice>0) then
             write (10) tice_om(:)
             write (10) sice_om(:)
         else
@@ -247,7 +247,7 @@ subroutine rest_sea(imode)
             write (10) sice_am(:)
         end if
     end if
-end
+end subroutine rest_sea
 
 subroutine obs_ssta()
     ! subroutine obs_ssta
@@ -276,9 +276,4 @@ subroutine obs_ssta()
     sstan3(1:ix,1:il,3)   = inp
 
     call forchk(bmask_s,sstan3(:,:,3),ngp,1,-50.0_dp,50.0_dp,0.0_dp)
-
- 100  continue
-
-    print *, ' warning: end-of-file reached on ssT anomaly file'
-    print *, ' sst anomaly will be kept constant'
-end
+end subroutine obs_ssta

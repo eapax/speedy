@@ -94,7 +94,7 @@ subroutine impint(dt,alph)
     do k=1,kxm
         do k1=1,kx
             xb(k,k1)=dhs(k1)*dsum(k)
-            if(k1.le.k) xb(k,k1)=xb(k,k1)-dhs(k1)
+            if(k1<=k) xb(k,k1)=xb(k,k1)-dhs(k1)
         end do
     end do
 
@@ -151,4 +151,4 @@ subroutine impint(dt,alph)
             xc(k,k1)=xc(k,k1)*xi
         end do
     end do
-end
+end subroutine impint

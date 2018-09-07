@@ -32,4 +32,4 @@ subroutine geop(jj)
                 log(hsg(k+1)/fsg(k)) / log(fsg(k+1)/fsg(k-1))
         phi(1,:,k) = phi(1,:,k) + corf*(t(1,:,k+1,jj) - t(1,:,k-1,jj))
     end do
-end
+end subroutine geop

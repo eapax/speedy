@@ -8,7 +8,7 @@ subroutine ini_coupler(istart)
     use mod_surfcon, only: fmask, alb0
     use mod_cli_land, only: fmask_l
     use mod_cli_sea, only: fmask_s, deglat_s
-    
+
     implicit none
 
     integer, intent(in) :: istart
@@ -24,7 +24,7 @@ subroutine ini_coupler(istart)
 
     ! 2.2 initialize sea and ice model variables
     call ini_sea(istart)
-end
+end subroutine ini_coupler
 
 subroutine agcm_to_coupler(jday)
     !
@@ -40,7 +40,7 @@ subroutine agcm_to_coupler(jday)
 
     ! 2. send fields to sea and ice model
     call atm2sea(jday)
-end
+end subroutine agcm_to_coupler
 
 subroutine coupler_to_agcm(jday)
     !
@@ -56,4 +56,4 @@ subroutine coupler_to_agcm(jday)
 
     ! 2. get updated fields from sea and ice model
     call sea2atm(jday)
-end
+end subroutine coupler_to_agcm

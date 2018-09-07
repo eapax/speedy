@@ -62,7 +62,7 @@ subroutine sea_model_init(fmask_s,rlat)
 
     do j=1,il
         do i=1,ix
-            if (fmask_s(i,j).lt.fseamin) dmask(i,j) = 0
+            if (fmask_s(i,j)<fseamin) dmask(i,j) = 0
         end do
     end do
 
@@ -74,7 +74,7 @@ subroutine sea_model_init(fmask_s,rlat)
 
     cdsea = dmask*tdsst/(1.0_dp+dmask*tdsst)
     cdice = dmask*tdice/(1.0_dp+dmask*tdice)
-end
+end subroutine sea_model_init
 
 subroutine sea_model()
     ! subroutine sea_model
@@ -160,7 +160,7 @@ subroutine sea_model()
     vsea_output(:,1) = reshape(sst1, (/ngp/))
     vsea_output(:,2) = reshape(tice1, (/ngp/))
     vsea_output(:,3) = reshape(sice1, (/ngp/))
-end
+end subroutine sea_model
 
 subroutine sea_domain(cdomain,rlat,dmask)
     ! subroutine sea_domain (cdomain,rlat,dmask)
@@ -187,73 +187,73 @@ subroutine sea_domain(cdomain,rlat,dmask)
 
     dlon = 360.0_dp/ix
 
-    if (cdomain.eq.'northe') then
+    if (cdomain=='northe') then
         do j=1,il
-            if (rlat(j).gt.20.0_dp) dmask(:,j) = 1.0_dp
+            if (rlat(j)>20.0_dp) dmask(:,j) = 1.0_dp
         end do
     end if
 
-    if (cdomain.eq.'natlan') then
+    if (cdomain=='natlan') then
          do j=1,il
-           if (rlat(j).gt.20.0_dp &
-                   .and.rlat(j).lt.80.0_dp) then
+           if (rlat(j)>20.0_dp &
+                   .and.rlat(j) <80.0_dp) then
              do i=1,ix
                rlon = (i-1)*dlon
-               if (rlon.lt.45.0_dp &
-                   .or.rlon.gt.260.0_dp) dmask(i,j) = 1.0_dp
+               if (rlon<45.0_dp &
+                   .or.rlon >260.0_dp) dmask(i,j) = 1.0_dp
              end do
            end if
          end do
     end if
 
-    if (cdomain.eq.'npacif') then
+    if (cdomain=='npacif') then
         do j=1,il
-            if (rlat(j).gt.20.0_dp &
-                    .and.rlat(j).lt.65.0_dp) then
+            if (rlat(j)>20.0_dp &
+                    .and.rlat(j) <65.0_dp) then
                 do i=1,ix
                     rlon = (i-1)*dlon
-                    if (rlon.gt.120.0_dp &
-                        .and.rlon.lt.260.0_dp) dmask(i,j) = 1.0_dp
+                    if (rlon>120.0_dp &
+                        .and.rlon <260.0_dp) dmask(i,j) = 1.0_dp
                 end do
             end if
         end do
     end if
 
-    if (cdomain.eq.'tropic') then
+    if (cdomain=='tropic') then
         do j=1,il
-            if (rlat(j).gt.-30.0_dp &
-                .and.rlat(j).lt.30.0_dp) dmask(:,j) = 1.0_dp
+            if (rlat(j)>-30.0_dp &
+                .and.rlat(j) <30.0_dp) dmask(:,j) = 1.0_dp
         end do
     end if
 
-    if (cdomain.eq.'indian') then
+    if (cdomain=='indian') then
         do j=1,il
-            if (rlat(j).gt.-30.0_dp &
-                    .and.rlat(j).lt.30.0_dp) then
+            if (rlat(j)>-30.0_dp &
+                    .and.rlat(j) <30.0_dp) then
                 do i=1,ix
                     rlon = (i-1)*dlon
-                    if (rlon.gt.30.0_dp&
-                        .and.rlon.lt.120.0_dp) dmask(i,j) = 1.0_dp
+                    if (rlon>30.0_dp&
+                        .and.rlon <120.0_dp) dmask(i,j) = 1.0_dp
                 end do
             end if
         end do
     end if
 
-    if (cdomain.eq.'elnino') then
+    if (cdomain=='elnino') then
         do j=1,il
             arlat = abs(rlat(j))
-            if (arlat.lt.25.0_dp) then
+            if (arlat<25.0_dp) then
                 wlat = 1.0_dp
-                if (arlat.gt.15.0_dp) then
+                if (arlat>15.0_dp) then
                     wlat = (0.1_dp*(25.0_dp-arlat))**2
                 end if
                 rlonw = 300.0_dp-2*max(rlat(j),0.0_dp)
                 do i=1,ix
                     rlon = (i-1)*dlon
-                    if (rlon.gt.165.0_dp.and.rlon.lt.rlonw) then
+                    if (rlon>165.0_dp .and. rlon<rlonw) then
                         dmask(i,j) = wlat
-                    else if (rlon.gt.155.0_dp&
-                            .and.rlon.lt.165.0_dp) then
+                    else if (rlon>155.0_dp&
+                            .and. rlon<165.0_dp) then
                         dmask(i,j) = wlat*0.1_dp*&
                                 (rlon-155.0_dp)
                     end if
@@ -261,4 +261,4 @@ subroutine sea_domain(cdomain,rlat,dmask)
             end if
         end do
     end if
-end
+end subroutine sea_domain

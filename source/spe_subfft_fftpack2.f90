@@ -29,10 +29,10 @@ subroutine rffti(n, wsave)
     real(dp), intent(inout) :: wsave(*)
 
     !***first executable statement  rffti
-    if (n .eq. 1) return
+    if (n==1) return
     call rffti1(n,wsave(n+1),wsave(2*n+1))
     return
-end
+end subroutine rffti
 
 subroutine rfftb(n, r, wsave)
 !    ******************************************************************
@@ -99,9 +99,9 @@ subroutine rfftb(n, r, wsave)
     real(dp), intent(inout) :: r(*), wsave(*)
 
     !***first executable statement  rfftb
-    if (n .eq. 1) return
+    if (n==1) return
     call rfftb1 (n,r,wsave,wsave(n+1),wsave(2*n+1))
-end
+end subroutine rfftb
 
 subroutine rfftf(n, r, wsave)
 !    ******************************************************************
@@ -170,10 +170,10 @@ subroutine rfftf(n, r, wsave)
     real(dp), intent(inout) :: r(*), wsave(*)
 
     !***first executable statement  rfftf
-    if (n .eq. 1) return
+    if (n==1) return
     call rfftf1 (n,r,wsave,wsave(n+1),wsave(2*n+1))
     return
-end
+end subroutine rfftf
 
 subroutine rffti1(n, wa, ifac)
     use mod_prec, only: dp
@@ -203,14 +203,14 @@ subroutine rffti1(n, wa, ifac)
   105 nf = nf+1
       ifac(nf+2) = ntry
       nl = nq
-      if (ntry .ne. 2) go to 107
-      if (nf .eq. 1) go to 107
-      do 106 i=2,nf
+      if (ntry/=2) go to 107
+      if (nf==1) go to 107
+      do i=2,nf
          ib = nf-i+2
          ifac(ib+2) = ifac(ib+1)
-  106 continue
+      end do
       ifac(3) = 2
-  107 if (nl .ne. 1) go to 104
+  107 if (nl  /= 1) go to 104
       ifac(1) = n
       ifac(2) = nf
       tpi = 8.0_dp*atan(1.0_dp)
@@ -218,30 +218,30 @@ subroutine rffti1(n, wa, ifac)
       is = 0
       nfm1 = nf-1
       l1 = 1
-      if (nfm1 .eq. 0) return
-      do 110 k1=1,nfm1
+      if (nfm1==0) return
+      do k1=1,nfm1
          ip = ifac(k1+2)
          ld = 0
          l2 = l1*ip
          ido = n/l2
          ipm = ip-1
-         do 109 j=1,ipm
+         do j=1,ipm
             ld = ld+l1
             i = is
             argld = ld*argh
             fi = 0.0_dp
-            do 108 ii=3,ido,2
+            do ii=3,ido,2
                i = i+2
                fi = fi+1.0_dp
                arg = fi*argld
                wa(i-1) = cos(arg)
                wa(i) = sin(arg)
-  108       continue
+            end do
             is = is+ido
-  109    continue
+         end do
          l1 = l2
-  110 continue
-end
+      end do
+end subroutine rffti1
 
 subroutine rfftb1(n, c, ch, wa, ifac)
     use mod_prec, only: dp
@@ -257,58 +257,58 @@ subroutine rfftb1(n, c, ch, wa, ifac)
       na = 0
       l1 = 1
       iw = 1
-      do 116 k1=1,nf
+      do k1=1,nf
          ip = ifac(k1+2)
          l2 = ip*l1
          ido = n/l2
          idl1 = ido*l1
-         if (ip .ne. 4) go to 103
+         if (ip/=4) go to 103
          ix2 = iw+ido
          ix3 = ix2+ido
-         if (na .ne. 0) go to 101
+         if (na/=0) go to 101
          call radb4(ido,l1,c,ch,wa(iw),wa(ix2),wa(ix3))
          go to 102
   101    call radb4(ido,l1,ch,c,wa(iw),wa(ix2),wa(ix3))
   102    na = 1-na
          go to 115
-  103    if (ip .ne. 2) go to 106
-         if (na .ne. 0) go to 104
+  103    if (ip  /= 2) go to 106
+         if (na/=0) go to 104
          call radb2(ido,l1,c,ch,wa(iw))
          go to 105
   104    call radb2(ido,l1,ch,c,wa(iw))
   105    na = 1-na
          go to 115
-  106    if (ip .ne. 3) go to 109
+  106    if (ip  /= 3) go to 109
          ix2 = iw+ido
-         if (na .ne. 0) go to 107
+         if (na/=0) go to 107
          call radb3(ido,l1,c,ch,wa(iw),wa(ix2))
          go to 108
   107    call radb3(ido,l1,ch,c,wa(iw),wa(ix2))
   108    na = 1-na
          go to 115
-  109    if (ip .ne. 5) go to 112
+  109    if (ip  /= 5) go to 112
          ix2 = iw+ido
          ix3 = ix2+ido
          ix4 = ix3+ido
-         if (na .ne. 0) go to 110
+         if (na/=0) go to 110
          call radb5(ido,l1,c,ch,wa(iw),wa(ix2),wa(ix3),wa(ix4))
          go to 111
   110    call radb5(ido,l1,ch,c,wa(iw),wa(ix2),wa(ix3),wa(ix4))
   111    na = 1-na
          go to 115
-  112    if (na .ne. 0) go to 113
+  112    if (na  /= 0) go to 113
          call radbg(ido,ip,l1,idl1,c,c,c,ch,ch,wa(iw))
          go to 114
   113    call radbg(ido,ip,l1,idl1,ch,ch,ch,c,c,wa(iw))
-  114    if (ido .eq. 1) na = 1-na
+  114    if (ido==1) na = 1-na
   115    l1 = l2
          iw = iw+(ip-1)*ido
-  116 continue
-      if (na .eq. 0) return
-      do 117 i=1,n
+      end do
+      if (na==0) return
+      do i=1,n
          c(i) = ch(i)
-  117 continue
-end
+      end do
+end subroutine rfftb1
 
 subroutine rfftf1 (n, c, ch, wa, ifac)
     use mod_prec, only: dp
@@ -325,7 +325,7 @@ subroutine rfftf1 (n, c, ch, wa, ifac)
       na = 1
       l2 = n
       iw = n
-      do 111 k1=1,nf
+      do k1=1,nf
          kh = nf-k1
          ip = ifac(kh+3)
          l1 = l2/ip
@@ -333,50 +333,50 @@ subroutine rfftf1 (n, c, ch, wa, ifac)
          idl1 = ido*l1
          iw = iw-(ip-1)*ido
          na = 1-na
-         if (ip .ne. 4) go to 102
+         if (ip/=4) go to 102
          ix2 = iw+ido
          ix3 = ix2+ido
-         if (na .ne. 0) go to 101
+         if (na/=0) go to 101
          call radf4 (ido,l1,c,ch,wa(iw),wa(ix2),wa(ix3))
          go to 110
   101    call radf4 (ido,l1,ch,c,wa(iw),wa(ix2),wa(ix3))
          go to 110
-  102    if (ip .ne. 2) go to 104
-         if (na .ne. 0) go to 103
+  102    if (ip  /= 2) go to 104
+         if (na/=0) go to 103
          call radf2 (ido,l1,c,ch,wa(iw))
          go to 110
   103    call radf2 (ido,l1,ch,c,wa(iw))
          go to 110
-  104    if (ip .ne. 3) go to 106
+  104    if (ip  /= 3) go to 106
          ix2 = iw+ido
-         if (na .ne. 0) go to 105
+         if (na/=0) go to 105
          call radf3 (ido,l1,c,ch,wa(iw),wa(ix2))
          go to 110
   105    call radf3 (ido,l1,ch,c,wa(iw),wa(ix2))
          go to 110
-  106    if (ip .ne. 5) go to 108
+  106    if (ip  /= 5) go to 108
          ix2 = iw+ido
          ix3 = ix2+ido
          ix4 = ix3+ido
-         if (na .ne. 0) go to 107
+         if (na/=0) go to 107
          call radf5 (ido,l1,c,ch,wa(iw),wa(ix2),wa(ix3),wa(ix4))
          go to 110
   107    call radf5 (ido,l1,ch,c,wa(iw),wa(ix2),wa(ix3),wa(ix4))
          go to 110
-  108    if (ido .eq. 1) na = 1-na
-         if (na .ne. 0) go to 109
+  108    if (ido==1) na = 1-na
+         if (na/=0) go to 109
          call radfg (ido,ip,l1,idl1,c,c,c,ch,ch,wa(iw))
          na = 1
          go to 110
   109    call radfg (ido,ip,l1,idl1,ch,ch,ch,c,c,wa(iw))
          na = 0
   110    l2 = l1
-  111 continue
-      if (na .eq. 1) return
-      do 112 i=1,n
+      end do
+      if (na==1) return
+      do i=1,n
          c(i) = ch(i)
-  112 continue
-end
+      end do
+end subroutine rfftf1
 
 subroutine radb2 (ido, l1, cc, ch, wa1)
     use mod_prec, only: dp
@@ -390,16 +390,15 @@ subroutine radb2 (ido, l1, cc, ch, wa1)
     real(dp) :: tr2, ti2
 
     !***FIRST EXECUTABLE STATEMENT  RADB2
-      do 101 k=1,l1
+      do k=1,l1
          ch(1,k,1) = cc(1,1,k)+cc(ido,2,k)
          ch(1,k,2) = cc(1,1,k)-cc(ido,2,k)
-  101 continue
+      end do
       if (ido-2) 107,105,102
   102 idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 108
-      do 104 k=1,l1
-!dir$ ivdep
-         do 103 i=3,ido,2
+      if((ido-1)/2<l1) go to 108
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             ch(i-1,k,1) = cc(i-1,1,k)+cc(ic-1,2,k)
             tr2 = cc(i-1,1,k)-cc(ic-1,2,k)
@@ -407,28 +406,27 @@ subroutine radb2 (ido, l1, cc, ch, wa1)
             ti2 = cc(i,1,k)+cc(ic,2,k)
             ch(i-1,k,2) = wa1(i-2)*tr2-wa1(i-1)*ti2
             ch(i,k,2) = wa1(i-2)*ti2+wa1(i-1)*tr2
-  103    continue
-  104 continue
+         end do
+      end do
       go to 111
-  108 do 110 i=3,ido,2
+  108 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 109 k=1,l1
+         do k=1,l1
             ch(i-1,k,1) = cc(i-1,1,k)+cc(ic-1,2,k)
             tr2 = cc(i-1,1,k)-cc(ic-1,2,k)
             ch(i,k,1) = cc(i,1,k)-cc(ic,2,k)
             ti2 = cc(i,1,k)+cc(ic,2,k)
             ch(i-1,k,2) = wa1(i-2)*tr2-wa1(i-1)*ti2
             ch(i,k,2) = wa1(i-2)*ti2+wa1(i-1)*tr2
-  109    continue
-  110 continue
-  111 if (mod(ido,2) .eq. 1) return
-  105 do 106 k=1,l1
+         end do
+      end do
+  111 if (mod(ido,2)==1) return
+  105 do k=1,l1
          ch(ido,k,1) = cc(ido,1,k)+cc(ido,1,k)
          ch(ido,k,2) = -(cc(1,2,k)+cc(1,2,k))
-  106 continue
+      end do
   107 return
-end
+end subroutine radb2
 
 subroutine radb3(ido, l1, cc, ch, wa1, wa2)
     use mod_prec, only: dp
@@ -444,20 +442,19 @@ subroutine radb3(ido, l1, cc, ch, wa1, wa2)
     !***FIRST EXECUTABLE STATEMENT  RADB3
       taur = -0.5_dp
       taui = 0.5_dp*sqrt(3.0_dp)
-      do 101 k=1,l1
+      do k=1,l1
          tr2 = cc(ido,2,k)+cc(ido,2,k)
          cr2 = cc(1,1,k)+taur*tr2
          ch(1,k,1) = cc(1,1,k)+tr2
          ci3 = taui*(cc(1,3,k)+cc(1,3,k))
          ch(1,k,2) = cr2-ci3
          ch(1,k,3) = cr2+ci3
-  101 continue
-      if (ido .eq. 1) return
+      end do
+      if (ido==1) return
       idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 104
-      do 103 k=1,l1
-!dir$ ivdep
-         do 102 i=3,ido,2
+      if((ido-1)/2<l1) go to 104
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             tr2 = cc(i-1,3,k)+cc(ic-1,2,k)
             cr2 = cc(i-1,1,k)+taur*tr2
@@ -475,13 +472,12 @@ subroutine radb3(ido, l1, cc, ch, wa1, wa2)
             ch(i,k,2) = wa1(i-2)*di2+wa1(i-1)*dr2
             ch(i-1,k,3) = wa2(i-2)*dr3-wa2(i-1)*di3
             ch(i,k,3) = wa2(i-2)*di3+wa2(i-1)*dr3
-  102    continue
-  103 continue
+         end do
+      end do
       return
-  104 do 106 i=3,ido,2
+  104 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 105 k=1,l1
+         do k=1,l1
             tr2 = cc(i-1,3,k)+cc(ic-1,2,k)
             cr2 = cc(i-1,1,k)+taur*tr2
             ch(i-1,k,1) = cc(i-1,1,k)+tr2
@@ -498,9 +494,9 @@ subroutine radb3(ido, l1, cc, ch, wa1, wa2)
             ch(i,k,2) = wa1(i-2)*di2+wa1(i-1)*dr2
             ch(i-1,k,3) = wa2(i-2)*dr3-wa2(i-1)*di3
             ch(i,k,3) = wa2(i-2)*di3+wa2(i-1)*dr3
-  105    continue
-  106 continue
-end
+         end do
+      end do
+end subroutine radb3
 
 subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
     use mod_prec, only: dp
@@ -516,7 +512,7 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
 
     !***First executable statement  radb4
       sqrt2 = sqrt(2.0_dp)
-      do 101 k=1,l1
+      do k=1,l1
          tr1 = cc(1,1,k)-cc(ido,4,k)
          tr2 = cc(1,1,k)+cc(ido,4,k)
          tr3 = cc(ido,2,k)+cc(ido,2,k)
@@ -525,13 +521,12 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
          ch(1,k,2) = tr1-tr4
          ch(1,k,3) = tr2-tr3
          ch(1,k,4) = tr1+tr4
-  101 continue
+      end do
       if (ido-2) 107,105,102
   102 idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 108
-      do 104 k=1,l1
-        !dir$ ivdep
-         do 103 i=3,ido,2
+      if((ido-1)/2<l1) go to 108
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             ti1 = cc(i,1,k)+cc(ic,4,k)
             ti2 = cc(i,1,k)-cc(ic,4,k)
@@ -555,13 +550,12 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
             ch(i,k,3) = wa2(i-2)*ci3+wa2(i-1)*cr3
             ch(i-1,k,4) = wa3(i-2)*cr4-wa3(i-1)*ci4
             ch(i,k,4) = wa3(i-2)*ci4+wa3(i-1)*cr4
-  103    continue
-  104 continue
+         end do
+      end do
       go to 111
-  108 do 110 i=3,ido,2
+  108 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 109 k=1,l1
+         do k=1,l1
             ti1 = cc(i,1,k)+cc(ic,4,k)
             ti2 = cc(i,1,k)-cc(ic,4,k)
             ti3 = cc(i,3,k)-cc(ic,2,k)
@@ -584,10 +578,10 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
             ch(i,k,3) = wa2(i-2)*ci3+wa2(i-1)*cr3
             ch(i-1,k,4) = wa3(i-2)*cr4-wa3(i-1)*ci4
             ch(i,k,4) = wa3(i-2)*ci4+wa3(i-1)*cr4
-  109    continue
-  110 continue
-  111 if (mod(ido,2) .eq. 1) return
-  105 do 106 k=1,l1
+         end do
+      end do
+  111 if (mod(ido,2)==1) return
+  105 do k=1,l1
          ti1 = cc(1,2,k)+cc(1,4,k)
          ti2 = cc(1,4,k)-cc(1,2,k)
          tr1 = cc(ido,1,k)-cc(ido,3,k)
@@ -596,9 +590,9 @@ subroutine radb4(ido, l1, cc, ch, wa1, wa2, wa3)
          ch(ido,k,2) = sqrt2*(tr1-ti1)
          ch(ido,k,3) = ti2+ti2
          ch(ido,k,4) = -sqrt2*(tr1+ti1)
-  106 continue
+      end do
   107 return
-end
+end subroutine radb4
 
 subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     use mod_prec, only: dp
@@ -619,7 +613,7 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
       ti11 = sin(0.4_dp*pi)
       tr12 = -sin(0.3_dp*pi)
       ti12 = sin(0.2_dp*pi)
-      do 101 k=1,l1
+      do k=1,l1
          ti5 = cc(1,3,k)+cc(1,3,k)
          ti4 = cc(1,5,k)+cc(1,5,k)
          tr2 = cc(ido,2,k)+cc(ido,2,k)
@@ -633,13 +627,12 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
          ch(1,k,3) = cr3-ci4
          ch(1,k,4) = cr3+ci4
          ch(1,k,5) = cr2+ci5
-  101 continue
-      if (ido .eq. 1) return
+      end do
+      if (ido==1) return
       idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 104
-      do 103 k=1,l1
-!dir$ ivdep
-         do 102 i=3,ido,2
+      if((ido-1)/2<l1) go to 104
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             ti5 = cc(i,3,k)+cc(ic,2,k)
             ti2 = cc(i,3,k)-cc(ic,2,k)
@@ -675,13 +668,12 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
             ch(i,k,4) = wa3(i-2)*di4+wa3(i-1)*dr4
             ch(i-1,k,5) = wa4(i-2)*dr5-wa4(i-1)*di5
             ch(i,k,5) = wa4(i-2)*di5+wa4(i-1)*dr5
-  102    continue
-  103 continue
+         end do
+      end do
       return
-  104 do 106 i=3,ido,2
+  104 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 105 k=1,l1
+         do k=1,l1
             ti5 = cc(i,3,k)+cc(ic,2,k)
             ti2 = cc(i,3,k)-cc(ic,2,k)
             ti4 = cc(i,5,k)+cc(ic,4,k)
@@ -716,10 +708,10 @@ subroutine radb5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
             ch(i,k,4) = wa3(i-2)*di4+wa3(i-1)*dr4
             ch(i-1,k,5) = wa4(i-2)*dr5-wa4(i-1)*di5
             ch(i,k,5) = wa4(i-2)*di5+wa4(i-1)*dr5
-  105    continue
-  106 continue
+         end do
+      end do
       return
-end
+end subroutine radb5
 
 subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
     use mod_prec, only: dp
@@ -743,158 +735,154 @@ subroutine radbg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
       nbd = (ido-1)/2
       ipp2 = ip+2
       ipph = (ip+1)/2
-      if (ido .lt. l1) go to 103
-      do 102 k=1,l1
-         do 101 i=1,ido
+      if (ido<l1) go to 103
+      do k=1,l1
+         do i=1,ido
             ch(i,k,1) = cc(i,1,k)
-  101    continue
-  102 continue
+         end do
+      end do
       go to 106
-  103 do 105 i=1,ido
-         do 104 k=1,l1
+  103 do i=1,ido
+         do k=1,l1
             ch(i,k,1) = cc(i,1,k)
-  104    continue
-  105 continue
-  106 do 108 j=2,ipph
+         end do
+      end do
+  106 do j=2,ipph
          jc = ipp2-j
          j2 = j+j
-         do 107 k=1,l1
+         do k=1,l1
             ch(1,k,j) = cc(ido,j2-2,k)+cc(ido,j2-2,k)
             ch(1,k,jc) = cc(1,j2-1,k)+cc(1,j2-1,k)
-  107    continue
-  108 continue
-      if (ido .eq. 1) go to 116
-      if (nbd .lt. l1) go to 112
-      do 111 j=2,ipph
+         end do
+      end do
+      if (ido==1) go to 116
+      if (nbd<l1) go to 112
+      do j=2,ipph
          jc = ipp2-j
-         do 110 k=1,l1
-!dir$ ivdep
-            do 109 i=3,ido,2
+         do k=1,l1
+            do i=3,ido,2
                ic = idp2-i
                ch(i-1,k,j) = cc(i-1,2*j-1,k)+cc(ic-1,2*j-2,k)
                ch(i-1,k,jc) = cc(i-1,2*j-1,k)-cc(ic-1,2*j-2,k)
                ch(i,k,j) = cc(i,2*j-1,k)-cc(ic,2*j-2,k)
                ch(i,k,jc) = cc(i,2*j-1,k)+cc(ic,2*j-2,k)
-  109       continue
-  110    continue
-  111 continue
+            end do
+         end do
+      end do
       go to 116
-  112 do 115 j=2,ipph
+  112 do j=2,ipph
          jc = ipp2-j
-!dir$ ivdep
-         do 114 i=3,ido,2
+         do i=3,ido,2
             ic = idp2-i
-            do 113 k=1,l1
+            do k=1,l1
                ch(i-1,k,j) = cc(i-1,2*j-1,k)+cc(ic-1,2*j-2,k)
                ch(i-1,k,jc) = cc(i-1,2*j-1,k)-cc(ic-1,2*j-2,k)
                ch(i,k,j) = cc(i,2*j-1,k)-cc(ic,2*j-2,k)
                ch(i,k,jc) = cc(i,2*j-1,k)+cc(ic,2*j-2,k)
-  113       continue
-  114    continue
-  115 continue
+            end do
+         end do
+       end do
   116 ar1 = 1.0_dp
       ai1 = 0.0_dp
-      do 120 l=2,ipph
+      do l=2,ipph
          lc = ipp2-l
          ar1h = dcp*ar1-dsp*ai1
          ai1 = dcp*ai1+dsp*ar1
          ar1 = ar1h
-         do 117 ik=1,idl1
+         do ik=1,idl1
             c2(ik,l) = ch2(ik,1)+ar1*ch2(ik,2)
             c2(ik,lc) = ai1*ch2(ik,ip)
-  117    continue
+         end do
          dc2 = ar1
          ds2 = ai1
          ar2 = ar1
          ai2 = ai1
-         do 119 j=3,ipph
+         do j=3,ipph
             jc = ipp2-j
             ar2h = dc2*ar2-ds2*ai2
             ai2 = dc2*ai2+ds2*ar2
             ar2 = ar2h
-            do 118 ik=1,idl1
+            do ik=1,idl1
                c2(ik,l) = c2(ik,l)+ar2*ch2(ik,j)
                c2(ik,lc) = c2(ik,lc)+ai2*ch2(ik,jc)
-  118       continue
-  119    continue
-  120 continue
-      do 122 j=2,ipph
-         do 121 ik=1,idl1
+            end do
+         end do
+      end do
+      do j=2,ipph
+         do ik=1,idl1
             ch2(ik,1) = ch2(ik,1)+ch2(ik,j)
-  121    continue
-  122 continue
-      do 124 j=2,ipph
+         end do
+      end do
+      do j=2,ipph
          jc = ipp2-j
-         do 123 k=1,l1
+         do k=1,l1
             ch(1,k,j) = c1(1,k,j)-c1(1,k,jc)
             ch(1,k,jc) = c1(1,k,j)+c1(1,k,jc)
-  123    continue
-  124 continue
-      if (ido .eq. 1) go to 132
-      if (nbd .lt. l1) go to 128
-      do 127 j=2,ipph
+         end do
+      end do
+      if (ido==1) go to 132
+      if (nbd<l1) go to 128
+      do j=2,ipph
          jc = ipp2-j
-         do 126 k=1,l1
-!dir$ ivdep
-            do 125 i=3,ido,2
+         do k=1,l1
+            do i=3,ido,2
                ch(i-1,k,j) = c1(i-1,k,j)-c1(i,k,jc)
                ch(i-1,k,jc) = c1(i-1,k,j)+c1(i,k,jc)
                ch(i,k,j) = c1(i,k,j)+c1(i-1,k,jc)
                ch(i,k,jc) = c1(i,k,j)-c1(i-1,k,jc)
-  125       continue
-  126    continue
-  127 continue
+            end do
+         end do
+      end do
       go to 132
-  128 do 131 j=2,ipph
+  128 do j=2,ipph
          jc = ipp2-j
-         do 130 i=3,ido,2
-            do 129 k=1,l1
+         do i=3,ido,2
+            do k=1,l1
                ch(i-1,k,j) = c1(i-1,k,j)-c1(i,k,jc)
                ch(i-1,k,jc) = c1(i-1,k,j)+c1(i,k,jc)
                ch(i,k,j) = c1(i,k,j)+c1(i-1,k,jc)
                ch(i,k,jc) = c1(i,k,j)-c1(i-1,k,jc)
-  129       continue
-  130    continue
-  131 continue
+            end do
+         end do
+      end do
   132 continue
-      if (ido .eq. 1) return
-      do 133 ik=1,idl1
+      if (ido==1) return
+      do ik=1,idl1
          c2(ik,1) = ch2(ik,1)
-  133 continue
-      do 135 j=2,ip
-         do 134 k=1,l1
+      end do
+      do j=2,ip
+         do k=1,l1
             c1(1,k,j) = ch(1,k,j)
-  134    continue
-  135 continue
-      if (nbd .gt. l1) go to 139
+         end do
+      end do
+      if (nbd>l1) go to 139
       is = -ido
-      do 138 j=2,ip
+      do j=2,ip
          is = is+ido
          idij = is
-         do 137 i=3,ido,2
+         do i=3,ido,2
             idij = idij+2
-            do 136 k=1,l1
+            do k=1,l1
                c1(i-1,k,j) = wa(idij-1)*ch(i-1,k,j)-wa(idij)*ch(i,k,j)
                c1(i,k,j) = wa(idij-1)*ch(i,k,j)+wa(idij)*ch(i-1,k,j)
-  136       continue
-  137    continue
-  138 continue
+            end do
+         end do
+      end do
       go to 143
   139 is = -ido
-      do 142 j=2,ip
+      do j=2,ip
          is = is+ido
-         do 141 k=1,l1
+         do k=1,l1
             idij = is
-!dir$ ivdep
-            do 140 i=3,ido,2
+            do i=3,ido,2
                idij = idij+2
                c1(i-1,k,j) = wa(idij-1)*ch(i-1,k,j)-wa(idij)*ch(i,k,j)
                c1(i,k,j) = wa(idij-1)*ch(i,k,j)+wa(idij)*ch(i-1,k,j)
-  140       continue
-  141    continue
-  142 continue
+            end do
+         end do
+      end do
   143 return
-      end
+end subroutine radbg
 
 subroutine radf2(ido, l1, cc, ch, wa1)
     use mod_prec, only: dp
@@ -908,16 +896,15 @@ subroutine radf2(ido, l1, cc, ch, wa1)
     integer :: i, k, idp2, ic
 
     !***First executable statement  radf2
-      do 101 k=1,l1
+      do k=1,l1
          ch(1,1,k) = cc(1,k,1)+cc(1,k,2)
          ch(ido,2,k) = cc(1,k,1)-cc(1,k,2)
-  101 continue
+      end do
       if (ido-2) 107,105,102
   102 idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 108
-      do 104 k=1,l1
-!dir$ ivdep
-         do 103 i=3,ido,2
+      if((ido-1)/2<l1) go to 108
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             tr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             ti2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
@@ -925,28 +912,27 @@ subroutine radf2(ido, l1, cc, ch, wa1)
             ch(ic,2,k) = ti2-cc(i,k,1)
             ch(i-1,1,k) = cc(i-1,k,1)+tr2
             ch(ic-1,2,k) = cc(i-1,k,1)-tr2
-  103    continue
-  104 continue
+         end do
+      end do
       go to 111
-  108 do 110 i=3,ido,2
+  108 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 109 k=1,l1
+         do k=1,l1
             tr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             ti2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
             ch(i,1,k) = cc(i,k,1)+ti2
             ch(ic,2,k) = ti2-cc(i,k,1)
             ch(i-1,1,k) = cc(i-1,k,1)+tr2
             ch(ic-1,2,k) = cc(i-1,k,1)-tr2
-  109    continue
-  110 continue
-  111 if (mod(ido,2) .eq. 1) return
-  105 do 106 k=1,l1
+         end do
+      end do
+  111 if (mod(ido,2)==1) return
+  105 do k=1,l1
          ch(1,2,k) = -cc(ido,k,2)
          ch(ido,1,k) = cc(ido,k,1)
-  106 continue
+      end do
   107 return
-end
+end subroutine radf2
 
 subroutine radf3(ido, l1, cc, ch, wa1, wa2)
     use mod_prec, only: dp
@@ -962,18 +948,17 @@ subroutine radf3(ido, l1, cc, ch, wa1, wa2)
     !***First executable statement  radf3
       taur = -0.5_dp
       taui = 0.5_dp*sqrt(3.0_dp)
-      do 101 k=1,l1
+      do k=1,l1
          cr2 = cc(1,k,2)+cc(1,k,3)
          ch(1,1,k) = cc(1,k,1)+cr2
          ch(1,3,k) = taui*(cc(1,k,3)-cc(1,k,2))
          ch(ido,2,k) = cc(1,k,1)+taur*cr2
-  101 continue
-      if (ido .eq. 1) return
+      end do
+      if (ido==1) return
       idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 104
-      do 103 k=1,l1
-!dir$ ivdep
-         do 102 i=3,ido,2
+      if((ido-1)/2<l1) go to 104
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             dr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             di2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
@@ -991,13 +976,12 @@ subroutine radf3(ido, l1, cc, ch, wa1, wa2)
             ch(ic-1,2,k) = tr2-tr3
             ch(i,3,k) = ti2+ti3
             ch(ic,2,k) = ti3-ti2
-  102    continue
-  103 continue
+         end do
+      end do
       return
-  104 do 106 i=3,ido,2
+  104 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 105 k=1,l1
+         do k=1,l1
             dr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             di2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
             dr3 = wa2(i-2)*cc(i-1,k,3)+wa2(i-1)*cc(i,k,3)
@@ -1014,9 +998,9 @@ subroutine radf3(ido, l1, cc, ch, wa1, wa2)
             ch(ic-1,2,k) = tr2-tr3
             ch(i,3,k) = ti2+ti3
             ch(ic,2,k) = ti3-ti2
-  105    continue
-  106 continue
-end
+         end do
+      end do
+end subroutine radf3
 
 subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
     use mod_prec, only: dp
@@ -1032,20 +1016,19 @@ subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
 
     !***First executable statement  radf4
       hsqt2 = 0.5_dp*sqrt(2.0_dp)
-      do 101 k=1,l1
+      do k=1,l1
          tr1 = cc(1,k,2)+cc(1,k,4)
          tr2 = cc(1,k,1)+cc(1,k,3)
          ch(1,1,k) = tr1+tr2
          ch(ido,4,k) = tr2-tr1
          ch(ido,2,k) = cc(1,k,1)-cc(1,k,3)
          ch(1,3,k) = cc(1,k,4)-cc(1,k,2)
-  101 continue
+      end do
       if (ido-2) 107,105,102
   102 idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 111
-      do 104 k=1,l1
-!dir$ ivdep
-         do 103 i=3,ido,2
+      if((ido-1)/2<l1) go to 111
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             cr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             ci2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
@@ -1069,13 +1052,12 @@ subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
             ch(ic-1,2,k) = tr3-ti4
             ch(i,3,k) = tr4+ti3
             ch(ic,2,k) = tr4-ti3
-  103    continue
-  104 continue
+         end do
+      end do
       go to 110
-  111 do 109 i=3,ido,2
+  111 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 108 k=1,l1
+         do k=1,l1
             cr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             ci2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
             cr3 = wa2(i-2)*cc(i-1,k,3)+wa2(i-1)*cc(i,k,3)
@@ -1098,19 +1080,19 @@ subroutine radf4(ido, l1, cc, ch, wa1, wa2, wa3)
             ch(ic-1,2,k) = tr3-ti4
             ch(i,3,k) = tr4+ti3
             ch(ic,2,k) = tr4-ti3
-  108    continue
-  109 continue
-  110 if (mod(ido,2) .eq. 1) return
-  105 do 106 k=1,l1
+         end do
+      end do
+  110 if (mod(ido,2)==1) return
+  105 do k=1,l1
          ti1 = -hsqt2*(cc(ido,k,2)+cc(ido,k,4))
          tr1 = hsqt2*(cc(ido,k,2)-cc(ido,k,4))
          ch(ido,1,k) = tr1+cc(ido,k,1)
          ch(ido,3,k) = cc(ido,k,1)-tr1
          ch(1,2,k) = ti1-cc(ido,k,3)
          ch(1,4,k) = ti1+cc(ido,k,3)
-  106 continue
+      end do
   107 return
-end
+end subroutine radf4
 
 subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
     use mod_prec, only: dp
@@ -1131,7 +1113,7 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
       ti11 = sin(0.4_dp*pi)
       tr12 = -sin(0.3_dp*pi)
       ti12 = sin(0.2_dp*pi)
-      do 101 k=1,l1
+      do k=1,l1
          cr2 = cc(1,k,5)+cc(1,k,2)
          ci5 = cc(1,k,5)-cc(1,k,2)
          cr3 = cc(1,k,4)+cc(1,k,3)
@@ -1141,13 +1123,12 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
          ch(1,3,k) = ti11*ci5+ti12*ci4
          ch(ido,4,k) = cc(1,k,1)+tr12*cr2+tr11*cr3
          ch(1,5,k) = ti12*ci5-ti11*ci4
-  101 continue
-      if (ido .eq. 1) return
+      end do
+      if (ido==1) return
       idp2 = ido+2
-      if((ido-1)/2.lt.l1) go to 104
-      do 103 k=1,l1
-!dir$ ivdep
-         do 102 i=3,ido,2
+      if((ido-1)/2<l1) go to 104
+      do k=1,l1
+         do i=3,ido,2
             ic = idp2-i
             dr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             di2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
@@ -1183,13 +1164,12 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
             ch(ic-1,4,k) = tr3-tr4
             ch(i,5,k) = ti3+ti4
             ch(ic,4,k) = ti4-ti3
-  102    continue
-  103 continue
+         end do
+      end do
       return
-  104 do 106 i=3,ido,2
+  104 do i=3,ido,2
          ic = idp2-i
-!dir$ ivdep
-         do 105 k=1,l1
+         do k=1,l1
             dr2 = wa1(i-2)*cc(i-1,k,2)+wa1(i-1)*cc(i,k,2)
             di2 = wa1(i-2)*cc(i,k,2)-wa1(i-1)*cc(i-1,k,2)
             dr3 = wa2(i-2)*cc(i-1,k,3)+wa2(i-1)*cc(i,k,3)
@@ -1224,9 +1204,9 @@ subroutine radf5(ido, l1, cc, ch, wa1, wa2, wa3, wa4)
             ch(ic-1,4,k) = tr3-tr4
             ch(i,5,k) = ti3+ti4
             ch(ic,4,k) = ti4-ti3
-  105    continue
-  106 continue
-end
+         end do
+      end do
+end subroutine radf5
 
 subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
     use mod_prec, only: dp
@@ -1250,160 +1230,157 @@ subroutine radfg(ido, ip, l1, idl1, cc, c1, c2, ch, ch2, wa)
       ipp2 = ip+2
       idp2 = ido+2
       nbd = (ido-1)/2
-      if (ido .eq. 1) go to 119
-      do 101 ik=1,idl1
+      if (ido==1) go to 119
+      do ik=1,idl1
          ch2(ik,1) = c2(ik,1)
-  101 continue
-      do 103 j=2,ip
-         do 102 k=1,l1
+      end do
+      do j=2,ip
+         do k=1,l1
             ch(1,k,j) = c1(1,k,j)
-  102    continue
-  103 continue
-      if (nbd .gt. l1) go to 107
+         end do
+      end do
+      if (nbd>l1) go to 107
       is = -ido
-      do 106 j=2,ip
+      do j=2,ip
          is = is+ido
          idij = is
-         do 105 i=3,ido,2
+         do i=3,ido,2
             idij = idij+2
-            do 104 k=1,l1
+            do k=1,l1
                ch(i-1,k,j) = wa(idij-1)*c1(i-1,k,j)+wa(idij)*c1(i,k,j)
                ch(i,k,j) = wa(idij-1)*c1(i,k,j)-wa(idij)*c1(i-1,k,j)
-  104       continue
-  105    continue
-  106 continue
+            end do
+         end do
+      end do
       go to 111
   107 is = -ido
-      do 110 j=2,ip
+      do j=2,ip
          is = is+ido
-         do 109 k=1,l1
+         do k=1,l1
             idij = is
-!dir$ ivdep
-            do 108 i=3,ido,2
+            do i=3,ido,2
                idij = idij+2
                ch(i-1,k,j) = wa(idij-1)*c1(i-1,k,j)+wa(idij)*c1(i,k,j)
                ch(i,k,j) = wa(idij-1)*c1(i,k,j)-wa(idij)*c1(i-1,k,j)
-  108       continue
-  109    continue
-  110 continue
-  111 if (nbd .lt. l1) go to 115
-      do 114 j=2,ipph
+            end do
+         end do
+      end do
+  111 if (nbd < l1) go to 115
+      do j=2,ipph
          jc = ipp2-j
-         do 113 k=1,l1
-!dir$ ivdep
-            do 112 i=3,ido,2
+         do k=1,l1
+            do i=3,ido,2
                c1(i-1,k,j) = ch(i-1,k,j)+ch(i-1,k,jc)
                c1(i-1,k,jc) = ch(i,k,j)-ch(i,k,jc)
                c1(i,k,j) = ch(i,k,j)+ch(i,k,jc)
                c1(i,k,jc) = ch(i-1,k,jc)-ch(i-1,k,j)
-  112       continue
-  113    continue
-  114 continue
+            end do
+         end do
+      end do
       go to 121
-  115 do 118 j=2,ipph
+  115 do j=2,ipph
          jc = ipp2-j
-         do 117 i=3,ido,2
-            do 116 k=1,l1
+         do i=3,ido,2
+            do k=1,l1
                c1(i-1,k,j) = ch(i-1,k,j)+ch(i-1,k,jc)
                c1(i-1,k,jc) = ch(i,k,j)-ch(i,k,jc)
                c1(i,k,j) = ch(i,k,j)+ch(i,k,jc)
                c1(i,k,jc) = ch(i-1,k,jc)-ch(i-1,k,j)
-  116       continue
-  117    continue
-  118 continue
+            end do
+         end do
+      end do
       go to 121
-  119 do 120 ik=1,idl1
+  119 do ik=1,idl1
          c2(ik,1) = ch2(ik,1)
-  120 continue
-  121 do 123 j=2,ipph
+      end do
+  121 do j=2,ipph
          jc = ipp2-j
-         do 122 k=1,l1
+         do k=1,l1
             c1(1,k,j) = ch(1,k,j)+ch(1,k,jc)
             c1(1,k,jc) = ch(1,k,jc)-ch(1,k,j)
-  122    continue
-  123 continue
+         end do
+      end do
 !
       ar1 = 1.0_dp
       ai1 = 0.0_dp
-      do 127 l=2,ipph
+      do l=2,ipph
          lc = ipp2-l
          ar1h = dcp*ar1-dsp*ai1
          ai1 = dcp*ai1+dsp*ar1
          ar1 = ar1h
-         do 124 ik=1,idl1
+         do ik=1,idl1
             ch2(ik,l) = c2(ik,1)+ar1*c2(ik,2)
             ch2(ik,lc) = ai1*c2(ik,ip)
-  124    continue
+         end do
          dc2 = ar1
          ds2 = ai1
          ar2 = ar1
          ai2 = ai1
-         do 126 j=3,ipph
+         do j=3,ipph
             jc = ipp2-j
             ar2h = dc2*ar2-ds2*ai2
             ai2 = dc2*ai2+ds2*ar2
             ar2 = ar2h
-            do 125 ik=1,idl1
+            do ik=1,idl1
                ch2(ik,l) = ch2(ik,l)+ar2*c2(ik,j)
                ch2(ik,lc) = ch2(ik,lc)+ai2*c2(ik,jc)
-  125       continue
-  126    continue
-  127 continue
-      do 129 j=2,ipph
-         do 128 ik=1,idl1
+            end do
+         end do
+      end do
+      do j=2,ipph
+         do ik=1,idl1
             ch2(ik,1) = ch2(ik,1)+c2(ik,j)
-  128    continue
-  129 continue
+         end do
+      end do
 !
-      if (ido .lt. l1) go to 132
-      do 131 k=1,l1
-         do 130 i=1,ido
+      if (ido<l1) go to 132
+      do k=1,l1
+         do i=1,ido
             cc(i,1,k) = ch(i,k,1)
-  130    continue
-  131 continue
+         end do
+      end do
       go to 135
-  132 do 134 i=1,ido
-         do 133 k=1,l1
+  132 do i=1,ido
+         do k=1,l1
             cc(i,1,k) = ch(i,k,1)
-  133    continue
-  134 continue
-  135 do 137 j=2,ipph
+         end do
+      end do
+  135 do j=2,ipph
          jc = ipp2-j
          j2 = j+j
-         do 136 k=1,l1
+         do k=1,l1
             cc(ido,j2-2,k) = ch(1,k,j)
             cc(1,j2-1,k) = ch(1,k,jc)
-  136    continue
-  137 continue
-      if (ido .eq. 1) return
-      if (nbd .lt. l1) go to 141
-      do 140 j=2,ipph
+         end do
+      end do
+      if (ido==1) return
+      if (nbd<l1) go to 141
+      do j=2,ipph
          jc = ipp2-j
          j2 = j+j
-         do 139 k=1,l1
-!dir$ ivdep
-            do 138 i=3,ido,2
+         do k=1,l1
+            do i=3,ido,2
                ic = idp2-i
                cc(i-1,j2-1,k) = ch(i-1,k,j)+ch(i-1,k,jc)
                cc(ic-1,j2-2,k) = ch(i-1,k,j)-ch(i-1,k,jc)
                cc(i,j2-1,k) = ch(i,k,j)+ch(i,k,jc)
                cc(ic,j2-2,k) = ch(i,k,jc)-ch(i,k,j)
-  138       continue
-  139    continue
-  140 continue
+            end do
+         end do
+      end do
       return
-  141 do 144 j=2,ipph
+  141 do j=2,ipph
          jc = ipp2-j
          j2 = j+j
-         do 143 i=3,ido,2
+         do i=3,ido,2
             ic = idp2-i
-            do 142 k=1,l1
+            do k=1,l1
                cc(i-1,j2-1,k) = ch(i-1,k,j)+ch(i-1,k,jc)
                cc(ic-1,j2-2,k) = ch(i-1,k,j)-ch(i-1,k,jc)
                cc(i,j2-1,k) = ch(i,k,j)+ch(i,k,jc)
                cc(ic,j2-2,k) = ch(i,k,jc)-ch(i,k,j)
-  142       continue
-  143    continue
-  144 continue
+            end do
+         end do
+      end do
       return
-      end
+end subroutine radfg

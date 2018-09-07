@@ -77,14 +77,14 @@ module mod_cpl_land_model
 
             do j=1,il
                 do i=1,ix
-                    if (fmask_l(i,j).lt.flandmin) dmask(i,j) = 0
+                    if (fmask_l(i,j)<flandmin) dmask(i,j) = 0
                 end do
             end do
 
             ! Set time_step/heat_capacity and dissipation fields
             do j=1,il
                 do i=1,ix
-                    if (alb0(i,j).lt.0.4_dp) then
+                    if (alb0(i,j)<0.4_dp) then
                         rhcapl(i,j) = 86400.0_dp/hcapl
                     else
                         rhcapl(i,j) = 86400.0_dp/hcapli

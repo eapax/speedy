@@ -25,8 +25,8 @@ program agcm_main
     enddo
 
     ! Write restart file at end of run if not already written
-    if (mod(imonth, nmonrs) /= 0 .or. iday /= 1) call restart(2)
-end
+    if (mod(imonth, nmonrs)/=0 .or. iday/=1) call restart(2)
+end program agcm_main
 
 subroutine agcm_1day(jday)
     ! subroutine agcm_1day (jday)
@@ -44,7 +44,7 @@ subroutine agcm_1day(jday)
     integer, intent(in) :: jday
     integer :: istep
 
-    if (iday == 1) print *, ' start of year/month = ', iyear, imonth
+    if (iday==1) print *, ' start of year/month = ', iyear, imonth
 
     istep = 1 + (jday - 1) * nsteps
 
@@ -58,7 +58,7 @@ subroutine agcm_1day(jday)
     call stloop(istep)
 
     ! 4. Write restart file at the end of selected months
-    if (iday == 1) then
-        if (mod(imonth, nmonrs) == 0) call restart(2)
+    if (iday==1) then
+        if (mod(imonth, nmonrs)==0) call restart(2)
     endif
-end
+end subroutine agcm_1day

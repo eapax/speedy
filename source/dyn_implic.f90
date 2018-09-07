@@ -47,7 +47,7 @@ subroutine implic(divdt,tdt,psdt)
         do m=1,mx
             mm=isc*(m-1)+1
             ll=mm+n-2
-            if(ll.ne.0) then
+            if(ll/=0) then
                 do k1=1,kx
                     divdt(m,n,:) = divdt(m,n,:) + xj(:,k1,ll) * yf(m,n,k1)
                 end do
@@ -64,4 +64,4 @@ subroutine implic(divdt,tdt,psdt)
             tdt(:,:,k) = tdt(:,:,k) + xc(k,k1) * divdt(:,:,k1)
         end do
     end do
-end
+end subroutine implic

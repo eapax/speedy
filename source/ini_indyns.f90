@@ -21,7 +21,7 @@ subroutine indyns()
     real(dp) :: elap, elapn, hdifd, hdiff, hdifs, qexp, rad1, rgam, rlap, twn
 
     ! 1. Definition of constants
-    if (mod(nsteps,2) /= 0) stop ' Invalid no. of time steps'
+    if (mod(nsteps,2)/=0) stop ' Invalid no. of time steps'
 
     ! alph = 0 ---- forward step for gravity wave terms
     ! alph = 1 ---- backward implicit -----------------
@@ -31,16 +31,16 @@ subroutine indyns()
     ! Power of Laplacian in horizontal diffusion
     npowhd = 4
 
-    ! 2. Definition of model levels  
+    ! 2. Definition of model levels
 
     ! 2.1 Half (vertical velocity) levels
-    if (kx == 5) then
+    if (kx==5) then
         hsg(:6) = (/ 0.000_dp, 0.150_dp, 0.350_dp, 0.650_dp, 0.900_dp, &
                 1.000_dp /)
-    else if (kx == 7) then
+    else if (kx==7) then
         hsg(:8) = (/ 0.020_dp, 0.140_dp, 0.260_dp, 0.420_dp, 0.600_dp, &
                 0.770_dp, 0.900_dp, 1.000_dp /)
-    else if (kx == 8) then
+    else if (kx==8) then
         hsg(:9) = (/ 0.000_dp, 0.050_dp, 0.140_dp, 0.260_dp, 0.420_dp, &
                 0.600_dp, 0.770_dp, 0.900_dp, 1.000_dp /)
     end if
@@ -84,7 +84,7 @@ subroutine indyns()
     ! 4. Coefficients to compute geopotential
     do k = 1, kx
       xgeop1(k) = rgas*log(hsg(k+1)/fsg(k))
-      if (k /= kx) xgeop2(k+1) = rgas*log(fsg(k+1)/hsg(k+1))
+      if (k/=kx) xgeop2(k+1) = rgas*log(fsg(k+1)/hsg(k+1))
     end do
 
     ! 5. Coefficients for horizontal diffusion
@@ -107,17 +107,17 @@ subroutine indyns()
     end do
 
     ! 5.2 Orographic correction terms for temperature and humidity
-    !     (vertical component) 
+    !     (vertical component)
     rgam = rgas*gamma/(1000.0_dp*grav)
     qexp = hscale/hshum
- 
+
     tcorv(1)=0.0_dp
     qcorv(1)=0.0_dp
     qcorv(2)=0.0_dp
 
     do k = 2, kx
         tcorv(k) = fsg(k)**rgam
-        if (k.gt.2) qcorv(k) = fsg(k)**qexp
+        if (k>2) qcorv(k) = fsg(k)**qexp
         print *, ' temp/hum correction at level ', k, tcorv(k), qcorv(k)
     end do
-end
+end subroutine indyns

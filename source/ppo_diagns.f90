@@ -29,13 +29,13 @@ subroutine diagns(jj,istep)
     do k=1,kx
         diag(k,1)=0.0_dp
         diag(k,2)=0.0_dp
-        diag(k,3)=sqhalf*realpart(t(1,1,k,jj))
+        diag(k,3)=sqhalf*REAL(REAL(t(1,1,k,jj)))
 
         call invlap(vor(1,1,k,jj),temp)
 
         do m=2,mx
             do n=1,nx
-                diag(k,1)=diag(k,1)-realpart(temp(m,n)*conjg(vor(m,n,k,jj)))
+                diag(k,1)=diag(k,1)-REAL(REAL(temp(m,n)*conjg(vor(m,n,k,jj))))
             end do
         end do
 
@@ -43,13 +43,13 @@ subroutine diagns(jj,istep)
 
         do m=2,mx
             do n=1,nx
-                diag(k,2)=diag(k,2)-realpart(temp(m,n)*conjg(div(m,n,k,jj)))
+                diag(k,2)=diag(k,2)-REAL(REAL(temp(m,n)*conjg(div(m,n,k,jj))))
             end do
         end do
     end do
 
     ! 2. Print results to screen
-    if (mod(istep,nstdia).eq.0) then
+    if (mod(istep,nstdia)==0) then
         print 2001, istep, (diag(k,1),k=1,kx)
         print 2002,        (diag(k,2),k=1,kx)
         print 2003,        (diag(k,3),k=1,kx)
@@ -57,8 +57,8 @@ subroutine diagns(jj,istep)
 
     ! 3. Stop integration if model variables are out of range
     do k=1,kx
-        if (diag(k,1).gt.500.or.diag(k,2).gt.500.or.diag(k,3).lt.180.or.&
-            & diag(k,3).gt.320.) then
+        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<180 .or.&
+            & diag(k,3)>320.) then
 
             print 2001, istep, (diag(kk,1),kk=1,kx)
             print 2002,        (diag(kk,2),kk=1,kx)
@@ -74,4 +74,4 @@ subroutine diagns(jj,istep)
     2001 format(' step =',i6,' reke =',(10f8.2))
     2002 format         (13x,' deke =',(10f8.2))
     2003 format         (13x,' temp =',(10f8.2))
-end
+end subroutine diagns

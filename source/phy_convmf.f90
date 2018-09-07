@@ -126,7 +126,7 @@ module phy_convmf
             do j=1,ngp
                 itop(j)=nlp
 
-                if (psa(j).gt.psmin) then
+                if (psa(j)>psmin) then
                     ! Minimum of moist static energy in the lowest two levels
                     mse0=se(j,kx)+alhc*qa(j,kx)
                     mse1=se(j,nl1) +alhc*qa(j,nl1)
@@ -143,25 +143,25 @@ module phy_convmf
 
                         ! Check 1: conditional instability
                         !          (MSS in PBL > MSS at top level)
-                        if (mss0.gt.mss2) then
+                        if (mss0>mss2) then
                            ktop1=k
                         end if
 
                         ! Check 2: gradient of actual moist static energy
                         !          between lower and upper troposphere
-                        if (mse1.gt.mss2) then
+                        if (mse1>mss2) then
                            ktop2=k
                            msthr=mss2
                         end if
                     end do
 
-                    if (ktop1.lt.kx) then
+                    if (ktop1<kx) then
                         ! Check 3: RH > RH_c at both k=kx and k=NL1
                         qthr0=rhbl*qsat(j,kx)
                         qthr1=rhbl*qsat(j,nl1)
-                        lqthr=(qa(j,kx).gt.qthr0.and.qa(j,nl1).gt.qthr1)
+                        lqthr=(qa(j,kx)>qthr0 .and. qa(j,nl1)>qthr1)
 
-                        if (ktop2.lt.kx) then
+                        if (ktop2<kx) then
                            itop(j)=ktop1
                            qdif(j)=max(qa(j,kx)-qthr0,(mse0-msthr)*rlhc)
                         else if (lqthr) then
@@ -174,7 +174,7 @@ module phy_convmf
 
             ! 3. Convection over selected grid-points
             do j=1,ngp
-                if (itop(j).eq.nlp) cycle
+                if (itop(j)==nlp) cycle
 
                 ! 3.1 Boundary layer (cloud base)
                 k =kx
@@ -234,7 +234,7 @@ module phy_convmf
 
                     ! Secondary moisture flux
                     delq=rhil*qsat(j,k)-qa(j,k)
-                    if (delq.gt.0.0_dp) then
+                    if (delq>0.0_dp) then
                         fsq=smf*cbmf(j)*delq
                         dfqa(j,k)   =dfqa(j,k)   +fsq
                         dfqa(j,kx)=dfqa(j,kx)-fsq

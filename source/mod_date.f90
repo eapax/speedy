@@ -68,7 +68,7 @@ module mod_date
             integer :: jm, im
 
             ! calendar
-            if (ncal == 365) then
+            if (ncal==365) then
                 ndaycal(:,1) = ncal365(:)
             else
                 ndaycal(:,1) = 30
@@ -87,7 +87,7 @@ module mod_date
             do jm=1,nmonts
                 ndays = ndays+ndaycal(im,1)
                 im = im+1
-                if (im.eq.13) im=1
+                if (im==13) im=1
             end do
 
             print *, 'start date ', iyear, imonth, iday, ihour
@@ -120,7 +120,7 @@ module mod_date
 
             logical :: month_start
 
-            month_start = (isecond < idelt .and. ihour == 0 .and. iday == 1)
+            month_start = (isecond < idelt .and. ihour==0 .and. iday==1)
         end function month_start
 
         subroutine newdate()
@@ -128,19 +128,19 @@ module mod_date
             iday = iday+1
 
             ! Leap year and February?
-            if (mod(iyear,4) == 0 .and. imonth == 2) then
-                if (iday > 29) then
+            if (mod(iyear,4)==0 .and. imonth==2) then
+                if (iday>29) then
                     iday   = 1
                     imonth = imonth+1
                 end if
             else
-                if (iday > ndaycal(imonth,1)) then
+                if (iday>ndaycal(imonth,1)) then
                     iday   = 1
                     imonth = imonth+1
                 end if
             end if
 
-            if (imonth > 12) then
+            if (imonth>12) then
                 imonth = 1
                 iyear  = iyear+1
             end if
@@ -150,7 +150,7 @@ module mod_date
 
         subroutine set_forcing_date()
             ! additional variables to define forcing terms and boundary cond.
-            if (iseasc >= 1) then
+            if (iseasc>=1) then
                 imont1 = imonth
                 tmonth = (iday-0.5)/float(ndaycal(imonth,1))
                 tyear  = (ndaycal(imonth,2)+iday-0.5)/float(ncal)

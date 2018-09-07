@@ -112,7 +112,7 @@ module ppo_output_stream
                     ! Check for every prognostic variable in the output stream
                     do m=1, streams(n)%nvars
                         do p=1, 5
-                            if (streams(n)%var_ID(m) == p) then
+                            if (streams(n)%var_ID(m)==p) then
                                 l_transform_field(p) = .true.
                             end if
                         end do
@@ -216,12 +216,12 @@ module ppo_output_stream
             integer, intent(in) :: frequency
             logical :: xmod
 
-            if (frequency > 0) then
-                xmod = (mod(istep, frequency) == 0)
+            if (frequency>0) then
+                xmod = (mod(istep, frequency)==0)
 
             else if (frequency < 0) then
                 ! Output on the first day of each month
-                xmod = (month_start() .and. mod(imonth, -frequency) == 0)
+                xmod = (month_start() .and. mod(imonth, -frequency)==0)
             else
                 xmod = .false.
             end if
@@ -267,8 +267,8 @@ module ppo_output_stream
                 output = fetch_output_spectral(stream%var_ID(n))
 
                 ! Write real and imaginary parts as separate variables
-                re_output = REALPART(output)
-                im_output = IMAGPART(output)
+                re_output = REAL(REAL (output))
+                im_output = REAL(AIMAG(output))
 
                 do k=kx, 1, -1
                     write(stream%file_ID, rec=stream%rec) re_output(:, :, k)
@@ -301,7 +301,7 @@ module ppo_output_stream
                     end do
                 else
                     ! Otherwise write model level output
-                    if (stream%var_ID(n) == 5) then
+                    if (stream%var_ID(n)==5) then
                         output_sp = output / gg !m
                     else
                         output_sp = output

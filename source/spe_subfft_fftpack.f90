@@ -8,7 +8,7 @@ subroutine inifft
 
     call rffti(ix,wsave)
     !call dffti (ix,wsave)
-end
+end subroutine inifft
 
 !*********************************************************************
 
@@ -43,13 +43,13 @@ subroutine gridx(varm,vorg,kcos)
         !call dfftb(ix,fvar,wsave)
 
         ! Copy output into grid-point field, scaling by cos(lat) if needed
-        if (kcos.eq.1) then
+        if (kcos==1) then
             vorg(:,j) = fvar
         else
             vorg(:,j) = fvar * cosgr(j)
         end if
     end do
-end
+end subroutine gridx
 
 !******************************************************************
 
@@ -86,6 +86,6 @@ subroutine specx(vorg,varm)
             varm(m,j)=fvar(m-1)*scale
         end do
     end do
-end
+end subroutine specx
 
 include "spe_subfft_fftpack2.f90"

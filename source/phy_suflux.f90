@@ -259,7 +259,7 @@ module phy_suflux
             end do
 
             do j=1,ngp
-                if (ta(j,kx) > ta(j,kxm)) then
+                if (ta(j,kx)>ta(j,kxm)) then
                     ! Use extrapolated temp. if dT/dz < 0
                     t1(j,1) = ftemp0*t1(j,1)+gtemp0*t2(j,1)
                     t1(j,2) = ftemp0*t1(j,2)+gtemp0*t2(j,2)
@@ -299,7 +299,7 @@ module phy_suflux
 
             do j=1,ngp
                 ! Potential temp. difference (land+sea average)
-                if (tskin(j) > t2(j,1)) then
+                if (tskin(j)>t2(j,1)) then
                     dthl=min(dtheta,tskin(j)-t2(j,1))
                 else
                     dthl=max(-dtheta,astab*(tskin(j)-t2(j,1)))
@@ -320,7 +320,7 @@ module phy_suflux
             end do
 
             ! 2.5 Evaporation
-            if (fhum0 > 0.0_dp) then
+            if (fhum0>0.0_dp) then
                 call shtorh(-1,ngp,t1(1,1),psa,1.0_dp, &
                         q1(1,1),rh(1,kx),qsat0(1,1))
 
@@ -364,7 +364,7 @@ module phy_suflux
                 qsat0(:, 2) = q_sat(ngp, dtskin, psa, 1.0_dp)
 
                 do j=1,ngp
-                    if (evap(j,1) > 0) then
+                    if (evap(j,1)>0) then
                         qsat0(j,2) = swav(j)*(qsat0(j,2)-qsat0(j,1))
                     else
                         qsat0(j,2) = 0.0_dp
@@ -398,7 +398,7 @@ module phy_suflux
             ! to get smaller dS/dT in stable conditions
 
             do j=1,ngp
-                if (tsea_lm(j) > t2(j,2)) then
+                if (tsea_lm(j)>t2(j,2)) then
                    dths=min(dtheta,tsea_lm(j)-t2(j,2))
                 else
                    dths=max(-dtheta,astab*(tsea_lm(j)-t2(j,2)))
@@ -406,7 +406,7 @@ module phy_suflux
                 denvvs(j,2)=denvvs(j,0)*(1.0_dp+dths*rdth)
             end do
 
-            if (fhum0 > 0.0_dp) then
+            if (fhum0>0.0_dp) then
                 call shtorh(-1,ngp,t1(1,2),psa,1.0_dp, &
                         q1(1,2),rh(1,kx),qsat0(1,2))
 

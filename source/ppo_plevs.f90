@@ -52,7 +52,7 @@ module ppo_plevs
                 call setvin(zinp,rdzinp,zout,ngp,kx,k0,w0)
 
                 ! This is done for all variables apart from temperature
-                if (varid /= 3 .and. varid /=5) then
+                if (varid/=3 .and. varid/=5) then
                     do j=1,ngp
                         w0(j) = max(w0(j),0.0_dp)
                     end do
@@ -62,7 +62,7 @@ module ppo_plevs
                 call verint(x_pressure_dp,x_sigma,ngp,kx,k0,w0)
 
                 ! Pass variable to single precision output
-                if (varid == 3) then
+                if (varid==3) then
                     ! Corrections applied to temperature
                     do j=1,ngp
                         if(zout(j)<zinp(kx)) then
@@ -74,7 +74,7 @@ module ppo_plevs
                     end do
                     x_pressure(:,k) = x_pressure_dp
 
-                else if (varid == 5) then
+                else if (varid==5) then
                     call verint(T_pressure,Tg1,ngp,kx,k0,w0)
                     ! Corrections applied to temperature
                     do j=1,ngp
@@ -111,8 +111,8 @@ module ppo_plevs
         subroutine setvin(zinp,rdzinp,zout,ngp,nlev,k0,w0)
             implicit none
 
-            real(dp), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
             integer, intent(in) :: ngp, nlev
+            real(dp), intent(in) :: zinp(nlev), rdzinp(nlev), zout(ngp)
             real(dp), intent(out) :: w0(ngp)
             integer, intent(out) :: k0(ngp)
             integer :: j, k
@@ -124,7 +124,7 @@ module ppo_plevs
 
             do k=2,nlev-1
                 do j=1,ngp
-                    if (zout(j).lt.zinp(k)) k0(j)=k+1
+                    if (zout(j)<zinp(k)) k0(j)=k+1
                 end do
             end do
 
@@ -132,7 +132,7 @@ module ppo_plevs
             do j=1,ngp
                 w0(j)=(zout(j)-zinp(k0(j)))*rdzinp(k0(j))
             end do
-        end
+        end subroutine setvin
 
         subroutine verint(f2d,f3d,ngp,nlev,k0,w0)
             implicit none
@@ -146,6 +146,6 @@ module ppo_plevs
             do j=1,ngp
                 f2d(j)=f3d(j,k0(j))+w0(j)*(f3d(j,k0(j)-1)-f3d(j,k0(j)))
             end do
-        end
+        end subroutine verint
 
 end module ppo_plevs

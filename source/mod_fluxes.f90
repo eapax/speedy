@@ -28,14 +28,18 @@ module mod_fluxes
 
             integer :: j
 
-            if (ihour /= 0) then
+            if (ihour/=0) then
+                !TODO - Implement reading and writing to a fluxes file to start
+                !       midway through a day
+
                 ! Read from flux file
-                open (100,file='fluxes.grd',form='unformatted',access='direct',&
-                        recl=8*ngp)
-                read (100,rec=4) (hflux_l(j),j=1,ngp)
-                read (100,rec=14) (hflux_s(j),j=1,ngp)
-                read (100,rec=15) (hflux_i(j),j=1,ngp)
-                close (100)
+                !open (100,file='fluxes.grd',form='unformatted',access='direct',&
+                !        recl=8*ngp)
+                !read (100,rec=4) (hflux_l(j),j=1,ngp)
+                !read (100,rec=14) (hflux_s(j),j=1,ngp)
+                !read (100,rec=15) (hflux_i(j),j=1,ngp)
+                !close (100)
+                stop 'Starting at arbitrary time of day not implemented yet'
             else
                 ! Set all daily-mean arrays to zero
                 hflux_l(:) = 0.0_dp

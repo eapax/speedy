@@ -15,13 +15,13 @@ subroutine ini_land(istart)
 
     ! 2. Initialize prognostic variables of land model
     !    in case of no restart or no coupling
-    if (istart.le.0 .or. istart == 2) then
+    if (istart<=0 .or. istart==2) then
         stl_lm(:)  = stlcl_ob(:)      ! land sfc. temperature
     end if
 
     ! 3. Compute additional land variables
     call land2atm(0)
-end
+end subroutine ini_land
 
 subroutine atm2land(jday)
     use mod_atparam
@@ -47,17 +47,17 @@ subroutine atm2land(jday)
     ! Climatological soil water availability
     call forint(ngp,imont1,tmonth,soilw12,soilwcl_ob)
 
-    if (jday.le.0) return
+    if (jday<=0) return
 
     ! 2. Set input variables for mixed-layer/ocean model
-    if (icland.gt.0) then
+    if (icland>0) then
         vland_input(:,1) = stl_lm(:)
         vland_input(:,2) = hflux_l(:)
         vland_input(:,3) = stlcl_ob(:)
     end if
 
     ! 3. Call message-passing routines to send data (if needed)
-end
+end subroutine atm2land
 
 subroutine land2atm(jday)
     use mod_atparam
@@ -69,7 +69,7 @@ subroutine land2atm(jday)
 
     integer, intent(in) :: jday
 
-    if (jday.gt.0.and.icland.gt.0) then
+    if (jday>0 .and. icland>0) then
         ! 1. Run ocean mixed layer or
         !    call message-passing routines to receive data from ocean model
         call land_model
@@ -80,7 +80,7 @@ subroutine land2atm(jday)
 
     ! 3. Compute land-sfc. fields for atm. model
     ! 3.1 Land sfc. temperature
-    if (icland.le.0) then
+    if (icland<=0) then
         ! Use observed climatological field
         stl_am(:) = stlcl_ob(:)
     else
@@ -91,7 +91,7 @@ subroutine land2atm(jday)
     ! 3.2 Snow depth and soil water availability
     snowd_am(:) = snowdcl_ob(:)
     soilw_am(:) = soilwcl_ob(:)
-end
+end subroutine land2atm
 
 subroutine rest_land(imode)
     ! subroutine rest_land (imode)
@@ -113,9 +113,9 @@ subroutine rest_land(imode)
     ! land surface temperature at input resolution
     real(dp) :: stl_lm_in(ix_in*il_in)
 
-    if (imode.eq.0) then
+    if (imode==0) then
         read (3)  stl_lm_in
-        if (ix_in /= ix .or. il_in /= il) then
+        if (ix_in/=ix .or. il_in/=il) then
             call regrid(stl_lm_in, stl_lm)
         else
             stl_lm = stl_lm_in
@@ -123,10 +123,10 @@ subroutine rest_land(imode)
     else
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model
-        if (icland.gt.0) then
+        if (icland>0) then
             write (10) stl_lm(:)
         else
             write (10) stl_am(:)
         end if
     end if
-end
+end subroutine rest_land

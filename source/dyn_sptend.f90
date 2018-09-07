@@ -66,4 +66,4 @@ subroutine sptend (divdt,tdt,psdt,j4)
         call lap(dumc(:,:,1),dumc(:,:,2))
         divdt(:,:,k) = divdt(:,:,k) - dumc(:,:,2)
     end do
-end
+end subroutine sptend

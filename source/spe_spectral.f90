@@ -72,9 +72,8 @@ module spectral
             !      w(m) = weights in gaussian quadrature (sum should equal 1.0)
 
 
-
-            real(dp), intent(out) :: x(m),w(m)
             integer, intent(in) :: m
+            real(dp), intent(out) :: x(m),w(m)
             real(dp) :: z,z1,p1,p2,p3,pp
             real(dp), parameter :: eps=3.d-14
             integer :: n, j, i
@@ -85,7 +84,7 @@ module spectral
 
             do i=1,m
                 z=cos(3.141592654_dp*(i-0.25_dp)/(n+0.5_dp))
-                do while (abs(z-z1).gt.eps)
+                do while (abs(z-z1) > eps)
                     p1=1.0_dp
                     p2=0.0_dp
 
@@ -160,8 +159,8 @@ module spectral
                     ll(m,n)=mm(m)+n-1
                     l2(m,n)=ll(m,n)*(ll(m,n)+1)
                     el2(m,n)=float(l2(m,n))*am2
-                    if (ll(m,n).le.ntrun1.or.ix.ne.4*iy) nsh2(n)=nsh2(n)+2
-                    if (ll(m,n).le.ntrun) then
+                    if (ll(m,n)<=ntrun1 .or. ix/=4*iy) nsh2(n)=nsh2(n)+2
+                    if (ll(m,n)<=ntrun) then
                       trfilt(m,n)=1.0_dp
                     else
                       trfilt(m,n)=0.0_dp
@@ -189,15 +188,15 @@ module spectral
                     ell(m,n)=float(n+m-2)
                     emm2=emm(m)**2
                     ell2=ell(m,n)**2
-                    if(n.eq.nxp) then
+                    if(n==nxp) then
                       epsi(m,n)=0.0_dp
-                    else if(n.eq.1.and.m.eq.1) then
+                    else if(n==1 .and. m==1) then
                       epsi(m,n)=0.0_dp
                     else
                       epsi(m,n)=sqrt((ell2-emm2)/(4.0_dp*ell2-1.0_dp))
                     end if
                     repsi(m,n)=0.0_dp
-                    if(epsi(m,n).gt.0.0_dp) repsi(m,n)=1.0_dp/epsi(m,n)
+                    if(epsi(m,n)>0.0_dp) repsi(m,n)=1.0_dp/epsi(m,n)
                 end do
             end do
 
@@ -212,7 +211,7 @@ module spectral
                     m1=mm(m)
                     m2=m1+1
                     el1=float(ll(m,n))
-                    if(n.eq.1) then
+                    if(n==1) then
                         gradx(m)=float(m1)/a
                         uvdx(m,1)=-a/float(m1+1)
                         uvdym(m,1)=0.0_dp
@@ -281,7 +280,7 @@ module spectral
             ! zero polynomials with absolute values smaller than 10**(-30)
             do n=1,nx
                 do m=1,mxp
-                    if(abs(alp(m,n)) .le. small) alp(m,n)=0.0_dp
+                    if(abs(alp(m,n))<=small) alp(m,n)=0.0_dp
                 end do
             end do
 
@@ -321,8 +320,8 @@ module spectral
             integer :: n
 
             do n=1,nx
-                psdx(:,n) = CMPLX(-gradx*IMAGPART(psi(:,n)), &
-                                   gradx*REALPART(psi(:,n)))
+                psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n))), &
+                                   gradx*REAL( REAL(psi(:,n))))
             end do
 
             psdy(:,1) = gradyp(:,1)*psi(:,2)
@@ -342,10 +341,10 @@ module spectral
             integer :: n
 
             do n=1,nx
-                zp(:,n) = CMPLX(-gradx*IMAGPART(ucosm(:,n)), &
-                                 gradx*REALPART(ucosm(:,n)))
-                zc(:,n) = CMPLX(-gradx*IMAGPART(vcosm(:,n)), &
-                                 gradx*REALPART(vcosm(:,n)))
+                zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n))), &
+                                 gradx*REAL(REAL(ucosm(:,n))))
+                zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n))), &
+                                 gradx*REAL(REAL(vcosm(:,n))))
             end do
 
             vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
@@ -370,8 +369,8 @@ module spectral
 
             integer :: n
 
-            zp = CMPLX(-uvdx*IMAGPART(vorm), uvdx*REALPART(vorm))
-            zc = CMPLX(-uvdx*IMAGPART(divm), uvdx*REALPART(divm))
+            zp = CMPLX(-uvdx*REAL(AIMAG(vorm)), uvdx*REAL(REAL(vorm)))
+            zc = CMPLX(-uvdx*REAL(AIMAG(divm)), uvdx*REAL(REAL(divm)))
 
             ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
             ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)
@@ -421,7 +420,7 @@ module spectral
             real(dp) :: ug1(ix,il), vg1(ix,il)
             complex(dp) :: um(mx,il), vm(mx,il), dumc1(mx,nx), dumc2(mx,nx)
 
-            if (kcos.eq.2) then
+            if (kcos==2) then
                 do j=1,il
                     do i=1,ix
                         ug1(i,j)=ug(i,j)*cosgr(j)
@@ -483,7 +482,7 @@ subroutine gridy(v,varm)
             varm(m,j) =vm1(m)-vm2(m)
         end do
     end do
-end
+end subroutine gridy
 !******************************************************************
 subroutine specy(varm,vorm)
     use mod_atparam
@@ -522,7 +521,7 @@ subroutine specy(varm,vorm)
             end do
         end do
     end do
-end
+end subroutine specy
 !******************************************************************
 subroutine trunct(vor)
     use mod_atparam
@@ -534,4 +533,4 @@ subroutine trunct(vor)
     complex(dp), intent(inout) :: vor(mx,nx)
 
     vor = vor * trfilt
-end
+end subroutine trunct

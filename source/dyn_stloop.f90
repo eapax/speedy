@@ -18,13 +18,13 @@ subroutine stloop(istep)
 
     ! Loop over number of steps per day
     do j = 1, nsteps
-        if (iitest == 1) print*, 'stloop: calling step ', istep
+        if (iitest==1) print*, 'stloop: calling step ', istep
 
         ! Increment the time by one timestep
         call update_time()
 
         ! Set logical flags
-        lradsw = (mod(istep,nstrad) == 1)
+        lradsw = (mod(istep,nstrad)==1)
 
         ! Perform one leapfrog time step
         call step(2, 2, delt2, alph, rob, wil)

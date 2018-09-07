@@ -32,9 +32,9 @@ module humidity
 
             ! 2. Compute rel.hum. RH=Q/Qsat (imode>0), or Q=RH*Qsat (imode<0)
             qsat = q_sat(ngp, ta, ps, sig)
-            if (imode.gt.0) then
+            if (imode>0) then
                 rh=qa/qsat
-            else if (imode.lt.0) then
+            else if (imode <0) then
                 qa=rh*qsat
             end if
         end subroutine shtorh
@@ -59,7 +59,7 @@ module humidity
             t2 = 7.66_dp
 
             do j=1,ngp
-                if (ta(j).ge.t0) then
+                if (ta(j)>=t0) then
                     ! Saturation relative to liquid water
                     q_sat(j)=e0*exp(c1*(ta(j)-t0)/(ta(j)-t1))
                 else
@@ -68,7 +68,7 @@ module humidity
                 end if
             end do
 
-            if (sig.le.0.0_dp) then
+            if (sig<=0.0_dp) then
                 do j=1,ngp
                     q_sat(j)=622.0_dp*q_sat(j)/ &
                             (ps(1)-0.378_dp*q_sat(j))
