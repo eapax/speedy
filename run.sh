@@ -13,7 +13,7 @@ fi
 
 # Define directory names
 UT=`pwd`
-TMP=${HOME}/temp/
+TMP=${HOME}/temp
 OUT=${UT}/output/exp_${2}
 INP=${UT}/output/exp_${3}
 
@@ -31,26 +31,25 @@ cp ${output}     ${TMP}/output_requests.nml
 
 # Link restart file if needed
 if [ ${3} != 0 ] ; then
-  cp ${INP}/*.rst ${TMP}
+  cp -sf ${INP}/*.rst ${TMP}
 fi
 
 # Link input files
-SB=${UT}/data/bc/${1}/clim
-SC=${UT}/data/bc/${1}/anom
+BC=${UT}/data/bc/${1}/clim
+SH=${UT}/hflux
 
 cd ${TMP}
-ln -sf ${SB}/sfc.grd   fort.20
-ln -sf ${SB}/sst.grd   fort.21
-ln -sf ${SB}/icec.grd  fort.22
-ln -sf ${SB}/stl.grd   fort.23
-ln -sf ${SB}/snowd.grd fort.24
-ln -sf ${SB}/swet.grd  fort.26
-ln -sf ${SC}/ssta.grd  fort.30
+ln -sf ${BC}/clim/sfc.grd   fort.20
+ln -sf ${BC}/clim/swet.grd  fort.26
+ln -sf ${BC}/anom/ssta.grd  fort.30
+ln -sf ${BC}/climatology.nc climatology.nc
+ln -sf ${BC}/anomalies.nc   anomalies.nc
+ln -sf ${SH}/hflux_speedy_ver41_1979_2008_clim.grd fort.31
 
 ls -l fort.*
 
 # Link rpe shared library
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${UT}/rpe/lib/
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/share/netcdf/lib
 
 time ./imp.exe | tee out.lis
 

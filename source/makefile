@@ -1,8 +1,8 @@
 %.o: %.mod
 
 COMPILE=gfortran
-COMLIB1=
-COMOTT1= -O2
+COMLIB1= -L/usr/share/netcdf/lib -lnetcdff
+COMOTT1= -O2 -I/usr/share/netcdf_fortran/include
 COMCONV= -fconvert=swap -std=gnu
 
 FILES= \

@@ -39,10 +39,9 @@ module mod_date
     real(dp) :: tmonth, tyear
 
     ! Record in SST anomaly file corr. to the initial month
-
-                ! Initialized in ini_date
-        integer, parameter :: issty0 = 1979
-            integer :: isst0
+    ! Initialized in ini_date
+    integer, parameter :: issty0 = 1979
+    integer :: isst0
 
     ! Calendar set-up (initialized in ini_date)
     integer :: ndaycal(12,2)

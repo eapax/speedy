@@ -6,6 +6,7 @@ subroutine inbcon(grav0,radlat)
     ! Input :   grav0  = gravity accel.
     !           radlat = grid latitudes in radiants
 
+    use netcdf
     use mod_cpl_flags, only: icsea, isstan
     use mod_date, only: isst0
     use mod_atparam
@@ -21,66 +22,58 @@ subroutine inbcon(grav0,radlat)
 
     real(sp) :: r4inp(ix,il)
     real(sp) :: inp(ix,il)
-    real(sp) :: veg(ix,il), swl1(ix,il), swl2(ix,il)
+    real(dp) :: vegh(ix,il), vegl(ix,il)
+    real(sp) :: swl1(ix,il), swl2(ix,il), veg(ix,il)
 
-    integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec
-    real(dp) :: rad2deg, rsw, sdep1, sdep2, swroot, swwil2, thrsh
+    integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec, NCID, VARID
+    real(dp) :: rad2deg, rsw, sdep1, sdep2, swwil2, thrsh, swroot
 
     ! Set threshold for land-sea mask definition
     ! (ie minimum fraction of either land or sea)
-
     thrsh = 0.1_dp
 
     ! 1. Read topographical fields (orography, land-sea mask)
     if (iitest>=1) print *,' read orography'
 
-    call load_boundary_file(20,inp,0)
+    call check(NF90_OPEN('climatology.nc', NF90_NOWRITE, NCID))
+    call NC_extract_variable(NCID, 'orog', 1, phi0)
 
-    phi0 = grav0*inp
+    phi0 = grav0*phi0
 
     call truncg (ntrun,phi0,phis0)
 
     if (iitest>=1) print *,' read fractional land-sea mask'
 
-    call load_boundary_file(20,inp,1)
-
-    fmask = inp
+    call NC_extract_variable(NCID, 'lsm', 1, fmask)
 
     ! 2. Initialize land-sfc boundary conditions
 
     ! 2.1 Fractional and binary land masks
-    do j=1,il
-        do i=1,ix
-            fmask_l(i,j) = fmask(i,j)
+    where (fmask > 1.0_dp-thrsh)
+        fmask_l = 1.0_dp
+        bmask_l = 1.0_dp
+    elsewhere (fmask >= thrsh)
+        fmask_l = fmask
+        bmask_l = 1.0_dp
+    elsewhere
+        bmask_l = 0.0_dp
+        fmask_l = 0.0_dp
+    end where
 
-            if (fmask_l(i,j)>=thrsh) then
-              bmask_l(i,j) = 1.0_dp
-              if (fmask(i,j)>(1.0_dp-thrsh)) fmask_l(i,j) = 1.0_dp
-            else
-              bmask_l(i,j) = 0.0_dp
-              fmask_l(i,j) = 0.0_dp
-            end if
-
-            fmask1(i,j) = fmask_l(i,j)
-        end do
-    end do
+    fmask1 = fmask_l
 
     ! 2.2 Annual-mean surface albedo
     if (iitest>=1) print *,' read surface albedo'
 
-    call load_boundary_file(20,inp,2)
-
-    alb0 = inp
+    call NC_extract_variable(NCID, 'alb', 1, alb0)
 
     ! 2.3 Land-surface temp.
     if (iitest>=1) print *,' reading land-surface temp.'
 
+    call NC_extract_variable(NCID, 'stl', 12, stl12)
+
     do it = 1,12
-        call load_boundary_file(23,inp,it-1)
-
-        call fillsf(inp,ix,il,0.0_dp)
-
-       stl12(1:ix,1:il,it) = inp
+        call fillsf(stl12(:,:,it),ix,il,0.0_dp)
     end do
 
     if (iitest==1) print *,' checking land-surface temp.'
@@ -89,20 +82,13 @@ subroutine inbcon(grav0,radlat)
 
     ! 2.4 Snow depth
     if (iitest>=1) print *,' reading snow depth'
-
-    do it = 1,12
-        call load_boundary_file(24,inp,it-1)
-
-        snowd12(1:ix,1:il,it) = inp
-    end do
+    call NC_extract_variable(NCID, 'snowd', 12, snowd12)
 
     if (iitest>=1) print *,' checking snow depth'
-
-    CALL FORCHK (bmask_l,snowd12,ngp,12,0.0_dp,20000.0_dp,0.0_dp)
+    call FORCHK (bmask_l,snowd12,ngp,12,0.0_dp,20000.0_dp,0.0_dp)
 
     ! 2.5 Read soil moisture and compute soil water availability
     !     using vegetation fraction
-
     if (iitest>=1) print *,' reading soil moisture'
 
     ! Read vegetation fraction
@@ -137,25 +123,21 @@ subroutine inbcon(grav0,radlat)
     end do
 
     if (iitest>=1) print *,' checking soil moisture'
-
     call forchk(bmask_l,soilw12,ngp,12,0.0_dp,10.0_dp,0.0_dp)
 
     ! 3. Initialize sea-sfc boundary conditions
 
     ! 3.1 Fractional and binary sea masks
-    do j=1,il
-        do i=1,ix
-            fmask_s(i,j) = 1.0_dp-fmask(i,j)
-
-            if (fmask_s(i,j)>=thrsh) then
-                bmask_s(i,j) = 1.0_dp
-                if (fmask_s(i,j)>(1.0_dp-thrsh)) fmask_s(i,j) = 1.0_dp
-            else
-                bmask_s(i,j) = 0.0_dp
-                fmask_s(i,j) = 0.0_dp
-            end if
-        end do
-    end do
+    where (fmask < thrsh)
+        fmask_s = 1.0_dp
+        bmask_s = 1.0_dp
+    elsewhere (fmask <= 1.0_dp - thrsh)
+        fmask_s = 1.0_dp - fmask
+        bmask_s = 1.0_dp
+    elsewhere
+        bmask_s = 0.0_dp
+        fmask_s = 0.0_dp
+    end where
 
     ! Grid latitudes for sea-sfc. variables
     rad2deg = 90.0_dp/asin(1.0_dp)
@@ -163,49 +145,45 @@ subroutine inbcon(grav0,radlat)
 
     ! 3.2 SST
     if (iitest>=1) print *,' reading sst'
+    call NC_extract_variable(NCID, 'sst', 12, sst12)
 
     do it = 1,12
-        call load_boundary_file(21,inp,it-1)
-
-        call fillsf(inp,ix,il,0.0_dp)
-
-        sst12(1:ix,1:il,it) = inp
+        call fillsf(sst12(:,:,it),ix,il,0.0_dp)
     end do
 
     if (iitest>=1) print *,' checking sst'
-
     call forchk(bmask_s,sst12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
 
     ! 3.3 Sea ice concentration
     if (iitest>=1) print *,' reading sea ice'
-
-    do it = 1,12
-        call load_boundary_file(22,inp,it-1)
-
-        inp = max(inp,0.0_sp)
-
-        sice12(1:ix,1:il,it) = inp
-    end do
+    call NC_extract_variable(NCID, 'icec', 12, sice12)
+    sice12 = max(sice12,0.0_sp)
 
     if (iitest>=1) print *,' checking sea ice'
-
     call forchk(bmask_s,sice12,ngp,12,0.0_dp,1.0_dp,0.0_dp)
+
+    call check(NF90_CLOSE(NCID))
 
     ! 3.4 SST anomalies for initial and prec./following months
     if (isstan>0) then
         if (iitest>=1) print *,' reading sst anomalies'
 
         print *, 'isst0 = ', isst0
+        ! Read in the the sst anomaly for the current month and the month
+        ! before and after the current month
+        ! isst0 = number of months of the current date from the start of the
+        !         sst anomaly file
+        call check(NF90_OPEN('anomalies.nc', NF90_NOWRITE, NCID))
         do it=1,3
-            if ((isst0<=1 .and. it/=2) .or. isst0>1) then
-                call load_boundary_file(30,inp,isst0-2+it-1)
-            end if
+            call check(NF90_INQ_VARID(NCID, 'ssta', VARID))
+            call check(NF90_GET_VAR(NCID, VARID, inp, &
+                    start=(/1, 1, 1, isst0-1+it-1/), count=(/ix, il, 1, 1/) ))
 
             sstan3(1:ix,1:il,it) = inp
         end do
+        call check(NF90_CLOSE(NCID))
 
         if (iitest>=1) print *,' checking sst anomalies'
-
         call forchk(bmask_s,sstan3,ngp,3,-50.0_dp,50.0_dp,0.0_dp)
     end if
 
@@ -234,18 +212,13 @@ subroutine inbcon(grav0,radlat)
             end do
         end do
 
-        do j = 1,il
-            do i = 1,ix
-                if (bmask_s(i,j)>0.0_dp) then
-                    hfseacl(i,j) = hfseacl(i,j)/(12.0_dp*fmask_s(i,j))
-                else
-                    hfseacl(i,j) = 0.0_dp
-                end if
-            end do
-        end do
+        where (bmask_s>0.0_dp)
+            hfseacl = hfseacl/(12.0_dp*fmask_s)
+        elsewhere
+            hfseacl = 0.0_dp
+        end where
 
         if (iitest>=1) print *,' checking sfc heat fluxes'
-
         call forchk (bmask_s,hfseacl,ngp,1,-1000.0_dp,1000.0_dp,0.0_dp)
     end if
 
@@ -258,16 +231,10 @@ subroutine inbcon(grav0,radlat)
 
         do it = 1,12
             read (32) r4inp
-
-            do j = 1,il
-                do i = 1,ix
-                    sstom12(i,j,it) = sst12(i,j,it)+r4inp(i,j)
-                end do
-            end do
+            sstom12(:,:,it) = sst12(:,:,it)+r4inp
         end do
 
         if (iitest>=1) print *,' checking ocean model SST'
-
         call forchk (bmask_s,sstom12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
     end if
 end subroutine inbcon
@@ -347,12 +314,12 @@ subroutine fillsf(sf,ix,il,fmis)
     ! Purpose: replace missing values in surface fields
     ! NB: it is assumed that non-missing values exist near the Equator
 
-    use mod_prec, only: sp, dp
+    use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ix, il
-    real(sp), intent(inout) :: sf(ix,il)
+    real(dp), intent(inout) :: sf(ix,il)
     real(dp), intent(in) :: fmis
 
     real(dp) :: sf2(0:ix+1)
@@ -419,3 +386,39 @@ subroutine load_boundary_file(iunit,inp,offset)
 
     close(unit=iunit)
 end subroutine load_boundary_file
+
+subroutine NC_extract_variable(NCID, variable, it, inp)
+    ! read field on from unit=iunit
+
+    use netcdf
+    use mod_atparam
+    use mod_prec, only: dp
+
+    implicit none
+
+    integer, intent(in) :: NCID, it
+    character (len=*), intent(in) :: variable
+    real(dp), intent(out) :: inp(ix,il,1,it)
+    integer :: i, VARID
+
+    call check(NF90_INQ_VARID(NCID, variable, VARID))
+    call check(NF90_GET_VAR(NCID, VARID, inp))
+
+    ! Fix undefined values
+    where (inp <= -999) inp = 0.0_dp
+end subroutine NC_extract_variable
+
+subroutine check(status)
+    ! Wrapper subroutine for NetCDF library functions that checks the returned
+    ! status and stops the program on any errors
+    use netcdf
+
+    implicit none
+
+    integer, intent (in) :: status
+
+    if(status /= NF90_NOERR) then
+        print *, NF90_STRERROR(status)
+        stop "Stopped"
+    end if
+end subroutine check
