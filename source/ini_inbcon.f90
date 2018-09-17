@@ -22,8 +22,8 @@ subroutine inbcon(grav0,radlat)
 
     real(sp) :: r4inp(ix,il)
     real(sp) :: inp(ix,il)
-    real(dp) :: vegh(ix,il), vegl(ix,il)
-    real(sp) :: swl1(ix,il), swl2(ix,il), veg(ix,il)
+    real(dp) :: vegh(ix,il), vegl(ix,il), veg(ix,il)
+    real(dp) :: swl1(ix,il,12), swl2(ix,il,12)
 
     integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec, NCID, VARID
     real(dp) :: rad2deg, rsw, sdep1, sdep2, swwil2, thrsh, swroot
@@ -92,11 +92,11 @@ subroutine inbcon(grav0,radlat)
     if (iitest>=1) print *,' reading soil moisture'
 
     ! Read vegetation fraction
-    call load_boundary_file(20,veg,3)
-    call load_boundary_file(20,inp,4)
+    call NC_extract_variable(NCID, 'vegh', 1, vegh)
+    call NC_extract_variable(NCID, 'vegl', 1, vegl)
 
     ! Combine high and low vegetation fractions
-    veg = max(0.0_dp,veg+0.8_dp*inp)
+    veg = max(0.0_dp, vegh+0.8_dp*vegl)
 
     ! Read soil moisture
     sdep1 = 70.0_dp
@@ -106,15 +106,14 @@ subroutine inbcon(grav0,radlat)
     swwil2= idep2*swwil
     rsw   = 1.0_dp/(swcap+idep2*(swcap-swwil))
 
+    call NC_extract_variable(NCID, 'swl1', 12, swl1)
+    call NC_extract_variable(NCID, 'swl2', 12, swl2)
     do it = 1,12
-        call load_boundary_file(26,swl1,3*it-3)
-        call load_boundary_file(26,swl2,3*it-2)
-
         ! Combine soil water content from two top layers
         do j = 1,il
             do i = 1,ix
-                swroot = idep2*swl2(i,j)
-                inp(i,j) = min(1.0_dp, rsw*(swl1(i,j) + &
+                swroot = idep2*swl2(i,j,it)
+                inp(i,j) = min(1.0_dp, rsw*(swl1(i,j,it) + &
                         veg(i,j)*max(0.0_dp, swroot-swwil2)))
             end do
         end do
@@ -363,32 +362,11 @@ subroutine fillsf(sf,ix,il,fmis)
     end do
 end subroutine fillsf
 
-subroutine load_boundary_file(iunit,inp,offset)
-    ! read field on from unit=iunit
-
-    use mod_atparam
-    use mod_prec, only: sp
-
-    implicit none
-
-    integer, intent(in) :: iunit, offset
-    real(sp), intent(out) :: inp(ix,il)
-    integer :: i
-
-    open(unit=iunit, form='unformatted', access='direct', recl=ix*4, &
-            convert='little_endian')
-    do i = 1, il
-        read(iunit,rec=offset*il+i) inp(:,il+1-i)
-    end do
-
-    ! Fix undefined values
-    where (inp <= -999) inp = 0.0_sp
-
-    close(unit=iunit)
-end subroutine load_boundary_file
-
 subroutine NC_extract_variable(NCID, variable, it, inp)
-    ! read field on from unit=iunit
+    ! read a boundary field on from the opened netCDF file
+    ! The input files are produces from GrADS files giving dimensions x,y,z,t
+    ! The x and y dimensions match that of the run resolution, the z dimension
+    ! is always 1 and the t dimension varies depending on the input.
 
     use netcdf
     use mod_atparam
@@ -415,6 +393,7 @@ subroutine check(status)
 
     implicit none
 
+    ! Status identifier output from netCDF library functions
     integer, intent (in) :: status
 
     if(status /= NF90_NOERR) then

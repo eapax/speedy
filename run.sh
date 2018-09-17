@@ -35,20 +35,15 @@ if [ ${3} != 0 ] ; then
 fi
 
 # Link input files
-BC=${UT}/data/bc/${1}/clim
+BC=${UT}/data/bc/${1}
 SH=${UT}/hflux
 
 cd ${TMP}
-ln -sf ${BC}/clim/sfc.grd   fort.20
-ln -sf ${BC}/clim/swet.grd  fort.26
-ln -sf ${BC}/anom/ssta.grd  fort.30
 ln -sf ${BC}/climatology.nc climatology.nc
 ln -sf ${BC}/anomalies.nc   anomalies.nc
 ln -sf ${SH}/hflux_speedy_ver41_1979_2008_clim.grd fort.31
 
-ls -l fort.*
-
-# Link rpe shared library
+# Link netCDF library
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/share/netcdf/lib
 
 time ./imp.exe | tee out.lis

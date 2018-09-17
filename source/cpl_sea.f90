@@ -254,24 +254,30 @@ subroutine obs_ssta()
 
     ! Purpose : update observed SST anomaly array
 
+    use netcdf
     use mod_atparam
     use mod_cli_sea, only: sstan3, bmask_s
-    use mod_date, only: imonth, iyear0, issty0
-    use mod_prec, only: sp, dp
+    use mod_date, only: imonth, iyear, issty0
+    use mod_prec, only: dp
 
     implicit none
 
     integer :: i, j, next_month
-    real(sp)   :: inp(ix,il)
+    integer :: NCID, VARID
+    real(dp)   :: inp(ix,il)
 
     sstan3(:,:,1) = sstan3(:,:,2)
     sstan3(:,:,2) = sstan3(:,:,3)
 
     ! Compute next month given initial SST year
-    next_month = (iyear0 - issty0) * 12 + imonth
+    next_month = (iyear - issty0) * 12 + imonth
 
     ! Read next month SST anomalies
-    call load_boundary_file(30,inp,next_month-1)
+    call check(NF90_OPEN('anomalies.nc', NF90_NOWRITE, NCID))
+    call check(NF90_INQ_VARID(NCID, 'ssta', VARID))
+    call check(NF90_GET_VAR(NCID, VARID, inp, &
+                    start=(/1, 1, 1, 1+next_month/), count=(/ix, il, 1, 1/) ))
+    call check(NF90_CLOSE(NCID))
 
     sstan3(1:ix,1:il,3)   = inp
 

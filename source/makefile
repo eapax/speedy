@@ -94,7 +94,8 @@ cpl_main_interface.o   : cpl_main_interface.f90 mod_atparam.o\
                          mod_cli_land.o mod_cli_sea.o
 cpl_sea.o              : cpl_sea.f90 mod_cpl_flags.o mod_atparam.o\
                          mod_cplvar_sea.o mod_date.o mod_fluxes.o\
-                         mod_cli_sea.o mod_var_sea.o mod_downscaling.o mod_prec.o
+                         mod_cli_sea.o mod_var_sea.o mod_downscaling.o\
+                         ini_inbcon.o mod_prec.o
 cpl_sea_model.o        : cpl_sea_model.f90 mod_atparam.o mod_cplcon_sea.o\
                          mod_cplvar_sea.o mod_prec.o
 dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
