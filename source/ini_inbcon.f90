@@ -156,7 +156,7 @@ subroutine inbcon(grav0,radlat)
     ! 3.3 Sea ice concentration
     if (iitest>=1) print *,' reading sea ice'
     call NC_extract_variable(NCID, 'icec', 12, sice12)
-    sice12 = max(sice12,0.0_sp)
+    sice12 = max(sice12, 0.0_dp)
 
     if (iitest>=1) print *,' checking sea ice'
     call forchk(bmask_s,sice12,ngp,12,0.0_dp,1.0_dp,0.0_dp)

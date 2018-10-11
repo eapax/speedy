@@ -52,6 +52,8 @@ subroutine restart(jday)
         read (3,end=200) yyyy, mm, dd, hh
 
         if (yyyy/=iyear .or. mm/=imonth .or. dd/=iday .or. hh/=ihour) then
+            print *, iyear, imonth, iday, ihour
+            print *, yyyy, mm, dd, hh
             stop 'Date in restart file does not match requested date'
         end if
 
