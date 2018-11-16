@@ -10,3 +10,6 @@ animations
 .rsync-filter
 experiments.ods
 data/bc/t39/
+_build
+_static
+_templates
