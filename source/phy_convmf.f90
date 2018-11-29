@@ -30,6 +30,7 @@ module phy_convmf
 
     ! Local derived variables
     real(dp) :: fm0
+    real(dp), allocatable :: entr(:)
 
     contains
         subroutine setup_convection(fid)
@@ -37,15 +38,29 @@ module phy_convmf
             integer, intent(in) :: fid
 
             read(fid, convection)
-
             write(*, convection)
+
+            allocate(entr(2:kx-1))
         end subroutine setup_convection
 
         subroutine ini_convmf()
             ! Calculate local variables for convection scheme
-            use mod_physcon, only: p0, gg, dsig
+            use mod_physcon, only: p0, gg, sig, dsig
+
+            integer :: k
+            real(dp) :: sentr
 
             fm0=p0*dsig(kx)/(gg*trcnv*3600.0_dp)
+
+            ! Entrainment profile (up to sigma = 0.5)
+            sentr=0.0_dp
+            do k=2,kxm
+                entr(k)=(max(0.0_dp, sig(k)-0.5_dp))**2
+                sentr=sentr+entr(k)
+            end do
+
+            sentr=entmax/sentr
+            entr(2:kxm) = entr(2:kxm) * sentr
         end subroutine ini_convmf
 
         subroutine convmf (&
@@ -82,16 +97,11 @@ module phy_convmf
             real(dp), intent(out) :: dfqa(ngp,kx)
 
             ! Local variables
-            integer :: j, k, k1, ktop1, ktop2, nl1, nlp
-            real(dp) :: mss(ngp,2:kx), mse0, mse1, mss0, mss2, msthr, &
-                    qdif(ngp), entr(2:kx-1), delq, enmass, fdq, fds, &
-                    fmass, fpsa, fqmax, fsq, fuq, fus, qb, qmax, qsatb, qthr0, &
-                    qthr1, rdps, rlhc, sb, sentr
-            logical :: lqthr
+            integer :: j, k, k1
+            real(dp) :: qdif(ngp), delq, enmass, fdq, fds, fmass, fpsa, fqmax, &
+                    fsq, fuq, fus, qb, qmax, qsatb, rdps, sb
 
             ! 1. Initialization of output and workspace arrays
-            nl1=kx-1
-            nlp=kx+1
             fqmax=5.0_dp
 
             rdps=2.0_dp/(1.0_dp-psmin)
@@ -102,79 +112,12 @@ module phy_convmf
             cbmf = 0.0_dp
             precnv = 0.0_dp
 
-            ! Saturation moist static energy
-            do k=2,kx
-                do j=1,ngp
-                    mss(j,k)=se(j,k)+alhc*qsat(j,k)
-                end do
-            end do
-
-            ! Entrainment profile (up to sigma = 0.5)
-            sentr=0.0_dp
-            do k=2,nl1
-                entr(k)=(max(0.0_dp, &
-                        sig(k)-0.5_dp))**2
-                sentr=sentr+entr(k)
-            end do
-
-            sentr=entmax/sentr
-            entr(2:nl1) = entr(2:nl1) * sentr
-
             ! 2. Check of conditions for convection
-            rlhc=1.0_dp/alhc
-
-            do j=1,ngp
-                itop(j)=nlp
-
-                if (psa(j)>psmin) then
-                    ! Minimum of moist static energy in the lowest two levels
-                    mse0=se(j,kx)+alhc*qa(j,kx)
-                    mse1=se(j,nl1) +alhc*qa(j,nl1)
-                    mse1=min(mse0,mse1)
-
-                    ! Saturation (or super-saturated) moist static energy in PBL
-                    mss0=max(mse0,mss(j,kx))
-
-                    ktop1=kx
-                    ktop2=kx
-
-                    do k=kx-3,3,-1
-                        mss2=mss(j,k)+wvi(k,2)*(mss(j,k+1)-mss(j,k))
-
-                        ! Check 1: conditional instability
-                        !          (MSS in PBL > MSS at top level)
-                        if (mss0>mss2) then
-                           ktop1=k
-                        end if
-
-                        ! Check 2: gradient of actual moist static energy
-                        !          between lower and upper troposphere
-                        if (mse1>mss2) then
-                           ktop2=k
-                           msthr=mss2
-                        end if
-                    end do
-
-                    if (ktop1<kx) then
-                        ! Check 3: RH > RH_c at both k=kx and k=NL1
-                        qthr0=rhbl*qsat(j,kx)
-                        qthr1=rhbl*qsat(j,nl1)
-                        lqthr=(qa(j,kx)>qthr0 .and. qa(j,nl1)>qthr1)
-
-                        if (ktop2<kx) then
-                           itop(j)=ktop1
-                           qdif(j)=max(qa(j,kx)-qthr0,(mse0-msthr)*rlhc)
-                        else if (lqthr) then
-                           itop(j)=ktop1
-                           qdif(j)=qa(j,kx)-qthr0
-                        end if
-                    end if
-                end if
-            end do
+            call diagnose_convection(psa, se, qa, qsat, itop, qdif)
 
             ! 3. Convection over selected grid-points
             do j=1,ngp
-                if (itop(j)==nlp) cycle
+                if (itop(j)==kxp) cycle
 
                 ! 3.1 Boundary layer (cloud base)
                 k =kx
@@ -257,4 +200,90 @@ module phy_convmf
             dfse = dfse*hflx2tend
             dfqa = dfqa*flx2tend
         end subroutine convmf
+
+        subroutine diagnose_convection(psa, se, qa, qsat, itop, qdif)
+            ! Purpose: Check criteria for convection in each grid column and
+            !          determine the level of convection. Calculate the humidity
+            !          excess in convective gridboxes.
+
+            use mod_physcon, only: alhc, wvi
+
+            ! Input:  PSA    = norm. surface pressure [p/p0]            (2-dim)
+            real(dp), intent(in) :: psa(ngp)
+            !         SE     = dry static energy                        (3-dim)
+            real(dp), intent(in) :: se(ngp, kx)
+            !         QA     = specific humidity [g/kg]                 (3-dim)
+            real(dp), intent(in) :: qa(ngp, kx)
+            !         QSAT   = saturation spec. hum. [g/kg]             (3-dim)
+            real(dp), intent(in) :: qsat(ngp, kx)
+
+            ! Output: ITOP   = top of convection (layer index)          (2-dim)
+            integer, intent(out) :: itop(ngp)
+            !         QDIF   = Humidity anomaly in convection gridpoints (2-dim)
+            real(dp), intent(out) :: qdif(ngp)
+
+            ! Local variables
+            integer :: j, k, ktop1, ktop2
+            real(dp) :: mss(ngp,2:kx), mse0, mse1, mss0, mss2, msthr, &
+                    qthr0, qthr1, rlhc
+            logical :: lqthr
+
+            rlhc=1.0_dp/alhc
+
+            ! Saturation moist static energy
+            do k=2,kx
+                do j=1,ngp
+                    mss(j,k)=se(j,k)+alhc*qsat(j,k)
+                end do
+            end do
+
+            do j=1,ngp
+                itop(j)=kxp
+
+                if (psa(j)>psmin) then
+                    ! Minimum of moist static energy in the lowest two levels
+                    mse0=se(j,kx)+alhc*qa(j,kx)
+                    mse1=se(j,kxm) +alhc*qa(j,kxm)
+                    mse1=min(mse0,mse1)
+
+                    ! Saturation (or super-saturated) moist static energy in PBL
+                    mss0=max(mse0,mss(j,kx))
+
+                    ktop1=kx
+                    ktop2=kx
+
+                    do k=kx-3,3,-1
+                        mss2=mss(j,k)+wvi(k,2)*(mss(j,k+1)-mss(j,k))
+
+                        ! Check 1: conditional instability
+                        !          (MSS in PBL > MSS at top level)
+                        if (mss0>mss2) then
+                           ktop1=k
+                        end if
+
+                        ! Check 2: gradient of actual moist static energy
+                        !          between lower and upper troposphere
+                        if (mse1>mss2) then
+                           ktop2=k
+                           msthr=mss2
+                        end if
+                    end do
+
+                    if (ktop1<kx) then
+                        ! Check 3: RH > RH_c at both k=kx and k=kxm
+                        qthr0=rhbl*qsat(j,kx)
+                        qthr1=rhbl*qsat(j,kxm)
+                        lqthr=(qa(j,kx)>qthr0 .and. qa(j,kxm)>qthr1)
+
+                        if (ktop2<kx) then
+                           itop(j)=ktop1
+                           qdif(j)=max(qa(j,kx)-qthr0,(mse0-msthr)*rlhc)
+                        else if (lqthr) then
+                           itop(j)=ktop1
+                           qdif(j)=qa(j,kx)-qthr0
+                        end if
+                    end if
+                end if
+            end do
+        end subroutine diagnose_convection
 end module phy_convmf
