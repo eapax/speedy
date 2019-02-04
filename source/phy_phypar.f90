@@ -25,7 +25,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_radlw, only: radlw_down, radlw_up
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
-    use phy_sppt, only: sppt_on, gen_sppt
+    use phy_sppt, only: sppt_on, gen_sppt, additive_forcing
     use mod_prec, only: dp
 
     implicit none
@@ -168,4 +168,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         ttend = tt_phy
         qtend = qt_phy
     end if
+
+    ! Additive random noise
+    call additive_forcing(tt_phy)
 end subroutine phypar

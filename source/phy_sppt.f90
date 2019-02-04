@@ -11,10 +11,10 @@ module phy_sppt
     implicit none
 
     private
-    public sppt_on, setup_sppt, ini_sppt, gen_sppt
+    public sppt_on, setup_sppt, ini_sppt, gen_sppt, additive_forcing
 
-    namelist /sppt/ sppt_on, nscales
-    namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev
+    namelist /sppt/ sppt_on, nscales, l_additive
+    namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev, additive_magnitude
 
     ! Turn on SPPT?
     logical :: sppt_on = .false.
@@ -26,6 +26,9 @@ module phy_sppt
     ! Number of correlation scales for SPPT perturbations
     integer :: nscales = 3
 
+    ! Turn on random additive forcing?
+    logical :: L_additive
+
     ! Namelist parameters used to setup SPPT constants
     ! Decorrelation time of SPPT perturbation (in hours)
     real(dp), allocatable :: time_decorr(:)
@@ -33,6 +36,9 @@ module phy_sppt
     real(dp), allocatable :: len_decorr(:)
     ! Standard deviation of SPPT perturbation (in grid point space)
     real(dp), allocatable :: stddev(:)
+
+    ! Additive random forcing standard deviation
+    real(dp) :: additive_magnitude
 
     ! SPPT parameters initialised in ini_sppt
     ! Time autocorrelation of spectral AR(1) signals
@@ -158,6 +164,20 @@ module phy_sppt
             ! Initialise the random number generator
             call time_seed()
         end subroutine ini_sppt
+
+        ! Add random noise to the temperature tendency
+        subroutine additive_forcing(tendency)
+            real(dp), intent(inout):: tendency(ngp, kx)
+            integer :: j, k
+
+            if (L_additive) then
+                do k=1,kx
+                    do j=1,ngp
+                        tendency(j,k) = tendency(j,k) + randn(0.0_dp, additive_magnitude)
+                    end do
+                end do
+            end if
+        end subroutine additive_forcing
 
         !> @brief
         !> Generates a random number drawn for the specified normal
