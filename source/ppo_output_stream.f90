@@ -566,44 +566,44 @@ module ppo_output_stream
                 !output(:, 1) = ssrd
 
                 ! ssr    = surface shortwave radiation (net downward)
-                !case(37)
+                !case(38)
                 !output(:, 1) = ssr
 
                 ! slrd   = surface longwave radiation  (downward-only)
-                !case(37)
+                !case(39)
                 !output(:, 1) = slrd
 
                 ! slr    = surface longwave radiation  (net upward)
-                !case(37)
+                !case(40)
                 !output(:, 1) = slr
 
                 ! olr    = outgoing longwave radiation (upward)
-                !case(37)
+                !case(41)
                 !output(:, 1) = olr
 
                 ! slru   = surface longwave emission   (upward)
                 !                                   (1:land, 2:sea, 3: wgt. average)
-                !case(37)
+                !case(42)
                 !output(:, 1:3) = slru
 
                 ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(37)
+                !case(43)
                 !output(:, 1:3) = ustr
 
                 ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(37)
+                !case(44)
                 !output(:, 1:3) = vstr
 
                 ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
-                !case(37)
+                !case(45)
                 !output(:, 1:3) = shf
 
                 ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
-                !case(37)
+                !case(46)
                 !output(:, 1:3) = evap
 
                 ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
-                !case(37)
+                !case(47)
                 !output(:, 1:3) = hfluxn
 
                 case default
