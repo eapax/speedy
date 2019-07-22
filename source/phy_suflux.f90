@@ -76,7 +76,7 @@ module phy_suflux
     type(rpe_var), allocatable :: forog(:)
 
     ! Local derived variables
-    type(rpe_var) :: esbc, prd, rcp, chlcp, chscp, rdphi0
+    type(rpe_var) :: esbc_1_3, esbc_1_4, prd, rcp, chlcp, chscp, rdphi0
     type(rpe_var), allocatable :: sqclat(:)
 
     ! Local copies of mod_physcon variables
@@ -102,7 +102,8 @@ module phy_suflux
             use phy_radlw, only: emisfc
 
             ! Local derived variables
-            esbc  = emisfc*sbc
+            esbc_1_3  = (emisfc*sbc)**(1.0_dp/3.0_dp)
+            esbc_1_4  = (emisfc*sbc)**(1.0_dp/4.0_dp)
             prd = p0/rd
             rcp = 1.0_dp/cp
             chlcp = chl*cp
@@ -137,7 +138,8 @@ module phy_suflux
 
             ! Local derived variables
             call apply_truncation(forog)
-            call apply_truncation(esbc)
+            call apply_truncation(esbc_1_3)
+            call apply_truncation(esbc_1_4)
             call apply_truncation(prd)
             call apply_truncation(rcp)
             call apply_truncation(chlcp)
@@ -430,9 +432,8 @@ module phy_suflux
             !      and net heat fluxes into land surface
             do j=1,ngp
                 dslr(j)     = rpe_literal(4.0_dp)* &
-                        (esbc**(rpe_literal(1.0_dp)/rpe_literal(3.0_dp)) &
-                        *(tskin(j) + rpe_literal(zero_c)))**3
-                slru(j,1)   = (esbc**(rpe_literal(0.25_dp)) *(tskin(j) + rpe_literal(zero_c)))**4
+                        (esbc_1_3*(tskin(j) + rpe_literal(zero_c)))**3
+                slru(j,1)   = (esbc_1_4 *(tskin(j) + rpe_literal(zero_c)))**4
                 hfluxn(j,1) = ssrd(j)*(rpe_literal(1.0_dp) - alb_l(j)) + &
                         slrd(j) - (slru(j,1) + shf(j,1) + alhc_sflx*evap(j,1))
             end do
@@ -621,7 +622,7 @@ module phy_suflux
             ! 4.5 Emission of lw radiation from the surface
             !     and net heat fluxes into sea surface
             do j=1,ngp
-                slru(j)   = (esbc**rpe_literal(0.25) *(tsea(j) + rpe_literal(zero_c)))**4
+                slru(j)   = (esbc_1_4 *(tsea(j) + rpe_literal(zero_c)))**4
                 hfluxn(j) = ssrd(j)*(rpe_literal(1.0_dp)-alb_s(j))+slrd(j)-&
                     & (slru(j)+shf(j)+alhc_sflx*evap(j))
             end do

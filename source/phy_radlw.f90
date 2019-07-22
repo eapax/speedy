@@ -36,7 +36,7 @@ module phy_radlw
     type(rpe_var) :: refsfc
 
     ! Local copies of mod_physcon variables
-    type(rpe_var) :: sbc_lw
+    type(rpe_var) :: sbc_1_3, sbc_1_4
     type(rpe_var), allocatable :: wvi_lw(:,:), dsig_lw(:)
 
     contains
@@ -63,7 +63,8 @@ module phy_radlw
             call radset()
 
             ! Local copies of mod_physcon
-            sbc_lw = sbc
+            sbc_1_3 = sbc**(1.0_dp/3.0_dp)
+            sbc_1_4 = sbc**(1.0_dp/4.0_dp)
             wvi_lw = wvi
             dsig_lw = dsig
         end subroutine ini_radlw
@@ -79,7 +80,8 @@ module phy_radlw
             call apply_truncation(refsfc)
 
             ! Local copies of mod_physcon
-            call apply_truncation(sbc_lw)
+            call apply_truncation(sbc_1_3)
+            call apply_truncation(sbc_1_4)
             call apply_truncation(wvi_lw)
             call apply_truncation(dsig_lw)
         end subroutine truncate_radlw
@@ -182,7 +184,7 @@ module phy_radlw
             ! Blackbody emission in the stratosphere
             do k=1,2
                 do j=1,ngp
-                    st4a(j,k,1)=(sbc_lw**(rpe_literal(0.25_dp)) * st4a(j,k,2))**4
+                    st4a(j,k,1)=(sbc_1_4 * st4a(j,k,2))**4
                     st4a(j,k,2)=0.0_dp
                 end do
             end do
@@ -190,7 +192,7 @@ module phy_radlw
             ! Blackbody emission in the troposphere
             do k=3,kx
                 do j=1,ngp
-                    st3a=(sbc_lw**(rpe_literal(1.0_dp)/rpe_literal(3.0_dp)) * ta(j,k))**3
+                    st3a=(sbc_1_3 * ta(j,k))**3
                     st4a(j,k,1)=st3a*ta(j,k)
                     st4a(j,k,2)=rpe_literal(4.0_dp)*st3a*st4a(j,k,2)
                 end do
