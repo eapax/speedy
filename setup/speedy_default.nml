@@ -342,7 +342,7 @@
     nscales=3,
 
     ! Additive random forcing
-    l_additive = .true.,
+    l_additive = .false.,
 /
 
 ! Remaining arrays must be allocated first
