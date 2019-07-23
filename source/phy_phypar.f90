@@ -136,7 +136,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
-    call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
+    call vdifsc(se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 5. Store all fluxes for coupling and daily-mean output
     call increment_fluxes()

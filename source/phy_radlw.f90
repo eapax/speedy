@@ -98,8 +98,7 @@ module phy_radlw
 
             ! Local variables
             integer :: j, jb, k
-            real(dp) :: anis, anish, brad, corlw, emis, &
-                    eps1, esbc
+            real(dp) :: anis, anish, brad, corlw, emis, eps1
             real(dp) :: st3a
 
             ! 1. Blackbody emission from atmospheric levels.
@@ -238,7 +237,7 @@ module phy_radlw
 
             ! Local variables
             integer :: j, jb, k
-            real(dp) :: brad, corlw, corlw1, corlw2, emis
+            real(dp) :: brad, corlw1, corlw2, emis
 
             fsfc = fsfcu - fsfcd
 

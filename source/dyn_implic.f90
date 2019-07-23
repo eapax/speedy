@@ -9,7 +9,6 @@ subroutine implic(divdt,tdt,psdt)
     !
 
     use mod_atparam
-    use mod_dyncon1, only: dhs
     use mod_dyncon2, only: tref1, xc, xd, xj, dhsx, elz
     use mod_prec, only: dp
 

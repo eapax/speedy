@@ -21,7 +21,6 @@ subroutine sptend (divdt,tdt,psdt,j4)
     integer, intent(in) :: j4
 
     complex(dp) :: dumk(mx,nx,kxp), dmeanc(mx,nx), sigdtc(mx,nx,kxp)
-    complex(dp) :: tempc(mx,nx,3)
     complex(dp) :: dumc(mx,nx,2), zero
 
     integer :: k

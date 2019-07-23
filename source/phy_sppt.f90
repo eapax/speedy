@@ -97,7 +97,8 @@ module phy_sppt
                                 min(10.0_dp, abs(randreal)) * &
                                         sign(1.0_dp, randreal),&
                                 min(10.0_dp, abs(randimag)) * &
-                                        sign(1.0_dp, randimag))
+                                        sign(1.0_dp, randimag), &
+                                kind=dp)
                     end do
                 end do
             end do

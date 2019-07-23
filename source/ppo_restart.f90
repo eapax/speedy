@@ -18,7 +18,7 @@ subroutine restart(jday)
 
     !---------------------------------------------------------------------------
     integer, intent(in) :: jday
-    integer :: yyyy, mm, dd, hh, m, n
+    integer :: yyyy, mm, dd, hh
     character(len=14) :: filename='yyyymmddhh.rst'
 
     ! Prognostic spectral variables. Can be at different resolution.
@@ -79,11 +79,11 @@ subroutine restart(jday)
         mx_tr = min(mx, mx_in)
         nx_tr = min(nx, nx_in)
 
-        vor = CMPLX(0.0_dp, 0.0_dp)
-        div = CMPLX(0.0_dp, 0.0_dp)
-        T   = CMPLX(0.0_dp, 0.0_dp)
-        Ps  = CMPLX(0.0_dp, 0.0_dp)
-        tr  = CMPLX(0.0_dp, 0.0_dp)
+        vor = CMPLX(0.0_dp, 0.0_dp, kind=dp)
+        div = CMPLX(0.0_dp, 0.0_dp, kind=dp)
+        T   = CMPLX(0.0_dp, 0.0_dp, kind=dp)
+        Ps  = CMPLX(0.0_dp, 0.0_dp, kind=dp)
+        tr  = CMPLX(0.0_dp, 0.0_dp, kind=dp)
 
         ! Pass input fields to resolution of run (truncate)
         vor(1:mx_tr, 1:nx_tr, :, :)    = vor_in(1:mx_tr, 1:nx_tr, :, :)

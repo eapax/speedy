@@ -129,7 +129,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     !           trdt  = spectral tendency of tracers
     use mod_atparam
     use mod_dynvar
-    use mod_dyncon1, only: akap, rgas, dhs, fsg, dhsr, fsgr
+    use mod_dyncon1, only: akap, rgas, dhs, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
     use mod_prec, only: dp
@@ -152,7 +152,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     complex(dp) :: dumc(mx,nx,3)
 
     real(dp), dimension(ix,il,kx) :: tgg, puv
-    real(dp), dimension(ix,il) :: px, py, umean, vmean, dmean, pstar
+    real(dp), dimension(ix,il) :: px, py, umean, vmean, dmean
     real(dp) :: sigdt(ix,il,kxp)
     real(dp) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
 

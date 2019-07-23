@@ -25,7 +25,7 @@ subroutine inbcon(grav0,radlat)
     real(dp) :: vegh(ix,il), vegl(ix,il), veg(ix,il)
     real(dp) :: swl1(ix,il,12), swl2(ix,il,12)
 
-    integer :: iitest=1, i, idep2, irec, irecl, it, j, jrec, NCID, VARID
+    integer :: iitest=1, i, idep2, irec, irecl, it, j, NCID, VARID
     real(dp) :: rad2deg, rsw, sdep1, sdep2, swwil2, thrsh, swroot
 
     ! Set threshold for land-sea mask definition
@@ -377,7 +377,7 @@ subroutine NC_extract_variable(NCID, variable, it, inp)
     integer, intent(in) :: NCID, it
     character (len=*), intent(in) :: variable
     real(dp), intent(out) :: inp(ix,il,1,it)
-    integer :: i, VARID
+    integer :: VARID
 
     call check(NF90_INQ_VARID(NCID, variable, VARID))
     call check(NF90_GET_VAR(NCID, VARID, inp))

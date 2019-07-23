@@ -29,7 +29,7 @@ module phy_vdifsc
     real(dp) :: segrad
 
     ! Local derived variables
-    real(dp) :: fshcq, fshcse, fvdiq, fvdise
+    real(dp) :: fshcq, fshcse, fvdise
     real(dp), allocatable :: rsig(:), rsig1(:), drh0(:), fvdiq2(:)
 
     contains
@@ -68,7 +68,7 @@ module phy_vdifsc
 
         end subroutine ini_vdifsc
 
-        subroutine vdifsc(ua, va, se, rh, qa, qsat, phi, icnv, &
+        subroutine vdifsc(se, rh, qa, qsat, phi, icnv, &
                 utenvd, vtenvd, ttenvd, qtenvd)
             !   subroutine vdifsc (ua,va,se,rh,qa,qsat,phi,icnv,
             !  &                   utenvd,vtenvd,ttenvd,qtenvd)
@@ -77,10 +77,6 @@ module phy_vdifsc
             !            due to vertical diffusion and shallow convection
             use mod_physcon, only: alhc, sigh
 
-            !   Input:   ua     = u-wind                           (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: ua
-            !            va     = v-wind                           (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: va
             !            se     = dry static energy                (3-dim)
             real(dp), dimension(ngp,kx), intent(in) :: se
             !            rh     = relative humidity [0-1]          (3-dim)

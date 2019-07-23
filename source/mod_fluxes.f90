@@ -26,7 +26,7 @@ module mod_fluxes
             !          If initialised part way through a day load from flux file
             use mod_date, only: ihour
 
-            integer :: j
+            !integer :: j
 
             if (ihour/=0) then
                 !TODO - Implement reading and writing to a fluxes file to start

@@ -70,7 +70,7 @@ module phy_convmf
             !
             ! Purpose: Compute convective fluxes of dry static energy and
             !          moisture using a simplified mass-flux scheme
-            use mod_physcon, only: alhc, sig, wvi
+            use mod_physcon, only: alhc, wvi
 
             ! Input:  PSA    = norm. surface pressure [p/p0]            (2-dim)
             real(dp), intent(in) :: psa(ngp)

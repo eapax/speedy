@@ -36,7 +36,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     complex(dp) :: ctmp(mx,nx,kx)
 
-    integer :: iitest = 0, n, itr, k, m
+    integer :: iitest = 0, itr, k
 
     if (iitest==1) print*, ' inside step'
 

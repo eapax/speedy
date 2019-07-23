@@ -8,7 +8,7 @@ subroutine stloop(istep)
 
 
     use mod_tsteps, only: nsteps, delt2, alph, rob, wil
-    use mod_date, only: ihour, iday, update_time
+    use mod_date, only: update_time
     use phy_radsw, only: lradsw, nstrad
 
     implicit none
