@@ -25,7 +25,7 @@ subroutine inbcon(grav0,radlat)
     real(dp) :: vegh(ix,il), vegl(ix,il), veg(ix,il)
     real(dp) :: swl1(ix,il,12), swl2(ix,il,12)
 
-    integer :: iitest=1, i, idep2, irec, irecl, it, j, NCID, VARID
+    integer :: i, idep2, irec, irecl, it, j, NCID, VARID
     real(dp) :: rad2deg, rsw, sdep1, sdep2, swwil2, thrsh, swroot
 
     ! Set threshold for land-sea mask definition
@@ -33,16 +33,12 @@ subroutine inbcon(grav0,radlat)
     thrsh = 0.1_dp
 
     ! 1. Read topographical fields (orography, land-sea mask)
-    if (iitest>=1) print *,' read orography'
-
     call check(NF90_OPEN('climatology.nc', NF90_NOWRITE, NCID))
     call NC_extract_variable(NCID, 'orog', 1, phi0)
 
     phi0 = grav0*phi0
 
     call truncg (ntrun,phi0,phis0)
-
-    if (iitest>=1) print *,' read fractional land-sea mask'
 
     call NC_extract_variable(NCID, 'lsm', 1, fmask)
 
@@ -63,34 +59,24 @@ subroutine inbcon(grav0,radlat)
     fmask1 = fmask_l
 
     ! 2.2 Annual-mean surface albedo
-    if (iitest>=1) print *,' read surface albedo'
-
     call NC_extract_variable(NCID, 'alb', 1, alb0)
 
     ! 2.3 Land-surface temp.
-    if (iitest>=1) print *,' reading land-surface temp.'
-
     call NC_extract_variable(NCID, 'stl', 12, stl12)
 
     do it = 1,12
         call fillsf(stl12(:,:,it),ix,il,0.0_dp)
     end do
 
-    if (iitest==1) print *,' checking land-surface temp.'
-
     call forchk(bmask_l,stl12,ngp,12,0.0_dp,400.0_dp,273.0_dp)
 
     ! 2.4 Snow depth
-    if (iitest>=1) print *,' reading snow depth'
     call NC_extract_variable(NCID, 'snowd', 12, snowd12)
 
-    if (iitest>=1) print *,' checking snow depth'
     call FORCHK (bmask_l,snowd12,ngp,12,0.0_dp,20000.0_dp,0.0_dp)
 
     ! 2.5 Read soil moisture and compute soil water availability
     !     using vegetation fraction
-    if (iitest>=1) print *,' reading soil moisture'
-
     ! Read vegetation fraction
     call NC_extract_variable(NCID, 'vegh', 1, vegh)
     call NC_extract_variable(NCID, 'vegl', 1, vegl)
@@ -121,7 +107,6 @@ subroutine inbcon(grav0,radlat)
         soilw12(1:ix,1:il,it) = inp
     end do
 
-    if (iitest>=1) print *,' checking soil moisture'
     call forchk(bmask_l,soilw12,ngp,12,0.0_dp,10.0_dp,0.0_dp)
 
     ! 3. Initialize sea-sfc boundary conditions
@@ -143,30 +128,24 @@ subroutine inbcon(grav0,radlat)
     deglat_s = rad2deg*radlat
 
     ! 3.2 SST
-    if (iitest>=1) print *,' reading sst'
     call NC_extract_variable(NCID, 'sst', 12, sst12)
 
     do it = 1,12
         call fillsf(sst12(:,:,it),ix,il,0.0_dp)
     end do
 
-    if (iitest>=1) print *,' checking sst'
     call forchk(bmask_s,sst12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
 
     ! 3.3 Sea ice concentration
-    if (iitest>=1) print *,' reading sea ice'
     call NC_extract_variable(NCID, 'icec', 12, sice12)
     sice12 = max(sice12, 0.0_dp)
 
-    if (iitest>=1) print *,' checking sea ice'
     call forchk(bmask_s,sice12,ngp,12,0.0_dp,1.0_dp,0.0_dp)
 
     call check(NF90_CLOSE(NCID))
 
     ! 3.4 SST anomalies for initial and prec./following months
     if (isstan>0) then
-        if (iitest>=1) print *,' reading sst anomalies'
-
         print *, 'isst0 = ', isst0
         ! Read in the the sst anomaly for the current month and the month
         ! before and after the current month
@@ -182,7 +161,6 @@ subroutine inbcon(grav0,radlat)
         end do
         call check(NF90_CLOSE(NCID))
 
-        if (iitest>=1) print *,' checking sst anomalies'
         call forchk(bmask_s,sstan3,ngp,3,-50.0_dp,50.0_dp,0.0_dp)
     end if
 
@@ -192,8 +170,6 @@ subroutine inbcon(grav0,radlat)
     hfseacl = 0.0_dp
 
     if (icsea>=1) then
-        if (iitest>=1) print *,' reading sfc heat fluxes'
-
         irecl = 4*ngp
         irec = 0
 
@@ -217,7 +193,6 @@ subroutine inbcon(grav0,radlat)
             hfseacl = 0.0_dp
         end where
 
-        if (iitest>=1) print *,' checking sfc heat fluxes'
         call forchk (bmask_s,hfseacl,ngp,1,-1000.0_dp,1000.0_dp,0.0_dp)
     end if
 
@@ -226,14 +201,11 @@ subroutine inbcon(grav0,radlat)
     !      (bias may be defined in a different period from climatology)
 
     if (icsea>=3) then
-        if (iitest>=1) print *,' reading ocean model SST bias'
-
         do it = 1,12
             read (32) r4inp
             sstom12(:,:,it) = sst12(:,:,it)+r4inp
         end do
 
-        if (iitest>=1) print *,' checking ocean model SST'
         call forchk (bmask_s,sstom12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
     end if
 end subroutine inbcon

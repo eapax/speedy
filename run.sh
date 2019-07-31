@@ -13,7 +13,7 @@ fi
 
 # Define directory names
 UT=`pwd`
-TMP=${HOME}/temp
+TMP=${HOME}/tmp
 OUT=${UT}/output/exp_${2}
 INP=${UT}/output/exp_${3}
 
@@ -26,7 +26,7 @@ output=${UT}/setup/default_outputs.nml
 mkdir -p ${TMP}
 find ${TMP} -type f -delete
 find ${TMP} -type l -delete
-find ${TMP} -type d -delete
+find ${TMP} -mindepth 1 -type d -delete
 cp ${executable} ${TMP}/imp.exe
 cp ${namelist}   ${TMP}/speedy.nml
 cp ${output}     ${TMP}/output_requests.nml

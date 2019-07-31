@@ -14,12 +14,10 @@ subroutine stloop(istep)
     implicit none
 
     integer, intent(inout) :: istep
-    integer :: iitest = 0, j
+    integer :: j
 
     ! Loop over number of steps per day
     do j = 1, nsteps
-        if (iitest==1) print*, 'stloop: calling step ', istep
-
         ! Increment the time by one timestep
         call update_time()
 

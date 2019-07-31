@@ -4,7 +4,7 @@ COMPILE=gfortran
 NCDIR=/usr/local/
 COMLIB1= -L${NCDIR}/lib -lnetcdff
 COMOTT1= -I${NCDIR}/include
-COMCONV= -fconvert=swap -std=gnu -Wall
+COMCONV= -fconvert=swap -std=gnu -Wall -g
 
 FILES= \
        mod_prec.o \

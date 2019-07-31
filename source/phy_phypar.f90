@@ -43,7 +43,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     real(dp) :: flx2tend(ngp,kx)
     real(dp) :: hflx2tend(ngp,kx)
 
-    integer :: iitest=0, j, k
+    integer :: j, k
 
     ! Reciprocal of surface pressure 1/psg
     real(dp), dimension(ngp) :: rps
@@ -52,8 +52,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     real(dp), dimension(ngp) :: gse
 
     ! 1. Compute thermodynamic variables
-    if (iitest==1) print *, ' 1.2 in phypar'
-
     do j=1,ngp
         psg(j)=exp(pslg1(j))
         rps(j)=1.0_dp/psg(j)
@@ -94,8 +92,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
-    if (iitest==1) print *, ' 3.1 in PHYPAR'
-
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
         do j=1,ngp
@@ -116,12 +112,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call radlw_down(tg1,slrd)
 
     ! 3.3. Compute surface fluxes and land skin temperature
-    if (iitest==1) then
-        print *, ' 3.3 in PHYPAR'
-        print *, 'mean(STL_AM) =', sum(STL_AM(:))/ngp
-        print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
-    end if
-
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,&
             phis0,fmask1,stl_am,sst_am,ssti_om,soilw_am,ssrd,slrd,&
             hflx2tend, flx2tend, &
@@ -131,7 +121,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
-    if (iitest==1) print *, ' 3.4 in PHYPAR'
     call radlw_up(tg1,ts,slrd,slru(:,3),hflx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
