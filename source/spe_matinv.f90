@@ -7,7 +7,8 @@ subroutine ludcmp(a,n,np,indx,d)
     real(dp), intent(inout) :: a(np,np), d
     integer, intent(inout) :: indx(n)
 
-    integer, parameter :: nmax = 100, tiniest = 1.0e-20
+    integer, parameter :: nmax = 100
+    real(dp), parameter :: tiniest = 1.0e-20
     integer :: i, j, k, imax
     real(dp) :: vv(nmax), aamax, dum, accum
 

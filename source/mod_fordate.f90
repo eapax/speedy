@@ -82,7 +82,7 @@ module mod_fordate
             use mod_date, only: iyear, tyear
             use mod_var_land, only: stl_am, snowd_am
             use mod_cli_sea, only: fmask_s
-            use mod_var_sea, only: sstcl_ob, sst_am, sice_am
+            use mod_var_sea, only: sst_am, sice_am
             use mod_solar, only: sol_oz
             use humidity, only: q_sat
             use spectral, only: spec
@@ -91,7 +91,7 @@ module mod_fordate
             real(dp), dimension(ngp) :: qsfc, qref
             real(dp) :: fland(ngp), alb_0(ngp)
 
-            integer :: i, j, ij, iitest = 0, iyear_ref
+            integer :: i, j, ij
 
             fland = reshape(fmask_l, (/ngp/))
             alb_0 = reshape(alb0, (/ngp/))

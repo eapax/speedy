@@ -8,18 +8,16 @@ subroutine stloop(istep)
 
 
     use mod_tsteps, only: nsteps, delt2, alph, rob, wil
-    use mod_date, only: ihour, iday, update_time
+    use mod_date, only: update_time
     use phy_radsw, only: lradsw, nstrad
 
     implicit none
 
     integer, intent(inout) :: istep
-    integer :: iitest = 0, j
+    integer :: j
 
     ! Loop over number of steps per day
     do j = 1, nsteps
-        if (iitest==1) print*, 'stloop: calling step ', istep
-
         ! Increment the time by one timestep
         call update_time()
 

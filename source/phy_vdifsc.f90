@@ -99,18 +99,14 @@ module phy_vdifsc
             call apply_truncation(cp_vdif)
         end subroutine truncate_vdifsc
 
-        subroutine vdifsc(&
-                ua_in, va_in, se_in, rh_in, qa_in, qsat_in, phi_in, icnv, &
-                utenvd_out, vtenvd_out, ttenvd_out, qtenvd_out)
+        subroutine vdifsc(se_in, rh_in, qa_in, qsat_in, phi_in, icnv, &
+                utenvd, vtenvd, ttenvd, qtenvd)
             !   subroutine vdifsc (ua,va,se,rh,qa,qsat,phi,icnv,
             !  &                   utenvd,vtenvd,ttenvd,qtenvd)
             !
             !   Purpose: Compute tendencies of momentum, energy and moisture
             !            due to vertical diffusion and shallow convection
-            !   Input:   ua     = u-wind                           (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: ua_in
-            !            va     = v-wind                           (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: va_in
+
             !            se     = dry static energy                (3-dim)
             real(dp), dimension(ngp,kx), intent(in) :: se_in
             !            rh     = relative humidity [0-1]          (3-dim)

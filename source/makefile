@@ -4,7 +4,7 @@ COMPILE=gfortran
 NCDIR=/usr
 COMLIB1= -L${NCDIR}/lib -lnetcdff
 COMOTT1= -I${NCDIR}/include
-COMCONV= -fconvert=swap -ffpe-trap=overflow,underflow -g -Wall
+COMCONV= -fconvert=swap -std=gnu -ffpe-trap=overflow -g -Wall
 RPEPATH=../../rpe_complex
 
 FILES= \
@@ -106,8 +106,7 @@ dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
 dyn_grtend.o           : dyn_grtend.f90 mod_atparam.o mod_dynvar.o\
                          mod_physvar.o mod_dyncon1.o mod_dyncon2.o\
                          spe_spectral.o mod_prec.o
-dyn_implic.o           : dyn_implic.f90 mod_atparam.o mod_dyncon1.o\
-                         mod_dyncon2.o mod_prec.o
+dyn_implic.o           : dyn_implic.f90 mod_atparam.o mod_dyncon2.o mod_prec.o
 dyn_sptend.o           : dyn_sptend.f90 mod_atparam.o mod_dynvar.o\
                          mod_dyncon1.o mod_dyncon2.o spe_spectral.o mod_prec.o
 dyn_step.o             : dyn_step.f90 mod_dyncon0.o mod_atparam.o\

@@ -38,7 +38,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     real(dp), intent(in) :: fmon, for12(ngp,12)
     real(dp), intent(inout) :: for1(ngp)
     integer :: im1, im2, ip1, ip2
-    real(dp) :: c0, t0, t1, t2, t3, wm1, wm2, w0, wp1, wp2, one
+    real(dp) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one
 
     one = 1.0_dp
 

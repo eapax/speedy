@@ -233,7 +233,7 @@ module spectral
             !  POLY(MX,NX). These are then stored in cpol.
             sqrhlf=sqrt(0.5_dp)
             do j=1,iy
-                call lgndre(j, sia(j), coa(j), poly, &
+                call lgndre(sia(j), coa(j), poly, &
                         sqrhlf, consq, epsi, repsi)
                 do n=1,nx
                     do m=1,mx
@@ -246,11 +246,10 @@ module spectral
             end do
         end subroutine parmtr
         !****************************************************************
-        subroutine lgndre(j, x, y, poly, sqrhlf, consq, epsi, repsi)
+        subroutine lgndre(x, y, poly, sqrhlf, consq, epsi, repsi)
             ! follows Leith Holloways code
             ! Sets the values of Legendre polynomial (poly)
 
-            integer, intent(in) :: j
             real(dp), intent(in) :: x, y
             real(dp), intent(in) :: sqrhlf
             real(dp), intent(in) :: consq(mxp), epsi(mxp,nxp), repsi(mxp,nxp)
@@ -321,7 +320,8 @@ module spectral
 
             do n=1,nx
                 psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n))), &
-                                   gradx*REAL( REAL(psi(:,n))))
+                                   gradx*REAL( REAL(psi(:,n))), &
+                        kind=dp)
             end do
 
             psdy(:,1) = gradyp(:,1)*psi(:,2)
@@ -342,9 +342,11 @@ module spectral
 
             do n=1,nx
                 zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n))), &
-                                 gradx*REAL(REAL(ucosm(:,n))))
+                                 gradx*REAL(REAL(ucosm(:,n))), &
+                        kind=dp)
                 zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n))), &
-                                 gradx*REAL(REAL(vcosm(:,n))))
+                                 gradx*REAL(REAL(vcosm(:,n))), &
+                        kind=dp)
             end do
 
             vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
@@ -369,8 +371,8 @@ module spectral
 
             integer :: n
 
-            zp = CMPLX(-uvdx*REAL(AIMAG(vorm)), uvdx*REAL(REAL(vorm)))
-            zc = CMPLX(-uvdx*REAL(AIMAG(divm)), uvdx*REAL(REAL(divm)))
+            zp = CMPLX(-uvdx*REAL(AIMAG(vorm)), uvdx*REAL(REAL(vorm)), kind=dp)
+            zc = CMPLX(-uvdx*REAL(AIMAG(divm)), uvdx*REAL(REAL(divm)), kind=dp)
 
             ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
             ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)

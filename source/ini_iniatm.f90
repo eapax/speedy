@@ -11,14 +11,12 @@ subroutine ini_atm()
     implicit none
 
     real(dp) :: ppl(kx)            ! post-processing levels (hpa/1000)
-    integer :: iitest = 1, k
+    integer :: k
 
     ! 1. initialize ffts
-    if (iitest==1) print *, 'calling inifft'
     call inifft()
 
     ! 2. initialize dynamical constants and operators
-    if (iitest==1) print *, 'calling indyns'
     call indyns()
 
     ! 3. set post-processing levels
@@ -27,19 +25,15 @@ subroutine ini_atm()
     end do
 
     ! 4. initialize forcing fields (boundary cond.)
-    if (iitest==1) print *, 'calling inbcon'
     call inbcon(grav,radang)
 
     ! 5. initialize model variables
-    if (iitest==1) print *, 'calling invars'
     call invars()
 
     ! 6. initialize constants for physical parametrization
-    if (iitest==1) print *, 'calling inphys'
     call inphys(hsg, ppl, radang)
 
     ! 7. initialize time-mean arrays for surface fluxes and output fields
-    if (iitest==1) print *, 'calling ini_fluxes'
     call ini_fluxes()
 
     contains

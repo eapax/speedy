@@ -166,8 +166,6 @@ module ppo_output_stream
             integer, intent(in) :: nvars, var_ID(:)
             type(output_stream) :: stream
 
-            integer :: recl
-
             ! Pass parameters to the new object
             stream%filename = filename
             stream%spectral = spectral

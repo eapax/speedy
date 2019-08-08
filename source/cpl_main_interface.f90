@@ -5,7 +5,7 @@ subroutine ini_coupler(istart)
 
     use mod_atparam
     use mod_cpl_land_model, only: land_model_init
-    use mod_surfcon, only: fmask, alb0
+    use mod_surfcon, only: alb0
     use mod_cli_land, only: fmask_l
     use mod_cli_sea, only: fmask_s, deglat_s
 
@@ -23,7 +23,7 @@ subroutine ini_coupler(istart)
     call sea_model_init(fmask_s,deglat_s)
 
     ! 2.2 initialize sea and ice model variables
-    call ini_sea(istart)
+    call ini_sea()
 end subroutine ini_coupler
 
 subroutine agcm_to_coupler(jday)

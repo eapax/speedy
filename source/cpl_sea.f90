@@ -1,8 +1,4 @@
-subroutine ini_sea(istart)
-    ! subroutine ini_sea(istart)
-
-    ! Input : istart = restart flag ( 0 = no, 1 = yes)
-
+subroutine ini_sea()
     use mod_cpl_flags, only: icsea
     use mod_atparam
     use mod_cli_sea, only: deglat_s
@@ -10,8 +6,6 @@ subroutine ini_sea(istart)
     use mod_prec, only: dp
 
     implicit none
-
-    integer, intent(in) :: istart
 
     ! 1. Compute climatological fields for initial date
     call atm2sea(0)
@@ -262,7 +256,7 @@ subroutine obs_ssta()
 
     implicit none
 
-    integer :: i, j, next_month
+    integer :: next_month
     integer :: NCID, VARID
     real(dp)   :: inp(ix,il)
 

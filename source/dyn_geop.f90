@@ -14,7 +14,7 @@ subroutine geop(jj)
     implicit none
 
     integer, intent(in) :: jj
-    integer :: k, m, n
+    integer :: k
     real(dp) :: corf
 
     ! 1. Bottom layer (integration over half a layer)
