@@ -100,8 +100,8 @@ module phy_vdifsc
         end subroutine truncate_vdifsc
 
         subroutine vdifsc(se_in, rh_in, qa_in, qsat_in, phi_in, icnv, &
-                utenvd, vtenvd, ttenvd, qtenvd)
-            !   subroutine vdifsc (ua,va,se,rh,qa,qsat,phi,icnv,
+                utenvd_out, vtenvd_out, ttenvd_out, qtenvd_out)
+            !   subroutine vdifsc (se,rh,qa,qsat,phi,icnv,
             !  &                   utenvd,vtenvd,ttenvd,qtenvd)
             !
             !   Purpose: Compute tendencies of momentum, energy and moisture
@@ -130,7 +130,7 @@ module phy_vdifsc
             real(dp), dimension(ngp,kx), intent(out) :: qtenvd_out
 
             ! Local copies of input variables
-            type(rpe_var), dimension(ngp, kx) :: ua, va, se, rh, qa, qsat, phi
+            type(rpe_var), dimension(ngp, kx) :: se, rh, qa, qsat, phi
 
             ! Local copies of output variables
             type(rpe_var), dimension(ngp,kx) :: utenvd, vtenvd, ttenvd, qtenvd
@@ -141,8 +141,6 @@ module phy_vdifsc
 
             ! 0. Pass input variables to local copies, triggering call to
             !    apply_truncation
-            ua = ua_in
-            va = va_in
             se = se_in
             rh = rh_in
             qa = qa_in

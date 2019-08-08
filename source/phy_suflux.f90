@@ -98,7 +98,7 @@ module phy_suflux
         end subroutine setup_surface_fluxes
 
         subroutine ini_suflux()
-            use mod_physcon, only: p0, rd, cp, alhc, sbc, clat, sigl
+            use mod_physcon, only: p0, rd, cp, alhc, sbc, clat, sigl, wvi
             use phy_radlw, only: emisfc
 
             ! Local derived variables
