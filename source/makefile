@@ -1,10 +1,11 @@
 %.o: %.mod
 
 COMPILE=gfortran
-NCDIR=/usr/local/
+NCDIR=/usr
 COMLIB1= -L${NCDIR}/lib -lnetcdff
 COMOTT1= -I${NCDIR}/include
-COMCONV= -fconvert=swap -std=gnu
+COMCONV= -fconvert=swap -ffpe-trap=overflow,underflow -g -Wall
+RPEPATH=../../rpe_complex
 
 FILES= \
        mod_prec.o \
@@ -27,6 +28,7 @@ FILES= \
        ini_inphys.o \
        ini_invars.o \
        ini_namelist.o \
+       ini_rp.o \
        ini_stepone.o \
        interpolation.o \
        mod_atparam.o \
@@ -74,10 +76,10 @@ FILES= \
 .SUFFIXES: .f90 .o
 
 .f90.o:
-	$(COMPILE) $(COMCONV) $(COMOTT1) -c $<
+	$(COMPILE) $(COMCONV) $(COMOTT1) -c $< -I$(RPEPATH)/modules
 
 imp.exe: $(FILES)  at_gcm.o
-	$(COMPILE) $(COMCONV) $(COMOTT1) $(FILES) at_gcm.o -o imp.exe $(COMLIB1)
+	$(COMPILE) $(COMCONV) $(COMOTT1) $(FILES) at_gcm.o -o imp.exe $(COMLIB1) -lrpe -L$(RPEPATH)/lib
 
 .PHONY: clean
 clean:
@@ -113,7 +115,7 @@ dyn_step.o             : dyn_step.f90 mod_dyncon0.o mod_atparam.o\
 dyn_stloop.o           : dyn_stloop.f90 mod_tsteps.o mod_date.o\
                          phy_radsw.o
 ini_agcm_init.o        : ini_agcm_init.f90 mod_cpl_flags.o mod_date.o\
-                         ppo_output_stream.o mod_fordate.o
+                         ppo_output_stream.o mod_prec.o mod_fordate.o
 ini_impint.o           : ini_impint.f90 mod_dyncon0.o mod_atparam.o\
                          mod_dyncon1.o mod_dyncon2.o mod_hdifcon.o mod_prec.o
 ini_inbcon.o           : ini_inbcon.f90 mod_cpl_flags.o mod_date.o\
@@ -141,6 +143,9 @@ ini_namelist.o         : ini_namelist.f90 mod_atparam.o mod_downscaling.o\
                          mod_dyncon1.o mod_dyncon2.o mod_dynvar.o mod_fft.o\
                          mod_fluxes.o mod_hdifcon.o mod_physcon.o mod_physvar.o\
                          mod_var_land.o mod_var_sea.o spe_spectral.o
+ini_rp.o               : mod_prec.o phy_convmf.o phy_lscond.o phy_cloud.o\
+                         phy_radsw.o phy_radlw.o phy_suflux.o phy_vdifsc.o\
+                         phy_sppt.o
 ini_stepone.o          : ini_stepone.f90 mod_tsteps.o mod_date.o mod_prec.o
 interpolation.o        : interpolation.f90 mod_prec.o
 mod_atparam.o          : mod_atparam.f90

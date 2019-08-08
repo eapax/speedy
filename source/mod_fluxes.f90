@@ -70,7 +70,7 @@ module mod_fluxes
             sstfr  = 273.2_dp-1.8_dp
 
             sstfr4 = sstfr**4
-            esbc   = emisfc*sbc
+            esbc   = emisfc%val*sbc
 
             ! 2. Store fluxes over land (SI units, all heat fluxes downw.)
             hflux_l(:) = hflux_l(:) + hfluxn(:,1)*rsteps

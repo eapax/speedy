@@ -1,6 +1,7 @@
 module mod_fordate
     use mod_atparam
-    use mod_prec, only: dp
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -20,7 +21,8 @@ module mod_fordate
     ! If lco2=.true., the yearly increase in co2 absorbtion from iyear_ref
     real(dp) :: del_co2
     ! ablco2 = abs. of air in CO2 band
-    real(dp) :: ablco2, ablco2_ref
+    type(rpe_var) :: ablco2
+    real(dp) :: ablco2_ref
 
     ! Constants for surface albedos
     ! albsea = Albedo over sea
@@ -36,7 +38,7 @@ module mod_fordate
     ! alb_s  = daily-mean albedo over sea  (open sea + sea ice)
     ! albsfc = combined surface albedo (land + sea)
     ! snowc  = effective snow cover (fraction)
-    real(dp), dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
+    type(rpe_var), dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
 
     real(dp) :: gamlat, pexp
 
@@ -112,6 +114,18 @@ module mod_fordate
             if (lco2) then
                 ablco2 = ablco2_ref * exp(del_co2 * (iyear + tyear - iyear_ref))
             end if
+
+            ! Truncate derived variables used exclusively in radsw
+            call set_precision('Short-Wave Radiation')
+            call apply_truncation(albsfc)
+            call apply_truncation(ablco2)
+
+            ! Truncate derived variables used exclusively in suflux
+            call set_precision('Surface Fluxes')
+            call apply_truncation(snowc)
+            call apply_truncation(alb_l)
+            call apply_truncation(alb_s)
+            call set_precision('Double')
 
             ! 2. temperature correction term for horizontal diffusion
             corh = gamlat * phis0

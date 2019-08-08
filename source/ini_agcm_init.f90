@@ -5,12 +5,15 @@ subroutine agcm_init()
     use mod_date, only: ini_date, istart
     use ppo_output_stream, only: initialise_output
     use mod_fordate, only: ini_fordate
+    use mod_prec, only: setup_precision
 
     implicit none
 
     print *, ' hallo from speedy_agcm'
 
     ! 0. Read namelist and allocate arrays
+    ! Setup reduced precision emulator
+    call setup_precision()
     call ini_namelist()
 
     ! 1. set run initial time, duration, time-stepping and coupling options
@@ -33,4 +36,7 @@ subroutine agcm_init()
 
     ! 6. Set up model output
     call initialise_output()
+
+    ! Truncate parameters and derived constants
+    call truncate_rp()
 end subroutine

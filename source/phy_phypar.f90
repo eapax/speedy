@@ -26,7 +26,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
     use phy_sppt, only: sppt_on, gen_sppt, additive_forcing
-    use mod_prec, only: dp
+    use mod_prec
 
     implicit none
 
@@ -76,12 +76,20 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
     end do
 
+    ! Static energy as an anomaly
+    do k=1,kx
+        do j=1,ngp
+            se(j,k) = (se(j,k) - se(j,kx))/ cp
+        end do
+    end do
+
     do k=1,kx
         call shtorh(1,ngp,tg1(:,k),psg,sig(k),qg1(:,k),rh(:,k),qsat(:,k))
     end do
 
     ! 2. Precipitation
     ! 2.1 Deep convection
+    call set_precision('Convection')
     call convmf(psg,se,qg1,qsat,hflx2tend,flx2tend,&
             iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
@@ -90,6 +98,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 2.2 Large-scale condensation
+    call set_precision('Condensation')
     call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
@@ -99,9 +108,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
         do j=1,ngp
-            gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
+            gse(j) = cp*(se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
 
+        call set_precision('Cloud')
         call cloud(qg1,rh,precnv,precls,iptop,gse,fmask1,icltop,cloudc,clstr)
 
         do j=1,ngp
@@ -109,10 +119,12 @@ subroutine phypar(utend,vtend,ttend,qtend)
             prtop(j)=float(iptop(j))
         end do
 
+        call set_precision('Short-Wave Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,hflx2tend,ssrd,ssr,tsr,tt_rsw)
     end if
 
     ! 3.2 Compute downward longwave fluxes
+    call set_precision('Long-Wave Radiation')
     call radlw_down(tg1,slrd)
 
     ! 3.3. Compute surface fluxes and land skin temperature
@@ -122,6 +134,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
         print *, 'mean(SST_AM) =', sum(SST_AM(:))/ngp
     end if
 
+    call set_precision('Surface Fluxes')
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,&
             phis0,fmask1,stl_am,sst_am,ssti_om,soilw_am,ssrd,slrd,&
             hflx2tend, flx2tend, &
@@ -132,13 +145,16 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
     if (iitest==1) print *, ' 3.4 in PHYPAR'
+    call set_precision('Long-Wave Radiation')
     call radlw_up(tg1,ts,slrd,slru(:,3),hflx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
+    call set_precision('Vertical Diffusion')
     call vdifsc(ug1,vg1,se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 5. Store all fluxes for coupling and daily-mean output
+    call set_precision('Double')
     call increment_fluxes()
 
     ! Sum physics tendencies
@@ -161,7 +177,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
         vt_sppt = vtend - vt_phy
         tt_sppt = ttend - tt_phy
         qt_sppt = qtend - qt_phy
-
     else
         utend = ut_phy
         vtend = vt_phy

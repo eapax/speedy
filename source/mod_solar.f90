@@ -1,7 +1,8 @@
 module mod_solar
 
     use mod_atparam
-    use mod_prec, only: dp
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -24,7 +25,7 @@ module mod_solar
     ! ozupp  = flux absorbed by ozone (upper stratos.)
     ! zenit  = optical depth ratio (function of solar zenith angle)
     ! stratz = stratospheric correction for polar night
-    real(dp), dimension(:), allocatable :: &
+    type(rpe_var), dimension(:), allocatable :: &
             fsol, ozone, ozupp, zenit, stratz
 
     contains
@@ -114,6 +115,15 @@ module mod_solar
                     stratz(i+j0) = stratz(j0)
                 end do
             end do
+
+            ! Truncate output for radsw
+            call set_precision('Short-Wave Radiation')
+            call apply_truncation(fsol)
+            call apply_truncation(ozone)
+            call apply_truncation(ozupp)
+            call apply_truncation(zenit)
+            call apply_truncation(stratz)
+            call set_precision('Double')
         end subroutine sol_oz
 
         subroutine solar(tyear,csol,il,clat,slat,topsr)

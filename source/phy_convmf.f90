@@ -1,36 +1,41 @@
 module phy_convmf
     use mod_atparam
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     private
-    public convmf, setup_convection, ini_convmf
+    public convmf, setup_convection, ini_convmf, truncate_convmf
 
     ! Variables loaded in by namelist
     namelist /convection/ psmin, trcnv, rhbl, rhil, entmax, smf
 
     ! Minimum (norm.) sfc. pressure for the occurrence of convection
-    real(dp) :: psmin
+    type(rpe_var) :: psmin
 
     ! Time of relaxation (in hours) towards reference state
     real(dp) :: trcnv
 
     ! Relative hum. threshold in the boundary layer
-    real(dp) :: rhbl
+    type(rpe_var) :: rhbl
 
     ! Rel. hum. threshold in intermed. layers for secondary mass flux
-    real(dp) :: rhil
+    type(rpe_var) :: rhil
 
     ! Max. entrainment as a fraction of cloud-base mass flux
     real(dp) :: entmax
 
     ! Ratio between secondary and primary mass flux at cloud-base
-    real(dp) :: smf
+    type(rpe_var) :: smf
 
     ! Local derived variables
-    real(dp) :: fm0
-    real(dp), allocatable :: entr(:)
+    type(rpe_var) :: fm0
+    type(rpe_var), allocatable :: entr(:)
+
+    ! Local copies of mod_atparam variables
+    type(rpe_var) :: alhc_cnv, cp_cnv
+    type(rpe_var), allocatable :: sig_cnv(:), wvi_cnv(:,:)
 
     contains
         subroutine setup_convection(fid)
@@ -41,11 +46,13 @@ module phy_convmf
             write(*, convection)
 
             allocate(entr(2:kx-1))
+            allocate(sig_cnv(kx))
+            allocate(wvi_cnv(kx,2))
         end subroutine setup_convection
 
         subroutine ini_convmf()
             ! Calculate local variables for convection scheme
-            use mod_physcon, only: p0, gg, sig, dsig
+            use mod_physcon, only: p0, gg, alhc, sig, dsig, wvi, cp
 
             integer :: k
             real(dp) :: sentr
@@ -61,50 +68,89 @@ module phy_convmf
 
             sentr=entmax/sentr
             entr(2:kxm) = entr(2:kxm) * sentr
+
+            alhc_cnv = alhc
+            sig_cnv = sig
+            wvi_cnv = wvi
+            cp_cnv = cp
         end subroutine ini_convmf
 
+        subroutine truncate_convmf()
+            ! Truncate local variables for convection scheme
+            ! Namelist variables
+            call apply_truncation(psmin)
+            call apply_truncation(rhbl)
+            call apply_truncation(rhil)
+            call apply_truncation(smf)
+
+            ! Derived variables
+            call apply_truncation(fm0)
+            call apply_truncation(entr)
+
+            ! Local copies of mod_physcon
+            call apply_truncation(alhc_cnv)
+            call apply_truncation(sig_cnv)
+            call apply_truncation(wvi_cnv)
+            call apply_truncation(cp_cnv)
+        end subroutine truncate_convmf
+
         subroutine convmf (&
-                psa, se, qa, qsat, hflx2tend, flx2tend, &
-                itop, cbmf, precnv, dfse, dfqa)
+                psa_in, se_in, qa_in, qsat_in, hflx2tend_in, flx2tend_in, &
+                itop, cbmf_out, precnv_out, dfse_out, dfqa_out)
             ! SUBROUTINE CONVMF (PSA,SE,QA,QSAT, ITOP,CBMF,PRECNV,DFSE,DFQA)
             !
             ! Purpose: Compute convective fluxes of dry static energy and
             !          moisture using a simplified mass-flux scheme
-            use mod_physcon, only: alhc, sig, wvi
 
             ! Input:  PSA    = norm. surface pressure [p/p0]            (2-dim)
-            real(dp), intent(in) :: psa(ngp)
+            real(dp), intent(in) :: psa_in(ngp)
             !         SE     = dry static energy                        (3-dim)
-            real(dp), intent(in) :: se(ngp, kx)
+            real(dp), intent(in) :: se_in(ngp, kx)
             !         QA     = specific humidity [g/kg]                 (3-dim)
-            real(dp), intent(in) :: qa(ngp, kx)
+            real(dp), intent(in) :: qa_in(ngp, kx)
             !         QSAT   = saturation spec. hum. [g/kg]             (3-dim)
-            real(dp), intent(in) :: qsat(ngp, kx)
+            real(dp), intent(in) :: qsat_in(ngp, kx)
             !         hflx2tend = Conversion factor between heat fluxes and T tendency
-            real(dp), intent(in) :: hflx2tend(ngp,kx)
+            real(dp), intent(in) :: hflx2tend_in(ngp,kx)
             !         flx2tend = Conversion factor between fluxes and tendencies
-            real(dp), intent(in) :: flx2tend(ngp,kx)
+            real(dp), intent(in) :: flx2tend_in(ngp,kx)
 
             ! Output: ITOP   = top of convection (layer index)          (2-dim)
             integer, intent(out) :: itop(ngp)
             !         CBMF   = cloud-base mass flux                     (2-dim)
-            real(dp), intent(out) :: cbmf(ngp)
+            real(dp), intent(out) :: cbmf_out(ngp)
             !         PRECNV = convective precipitation [g/(m^2 s)]     (2-dim)
-            real(dp), intent(out) :: precnv(ngp)
+            real(dp), intent(out) :: precnv_out(ngp)
             !         DFSE   = net flux of d.s.en. into each atm. layer (3-dim)
-            real(dp), intent(out) :: dfse(ngp,kx)
+            real(dp), intent(out) :: dfse_out(ngp,kx)
             !         DFQA   = net flux of sp.hum. into each atm. layer (3-dim)
-            real(dp), intent(out) :: dfqa(ngp,kx)
+            real(dp), intent(out) :: dfqa_out(ngp,kx)
+
+            ! Local copies of input variables
+            type(rpe_var) :: psa(ngp), se(ngp,kx), qa(ngp,kx), qsat(ngp,kx), &
+                    hflx2tend(ngp,kx), flx2tend(ngp,kx)
+
+            ! Local copies of output variables
+            type(rpe_var) :: cbmf(ngp), precnv(ngp), dfse(ngp,kx), dfqa(ngp,kx)
 
             ! Local variables
             integer :: j, k, k1
-            real(dp) :: qdif(ngp), delq, enmass, fdq, fds, fmass, fpsa, fqmax, &
-                    fsq, fuq, fus, qb, qmax, qsatb, rdps, sb
+            type(rpe_var) :: qdif(ngp), delq, enmass, fdq, fds, fmass, fpsa, &
+                    fqmax, fsq, fuq, fus, qb, qmax, qsatb, rdps, sb
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            psa = psa_in
+            se = se_in
+            qa = qa_in
+            qsat = qsat_in
+            hflx2tend = hflx2tend_in
+            flx2tend = flx2tend_in
 
             ! 1. Initialization of output and workspace arrays
             fqmax=5.0_dp
 
-            rdps=2.0_dp/(1.0_dp-psmin)
+            rdps=rpe_literal(2.0_dp)/(rpe_literal(1.0_dp)-psmin)
 
             dfse = 0.0_dp
             dfqa = 0.0_dp
@@ -124,16 +170,16 @@ module phy_convmf
                 k1=k-1
 
                 ! Maximum specific humidity in the PBL
-                qmax=max(1.01_dp*qa(j,k),qsat(j,k))
+                qmax=max(rpe_literal(1.01_dp)*qa(j,k),qsat(j,k))
 
                 ! Dry static energy and moisture at upper boundary
-                sb=se(j,k1)+wvi(k1,2)*(se(j,k)-se(j,k1))
-                qb=qa(j,k1)+wvi(k1,2)*(qa(j,k)-qa(j,k1))
+                sb=se(j,k1)+wvi_cnv(k1,2)*(se(j,k)-se(j,k1))
+                qb=qa(j,k1)+wvi_cnv(k1,2)*(qa(j,k)-qa(j,k1))
                 qb=min(qb,qa(j,k))
 
                 ! Cloud-base mass flux, computed to satisfy:
                 ! fmass*(qmax-qb)*(g/dp)=qdif/trcnv
-                fpsa=psa(j)*min(1.0_dp,(psa(j)-psmin)*rdps)
+                fpsa=psa(j)*min(rpe_literal(1.0_dp),(psa(j)-psmin)*rdps)
                 fmass=fm0*fpsa*min(fqmax,qdif(j)/(qmax-qb))
                 cbmf(j)=fmass
 
@@ -166,8 +212,8 @@ module phy_convmf
                     fuq=fuq+enmass*qa(j,k)
 
                     ! Downward fluxes at upper boundary
-                    sb=se(j,k1)+wvi(k1,2)*(se(j,k)-se(j,k1))
-                    qb=qa(j,k1)+wvi(k1,2)*(qa(j,k)-qa(j,k1))
+                    sb=se(j,k1)+wvi_cnv(k1,2)*(se(j,k)-se(j,k1))
+                    qb=qa(j,k1)+wvi_cnv(k1,2)*(qa(j,k)-qa(j,k1))
                     fds=fmass*sb
                     fdq=fmass*qb
 
@@ -177,7 +223,7 @@ module phy_convmf
 
                     ! Secondary moisture flux
                     delq=rhil*qsat(j,k)-qa(j,k)
-                    if (delq>0.0_dp) then
+                    if (delq>rpe_literal(0.0_dp)) then
                         fsq=smf*cbmf(j)*delq
                         dfqa(j,k)   =dfqa(j,k)   +fsq
                         dfqa(j,kx)=dfqa(j,kx)-fsq
@@ -188,17 +234,19 @@ module phy_convmf
                 k=itop(j)
 
                 ! Flux of convective precipitation
-                qsatb=qsat(j,k)+wvi(k,2)*(qsat(j,k+1)-qsat(j,k))
-                precnv(j)=max(fuq-fmass*qsatb,0.0_dp)
+                qsatb=qsat(j,k)+wvi_cnv(k,2)*(qsat(j,k+1)-qsat(j,k))
+                precnv(j)=max(fuq-fmass*qsatb,rpe_literal(0.0_dp))
 
                 ! Net flux of dry static energy and moisture
-                dfse(j,k)=fus-fds+alhc*precnv(j)
+                dfse(j,k)=fus-fds+(alhc_cnv/cp_cnv)*precnv(j)
                 dfqa(j,k)=fuq-fdq-precnv(j)
             end do
 
+            cbmf_out = cbmf
+            precnv_out = precnv
             ! Convert fluxes to temperature tendencies
-            dfse = dfse*hflx2tend
-            dfqa = dfqa*flx2tend
+            dfse_out = dfse*cp_cnv*hflx2tend
+            dfqa_out = dfqa*flx2tend
         end subroutine convmf
 
         subroutine diagnose_convection(psa, se, qa, qsat, itop, qdif)
@@ -206,34 +254,32 @@ module phy_convmf
             !          determine the level of convection. Calculate the humidity
             !          excess in convective gridboxes.
 
-            use mod_physcon, only: alhc, wvi
-
             ! Input:  PSA    = norm. surface pressure [p/p0]            (2-dim)
-            real(dp), intent(in) :: psa(ngp)
+            type(rpe_var), intent(in) :: psa(ngp)
             !         SE     = dry static energy                        (3-dim)
-            real(dp), intent(in) :: se(ngp, kx)
+            type(rpe_var), intent(in) :: se(ngp, kx)
             !         QA     = specific humidity [g/kg]                 (3-dim)
-            real(dp), intent(in) :: qa(ngp, kx)
+            type(rpe_var), intent(in) :: qa(ngp, kx)
             !         QSAT   = saturation spec. hum. [g/kg]             (3-dim)
-            real(dp), intent(in) :: qsat(ngp, kx)
+            type(rpe_var), intent(in) :: qsat(ngp, kx)
 
             ! Output: ITOP   = top of convection (layer index)          (2-dim)
             integer, intent(out) :: itop(ngp)
             !         QDIF   = Humidity anomaly in convection gridpoints (2-dim)
-            real(dp), intent(out) :: qdif(ngp)
+            type(rpe_var), intent(out) :: qdif(ngp)
 
             ! Local variables
             integer :: j, k, ktop1, ktop2
-            real(dp) :: mss(ngp,2:kx), mse0, mse1, mss0, mss2, msthr, &
+            type(rpe_var) :: mss(ngp,2:kx), mse0, mse1, mss0, mss2, msthr, &
                     qthr0, qthr1, rlhc
             logical :: lqthr
 
-            rlhc=1.0_dp/alhc
+            rlhc=rpe_literal(1.0_dp)/alhc_cnv
 
             ! Saturation moist static energy
             do k=2,kx
                 do j=1,ngp
-                    mss(j,k)=se(j,k)+alhc*qsat(j,k)
+                    mss(j,k)=se(j,k)+(alhc_cnv/cp_cnv)*qsat(j,k)
                 end do
             end do
 
@@ -242,8 +288,8 @@ module phy_convmf
 
                 if (psa(j)>psmin) then
                     ! Minimum of moist static energy in the lowest two levels
-                    mse0=se(j,kx)+alhc*qa(j,kx)
-                    mse1=se(j,kxm) +alhc*qa(j,kxm)
+                    mse0=se(j,kx)  + (alhc_cnv/cp_cnv)*qa(j,kx)
+                    mse1=se(j,kxm) + (alhc_cnv/cp_cnv)*qa(j,kxm)
                     mse1=min(mse0,mse1)
 
                     ! Saturation (or super-saturated) moist static energy in PBL
@@ -253,19 +299,19 @@ module phy_convmf
                     ktop2=kx
 
                     do k=kx-3,3,-1
-                        mss2=mss(j,k)+wvi(k,2)*(mss(j,k+1)-mss(j,k))
+                        mss2=mss(j,k)+wvi_cnv(k,2)*(mss(j,k+1)-mss(j,k))
 
                         ! Check 1: conditional instability
                         !          (MSS in PBL > MSS at top level)
                         if (mss0>mss2) then
-                           ktop1=k
+                            ktop1=k
                         end if
 
                         ! Check 2: gradient of actual moist static energy
                         !          between lower and upper troposphere
                         if (mse1>mss2) then
-                           ktop2=k
-                           msthr=mss2
+                            ktop2=k
+                            msthr=mss2
                         end if
                     end do
 
@@ -276,11 +322,11 @@ module phy_convmf
                         lqthr=(qa(j,kx)>qthr0 .and. qa(j,kxm)>qthr1)
 
                         if (ktop2<kx) then
-                           itop(j)=ktop1
-                           qdif(j)=max(qa(j,kx)-qthr0,(mse0-msthr)*rlhc)
+                            itop(j)=ktop1
+                            qdif(j)=max(qa(j,kx)-qthr0,(mse0-msthr)*rlhc*cp_cnv)
                         else if (lqthr) then
-                           itop(j)=ktop1
-                           qdif(j)=qa(j,kx)-qthr0
+                            itop(j)=ktop1
+                            qdif(j)=qa(j,kx)-qthr0
                         end if
                     end if
                 end if

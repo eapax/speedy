@@ -1,11 +1,12 @@
 module phy_lscond
     use mod_atparam
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     private
-    public lscond, setup_condensation, ini_lscond
+    public lscond, setup_condensation, ini_lscond, truncate_lscond
 
     ! Variables loaded in by namelist
     namelist /condensation/ trlsc, rhlsc, drhlsc, rhblsc
@@ -25,8 +26,8 @@ module phy_lscond
     real(dp) :: rhblsc
 
     ! Local derived variables
-    real(dp) :: rtlsc, tfact
-    real(dp), allocatable :: pfact(:), rhref(:), dqmax(:)
+    type(rpe_var) :: rtlsc, tfact
+    type(rpe_var), allocatable :: pfact(:), rhref(:), dqmax(:)
 
     contains
         subroutine setup_condensation(fid)
@@ -58,35 +59,58 @@ module phy_lscond
                 rhref(k) = rhlsc+drhlsc*(sig2-1.0_dp)
                 dqmax(k) = qsmax*sig2*rtlsc
             end do
-            rhref(kx) = max(rhref(kx), rhblsc)
+            rhref(kx) = max(rhref(kx)%val, rhblsc)
 
         end subroutine ini_lscond
 
-        subroutine lscond(psa, qa, qsat, itop, precls, dtlsc, dqlsc)
+        subroutine truncate_lscond()
+            ! Truncate local variables for condensation scheme
+            ! Derived variables
+            call apply_truncation(rtlsc)
+            call apply_truncation(tfact)
+            call apply_truncation(pfact)
+            call apply_truncation(rhref)
+            call apply_truncation(dqmax)
+        end subroutine truncate_lscond
+
+        subroutine lscond(psa_in, qa_in, qsat_in, itop, &
+                precls_out, dtlsc_out, dqlsc_out)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !
             !  Purpose: Compute large-scale precipitation and
             !           associated tendencies of temperature and moisture
             !  Input:   psa    = norm. surface pressure [p/p0]           (2-dim)
-            real(dp), intent(in) :: psa(ngp)
+            real(dp), intent(in) :: psa_in(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
-            real(dp), intent(in) :: qa(ngp,kx)
+            real(dp), intent(in) :: qa_in(ngp,kx)
             !           qsat   = saturation spec. hum. [g/kg]            (3-dim)
-            real(dp), intent(in) :: qsat(ngp,kx)
+            real(dp), intent(in) :: qsat_in(ngp,kx)
 
             !           itop   = top of convection (layer index)         (2-dim)
             !  Output:  itop   = top of conv+l.s.condensat.(layer index) (2-dim)
             integer, intent(inout) :: itop(ngp)
             !           precls = large-scale precipitation [g/(m^2 s)]   (2-dim)
-            real(dp), intent(out) :: precls(ngp)
+            real(dp), intent(out) :: precls_out(ngp)
             !           dtlsc  = temperature tendency from l.s. cond     (3-dim)
-            real(dp), intent(out) :: dtlsc(ngp,kx)
+            real(dp), intent(out) :: dtlsc_out(ngp,kx)
             !           dqlsc  = hum. tendency [g/(kg s)] from l.s. cond (3-dim)
-            real(dp), intent(out) :: dqlsc(ngp,kx)
+            real(dp), intent(out) :: dqlsc_out(ngp,kx)
+
+            ! Local copies of input variables
+            type(rpe_var) :: psa(ngp), qa(ngp,kx), qsat(ngp,kx)
+
+            ! Local copies of output variables
+            type(rpe_var) :: precls(ngp), dtlsc(ngp,kx), dqlsc(ngp,kx)
 
             ! Local variables
             integer :: j, k
-            real(dp) ::  dqa
+            type(rpe_var) ::  dqa
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            psa = psa_in
+            qa = qa_in
+            qsat = qsat_in
 
             ! 1. Initialization
             dtlsc(:,1) = 0.0_dp
@@ -99,7 +123,7 @@ module phy_lscond
             do k=2,kx
                 do j=1,ngp
                     dqa = rhref(k)*qsat(j,k)-qa(j,k)
-                    if (dqa<0.0_dp) then
+                    if (dqa<rpe_literal(0.0_dp)) then
                         itop(j)    = min(k,itop(j))
                         dqlsc(j,k) = dqa*rtlsc
                         dtlsc(j,k) = tfact*min(-dqlsc(j,k), dqmax(k)*psa(j)**2)
@@ -120,5 +144,9 @@ module phy_lscond
             do j=1,ngp
                 precls(j) = precls(j)*psa(j)
             end do
+
+            precls_out = precls
+            dtlsc_out = dtlsc
+            dqlsc_out = dqlsc
         end subroutine lscond
 end module phy_lscond

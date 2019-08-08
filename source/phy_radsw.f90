@@ -1,12 +1,13 @@
 module phy_radsw
     ! Put this in the documentation please
     use mod_atparam
-    use mod_prec, only: dp
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
     private
-    public setup_sw_radiation, ini_radsw, radsw
+    public setup_sw_radiation, ini_radsw, truncate_radsw, radsw
     public nstrad, lradsw
 
     ! Flag for shortwave radiation routine (updated each timestep in dyn_stloop)
@@ -25,40 +26,40 @@ module phy_radsw
 
     !          shortwave absorptivities (for dp = 10^5 Pa) :
     ! absdry = abs. of dry air      (visible band)
-    real(dp) :: absdry
+    type(rpe_var) :: absdry
     ! absaer = abs. of aerosols     (visible band)
-    real(dp) :: absaer
+    type(rpe_var) :: absaer
     ! abswv1 = abs. of water vapour (visible band, for dq = 1 g/kg)
-    real(dp) :: abswv1
+    type(rpe_var) :: abswv1
     ! abswv2 = abs. of water vapour (near IR band, for dq = 1 g/kg)
-    real(dp) :: abswv2
+    type(rpe_var) :: abswv2
 
     ! abscl2 = abs. of clouds       (visible band, for dq_base = 1 g/kg)
-    real(dp) :: abscl1
+    type(rpe_var) :: abscl1
     ! abscl1 = abs. of clouds       (visible band, maximum value)
-    real(dp) :: abscl2
+    type(rpe_var) :: abscl2
 
     !          longwave absorptivities (per dp = 10^5 Pa) :
     ! ablwin = abs. of air in "window" band
-    real(dp) :: ablwin
+    type(rpe_var) :: ablwin
     ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
-    real(dp) :: ablwv1
+    type(rpe_var) :: ablwv1
     ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
-    real(dp) :: ablwv2
+    type(rpe_var) :: ablwv2
 
     ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
-    real(dp) :: ablcl1
+    type(rpe_var) :: ablcl1
     ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
-    real(dp) :: ablcl2
+    type(rpe_var) :: ablcl2
 
     ! albcl  = cloud albedo (for cloud cover = 1)
-    real(dp) :: albcl
+    type(rpe_var) :: albcl
     ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
-    real(dp) :: albcls
+    type(rpe_var) :: albcls
 
     ! Local derived variables
-    real(dp) :: fband1, fband2, eps1
-    real(dp), allocatable :: abs1(:), dsig_sw(:)
+    type(rpe_var) :: fband1, fband2, eps1
+    type(rpe_var), allocatable :: abs1(:), dsig_sw(:)
 
     contains
         subroutine setup_sw_radiation(fid)
@@ -84,50 +85,93 @@ module phy_radsw
             dsig_sw(1:kx) = dsig(1:kx)
         end subroutine ini_radsw
 
+        subroutine truncate_radsw()
+            ! Truncate local variables for short-wave radiation scheme
+            ! Namelist variables
+            call apply_truncation(absdry)
+            call apply_truncation(absaer)
+            call apply_truncation(abswv1)
+            call apply_truncation(abswv2)
+            call apply_truncation(abscl1)
+            call apply_truncation(abscl2)
+            call apply_truncation(ablwin)
+            call apply_truncation(ablwv1)
+            call apply_truncation(ablwv2)
+            call apply_truncation(ablcl1)
+            call apply_truncation(ablcl2)
+            call apply_truncation(albcl)
+            call apply_truncation(albcls)
+
+            ! Locally derived variables
+            call apply_truncation(fband1)
+            call apply_truncation(fband2)
+            call apply_truncation(abs1)
+            call apply_truncation(eps1)
+
+            ! Local copies of mod_physcon
+            call apply_truncation(dsig_sw)
+        end subroutine truncate_radsw
+
         subroutine radsw(&
-                psa, qa, icltop, cloudc, clstr, flx2tend, &
-                fsfcd, fsfc, ftop, dfabs)
+                psa_in, qa_in, icltop, cloudc_in, clstr_in, flx2tend_in, &
+                fsfcd_out, fsfc_out, ftop_out, dfabs_out)
             ! Compute the absorption of shortwave radiation and initialize
             ! arrays for longwave-radiation routines
 
             ! The following variables are initialised here and used in radlw.
             ! Since radsw is not called every timestep they need to be stored in
-            ! mod_physvar.
+            ! mod_physvar. Therefore they are truncated at the end of this
+            ! subroutine to the precision matching radlw
             use mod_physvar, only: tau2, stratc
 
             ! The following variables are derived once per day in other
-            ! subroutines and are only used here.
+            ! subroutines and are only used here. Therefore they are truncated
+            ! after being calculated to the precision of radsw
             use mod_fordate, only: albsfc, ablco2
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
 
-
-            real(dp), intent(in) :: psa(ngp)  !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
-
+            !  input:   psa    = norm. surface pressure [p/p0]           (2-dim)
+            real(dp), intent(in) :: psa_in(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
-            real(dp), intent(in) :: qa(ngp,kx)
+            real(dp), intent(in) :: qa_in(ngp,kx)
             !           icltop = cloud top level                         (2-dim)
             integer, intent(in) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
-            real(dp), intent(in) :: cloudc(ngp)
+            real(dp), intent(in) :: cloudc_in(ngp)
             !           clstr  = stratiform cloud cover                  (2-dim)
-            real(dp), intent(in) :: clstr(ngp)
+            real(dp), intent(in) :: clstr_in(ngp)
             !         flx2tend = Conversion factor between fluxes and T tendency
-            real(dp), intent(in) :: flx2tend(ngp,kx)
+            real(dp), intent(in) :: flx2tend_in(ngp,kx)
             !  output:  fsfcd  = downward-only flux of sw rad. at the surface (2-dim)
-            real(dp), intent(out) :: fsfcd(ngp)
+            real(dp), intent(out) :: fsfcd_out(ngp)
             !           fsfc   = net (downw.) flux of sw rad. at the surface  (2-dim)
-            real(dp), intent(out) :: fsfc(ngp)
+            real(dp), intent(out) :: fsfc_out(ngp)
             !           ftop   = net (downw.) flux of sw rad. at the atm. top (2-dim)
-            real(dp), intent(out) :: ftop(ngp)
+            real(dp), intent(out) :: ftop_out(ngp)
             !           dfabs  = flux of sw rad. absorbed by each atm. layer  (3-dim)
-            real(dp), intent(out) :: dfabs(ngp,kx)
+            real(dp), intent(out) :: dfabs_out(ngp,kx)
+
+            ! Local copies of input variables
+            type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp), &
+                    flx2tend(ngp,kx)
+
+            ! Local copies of output variables
+            type(rpe_var) :: fsfcd(ngp), fsfc(ngp), ftop(ngp), dfabs(ngp,kx)
 
             ! flux   = radiative flux in different spectral bands
-            real(dp) :: flux(ngp,2)
+            type(rpe_var) :: flux(ngp,2)
 
             ! Local variables
             integer :: j, k
-            real(dp) :: acloud(ngp), psaz(ngp), acloud1, deltap
+            type(rpe_var) :: acloud(ngp), psaz(ngp), acloud1, deltap
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            psa = psa_in
+            qa = qa_in
+            cloudc = cloudc_in
+            clstr = clstr_in
+            flx2tend = flx2tend_in
 
             ! 1.  Initialization
             tau2 = 0.0_dp
@@ -290,6 +334,15 @@ module phy_radsw
             end do
 
             ! Convert SW fluxes to temperature tendencies
-            dfabs = dfabs*flx2tend
+            dfabs_out = dfabs*flx2tend
+            fsfcd_out = fsfcd
+            fsfc_out = fsfc
+            ftop_out = ftop
+
+            ! Truncate saved outputs for radlw
+            call set_precision('Long-Wave Radiation')
+            call apply_truncation(tau2)
+            call apply_truncation(stratc)
+            call set_precision('Previous')
         end subroutine radsw
 end module phy_radsw

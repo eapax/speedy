@@ -1,6 +1,7 @@
 module mod_physvar
     use mod_atparam
     use mod_prec, only: dp
+    use rp_emulator
 
     implicit none
 
@@ -89,7 +90,7 @@ module mod_physvar
     ! Transmissivity and blackbody rad. (updated in radsw)
     ! tau2   = transmissivity of atmospheric layers
     ! stratc = stratospheric correction term
-    real(dp), allocatable :: tau2(:,:,:), stratc(:,:)
+    type(rpe_var), allocatable :: tau2(:,:,:), stratc(:,:)
 
     ! 3D Stochastic perturbation pattern
     real(dp), dimension(:,:), allocatable :: sppt(:,:)

@@ -6,6 +6,7 @@
 !> See ECMWF Tech. Memo. #598 (Palmer et al. 2009)
 module phy_sppt
     use mod_atparam
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -78,8 +79,8 @@ module phy_sppt
             use spectral, only: grid
 
             integer :: m, n, k
-            real(dp) :: sppt_grid(ix, il), sppt_grid_total(ix, il), &
-                             sppt_grid_out(ngp, kx)
+            real(dp) :: sppt_grid(ix, il), sppt_grid_total(ix, il)
+            type(rpe_var) :: sppt_grid_out(ngp, kx)
             complex(dp) :: eta(mx, nx, nscales)
             real(dp) :: randreal, randimag
 
@@ -87,17 +88,16 @@ module phy_sppt
             do k=1, nscales
                 do n=1, nx
                     do m=1, mx
-                        randreal = randn( &
-                                0.0_dp, 1.0_dp)
-                        randimag = randn( &
-                                0.0_dp, 1.0_dp)
+                        randreal = randn(0.0_dp, 1.0_dp)
+                        randimag = randn(0.0_dp, 1.0_dp)
 
                         ! Clip noise to +- 10 standard deviations
                         eta(m,n,k) = cmplx(&
                                 min(10.0_dp, abs(randreal)) * &
                                         sign(1.0_dp, randreal),&
                                 min(10.0_dp, abs(randimag)) * &
-                                        sign(1.0_dp, randimag))
+                                        sign(1.0_dp, randimag), &
+                                kind=dp)
                     end do
                 end do
             end do
@@ -133,7 +133,7 @@ module phy_sppt
 
             ! Apply tapering
             do k=1,kx
-                sppt_grid_out(:, k) = 1.0_dp + &
+                sppt_grid_out(:, k) = rpe_literal(1.0_dp) + &
                         reshape(sppt_grid_total, (/ngp/)) * mu(k)
             end do
         end function gen_sppt
