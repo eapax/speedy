@@ -118,6 +118,7 @@ module mod_fordate
             ! Truncate derived variables used exclusively in radsw
             call set_precision('Short-Wave Radiation')
             call apply_truncation(albsfc)
+            call set_precision('Long-Wave Radiation')
             call apply_truncation(ablco2)
 
             ! Truncate derived variables used exclusively in suflux

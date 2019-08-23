@@ -99,6 +99,11 @@ module phy_radlw
             ! Namelist variables
             call apply_truncation(epslw)
             call apply_truncation(emisfc)
+            call apply_truncation(ablwin)
+            call apply_truncation(ablwv1)
+            call apply_truncation(ablwv2)
+            call apply_truncation(ablcl1)
+            call apply_truncation(ablcl2)
 
             ! Derived variables
             call apply_truncation(eps1)
@@ -140,7 +145,7 @@ module phy_radlw
             end do
         end subroutine radset
 
-        subroutine radlw_transmissivity(psa, qa, icltop, cloudc)
+        subroutine radlw_transmissivity(psa_in, qa_in, icltop, cloudc_in)
             ! 5.  Initialization of longwave radiation model
             use mod_physcon, only: dsig
 
@@ -156,7 +161,7 @@ module phy_radlw
             !           icltop = cloud top level                         (2-dim)
             integer, intent(in) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
-            real(dp), intent(in) :: cloudc(ngp)
+            real(dp), intent(in) :: cloudc_in(ngp)
 
             ! Local copies of input variables
             type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp)

@@ -122,6 +122,8 @@ module mod_solar
             call apply_truncation(ozone)
             call apply_truncation(ozupp)
             call apply_truncation(zenit)
+
+            call set_precision('Long-Wave Radiation')
             call apply_truncation(stratz)
             call set_precision('Double')
         end subroutine sol_oz

@@ -132,7 +132,7 @@ module phy_radsw
             ! flux   = radiative flux in different spectral bands
             type(rpe_var) :: flux(ngp,2)
 
-            real(dp) :: tau2(ngp,kx,3)
+            type(rpe_var) :: tau2(ngp,kx,3)
 
             ! Local variables
             integer :: j, k
@@ -263,11 +263,5 @@ module phy_radsw
             fsfcd_out = fsfcd
             fsfc_out = fsfc
             ftop_out = ftop
-
-            ! Truncate saved outputs for radlw
-            call set_precision('Long-Wave Radiation')
-            call apply_truncation(tau2)
-            call apply_truncation(stratc)
-            call set_precision('Previous')
         end subroutine radsw
 end module phy_radsw

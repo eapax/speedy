@@ -117,6 +117,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
         call set_precision('Short-Wave Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,hflx2tend,ssrd,ssr,tsr,tt_rsw)
+
+        call set_precision('Long-Wave Radiation')
         call radlw_transmissivity(psg, qg1, icltop, cloudc)
     end if
 
