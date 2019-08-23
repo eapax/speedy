@@ -22,7 +22,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_lscond, only: lscond
     use phy_cloud, only: cloud
     use phy_radsw, only: lradsw, radsw
-    use phy_radlw, only: radlw_down, radlw_up
+    use phy_radlw, only: radlw_transmissivity, radlw_down, radlw_up
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
     use phy_sppt, only: sppt_on, gen_sppt, additive_forcing
@@ -117,6 +117,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
         call set_precision('Short-Wave Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,hflx2tend,ssrd,ssr,tsr,tt_rsw)
+        call radlw_transmissivity(psg, qg1, icltop, cloudc)
     end if
 
     ! 3.2 Compute downward longwave fluxes

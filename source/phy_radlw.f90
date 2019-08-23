@@ -6,19 +6,35 @@ module phy_radlw
     implicit none
 
     private
-    public setup_lw_radiation, ini_radlw, truncate_radlw, radlw_down, radlw_up
+    public setup_lw_radiation, ini_radlw, truncate_radlw,&
+            radlw_transmissivity, radlw_down, radlw_up
     public epslw, emisfc
 
     ! Number of radiation bands with tau < 1
     integer, parameter :: nband=4
 
     ! Variables loaded in by namelist
-    namelist /lw_radiation/ epslw, emisfc
+    namelist /lw_radiation/ epslw, emisfc, &
+            ablwin, ablwv1, ablwv2, &
+            ablcl1, ablcl2
 
     ! epslw  = fraction of blackbody spectrum absorbed/emitted by PBL only
     type(rpe_var) :: epslw
     ! emisfc = longwave surface emissivity
     type(rpe_var) :: emisfc
+
+    !          longwave absorptivities (per dp = 10^5 Pa) :
+    ! ablwin = abs. of air in "window" band
+    type(rpe_var) :: ablwin
+    ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
+    type(rpe_var) :: ablwv1
+    ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
+    type(rpe_var) :: ablwv2
+
+    ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
+    type(rpe_var) :: ablcl1
+    ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
+    type(rpe_var) :: ablcl2
 
     ! Time-invariant fields (initial. in radset)
     ! fband  = energy fraction emitted in each LW band = f(T)
@@ -31,9 +47,13 @@ module phy_radlw
     type(rpe_var), allocatable :: flux(:,:)
     !  dfabs  = flux of lw rad. absorbed by each atm. layer (3-dim)
     type(rpe_var), allocatable :: dfabs(:,:)
+    ! Transmissivity and blackbody radiation
+    ! tau2   = transmissivity of atmospheric layers
+    ! stratc = stratospheric correction term
+    type(rpe_var), allocatable :: tau2(:,:,:), stratc(:,:)
 
     ! Local derived variables
-    type(rpe_var) :: refsfc
+    type(rpe_var) :: refsfc, eps1
 
     ! Local copies of mod_physcon variables
     type(rpe_var) :: sbc_1_3, sbc_1_4
@@ -50,16 +70,21 @@ module phy_radlw
             allocate(st4a(ngp,kx,2))
             allocate(flux(ngp,4))
             allocate(dfabs(ngp,kx))
+            allocate(tau2(ngp,kx,4))
+            allocate(stratc(ngp,2))
             allocate(wvi_lw(kx,2))
             allocate(dsig_lw(kx))
         end subroutine setup_lw_radiation
 
         subroutine ini_radlw()
+            use mod_physcon, only: dsig
+
             ! Calculate local variables for long-wave radiation scheme
             use mod_physcon, only: sbc, wvi, dsig
 
             ! Derived variables
             refsfc=1.0_dp-emisfc
+            eps1=epslw/(dsig(1)+dsig(2))
             call radset()
 
             ! Local copies of mod_physcon
@@ -76,6 +101,7 @@ module phy_radlw
             call apply_truncation(emisfc)
 
             ! Derived variables
+            call apply_truncation(eps1)
             call apply_truncation(fband)
             call apply_truncation(refsfc)
 
@@ -91,7 +117,6 @@ module phy_radlw
             !
             ! Purpose: compute energy fractions in LW bands
             !          as a function of temperature
-
             integer :: jb, jtemp
             real(dp) :: eps1
 
@@ -115,13 +140,90 @@ module phy_radlw
             end do
         end subroutine radset
 
+        subroutine radlw_transmissivity(psa, qa, icltop, cloudc)
+            ! 5.  Initialization of longwave radiation model
+            use mod_physcon, only: dsig
+
+            ! The following variables are derived once per day in other
+            ! subroutines and are only used here.
+            use mod_fordate, only: ablco2
+            use mod_solar, only: stratz
+
+            !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
+            real(dp), intent(in) :: psa_in(ngp)
+            !           qa     = specific humidity [g/kg]                (3-dim)
+            real(dp), intent(in) :: qa_in(ngp,kx)
+            !           icltop = cloud top level                         (2-dim)
+            integer, intent(in) :: icltop(ngp)
+            !           cloudc = total cloud cover                       (2-dim)
+            real(dp), intent(in) :: cloudc(ngp)
+
+            ! Local copies of input variables
+            type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp)
+
+            ! Local variables
+            integer :: j, k
+            type(rpe_var) :: acloud(ngp), acloud1, deltap
+
+            ! 0. Pass input variables to local copies, triggering call to
+            !    apply_truncation
+            psa = psa_in
+            qa = qa_in
+            cloudc = cloudc_in
+
+            ! 5.1  Longwave transmissivity:
+            ! function of layer mass, abs. humidity and cloud cover.
+
+            ! Cloud-free levels (stratosphere + PBL)
+            k=1
+            do j=1,ngp
+                deltap=psa(j)*dsig(k)
+                tau2(j,k,1)=exp(-deltap*ablwin)
+                tau2(j,k,2)=exp(-deltap*ablco2)
+                tau2(j,k,3)=1.0_dp
+                tau2(j,k,4)=1.0_dp
+            end do
+
+            do k=2,kx,kx-2
+                do j=1,ngp
+                    deltap=psa(j)*dsig(k)
+                    tau2(j,k,1)=exp(-deltap*ablwin)
+                    tau2(j,k,2)=exp(-deltap*ablco2)
+                    tau2(j,k,3)=exp(-deltap*ablwv1*qa(j,k))
+                    tau2(j,k,4)=exp(-deltap*ablwv2*qa(j,k))
+                end do
+            end do
+
+            ! Cloudy layers (free troposphere)
+            acloud = cloudc * ablcl2
+
+            do k=3,kxm
+               do j=1,ngp
+                 deltap=psa(j)*dsig(k)
+                 if (k<icltop(j)) then
+                   acloud1=acloud(j)
+                 else
+                   acloud1=ablcl1*cloudc(j)
+                 endif
+                 tau2(j,k,1)=exp(-deltap*(ablwin+acloud1))
+                 tau2(j,k,2)=exp(-deltap*ablco2)
+                 tau2(j,k,3)=exp(-deltap*max(ablwv1*qa(j,k),acloud(j)))
+                 tau2(j,k,4)=exp(-deltap*max(ablwv2*qa(j,k),acloud(j)))
+               end do
+            end do
+
+            ! 5.2  Stratospheric correction terms
+            do j=1,ngp
+                stratc(j,1)=stratz(j)*psa(j)
+                stratc(j,2)=eps1*psa(j)
+            end do
+
+        end subroutine radlw_transmissivity
+
         subroutine radlw_down(ta_in,fsfcd_out)
             !  Purpose: Compute the absorption of longwave radiation
             !           downward flux only
-
-            ! Variables calculated only on sub set of timesteps in radsw and
-            ! truncated to radlw precision there
-            use mod_physvar, only: tau2
+            use mod_physcon, only: sbc, wvi
 
             !  input:  ta     = absolute temperature (3-dim)
             real(dp), intent(in) :: ta_in(ngp,kx)
@@ -258,9 +360,8 @@ module phy_radlw
             !  Purpose: Compute the absorption of longwave radiation
             !           upward flux only
 
-            ! Variables calculated only on sub set of timesteps in radsw and
-            ! truncated to radlw precision there
-            use mod_physvar, only: tau2, stratc
+            ! Variables calculated only on sub set of timesteps in radsw
+            use mod_physcon, only: dsig
 
             !           ta     = absolute temperature (3-dim)
             real(dp), intent(in) :: ta_in(ngp,kx)

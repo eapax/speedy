@@ -87,11 +87,6 @@ module mod_physvar
             cbmf, tsr, ssrd, ssr, slrd, slr, olr
     real(dp), dimension(:, :), allocatable :: slru, ustr, vstr, shf, evap, hfluxn
 
-    ! Transmissivity and blackbody rad. (updated in radsw)
-    ! tau2   = transmissivity of atmospheric layers
-    ! stratc = stratospheric correction term
-    type(rpe_var), allocatable :: tau2(:,:,:), stratc(:,:)
-
     ! 3D Stochastic perturbation pattern
     real(dp), dimension(:,:), allocatable :: sppt(:,:)
 
@@ -156,8 +151,6 @@ module mod_physvar
             allocate(shf(ngp, 3))
             allocate(evap(ngp, 3))
             allocate(hfluxn(ngp, 3))
-            allocate(tau2(ngp,kx,4))
-            allocate(stratc(ngp,2))
             allocate(sppt(ngp,kx))
         end subroutine setup_physvar
 end module
