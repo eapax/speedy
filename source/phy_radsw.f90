@@ -16,8 +16,6 @@ module phy_radsw
     namelist /sw_radiation/ nstrad, &
             absdry, absaer, abswv1, abswv2, &
             abscl1, abscl2, &
-            ablwin, ablwv1, ablwv2, &
-            ablcl1, ablcl2, &
             albcl, albcls
 
     ! Period (no. of steps) for shortwave radiation
@@ -38,26 +36,13 @@ module phy_radsw
     ! abscl1 = abs. of clouds       (visible band, maximum value)
     real(dp) :: abscl2
 
-    !          longwave absorptivities (per dp = 10^5 Pa) :
-    ! ablwin = abs. of air in "window" band
-    real(dp) :: ablwin
-    ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
-    real(dp) :: ablwv1
-    ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
-    real(dp) :: ablwv2
-
-    ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
-    real(dp) :: ablcl1
-    ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
-    real(dp) :: ablcl2
-
     ! albcl  = cloud albedo (for cloud cover = 1)
     real(dp) :: albcl
     ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
     real(dp) :: albcls
 
     ! Local derived variables
-    real(dp) :: fband1, fband2, eps1
+    real(dp) :: fband1, fband2
     real(dp), allocatable :: abs1(:), dsig_sw(:)
 
     contains
@@ -80,29 +65,21 @@ module phy_radsw
             fband2 = 0.05_dp
             fband1 = 1.0_dp-fband2
             abs1(2:kx)=absdry+absaer*sig(2:kx)**2
-            eps1=epslw/(dsig(1)+dsig(2))
             dsig_sw(1:kx) = dsig(1:kx)
         end subroutine ini_radsw
 
         subroutine radsw(&
                 psa, qa, icltop, cloudc, clstr, flx2tend, &
                 fsfcd, fsfc, ftop, dfabs)
-            ! Compute the absorption of shortwave radiation and initialize
-            ! arrays for longwave-radiation routines
-
-            ! The following variables are initialised here and used in radlw.
-            ! Since radsw is not called every timestep they need to be stored in
-            ! mod_physvar.
-            use mod_physvar, only: tau2, stratc
+            ! Compute the absorption of shortwave radiation
 
             ! The following variables are derived once per day in other
             ! subroutines and are only used here.
-            use mod_fordate, only: albsfc, ablco2
-            use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
+            use mod_fordate, only: albsfc
+            use mod_solar, only: fsol, ozone, ozupp, zenit
 
-
-            real(dp), intent(in) :: psa(ngp)  !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
-
+            !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
+            real(dp), intent(in) :: psa(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
             real(dp), intent(in) :: qa(ngp,kx)
             !           icltop = cloud top level                         (2-dim)
@@ -125,9 +102,11 @@ module phy_radsw
             ! flux   = radiative flux in different spectral bands
             real(dp) :: flux(ngp,2)
 
+            real(dp) :: tau2(ngp,kx,3)
+
             ! Local variables
             integer :: j, k
-            real(dp) :: acloud(ngp), psaz(ngp), acloud1, deltap
+            real(dp) :: acloud(ngp), psaz(ngp), deltap
 
             ! 1.  Initialization
             tau2 = 0.0_dp
@@ -240,54 +219,6 @@ module phy_radsw
 
             ! 4.3  Net solar radiation = incoming - outgoing
             ftop = ftop - flux(:,1)
-
-            ! 5.  Initialization of longwave radiation model
-            ! 5.1  Longwave transmissivity:
-            ! function of layer mass, abs. humidity and cloud cover.
-
-            ! Cloud-free levels (stratosphere + PBL)
-            k=1
-            do j=1,ngp
-                deltap=psa(j)*dsig_sw(k)
-                tau2(j,k,1)=exp(-deltap*ablwin)
-                tau2(j,k,2)=exp(-deltap*ablco2)
-                tau2(j,k,3)=1.0_dp
-                tau2(j,k,4)=1.0_dp
-            end do
-
-            do k=2,kx,kx-2
-                do j=1,ngp
-                    deltap=psa(j)*dsig_sw(k)
-                    tau2(j,k,1)=exp(-deltap*ablwin)
-                    tau2(j,k,2)=exp(-deltap*ablco2)
-                    tau2(j,k,3)=exp(-deltap*ablwv1*qa(j,k))
-                    tau2(j,k,4)=exp(-deltap*ablwv2*qa(j,k))
-                end do
-            end do
-
-            ! Cloudy layers (free troposphere)
-            acloud = cloudc * ablcl2
-
-            do k=3,kxm
-               do j=1,ngp
-                 deltap=psa(j)*dsig_sw(k)
-                 if (k<icltop(j)) then
-                   acloud1=acloud(j)
-                 else
-                   acloud1=ablcl1*cloudc(j)
-                 endif
-                 tau2(j,k,1)=exp(-deltap*(ablwin+acloud1))
-                 tau2(j,k,2)=exp(-deltap*ablco2)
-                 tau2(j,k,3)=exp(-deltap*max(ablwv1*qa(j,k),acloud(j)))
-                 tau2(j,k,4)=exp(-deltap*max(ablwv2*qa(j,k),acloud(j)))
-               end do
-            end do
-
-            ! 5.2  Stratospheric correction terms
-            do j=1,ngp
-                stratc(j,1)=stratz(j)*psa(j)
-                stratc(j,2)=eps1*psa(j)
-            end do
 
             ! Convert SW fluxes to temperature tendencies
             dfabs = dfabs*flx2tend

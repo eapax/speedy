@@ -252,19 +252,6 @@
     ! abscl1 = abs. of clouds       (visible band, maximum value)
     abscl2 =  0.15,
 
-    !          longwave absorptivities (per dp = 10^5 Pa) :
-    ! ablwin = abs. of air in "window" band
-    ablwin =  0.3,
-    ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
-    ablwv1 =  0.7,
-    ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
-    ablwv2 = 50.0,
-
-    ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
-    ablcl1 = 12.0,
-    ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
-    ablcl2 =  0.6,
-
     ! albcl  = cloud albedo (for cloud cover = 1)
     albcl  =  0.43,
     ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
@@ -277,6 +264,19 @@
     epslw  =  0.05,
     ! emisfc = longwave surface emissivity
     emisfc =  0.98,
+
+    !          longwave absorptivities (per dp = 10^5 Pa) :
+    ! ablwin = abs. of air in "window" band
+    ablwin =  0.3,
+    ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
+    ablwv1 =  0.7,
+    ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
+    ablwv2 = 50.0,
+
+    ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
+    ablcl1 = 12.0,
+    ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
+    ablcl2 =  0.6,
 /
 
 ! phy_suflux
