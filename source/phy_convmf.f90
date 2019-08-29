@@ -57,7 +57,7 @@ module phy_convmf
             integer :: k
             real(dp) :: sentr
 
-            fm0=p0*dsig(kx)/(gg*trcnv*3600.0_dp)
+            fm0=p0*dsig(kx)/(gg*trcnv)
 
             ! Entrainment profile (up to sigma = 0.5)
             sentr=0.0_dp
@@ -95,7 +95,7 @@ module phy_convmf
         end subroutine truncate_convmf
 
         subroutine convmf (&
-                psa_in, se_in, qa_in, qsat_in, hflx2tend_in, flx2tend_in, &
+                psa_in, se_in, qa_in, qsat_in, flx2tend_in, &
                 itop, cbmf_out, precnv_out, dfse_out, dfqa_out)
             ! SUBROUTINE CONVMF (PSA,SE,QA,QSAT, ITOP,CBMF,PRECNV,DFSE,DFQA)
             !
@@ -110,8 +110,6 @@ module phy_convmf
             real(dp), intent(in) :: qa_in(ngp, kx)
             !         QSAT   = saturation spec. hum. [g/kg]             (3-dim)
             real(dp), intent(in) :: qsat_in(ngp, kx)
-            !         hflx2tend = Conversion factor between heat fluxes and T tendency
-            real(dp), intent(in) :: hflx2tend_in(ngp,kx)
             !         flx2tend = Conversion factor between fluxes and tendencies
             real(dp), intent(in) :: flx2tend_in(ngp,kx)
 
@@ -128,7 +126,7 @@ module phy_convmf
 
             ! Local copies of input variables
             type(rpe_var) :: psa(ngp), se(ngp,kx), qa(ngp,kx), qsat(ngp,kx), &
-                    hflx2tend(ngp,kx), flx2tend(ngp,kx)
+                    flx2tend(ngp,kx)
 
             ! Local copies of output variables
             type(rpe_var) :: cbmf(ngp), precnv(ngp), dfse(ngp,kx), dfqa(ngp,kx)
@@ -144,7 +142,6 @@ module phy_convmf
             se = se_in
             qa = qa_in
             qsat = qsat_in
-            hflx2tend = hflx2tend_in
             flx2tend = flx2tend_in
 
             ! 1. Initialization of output and workspace arrays
@@ -245,8 +242,8 @@ module phy_convmf
             cbmf_out = cbmf
             precnv_out = precnv
             ! Convert fluxes to temperature tendencies
-            dfse_out = dfse*cp_cnv*hflx2tend
-            dfqa_out = dfqa*flx2tend
+            dfse_out = dfse*flx2tend / 3600.0_dp
+            dfqa_out = dfqa*flx2tend / 3600.0_dp
         end subroutine convmf
 
         subroutine diagnose_convection(psa, se, qa, qsat, itop, qdif)

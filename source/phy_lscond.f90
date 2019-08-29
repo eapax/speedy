@@ -50,7 +50,7 @@ module phy_lscond
             real(dp) :: sig2
             integer :: k
 
-            rtlsc = 1.0_dp/(trlsc*3600.0_dp)
+            rtlsc = 1.0_dp/trlsc
             tfact = alhc/cp
             pfact = dsig*p0/gg
 

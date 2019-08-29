@@ -59,8 +59,8 @@ module phy_vdifsc
 
             real(dp) :: cshc, cvdi
 
-            cshc = dsig(kx)/3600.0_dp
-            cvdi = (sigh(kxm)-sigh(1))/((kxm-1)*3600.0_dp)
+            cshc = dsig(kx)
+            cvdi = (sigh(kxm)-sigh(1))/(kxm-1)
 
             fshcq  = cshc/trshc
             fshcse = cshc/(trshc*cp)

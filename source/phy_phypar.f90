@@ -60,9 +60,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             ! Conversion for fluxes->tendencies
-            flx2tend(j,k)  = rps(j)*grdsig(k)
+            flx2tend(j,k)  = rps(j)*grdsig(k)*3600.0_dp
             ! Conversion for heat fluxes->tendencies
-            hflx2tend(j,k) = rps(j)*grdscp(k)
+            hflx2tend(j,k) = rps(j)*grdscp(k)*3600.0_dp
         end do
     end do
 
@@ -88,7 +88,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 2. Precipitation
     ! 2.1 Deep convection
     call set_precision('Convection')
-    call convmf(psg,se,qg1,qsat,hflx2tend,flx2tend,&
+    call convmf(psg,se,qg1,qsat,flx2tend,&
             iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
     do j=1,ngp
@@ -98,6 +98,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! 2.2 Large-scale condensation
     call set_precision('Condensation')
     call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
+
+    call set_precision('Double')
+    precnv = precnv / 3600.0_dp
+    precls = precls / 3600.0_dp
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
@@ -150,10 +154,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call increment_fluxes()
 
     ! Sum physics tendencies
-    ut_phy = ut_sflx + ut_pbl
-    vt_phy = vt_sflx + vt_pbl
-    tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_sflx + tt_rlw + tt_pbl
-    qt_phy = qt_cnv + qt_lsc + qt_sflx + qt_pbl
+    ut_phy = ut_sflx / 3600.0_dp
+    vt_phy = vt_sflx / 3600.0_dp
+    tt_phy = (tt_cnv + tt_lsc + tt_rsw + tt_sflx + tt_rlw + tt_pbl) / 3600.0_dp
+    qt_phy = (qt_cnv + qt_lsc + qt_sflx + qt_pbl) / 3600.0_dp
 
     ! Add SPPT noise
     if (sppt_on) then
