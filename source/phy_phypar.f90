@@ -97,7 +97,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2.2 Large-scale condensation
     call set_precision('Condensation')
-    call lscond(psg,qg1,qsat,iptop,precls,tt_lsc,qt_lsc)
+    call lscond(psg,rh,qsat,iptop,precls,tt_lsc,qt_lsc)
 
     call set_precision('Double')
     precnv = precnv / 3600.0_dp
