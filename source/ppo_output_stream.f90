@@ -218,12 +218,6 @@ module ppo_output_stream
             end if
         end function
 
-        ! todo Close the currently open file and open a new file named by the
-        ! current time
-        subroutine reinit_output_stream(stream)
-            type(output_stream), intent(inout) :: stream
-        end subroutine
-
         ! todo Increment the output on substeps relative to how often it is
         ! written to file
         subroutine incr_output_stream(stream)
@@ -273,8 +267,7 @@ module ppo_output_stream
         subroutine write_grid(stream)
             type(output_stream), intent(inout) :: stream
             real(dp) :: output(ngp, kx)
-            real(sp) :: output_sp(ngp, kx)
-            real(sp) :: output_p(ngp, np)
+            real(dp) :: output_p(ngp, np)
             integer :: n, k
 
             do n=1, stream%nvars
@@ -284,23 +277,21 @@ module ppo_output_stream
                     ! Interpolate output to pressure levels
                     call pressure_levels(stream%var_ID(n), output, output_p)
                     do k=np, 1, -1
-                        !write(stream%file_ID, rec=stream%rec) output_p(:, k)
                         call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output_p(:, k), &
-                                                 start = (/ 1, 1, kx-k+1, stream%rec /), &
+                                                 start = (/ 1, 1, np-k+1, stream%rec /), &
                                                  count = (/ ix, il, 1, 1/)) )
                     end do
                 else
                     ! Otherwise write model level output
                     if (stream%var_ID(n)==5) then
-                        output_sp = output / gg !m
-                    else
-                        output_sp = output
+                        output = output / gg !m
                     end if
 
                     ! For some reason the height levels need to be written backwards
                     do k=kx, 1, -1
-                        write(stream%file_ID, rec=stream%rec) output_sp(:, k)
-                        stream%rec = stream%rec + 1
+                        call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output(:, k), &
+                                                 start = (/ 1, 1, kx-k+1, stream%rec /), &
+                                                 count = (/ ix, il, 1, 1/)) )
                     end do
                 end if
             end do
@@ -793,7 +784,7 @@ module ppo_output_stream
                 print *, 'Variable no.', var_ID, ' unavailable for output'
             end select
 
-            call check( nf90_def_var(file_ID, trim(name), NF90_REAL, dimids, nc_var_ID) )
+            call check( nf90_def_var(file_ID, trim(name), NF90_DOUBLE, dimids, nc_var_ID) )
             call check( nf90_put_att(file_ID, nc_var_ID, 'units', trim(units)) )
         end subroutine add_var_info
 
@@ -815,12 +806,12 @@ module ppo_output_stream
             end if
             call check( nf90_def_dim(stream%file_ID, 'time', NF90_UNLIMITED, rec_dimid) )
 
-            call check( nf90_def_var(stream%file_ID, 'longitude', NF90_REAL, lon_dimid, lon_varid) )
-            call check( nf90_def_var(stream%file_ID, 'latitude' , NF90_REAL, lat_dimid, lat_varid) )
+            call check( nf90_def_var(stream%file_ID, 'longitude', NF90_DOUBLE, lon_dimid, lon_varid) )
+            call check( nf90_def_var(stream%file_ID, 'latitude' , NF90_DOUBLE, lat_dimid, lat_varid) )
             if (stream%plevs) then
-                call check( nf90_def_var(stream%file_ID, 'pressure' , NF90_REAL, lvl_dimid, lvl_varid) )
+                call check( nf90_def_var(stream%file_ID, 'pressure' , NF90_DOUBLE, lvl_dimid, lvl_varid) )
             else
-                call check( nf90_def_var(stream%file_ID, 'sigma'    , NF90_REAL, lvl_dimid, lvl_varid) )
+                call check( nf90_def_var(stream%file_ID, 'sigma'    , NF90_DOUBLE, lvl_dimid, lvl_varid) )
             end if
 
             ! Assign units attributes to coordinate variables.
@@ -841,10 +832,10 @@ module ppo_output_stream
 
             ! Write the coordinate variable data. This will put the latitudes
             ! and longitudes of our data grid into the netCDF file.
-            call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=1, ix) /)) )
+            call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=0, ix-1) /)) )
             call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s) )
             if (stream%plevs) then
-                call check( nf90_put_var(stream%file_ID, lvl_varid, pout*100) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, pout*1000) )
             else
                 call check( nf90_put_var(stream%file_ID, lvl_varid, sig) )
             end if
