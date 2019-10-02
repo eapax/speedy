@@ -3,21 +3,19 @@ module ppo_output_stream
     use mod_atparam
     use mod_dynvar
     use mod_physvar
-    use mod_physcon, only: gg
+    use mod_physcon, only: gg, sig, pout
+    use mod_cli_sea, only: deglat_s
     use mod_date, only: imonth, month_start
     use spectral, only: uvspec, grid
     use ppo_plevs, only: pressure_levels, np
     use mod_prec, only: sp, dp
 
+    use netcdf
+
     implicit none
 
     private
-    public initialise_output, update_output
-
-    integer :: recl_spec, recl_grid
-
-    ! Counter so that each output stream has a unique file ID
-    integer :: next_file_ID = 200
+    public initialise_output, update_output, close_output, check
 
     ! Generic type used to describe an output stream
     type output_stream
@@ -40,13 +38,13 @@ module ppo_output_stream
 
         ! The ID used in open/read/write statements
         integer :: file_ID
+        integer, allocatable :: nc_var_ID(:)
 
         ! An array of integers corresponding to the variables being output
         integer :: nvars
         integer, allocatable :: var_ID(:)
 
         ! The record counter used for direct access in read/write statements
-        integer :: recl
         integer :: rec = 1
     end type output_stream
 
@@ -70,10 +68,6 @@ module ppo_output_stream
             integer, allocatable :: var_IDs(:)
 
             integer :: n
-
-            ! Set record lengths to grid size
-            recl_spec = 4*mx*nx
-            recl_grid = 4*ngp
 
             ! Read output parameters from input text file
             open(99, file='output_requests.nml')
@@ -156,6 +150,14 @@ module ppo_output_stream
             end do
         end subroutine
 
+        subroutine close_output()
+            integer :: n
+
+            do n=1, nstreams
+                call check( nf90_close(streams(n)%file_ID) )
+            end do
+        end subroutine close_output
+
         !
         function init_output_stream(filename, spectral, plevs, nstpinc, &
                 nstpout, nstpopen, nvars, var_ID) &
@@ -174,18 +176,9 @@ module ppo_output_stream
             stream%nstpout = nstpout
             stream%nstpopen = nstpopen
             stream%nvars = nvars
+            allocate(stream%nc_var_ID(stream%nvars))
             allocate(stream%var_ID(stream%nvars))
             stream%var_ID = var_ID
-
-            if (spectral) then
-                stream%recl = recl_spec
-            else
-                stream%recl = recl_grid
-            end if
-
-            ! Assign a unique file ID to the output stream
-            stream%file_ID = next_file_ID
-            next_file_ID = next_file_ID + 1
         end function
 
         ! Update called once per timestep for each output stream.
@@ -199,7 +192,7 @@ module ppo_output_stream
             type(output_stream), intent(inout) :: stream
             integer, intent(in) :: istep
 
-            if (xmod(istep, stream%nstpopen)) call reinit_output_stream(stream)
+            if (xmod(istep, stream%nstpopen)) call init_nc(stream)
 
             if (xmod(istep, stream%nstpinc)) call incr_output_stream(stream)
 
@@ -229,11 +222,6 @@ module ppo_output_stream
         ! current time
         subroutine reinit_output_stream(stream)
             type(output_stream), intent(inout) :: stream
-
-            close(stream%file_ID)
-
-            open(stream%file_ID, file=trim(stream%filename), &
-                    form='unformatted', access='direct', recl=stream%recl)
         end subroutine
 
         ! todo Increment the output on substeps relative to how often it is
@@ -253,6 +241,8 @@ module ppo_output_stream
             else
                 call write_grid(stream)
             end if
+
+            stream%rec = stream%rec + 1
         end subroutine
 
         subroutine write_spectral(stream)
@@ -294,8 +284,10 @@ module ppo_output_stream
                     ! Interpolate output to pressure levels
                     call pressure_levels(stream%var_ID(n), output, output_p)
                     do k=np, 1, -1
-                        write(stream%file_ID, rec=stream%rec) output_p(:, k)
-                        stream%rec = stream%rec + 1
+                        !write(stream%file_ID, rec=stream%rec) output_p(:, k)
+                        call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output_p(:, k), &
+                                                 start = (/ 1, 1, kx-k+1, stream%rec /), &
+                                                 count = (/ ix, il, 1, 1/)) )
                     end do
                 else
                     ! Otherwise write model level output
@@ -608,4 +600,266 @@ module ppo_output_stream
                 print *, 'Variable no.', varID, ' unavailable for output'
             end select
         end function
+
+        subroutine add_var_info(var_ID, file_ID, nc_var_ID, dimids)
+            integer, intent(in) :: var_ID, file_ID
+            integer, intent(inout) :: nc_var_ID
+            integer, intent(in) :: dimids(4)
+            character(len=32) :: name
+            character(len=32) :: units
+
+            select case(var_ID)
+                ! ug1/vg1 (ms-1)
+                case(1)
+                name = 'zonal_velocity'
+                units = 'm s-1'
+
+                 ! vg1
+                case(2)
+                name = 'meridional_velocity'
+                units = 'm s-1'
+
+                ! tg1 (K)
+                case(3)
+                name = 'temperature'
+                units = 'K'
+
+                ! qg1 (kg/kg)
+                case(4)
+                name = 'specific_humidity'
+                units = ''
+
+                ! phig1  = geopotential
+                case(5)
+                name = 'geopotential_height'
+                units = 'm'
+
+                ! pslg1
+                case(6)
+                name = 'logarithm_of_surface_pressure'
+                units = ''
+
+                ! se     = dry static energy
+                case(7)
+                name = 'dry_static_energy'
+                units = 'J kg-1'
+
+                ! rh     = relative humidity
+                case(8)
+                name = 'relative_humidity'
+                units = ''
+
+                ! qsat   = saturation specific humidity (g/kg)
+                case(9)
+                name = 'saturation_specific_humidity'
+                units = 'g kg-1'
+
+                ! psg    = surface pressure
+                case(10)
+                name = 'surface_pressure'
+                units = 'Pa'
+
+                ! ts     = surface temperature
+                case(11)
+                name = 'surface temperature'
+                units = 'K'
+
+                ! tskin  = skin temperature
+                case(12)
+                name = 'skin_temperature'
+                units = 'K'
+
+                ! u0     = near-surface u-wind
+                case(13)
+                name = 'near_surface_zonal_velocity'
+                units = 'm s-1'
+
+                ! v0     = near-surface v-wind
+                case(14)
+                name = 'near_surface_meridional_velocity'
+                units = 'm s-1'
+
+                ! t0     = near-surface air temperature
+                case(15)
+                name = 'near_surface_temperature'
+                units = 'K'
+
+                ! q0     = near-surface specific humidity (g/kg)
+                case(16)
+                name = 'near_surface_specific_humidity'
+                units = 'g kg-1'
+
+                ! cloudc = total cloud cover (fraction)
+                case(17)
+                name = 'cloud_cover'
+                units = ''
+
+                ! clstr  = stratiform cloud cover (fraction)
+                case(18)
+                name = 'stratiform_cloud_cover'
+                units = ''
+
+                ! cltop  = norm. pressure at cloud top
+                case(19)
+                name = 'cloud_top_pressure'
+                units = ''
+
+                ! prtop  = top of precipitation (level index)
+                case(20)
+                name = 'level_of_precipitation'
+                units = ''
+
+                ! precnv = convective precipitation  [g/(m^2 s)], total
+                case(31)
+                name = 'convective_precipitation'
+                units = 'g m-2 s-1'
+
+                ! precls = large-scale precipitation [g/(m^2 s)], total
+                case(32)
+                name = 'large_scale_precipitation'
+                units = 'g m-2 s-1'
+
+                ! snowcv = convective precipitation  [g/(m^2 s)], snow only
+                !case(33)
+
+                ! snowls = large-scale precipitation [g/(m^2 s)], snow only
+                !case(34)
+
+                ! cbmf   = cloud-base mass flux
+                case(35)
+                name = 'cloud_base_mass_flux'
+                units ='?'
+
+                ! tsr    = top-of-atm. shortwave radiation (downward)
+                !case(36)
+                !output(:, 1) = tsr
+
+                ! ssrd   = surface shortwave radiation (downward-only)
+                !case(37)
+                !output(:, 1) = ssrd
+
+                ! ssr    = surface shortwave radiation (net downward)
+                !case(38)
+                !output(:, 1) = ssr
+
+                ! slrd   = surface longwave radiation  (downward-only)
+                !case(39)
+                !output(:, 1) = slrd
+
+                ! slr    = surface longwave radiation  (net upward)
+                !case(40)
+                !output(:, 1) = slr
+
+                ! olr    = outgoing longwave radiation (upward)
+                !case(41)
+                !output(:, 1) = olr
+
+                ! slru   = surface longwave emission   (upward)
+                !                                   (1:land, 2:sea, 3: wgt. average)
+                !case(42)
+                !output(:, 1:3) = slru
+
+                ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
+                !case(43)
+                !output(:, 1:3) = ustr
+
+                ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
+                !case(44)
+                !output(:, 1:3) = vstr
+
+                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
+                !case(45)
+                !output(:, 1:3) = shf
+
+                ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
+                !case(46)
+                !output(:, 1:3) = evap
+
+                ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
+                !case(47)
+                !output(:, 1:3) = hfluxn
+
+                ! tendencies
+                case(101:122)
+                name = 'tendency'
+                units = 'K s-1'
+
+                ! 3D Stochastic perturbation pattern
+                case(123)
+                name = 'stochastic_perturbation'
+                units = ''
+
+                case default
+                print *, 'Variable no.', var_ID, ' unavailable for output'
+            end select
+
+            call check( nf90_def_var(file_ID, trim(name), NF90_REAL, dimids, nc_var_ID) )
+            call check( nf90_put_att(file_ID, nc_var_ID, 'units', trim(units)) )
+        end subroutine add_var_info
+
+        subroutine init_nc(stream)
+            type(output_stream), intent(inout) :: stream
+            integer :: lon_dimid, lat_dimid, lvl_dimid, rec_dimid, &
+                    lon_varid, lat_varid, lvl_varid
+            integer :: dimids(4)
+            integer :: n
+
+            call check( nf90_create(trim(stream%filename), NF90_CLOBBER, stream%file_ID) )
+
+            call check( nf90_def_dim(stream%file_ID, 'longitude', ix, lon_dimid) )
+            call check( nf90_def_dim(stream%file_ID, 'latitude' , il, lat_dimid) )
+            if (stream%plevs) then
+                call check( nf90_def_dim(stream%file_ID, 'pressure', kx, lvl_dimid) )
+            else
+                call check( nf90_def_dim(stream%file_ID, 'sigma'   , kx, lvl_dimid) )
+            end if
+            call check( nf90_def_dim(stream%file_ID, 'time', NF90_UNLIMITED, rec_dimid) )
+
+            call check( nf90_def_var(stream%file_ID, 'longitude', NF90_REAL, lon_dimid, lon_varid) )
+            call check( nf90_def_var(stream%file_ID, 'latitude' , NF90_REAL, lat_dimid, lat_varid) )
+            if (stream%plevs) then
+                call check( nf90_def_var(stream%file_ID, 'pressure' , NF90_REAL, lvl_dimid, lvl_varid) )
+            else
+                call check( nf90_def_var(stream%file_ID, 'sigma'    , NF90_REAL, lvl_dimid, lvl_varid) )
+            end if
+
+            ! Assign units attributes to coordinate variables.
+            call check( nf90_put_att(stream%file_ID, lon_varid, 'units', 'degrees') )
+            call check( nf90_put_att(stream%file_ID, lat_varid, 'units', 'degrees') )
+            if (stream%plevs) then
+                call check( nf90_put_att(stream%file_ID, lvl_varid, 'units', 'hPa') )
+            end if
+
+            ! Define the netCDF variables for the output fields
+            dimids = (/ lon_dimid, lat_dimid, lvl_dimid, rec_dimid /)
+            do n=1, stream%nvars
+                call add_var_info(stream%var_ID(n), stream%file_ID, stream%nc_var_ID(n), dimids)
+            end do
+
+            ! End define mode.
+            call check( nf90_enddef(stream%file_ID) )
+
+            ! Write the coordinate variable data. This will put the latitudes
+            ! and longitudes of our data grid into the netCDF file.
+            call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=1, ix) /)) )
+            call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s) )
+            if (stream%plevs) then
+                call check( nf90_put_var(stream%file_ID, lvl_varid, pout*100) )
+            else
+                call check( nf90_put_var(stream%file_ID, lvl_varid, sig) )
+            end if
+        end subroutine init_nc
+
+        subroutine check(status)
+            ! Wrapper subroutine for NetCDF library functions that checks the returned
+            ! status and stops the program on any errors
+
+            ! Status identifier output from netCDF library functions
+            integer, intent (in) :: status
+
+            if(status /= NF90_NOERR) then
+                print *, NF90_STRERROR(status)
+                stop "Stopped"
+            end if
+        end subroutine check
 end module

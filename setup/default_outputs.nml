@@ -3,7 +3,7 @@
 /
 
 &output_file
-    filename='prognostics_pressure.grd',
+    filename='prognostics_pressure.nc',
     spectral=.false.,
     plevs=.true.,
     nstpinc=36,

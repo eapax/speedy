@@ -252,6 +252,7 @@ subroutine obs_ssta()
     use mod_atparam
     use mod_cli_sea, only: sstan3, bmask_s
     use mod_date, only: imonth, iyear, issty0
+    use ppo_output_stream, only: check
     use mod_prec, only: dp
 
     implicit none

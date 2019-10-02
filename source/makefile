@@ -1,7 +1,7 @@
 %.o: %.mod
 
 COMPILE=gfortran
-NCDIR=/usr/local/
+NCDIR=/usr
 COMLIB1= -L${NCDIR}/lib -lnetcdff
 COMOTT1= -I${NCDIR}/include
 COMCONV= -fconvert=swap -std=gnu -Wall -g
@@ -84,7 +84,7 @@ clean:
 	rm -f *.o *.mod
 
 at_gcm.o               : at_gcm.f90 mod_tsteps.o mod_date.o mod_fordate.o\
-                         mod_fluxes.o
+                         mod_fluxes.o ppo_output_stream.o
 cpl_bcinterp.o         : cpl_bcinterp.f90 mod_prec.o
 cpl_land.o             : cpl_land.f90 mod_atparam.o mod_var_land.o mod_date.o\
                          mod_cpl_flags.o mod_cpl_land_model.o mod_fluxes.o\
@@ -96,7 +96,7 @@ cpl_main_interface.o   : cpl_main_interface.f90 mod_atparam.o\
 cpl_sea.o              : cpl_sea.f90 mod_cpl_flags.o mod_atparam.o\
                          mod_cplvar_sea.o mod_date.o mod_fluxes.o\
                          mod_cli_sea.o mod_var_sea.o mod_downscaling.o\
-                         ini_inbcon.o mod_prec.o
+                         ini_inbcon.o ppo_output_stream.o mod_prec.o
 cpl_sea_model.o        : cpl_sea_model.f90 mod_atparam.o mod_cplcon_sea.o\
                          mod_cplvar_sea.o mod_prec.o
 dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
@@ -117,7 +117,8 @@ ini_impint.o           : ini_impint.f90 mod_dyncon0.o mod_atparam.o\
                          mod_dyncon1.o mod_dyncon2.o mod_hdifcon.o mod_prec.o
 ini_inbcon.o           : ini_inbcon.f90 mod_cpl_flags.o mod_date.o\
                          mod_atparam.o mod_surfcon.o mod_cli_land.o\
-                         mod_cli_sea.o mod_prec.o spe_spectral.o
+                         mod_cli_sea.o mod_prec.o spe_spectral.o\
+                         ppo_output_stream.o
 ini_indyns.o           : ini_indyns.f90 mod_tsteps.o mod_dyncon0.o\
                          mod_atparam.o mod_dyncon1.o mod_hdifcon.o\
                          spe_spectral.o mod_prec.o
