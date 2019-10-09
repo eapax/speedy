@@ -46,6 +46,7 @@ module ppo_output_stream
 
         ! The record counter used for direct access in read/write statements
         integer :: rec = 1
+        integer :: rec_varid
     end type output_stream
 
     ! Array containing all output streams. Allocated during model set up
@@ -196,7 +197,7 @@ module ppo_output_stream
 
             if (xmod(istep, stream%nstpinc)) call incr_output_stream(stream)
 
-            if (xmod(istep, stream%nstpout)) call write_output_stream(stream)
+            if (xmod(istep, stream%nstpout)) call write_output_stream(stream, istep)
         end subroutine
 
         ! Check whether the timestep matches the frequency by using mod in
@@ -227,8 +228,15 @@ module ppo_output_stream
         ! Write each of the variables associated with the given stream to file.
         ! Acts a wrapper to separate write functions for spectral and grid
         ! variables.
-        subroutine write_output_stream(stream)
+        subroutine write_output_stream(stream, istep)
+            use mod_tsteps, only: delt
+
             type(output_stream), intent(inout) :: stream
+            integer, intent(in) :: istep
+
+            ! Write the next entry in the time dimension
+            call check( nf90_put_var(stream%file_ID, stream%rec_varid, (/istep*delt/), &
+                                     start=(/stream%rec/), count=(/1/)) )
 
             if (stream%spectral) then
                 call write_spectral(stream)
@@ -355,8 +363,6 @@ module ppo_output_stream
             logical, intent(out) :: l_3d
 
             l_3d = .true.
-
-            print *, varID
 
             select case(varID)
                 ! ug1    = u-wind
@@ -642,7 +648,6 @@ module ppo_output_stream
             character(len=32) :: units
 
             l_3d = .true.
-            print *, varID
 
             select case(varID)
                 ! ug1/vg1 (ms-1)
@@ -989,7 +994,7 @@ module ppo_output_stream
         subroutine init_nc(stream)
             type(output_stream), intent(inout) :: stream
             integer :: lon_dimid, lat_dimid, lvl_dimid, rec_dimid, &
-                    lon_varid, lat_varid, lvl_varid, rec_varid
+                    lon_varid, lat_varid, lvl_varid
             integer :: dimids(4)
             integer :: n
 
@@ -1004,7 +1009,7 @@ module ppo_output_stream
             else
                 call check( nf90_def_dim(stream%file_ID, 'sigma'   , kx, lvl_dimid) )
             end if
-            call check( nf90_def_dim(stream%file_ID, 'time', NF90_UNLIMITED, rec_dimid) )
+            call check( nf90_def_dim(stream%file_ID, 'forecast_period', NF90_UNLIMITED, rec_dimid) )
 
             ! Add the dimensions as variables as well
             call check( nf90_def_var(stream%file_ID, 'longitude', NF90_DOUBLE, lon_dimid, lon_varid) )
@@ -1014,7 +1019,7 @@ module ppo_output_stream
             else
                 call check( nf90_def_var(stream%file_ID, 'sigma'    , NF90_DOUBLE, lvl_dimid, lvl_varid) )
             end if
-            call check( nf90_def_var(stream%file_ID, 'time' , NF90_DOUBLE, rec_dimid, rec_varid) )
+            call check( nf90_def_var(stream%file_ID, 'forecast_period' , NF90_DOUBLE, rec_dimid, stream%rec_varid) )
 
             ! Assign units attributes to coordinate variables.
             call check( nf90_put_att(stream%file_ID, lon_varid, 'units', 'degrees') )
@@ -1022,7 +1027,7 @@ module ppo_output_stream
             if (stream%plevs) then
                 call check( nf90_put_att(stream%file_ID, lvl_varid, 'units', 'hPa') )
             end if
-            call check( nf90_put_att(stream%file_ID, rec_varid, 'units', 'timesteps') )
+            call check( nf90_put_att(stream%file_ID, stream%rec_varid, 'units', 'seconds') )
 
             ! Define the netCDF variables for the output fields
             dimids = (/ lon_dimid, lat_dimid, lvl_dimid, rec_dimid /)
@@ -1041,6 +1046,7 @@ module ppo_output_stream
             else
                 call check( nf90_put_var(stream%file_ID, lvl_varid, sig) )
             end if
+            call check( nf90_put_var(stream%file_ID, stream%rec_varid, 0.0) )
         end subroutine init_nc
 
         subroutine check(status)
