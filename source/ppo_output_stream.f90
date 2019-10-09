@@ -268,31 +268,38 @@ module ppo_output_stream
             type(output_stream), intent(inout) :: stream
             real(dp) :: output(ngp, kx)
             real(dp) :: output_p(ngp, np)
+            logical :: l_3d
             integer :: n, k
 
             do n=1, stream%nvars
-                output = fetch_output_grid(stream%var_ID(n))
+                call fetch_output_grid(stream%var_ID(n), output, l_3d)
 
-                if(stream%plevs) then
-                    ! Interpolate output to pressure levels
-                    call pressure_levels(stream%var_ID(n), output, output_p)
-                    do k=np, 1, -1
-                        call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output_p(:, k), &
-                                                 start = (/ 1, 1, np-k+1, stream%rec /), &
-                                                 count = (/ ix, il, 1, 1/)) )
-                    end do
-                else
-                    ! Otherwise write model level output
-                    if (stream%var_ID(n)==5) then
-                        output = output / gg !m
+                if (l_3d) then
+                    if(stream%plevs) then
+                        ! Interpolate output to pressure levels
+                        call pressure_levels(stream%var_ID(n), output, output_p)
+                        do k=np, 1, -1
+                            call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output_p(:, k), &
+                                                     start = (/ 1, 1, np-k+1, stream%rec /), &
+                                                     count = (/ ix, il, 1, 1/)) )
+                        end do
+                    else
+                        ! Otherwise write model level output
+                        if (stream%var_ID(n)==5) then
+                            output = output / gg !m
+                        end if
+
+                        ! For some reason the height levels need to be written backwards
+                        do k=kx, 1, -1
+                            call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output(:, k), &
+                                                     start = (/ 1, 1, kx-k+1, stream%rec /), &
+                                                     count = (/ ix, il, 1, 1/)) )
+                        end do
                     end if
-
-                    ! For some reason the height levels need to be written backwards
-                    do k=kx, 1, -1
-                        call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output(:, k), &
-                                                 start = (/ 1, 1, kx-k+1, stream%rec /), &
-                                                 count = (/ ix, il, 1, 1/)) )
-                    end do
+                else
+                    call check( nf90_put_var(stream%file_ID, stream%nc_var_ID(n), output(:, 1), &
+                                             start = (/ 1, 1, stream%rec /), &
+                                             count = (/ ix, il, 1/)) )
                 end if
             end do
         end subroutine write_grid
@@ -340,10 +347,16 @@ module ppo_output_stream
 
         ! Get the variable corresponding to the varID in single bit precision
         ! Essentially a look up for all the variables in mod_physvar
-        ! TODO implement 2d variables in same interface
-        function fetch_output_grid(varID) result(output)
+        subroutine fetch_output_grid(varID, output, l_3d)
             integer :: varID
-            real(dp) :: output(ngp, kx)
+            real(dp), intent(out) :: output(ngp, kx)
+
+            ! Flag for whether the output is 3d (uses all kx levels)
+            logical, intent(out) :: l_3d
+
+            l_3d = .true.
+
+            print *, varID
 
             select case(varID)
                 ! ug1    = u-wind
@@ -367,8 +380,9 @@ module ppo_output_stream
                 output = phig1
 
                 ! pslg1  = log. of surface pressure
-                !case(6)
-                !output(:, 1) = pslg1
+                case(6)
+                output(:, 1) = pslg1
+                l_3d = .false.
 
                 ! se     = dry static energy
                 case(7)
@@ -383,56 +397,69 @@ module ppo_output_stream
                 output = qsat
 
                 ! psg    = surface pressure
-                !case(10)
-                !output(:, 1) = psg
+                case(10)
+                output(:, 1) = psg
+                l_3d = .false.
 
                 ! ts     = surface temperature
-                !case(11)
-                !output(:, 1) = ts
+                case(11)
+                output(:, 1) = ts
+                l_3d = .false.
 
                 ! tskin  = skin temperature
-                !case(12)
-                !output(:, 1) = tskin
+                case(12)
+                output(:, 1) = tskin
+                l_3d = .false.
 
                 ! u0     = near-surface u-wind
-                !case(13)
-                !output(:, 1) = u0
+                case(13)
+                output(:, 1) = u0
+                l_3d = .false.
 
                 ! v0     = near-surface v-wind
-                !case(14)
-                !output(:, 1) = v0
+                case(14)
+                output(:, 1) = v0
+                l_3d = .false.
 
                 ! t0     = near-surface air temperature
-                !case(15)
-                !output(:, 1) = t0
+                case(15)
+                output(:, 1) = t0
+                l_3d = .false.
 
                 ! q0     = near-surface specific humidity (g/kg)
-                !case(16)
-                !output(:, 1) = q0
+                case(16)
+                output(:, 1) = q0
+                l_3d = .false.
 
                 ! cloudc = total cloud cover (fraction)
-                !case(17)
-                !output(:, 1) = cloudc
+                case(17)
+                output(:, 1) = cloudc
+                l_3d = .false.
 
                 ! clstr  = stratiform cloud cover (fraction)
-                !case(18)
-                !output(:, 1) = clstr
+                case(18)
+                output(:, 1) = clstr
+                l_3d = .false.
 
                 ! cltop  = norm. pressure at cloud top
-                !case(19)
-                !output(:, 1) = cltop
+                case(19)
+                output(:, 1) = cltop
+                l_3d = .false.
 
                 ! prtop  = top of precipitation (level index)
-                !case(20)
-                !output(:, 1) = prtop
+                case(20)
+                output(:, 1) = prtop
+                l_3d = .false.
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total
-                !case(31)
-                !output(:, 1) = precnv
+                case(31)
+                output(:, 1) = precnv
+                l_3d = .false.
 
                 ! precls = large-scale precipitation [g/(m^2 s)], total
-                !case(32)
-                !output(:, 1) = precls
+                case(32)
+                output(:, 1) = precls
+                l_3d = .false.
 
                 ! snowcv = convective precipitation  [g/(m^2 s)], snow only
                 !case(33)
@@ -443,57 +470,70 @@ module ppo_output_stream
                 !output(:, 1) = snowls
 
                 ! cbmf   = cloud-base mass flux
-                !case(35)
-                !output(:, 1) = cbmf
+                case(35)
+                output(:, 1) = cbmf
+                l_3d = .false.
 
                 ! tsr    = top-of-atm. shortwave radiation (downward)
-                !case(36)
-                !output(:, 1) = tsr
+                case(36)
+                output(:, 1) = tsr
+                l_3d = .false.
 
                 ! ssrd   = surface shortwave radiation (downward-only)
-                !case(37)
-                !output(:, 1) = ssrd
+                case(37)
+                output(:, 1) = ssrd
+                l_3d = .false.
 
                 ! ssr    = surface shortwave radiation (net downward)
-                !case(38)
-                !output(:, 1) = ssr
+                case(38)
+                output(:, 1) = ssr
+                l_3d = .false.
 
                 ! slrd   = surface longwave radiation  (downward-only)
-                !case(39)
-                !output(:, 1) = slrd
+                case(39)
+                output(:, 1) = slrd
+                l_3d = .false.
 
                 ! slr    = surface longwave radiation  (net upward)
-                !case(40)
-                !output(:, 1) = slr
+                case(40)
+                output(:, 1) = slr
+                l_3d = .false.
 
                 ! olr    = outgoing longwave radiation (upward)
-                !case(41)
-                !output(:, 1) = olr
+                case(41)
+                output(:, 1) = olr
+                l_3d = .false.
 
                 ! slru   = surface longwave emission   (upward)
                 !                                   (1:land, 2:sea, 3: wgt. average)
-                !case(42)
-                !output(:, 1:3) = slru
+                case(42)
+                output(:, 1) = slru(:, 3)
+                l_3d = .false.
 
                 ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(43)
-                !output(:, 1:3) = ustr
+                case(43)
+                output(:, 1) = ustr(:, 3)
+                l_3d = .false.
 
                 ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(44)
-                !output(:, 1:3) = vstr
+                case(44)
+                output(:, 1) = vstr(:, 3)
+                l_3d = .false.
 
                 ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
-                !case(45)
-                !output(:, 1:3) = shf
+                case(45)
+                output(:, 1) = shf(:, 3)
+                l_3d = .false.
 
                 ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
-                !case(46)
-                !output(:, 1:3) = evap
+                case(46)
+                output(:, 1) = evap(:, 3)
+                l_3d = .false.
 
                 ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
-                !case(47)
-                !output(:, 1:3) = hfluxn
+                case(47)
+                output(:, 1) = hfluxn(:, 3)
+                l_3d = .false.
 
                 ! tt_cnv  =  temperature tendency due to convection
                 case(101)
@@ -590,16 +630,21 @@ module ppo_output_stream
                 case default
                 print *, 'Variable no.', varID, ' unavailable for output'
             end select
-        end function
+        end subroutine fetch_output_grid
 
-        subroutine add_var_info(var_ID, file_ID, nc_var_ID, dimids)
-            integer, intent(in) :: var_ID, file_ID
+        subroutine add_var_info(varID, file_ID, nc_var_ID, dimids)
+            integer, intent(in) :: varID, file_ID
             integer, intent(inout) :: nc_var_ID
             integer, intent(in) :: dimids(4)
+            integer :: dimids_2d(3)
+            logical :: l_3d
             character(len=128) :: name
             character(len=32) :: units
 
-            select case(var_ID)
+            l_3d = .true.
+            print *, varID
+
+            select case(varID)
                 ! ug1/vg1 (ms-1)
                 case(1)
                 name = 'zonal_velocity'
@@ -629,6 +674,7 @@ module ppo_output_stream
                 case(6)
                 name = 'logarithm_of_surface_pressure'
                 units = ''
+                l_3d = .false.
 
                 ! se     = dry static energy
                 case(7)
@@ -649,66 +695,79 @@ module ppo_output_stream
                 case(10)
                 name = 'surface_pressure'
                 units = 'Pa'
+                l_3d = .false.
 
                 ! ts     = surface temperature
                 case(11)
-                name = 'surface temperature'
+                name = 'surface_temperature'
                 units = 'K'
+                l_3d = .false.
 
                 ! tskin  = skin temperature
                 case(12)
                 name = 'skin_temperature'
                 units = 'K'
+                l_3d = .false.
 
                 ! u0     = near-surface u-wind
                 case(13)
                 name = 'near_surface_zonal_velocity'
                 units = 'm s-1'
+                l_3d = .false.
 
                 ! v0     = near-surface v-wind
                 case(14)
                 name = 'near_surface_meridional_velocity'
                 units = 'm s-1'
+                l_3d = .false.
 
                 ! t0     = near-surface air temperature
                 case(15)
                 name = 'near_surface_temperature'
                 units = 'K'
+                l_3d = .false.
 
                 ! q0     = near-surface specific humidity (g/kg)
                 case(16)
                 name = 'near_surface_specific_humidity'
                 units = 'g kg-1'
+                l_3d = .false.
 
                 ! cloudc = total cloud cover (fraction)
                 case(17)
                 name = 'cloud_cover'
                 units = ''
+                l_3d = .false.
 
                 ! clstr  = stratiform cloud cover (fraction)
                 case(18)
                 name = 'stratiform_cloud_cover'
                 units = ''
+                l_3d = .false.
 
                 ! cltop  = norm. pressure at cloud top
                 case(19)
                 name = 'cloud_top_pressure'
                 units = ''
+                l_3d = .false.
 
                 ! prtop  = top of precipitation (level index)
                 case(20)
                 name = 'level_of_precipitation'
                 units = ''
+                l_3d = .false.
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total
                 case(31)
                 name = 'convective_precipitation'
                 units = 'g m-2 s-1'
+                l_3d = .false.
 
                 ! precls = large-scale precipitation [g/(m^2 s)], total
                 case(32)
                 name = 'large_scale_precipitation'
                 units = 'g m-2 s-1'
+                l_3d = .false.
 
                 ! snowcv = convective precipitation  [g/(m^2 s)], snow only
                 !case(33)
@@ -719,68 +778,81 @@ module ppo_output_stream
                 ! cbmf   = cloud-base mass flux
                 case(35)
                 name = 'cloud_base_mass_flux'
-                units ='?'
+                units ='unknown'
+                l_3d = .false.
 
                 ! tsr    = top-of-atm. shortwave radiation (downward)
                 case(36)
                 name = 'top_of_atmosphere_shortwave_radiation'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! ssrd   = surface shortwave radiation (downward-only)
-                !case(37)
+                case(37)
                 name = 'downward_shortwave_radiation_at_surface'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! ssr    = surface shortwave radiation (net downward)
-                !case(38)
+                case(38)
                 name = 'net_downward_shortwave_radiation_at_surface'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! slrd   = surface longwave radiation  (downward-only)
-                !case(39)
+                case(39)
                 name = 'downward_longwave_radiation_at_surface'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! slr    = surface longwave radiation  (net upward)
-                !case(40)
+                case(40)
                 name = 'net_upward_longwave_radiation_at_surface'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! olr    = outgoing longwave radiation (upward)
-                !case(41)
+                case(41)
                 name = 'outgoing_longwave_radiation'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! slru   = surface longwave emission   (upward)
                 !                                   (1:land, 2:sea, 3: wgt. average)
-                !case(42)
+                case(42)
                 name = 'surface_longwave_emission'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(43)
+                case(43)
                 name = 'zonal_wind_stress'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(44)
+                case(44)
                 name = 'meridional_wind_stress'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
-                !case(45)
+                case(45)
                 name = 'sensible_heat_flux'
-                units = '?'
+                units = 'unknown'
+                l_3d = .false.
 
                 ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
-                !case(46)
+                case(46)
                 name = 'evaporation'
                 units = 'g m-2 s-1'
+                l_3d = .false.
 
                 ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
-                !case(47)
+                case(47)
                 name = 'net_heat_flux_into_surface'
                 units = ''
+                l_3d = .false.
 
                 ! tt_cnv  =  temperature tendency due to convection
                 case(101)
@@ -898,10 +970,19 @@ module ppo_output_stream
                 units = ''
 
                 case default
-                print *, 'Variable no.', var_ID, ' unavailable for output'
+                print *, 'Variable no.', varID, ' unavailable for output'
             end select
 
-            call check( nf90_def_var(file_ID, trim(name), NF90_DOUBLE, dimids, nc_var_ID) )
+            ! Don't include the vertical dimension on 2d fields
+            if (l_3d) then
+                call check( nf90_def_var(file_ID, trim(name), NF90_DOUBLE, dimids, nc_var_ID) )
+            else
+                dimids_2d(1) = dimids(1)
+                dimids_2d(2) = dimids(2)
+                dimids_2d(3) = dimids(4)
+                call check( nf90_def_var(file_ID, trim(name), NF90_DOUBLE, dimids_2d, nc_var_ID) )
+            end if
+
             call check( nf90_put_att(file_ID, nc_var_ID, 'units', trim(units)) )
         end subroutine add_var_info
 
