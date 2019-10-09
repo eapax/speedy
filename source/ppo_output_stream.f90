@@ -426,6 +426,75 @@ module ppo_output_stream
                 !case(20)
                 !output(:, 1) = prtop
 
+                ! precnv = convective precipitation  [g/(m^2 s)], total
+                !case(31)
+                !output(:, 1) = precnv
+
+                ! precls = large-scale precipitation [g/(m^2 s)], total
+                !case(32)
+                !output(:, 1) = precls
+
+                ! snowcv = convective precipitation  [g/(m^2 s)], snow only
+                !case(33)
+                !output(:, 1) = snowcv
+
+                ! snowls = large-scale precipitation [g/(m^2 s)], snow only
+                !case(34)
+                !output(:, 1) = snowls
+
+                ! cbmf   = cloud-base mass flux
+                !case(35)
+                !output(:, 1) = cbmf
+
+                ! tsr    = top-of-atm. shortwave radiation (downward)
+                !case(36)
+                !output(:, 1) = tsr
+
+                ! ssrd   = surface shortwave radiation (downward-only)
+                !case(37)
+                !output(:, 1) = ssrd
+
+                ! ssr    = surface shortwave radiation (net downward)
+                !case(38)
+                !output(:, 1) = ssr
+
+                ! slrd   = surface longwave radiation  (downward-only)
+                !case(39)
+                !output(:, 1) = slrd
+
+                ! slr    = surface longwave radiation  (net upward)
+                !case(40)
+                !output(:, 1) = slr
+
+                ! olr    = outgoing longwave radiation (upward)
+                !case(41)
+                !output(:, 1) = olr
+
+                ! slru   = surface longwave emission   (upward)
+                !                                   (1:land, 2:sea, 3: wgt. average)
+                !case(42)
+                !output(:, 1:3) = slru
+
+                ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
+                !case(43)
+                !output(:, 1:3) = ustr
+
+                ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
+                !case(44)
+                !output(:, 1:3) = vstr
+
+                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
+                !case(45)
+                !output(:, 1:3) = shf
+
+                ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
+                !case(46)
+                !output(:, 1:3) = evap
+
+                ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
+                !case(47)
+                !output(:, 1:3) = hfluxn
+
                 ! tt_cnv  =  temperature tendency due to convection
                 case(101)
                 output = tt_cnv
@@ -518,75 +587,6 @@ module ppo_output_stream
                 case(123)
                 output = sppt
 
-                ! precnv = convective precipitation  [g/(m^2 s)], total
-                !case(31)
-                !output(:, 1) = precnv
-
-                ! precls = large-scale precipitation [g/(m^2 s)], total
-                !case(32)
-                !output(:, 1) = precls
-
-                ! snowcv = convective precipitation  [g/(m^2 s)], snow only
-                !case(33)
-                !output(:, 1) = snowcv
-
-                ! snowls = large-scale precipitation [g/(m^2 s)], snow only
-                !case(34)
-                !output(:, 1) = snowls
-
-                ! cbmf   = cloud-base mass flux
-                !case(35)
-                !output(:, 1) = cbmf
-
-                ! tsr    = top-of-atm. shortwave radiation (downward)
-                !case(36)
-                !output(:, 1) = tsr
-
-                ! ssrd   = surface shortwave radiation (downward-only)
-                !case(37)
-                !output(:, 1) = ssrd
-
-                ! ssr    = surface shortwave radiation (net downward)
-                !case(38)
-                !output(:, 1) = ssr
-
-                ! slrd   = surface longwave radiation  (downward-only)
-                !case(39)
-                !output(:, 1) = slrd
-
-                ! slr    = surface longwave radiation  (net upward)
-                !case(40)
-                !output(:, 1) = slr
-
-                ! olr    = outgoing longwave radiation (upward)
-                !case(41)
-                !output(:, 1) = olr
-
-                ! slru   = surface longwave emission   (upward)
-                !                                   (1:land, 2:sea, 3: wgt. average)
-                !case(42)
-                !output(:, 1:3) = slru
-
-                ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(43)
-                !output(:, 1:3) = ustr
-
-                ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
-                !case(44)
-                !output(:, 1:3) = vstr
-
-                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
-                !case(45)
-                !output(:, 1:3) = shf
-
-                ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
-                !case(46)
-                !output(:, 1:3) = evap
-
-                ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
-                !case(47)
-                !output(:, 1:3) = hfluxn
-
                 case default
                 print *, 'Variable no.', varID, ' unavailable for output'
             end select
@@ -596,7 +596,7 @@ module ppo_output_stream
             integer, intent(in) :: var_ID, file_ID
             integer, intent(inout) :: nc_var_ID
             integer, intent(in) :: dimids(4)
-            character(len=32) :: name
+            character(len=128) :: name
             character(len=32) :: units
 
             select case(var_ID)
@@ -722,58 +722,175 @@ module ppo_output_stream
                 units ='?'
 
                 ! tsr    = top-of-atm. shortwave radiation (downward)
-                !case(36)
-                !output(:, 1) = tsr
+                case(36)
+                name = 'top_of_atmosphere_shortwave_radiation'
+                units = '?'
 
                 ! ssrd   = surface shortwave radiation (downward-only)
                 !case(37)
-                !output(:, 1) = ssrd
+                name = 'downward_shortwave_radiation_at_surface'
+                units = '?'
 
                 ! ssr    = surface shortwave radiation (net downward)
                 !case(38)
-                !output(:, 1) = ssr
+                name = 'net_downward_shortwave_radiation_at_surface'
+                units = '?'
 
                 ! slrd   = surface longwave radiation  (downward-only)
                 !case(39)
-                !output(:, 1) = slrd
+                name = 'downward_longwave_radiation_at_surface'
+                units = '?'
 
                 ! slr    = surface longwave radiation  (net upward)
                 !case(40)
-                !output(:, 1) = slr
+                name = 'net_upward_longwave_radiation_at_surface'
+                units = '?'
 
                 ! olr    = outgoing longwave radiation (upward)
                 !case(41)
-                !output(:, 1) = olr
+                name = 'outgoing_longwave_radiation'
+                units = '?'
 
                 ! slru   = surface longwave emission   (upward)
                 !                                   (1:land, 2:sea, 3: wgt. average)
                 !case(42)
-                !output(:, 1:3) = slru
+                name = 'surface_longwave_emission'
+                units = '?'
 
                 ! ustr   = u-stress                 (1:land, 2:sea, 3: wgt. average)
                 !case(43)
-                !output(:, 1:3) = ustr
+                name = 'zonal_wind_stress'
+                units = '?'
 
                 ! vstr   = v-stress                 (1:land, 2:sea, 3: wgt. average)
                 !case(44)
-                !output(:, 1:3) = vstr
+                name = 'meridional_wind_stress'
+                units = '?'
 
                 ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
                 !case(45)
-                !output(:, 1:3) = shf
+                name = 'sensible_heat_flux'
+                units = '?'
 
                 ! evap   = evaporation [g/(m^2 s)]  (1:land, 2:sea, 3: wgt. average)
                 !case(46)
-                !output(:, 1:3) = evap
+                name = 'evaporation'
+                units = 'g m-2 s-1'
 
                 ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
                 !case(47)
-                !output(:, 1:3) = hfluxn
+                name = 'net_heat_flux_into_surface'
+                units = ''
 
-                ! tendencies
-                case(101:122)
-                name = 'tendency'
+                ! tt_cnv  =  temperature tendency due to convection
+                case(101)
+                name = 'temperature_tendency_due_to_convection'
                 units = 'K s-1'
+
+                ! qt_cnv  = sp. humidity tendency due to convection
+                case(102)
+                name = 'specific_humidity_tendency_due_to_convection'
+                units = 's-1'
+
+                ! tt_lsc  =  temperature tendency due to large-scale condensation
+                case(103)
+                name = 'temperature_tendency_due_to_condensation'
+                units = 'K s-1'
+
+                ! qt_lsc  = sp. humidity tendency due to large-scale condensation
+                case(104)
+                name = 'specific_humidity_tendency_due_to_condensation'
+                units = 's-1'
+
+                ! tt_rsw  =  temperature tendency due to short-wave radiation
+                case(105)
+                name = 'temperature_tendency_due_to_shortwave_radiation'
+                units = 'K s-1'
+
+                ! tt_rlw  =  temperature tendency due to long-wave radiation
+                case(106)
+                name = 'temperature_tendency_due_to_longwave_radiation'
+                units = 'K s-1'
+
+                ! ut_sflx  =       u-wind tendency due to surface fluxes
+                case(107)
+                name = 'zonal_velocity_tendency_due_to_surface_fluxes'
+                units = 'm s-2'
+
+                ! vt_sflx  =       v-wind tendency due to surface fluxes
+                case(108)
+                name = 'meridional_velocity_tendency_due_to_surface_fluxes'
+                units = 'm s-2'
+
+                ! tt_sflx  =  temperature tendency due to surface fluxes
+                case(109)
+                name = 'temperature_tendency_due_to_surface_fluxes'
+                units = 'K s-1'
+
+                ! qt_sflx  = sp. humidity tendency due to surface fluxes
+                case(110)
+                name = 'specific_humidity_tendency_due_to_surface_fluxes'
+                units = 's-1'
+
+                ! ut_pbl  =       u-wind tendency due to PBL and diffusive processes
+                case(111)
+                name = 'zonal_velocity_tendency_due_to_vertical_diffusion'
+                units = 'm s-2'
+
+                ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
+                case(112)
+                name = 'meridional_velocity_tendency_due_to_vertical_diffusion'
+                units = 'm s-2'
+
+                ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
+                case(113)
+                name = 'temperature_tendency_due_to_vertical_diffusion'
+                units = 'K s-1'
+
+                ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
+                case(114)
+                name = 'specific_humidity_tendency_due_to_vertical_diffusion'
+                units = 's-1'
+
+                ! ut_phy  =       u-wind tendency due to all physics processes
+                case(115)
+                name = 'zonal_velocity_tendency_due_to_all_parametrizations'
+                units = 'm s-2'
+
+                ! vt_phy  =       v-wind tendency due to all physics processes
+                case(116)
+                name = 'meridional_velocity_tendency_due_to_all_parametrizations'
+                units = 'm s-2'
+
+                ! tt_phy  =  temperature tendency due to all physics processes
+                case(117)
+                name = 'temperature_tendency_due_to_all_parametrizations'
+                units = 'K s-1'
+
+                ! qt_phy  = sp. humidity tendency due to all physics processes
+                case(118)
+                name = 'specific_humidity_tendency_due_to_all_parametrizations'
+                units = 's-1'
+
+                ! ut_sppt =       u-wind tendency due to stochastic perturbation
+                case(119)
+                name = 'zonal_velocity_tendency_due_to_stochastic_perturbation'
+                units = 'm s-2'
+
+                ! vt_sppt =       v-wind tendency due to stochastic perturbation
+                case(120)
+                name = 'meridional_velocity_tendency_due_to_stochastic_perturbation'
+                units = 'm s-2'
+
+                ! tt_sppt =  temperature tendency due to stochastic perturbation
+                case(121)
+                name = 'temperature_tendency_due_to_stochastic_perturbation'
+                units = 'K s-1'
+
+                ! qt_sppt = sp. humidity tendency due to stochastic perturbation
+                case(122)
+                name = 'specific_humidity_tendency_due_to_stochastic_perturbation'
+                units = 's-1'
 
                 ! 3D Stochastic perturbation pattern
                 case(123)
@@ -791,12 +908,14 @@ module ppo_output_stream
         subroutine init_nc(stream)
             type(output_stream), intent(inout) :: stream
             integer :: lon_dimid, lat_dimid, lvl_dimid, rec_dimid, &
-                    lon_varid, lat_varid, lvl_varid
+                    lon_varid, lat_varid, lvl_varid, rec_varid
             integer :: dimids(4)
             integer :: n
 
+            ! Open the netcdf file, assigning the file_ID
             call check( nf90_create(trim(stream%filename), NF90_CLOBBER, stream%file_ID) )
 
+            ! Add the dimensions of the model to the netcdf file
             call check( nf90_def_dim(stream%file_ID, 'longitude', ix, lon_dimid) )
             call check( nf90_def_dim(stream%file_ID, 'latitude' , il, lat_dimid) )
             if (stream%plevs) then
@@ -806,6 +925,7 @@ module ppo_output_stream
             end if
             call check( nf90_def_dim(stream%file_ID, 'time', NF90_UNLIMITED, rec_dimid) )
 
+            ! Add the dimensions as variables as well
             call check( nf90_def_var(stream%file_ID, 'longitude', NF90_DOUBLE, lon_dimid, lon_varid) )
             call check( nf90_def_var(stream%file_ID, 'latitude' , NF90_DOUBLE, lat_dimid, lat_varid) )
             if (stream%plevs) then
@@ -813,6 +933,7 @@ module ppo_output_stream
             else
                 call check( nf90_def_var(stream%file_ID, 'sigma'    , NF90_DOUBLE, lvl_dimid, lvl_varid) )
             end if
+            call check( nf90_def_var(stream%file_ID, 'time' , NF90_DOUBLE, rec_dimid, rec_varid) )
 
             ! Assign units attributes to coordinate variables.
             call check( nf90_put_att(stream%file_ID, lon_varid, 'units', 'degrees') )
@@ -820,6 +941,7 @@ module ppo_output_stream
             if (stream%plevs) then
                 call check( nf90_put_att(stream%file_ID, lvl_varid, 'units', 'hPa') )
             end if
+            call check( nf90_put_att(stream%file_ID, rec_varid, 'units', 'timesteps') )
 
             ! Define the netCDF variables for the output fields
             dimids = (/ lon_dimid, lat_dimid, lvl_dimid, rec_dimid /)
@@ -830,8 +952,7 @@ module ppo_output_stream
             ! End define mode.
             call check( nf90_enddef(stream%file_ID) )
 
-            ! Write the coordinate variable data. This will put the latitudes
-            ! and longitudes of our data grid into the netCDF file.
+            ! Write the coordinate variable data
             call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=0, ix-1) /)) )
             call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s) )
             if (stream%plevs) then
