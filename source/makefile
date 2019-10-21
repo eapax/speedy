@@ -199,7 +199,8 @@ ppo_diagns.o           : ppo_diagns.f90 mod_tsteps.o mod_atparam.o mod_dynvar.o\
                          ppo_output_stream.o spe_spectral.o mod_prec.o
 ppo_output_stream.o    : ppo_output_stream.f90 mod_atparam.o mod_dynvar.o\
                          mod_physvar.o mod_physcon.o mod_date.o ppo_plevs.o\
-                         spe_spectral.o mod_prec.o
+                         spe_spectral.o mod_fordate.o mod_solar.o\
+                         mod_var_land.o mod_var_sea.o mod_surfcon.o mod_prec.o
 ppo_plevs.o            : ppo_plevs.f90 mod_atparam.o mod_dynvar.o mod_physvar.o\
                          mod_physcon.o spe_spectral.o mod_prec.o
 ppo_restart.o          : ppo_restart.f90 mod_atparam.o mod_dynvar.o mod_date.o\

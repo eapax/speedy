@@ -356,6 +356,12 @@ module ppo_output_stream
         ! Get the variable corresponding to the varID in single bit precision
         ! Essentially a look up for all the variables in mod_physvar
         subroutine fetch_output_grid(varID, output, l_3d)
+            use mod_fordate, only: alb_l, alb_s, albsfc, snowc
+            use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
+            use mod_var_land, only: stl_am, soilw_am
+            use mod_var_sea, only: sst_am, ssti_om
+            use mod_surfcon, only: phis0, fmask1
+
             integer :: varID
             real(dp), intent(out) :: output(ngp, kx)
 
@@ -539,6 +545,81 @@ module ppo_output_stream
                 ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
                 case(47)
                 output(:, 1) = hfluxn(:, 3)
+                l_3d = .false.
+
+                ! alb_l = surface albedo over land
+                case(48)
+                output(:, 1) = alb_l
+                l_3d = .false.
+
+                ! alb_s = surface albedo over sea
+                case(49)
+                output(:, 1) = alb_s
+                l_3d = .false.
+
+                ! albsfc = surface albedo
+                case(50)
+                output(:, 1) = albsfc
+                l_3d = .false.
+
+                ! snowc = snow cover
+                case(51)
+                output(:, 1) = snowc
+                l_3d = .false.
+
+                ! fsol = flux of incoming solar radiation
+                case(52)
+                output(:, 1) = fsol
+                l_3d = .false.
+
+                ! ozone = ozone concentration
+                case(53)
+                output(:, 1) = ozone
+                l_3d = .false.
+
+                ! ozupp = ozone concentration ...
+                case(54)
+                output(:, 1) = ozupp
+                l_3d = .false.
+
+                ! zenit = ???
+                case(55)
+                output(:, 1) = zenit
+                l_3d = .false.
+
+                ! stratz = ???
+                case(56)
+                output(:, 1) = stratz
+                l_3d = .false.
+
+                ! stl_am = Surface temperature from the land model
+                case(57)
+                output(:, 1) = stl_am
+                l_3d = .false.
+
+                ! soilw_am = Soil water from the land model
+                case(58)
+                output(:, 1) = soilw_am
+                l_3d = .false.
+
+                ! sst_am = Sea surface temperature from the ocean model
+                case(59)
+                output(:, 1) = sst_am
+                l_3d = .false.
+
+                ! ssti_om = Sea surface + ice temperature from the ocean model
+                case(60)
+                output(:, 1) = ssti_om
+                l_3d = .false.
+
+                ! phis0 = spectrally filtered surface geopotential
+                case(61)
+                output(:, 1) = pack(phis0, .true.)
+                l_3d = .false.
+
+                ! fmask1 = fractional land-sea mask
+                case(62)
+                output(:, 1) = pack(fmask1, .true.)
                 l_3d = .false.
 
                 ! tt_cnv  =  temperature tendency due to convection
@@ -856,6 +937,96 @@ module ppo_output_stream
                 ! hfluxn = net heat flux into surf. (1:land, 2:sea, 3: ice-sea dif.)
                 case(47)
                 name = 'net_heat_flux_into_surface'
+                units = ''
+                l_3d = .false.
+
+                ! alb_l = Surface albedo over land
+                case(48)
+                name = 'surface_albedo_over_land'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! alb_s = surface albedo over sea
+                case(49)
+                name = 'surface_albedo_over_sea'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! albsfc = surface albedo
+                case(50)
+                name = 'surface_albedo'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! snowc = snow cover
+                case(51)
+                name = 'snow_cover'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! fsol = flux of incoming solar radiation
+                case(52)
+                name = 'flux_of_incoming_solar_radiation'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! ozone = ozone concentration
+                case(53)
+                name = 'ozone'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! ozupp = ozone concentration ...
+                case(54)
+                name = 'ozupp'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! zenit = ???
+                case(55)
+                name = 'zenit'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! stratz = ???
+                case(56)
+                name = 'stratz'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! stl_am = Surface temperature from the land model
+                case(57)
+                name = 'land_model_surface_temperature'
+                units = 'K'
+                l_3d = .false.
+
+                ! soilw_am = Soil water from the land model
+                case(58)
+                name = 'land_model_soil_moisture'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! sst_am = Sea surface temperature from the ocean model
+                case(59)
+                name = 'ocean_model_surface_temperature'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! ssti_om = Sea surface + ice temperature from the ocean model
+                case(60)
+                name = 'ocean_and_ice_model_surface_temperature'
+                units = 'K'
+                l_3d = .false.
+
+                ! phis0 = spectrally filtered surface geopotential
+                case(61)
+                name = 'surface_geopotential'
+                units = 'unknown'
+                l_3d = .false.
+
+                ! fmask1 = fractional land-sea mask
+                case(62)
+                name = 'fractional_land_sea_mask'
                 units = ''
                 l_3d = .false.
 

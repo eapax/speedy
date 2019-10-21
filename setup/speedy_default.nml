@@ -96,7 +96,7 @@
     istart=1,
     ! Start date
     ! YYYY
-    iyear0=1982,
+    iyear0=1983,
     ! MM
     imonth0=1,
     ! DD
@@ -106,7 +106,7 @@
     ! No. of days in the last month of int. (max=30)
     ndaysl=0,
     ! Seasonal cycle flag (0=no, 1=yes)
-    iseasc=1,
+    iseasc=0,
 /
 
 ! mod_dyncon0
@@ -174,7 +174,7 @@
     ! Period (no. of steps) for diagnostic print-out
     nstdia=180,
     ! Period (no. of months) for restart file update
-    nmonrs=3,
+    nmonrs=12,
     ! Damping factor in Robert time filter
     rob=0.05,
     ! Parameter of Williams filter
