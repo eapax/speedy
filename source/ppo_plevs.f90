@@ -13,14 +13,14 @@ module ppo_plevs
         ! Interpolate a variable from sigma levels to pressure levels
         subroutine pressure_levels(varid, x_sigma, x_pressure)
             use mod_atparam
-            use mod_dynvar, only: ps, T
+            use mod_dynvar, only: ps
             use mod_physvar, only: tg1
             use mod_physcon, only: sigl, rd, gg, pout
             use spectral, only: grid
 
             integer, intent(in) :: varid
             real(dp), dimension(ngp, kx), intent(in) :: x_sigma
-            real(sp), dimension(ngp, kx), intent(out) :: x_pressure
+            real(dp), dimension(ngp, kx), intent(out) :: x_pressure
 
             real(dp), dimension(ngp) :: x_pressure_dp
             real(dp), dimension(kx) :: zinp, rdzinp

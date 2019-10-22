@@ -1,6 +1,7 @@
 program agcm_main
     use mod_tsteps, only: nmonrs
     use mod_date, only: imonth, iday, ndays
+    use ppo_output_stream, only: close_output
 
     implicit none
 
@@ -26,6 +27,8 @@ program agcm_main
 
     ! Write restart file at end of run if not already written
     if (mod(imonth, nmonrs)/=0 .or. iday/=1) call restart(2)
+
+    call close_output()
 end program agcm_main
 
 subroutine agcm_1day(jday)

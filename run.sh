@@ -56,6 +56,4 @@ time ./imp.exe | tee out.lis
 
 # Copy output to experiment directory
 mkdir -p ${OUT}
-mv out.lis ${OUT}/atgcm${2}.lis
-mv *.rst ${OUT}
-mv *.grd ${OUT}
+mv prognostics_pressure.nc ${OUT}

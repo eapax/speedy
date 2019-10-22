@@ -13,6 +13,7 @@ subroutine inbcon(grav0,radlat)
     use mod_surfcon
     use mod_cli_land
     use mod_cli_sea
+    use ppo_output_stream, only: check
     use mod_prec, only: sp, dp
 
     implicit none
@@ -342,6 +343,7 @@ subroutine NC_extract_variable(NCID, variable, it, inp)
 
     use netcdf
     use mod_atparam
+    use ppo_output_stream, only: check
     use mod_prec, only: dp
 
     implicit none
@@ -357,19 +359,3 @@ subroutine NC_extract_variable(NCID, variable, it, inp)
     ! Fix undefined values
     where (inp <= -999) inp = 0.0_dp
 end subroutine NC_extract_variable
-
-subroutine check(status)
-    ! Wrapper subroutine for NetCDF library functions that checks the returned
-    ! status and stops the program on any errors
-    use netcdf
-
-    implicit none
-
-    ! Status identifier output from netCDF library functions
-    integer, intent (in) :: status
-
-    if(status /= NF90_NOERR) then
-        print *, NF90_STRERROR(status)
-        stop "Stopped"
-    end if
-end subroutine check
