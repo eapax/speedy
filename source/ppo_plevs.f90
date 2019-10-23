@@ -1,6 +1,7 @@
 module ppo_plevs
 
     use mod_prec, only: sp, dp
+    use rp_emulator
 
     implicit none
 
@@ -26,7 +27,7 @@ module ppo_plevs
             real(dp), dimension(kx) :: zinp, rdzinp
             integer :: k0(ngp)
             real(dp) :: w0(ngp)
-            real(dp), dimension(ngp) :: psgr
+            type(rpe_var), dimension(ngp) :: psgr
             real(dp), dimension(ngp) :: zout
             real(dp), dimension(ngp) :: T_pressure
             real(dp) :: textr, aref, tref, phi1, phi2
@@ -34,7 +35,7 @@ module ppo_plevs
 
             ! Vertical interpolation from sigma level to pressure level
             ! sigl is constant so this should only be done once
-            zinp = -sigl
+            zinp = -sigl%val
             do k=2,kx
                rdzinp(k) = 1.0_dp/(zinp(k-1)-zinp(k))
             end do
@@ -75,7 +76,7 @@ module ppo_plevs
                     x_pressure(:,k) = x_pressure_dp
 
                 else if (varid==5) then
-                    call verint(T_pressure,Tg1,ngp,kx,k0,w0)
+                    call verint(T_pressure,Tg1%val,ngp,kx,k0,w0)
                     ! Corrections applied to temperature
                     do j=1,ngp
                         if(zout(j)<zinp(kx)) then

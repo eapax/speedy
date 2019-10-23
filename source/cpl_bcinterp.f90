@@ -1,15 +1,16 @@
 subroutine forint(ngp,imon,fmon,for12,for1)
     ! Aux. routine FORINT : linear interpolation of monthly-mean forcing
 
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ngp, imon
-    real(dp), intent(in) :: fmon, for12(ngp,*)
-    real(dp), intent(inout) :: for1(ngp)
+    type(rpe_var), intent(in) :: fmon, for12(ngp,*)
+    type(rpe_var), intent(inout) :: for1(ngp)
     integer :: imon2
-    real(dp) :: wmon, half
+    type(rpe_var) :: wmon, half
 
     half = 0.5_dp
 
@@ -30,15 +31,16 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     ! Aux. routine FORIN5 : non-linear, mean-conserving interpolation
     !                       of monthly-mean forcing fields
 
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ngp, imon
-    real(dp), intent(in) :: fmon, for12(ngp,12)
-    real(dp), intent(inout) :: for1(ngp)
+    type(rpe_var), intent(in) :: fmon, for12(ngp,12)
+    type(rpe_var), intent(inout) :: for1(ngp)
     integer :: im1, im2, ip1, ip2
-    real(dp) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one
+    type(rpe_var) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one
 
     one = 1.0_dp
 
@@ -52,10 +54,10 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     if (ip1>12) ip1 = ip1-12
     if (ip2>12) ip2 = ip2-12
 
-    c0 = one/12.0_dp
+    c0 = one/rpe_literal(12.0_dp)
     t0 = c0*fmon
     t1 = c0*(one-fmon)
-    t2 = 0.25_dp*fmon*(one-fmon)
+    t2 = rpe_literal(0.25_dp)*fmon*(one-fmon)
 
     wm2 =        -t1   +t2
     wm1 =  -c0 +8*t1 -6*t2

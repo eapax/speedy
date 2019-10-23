@@ -13,15 +13,16 @@ subroutine sptend (divdt,tdt,psdt,j4)
     use mod_dyncon1, only: rgas, dhs, dhsr
     use mod_dyncon2, only: tref, tref2, tref3
     use spectral, only: lap
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    complex(dp), intent(inout) :: psdt(mx,nx), divdt(mx,nx,kx), tdt(mx,nx,kx)
+    type(rpe_complex_var), intent(inout) :: psdt(mx,nx), divdt(mx,nx,kx), tdt(mx,nx,kx)
     integer, intent(in) :: j4
 
-    complex(dp) :: dumk(mx,nx,kxp), dmeanc(mx,nx), sigdtc(mx,nx,kxp)
-    complex(dp) :: dumc(mx,nx,2), zero
+    type(rpe_complex_var) :: dumk(mx,nx,kxp), dmeanc(mx,nx), sigdtc(mx,nx,kxp)
+    type(rpe_complex_var) :: dumc(mx,nx,2), zero
 
     integer :: k
 

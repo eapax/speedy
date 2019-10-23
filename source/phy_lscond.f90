@@ -73,33 +73,30 @@ module phy_lscond
         end subroutine truncate_lscond
 
         subroutine lscond(psa_in, rh_in, qsat_in, itop, &
-                precls_out, dtlsc_out, dqlsc_out)
+                precls, dtlsc, dqlsc)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !
             !  Purpose: Compute large-scale precipitation and
             !           associated tendencies of temperature and moisture
             !  Input:   psa    = norm. surface pressure [p/p0]           (2-dim)
-            real(dp), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa_in(ngp)
             !           rh     = relative humidity                       (3-dim)
-            real(dp), intent(in) :: rh_in(ngp,kx)
+            type(rpe_var), intent(in) :: rh_in(ngp,kx)
             !           qsat   = saturation spec. hum. [g/kg]            (3-dim)
-            real(dp), intent(in) :: qsat_in(ngp,kx)
+            type(rpe_var), intent(in) :: qsat_in(ngp,kx)
 
             !           itop   = top of convection (layer index)         (2-dim)
             !  Output:  itop   = top of conv+l.s.condensat.(layer index) (2-dim)
             integer, intent(inout) :: itop(ngp)
             !           precls = large-scale precipitation [g/(m^2 s)]   (2-dim)
-            real(dp), intent(out) :: precls_out(ngp)
+            type(rpe_var), intent(out) :: precls(ngp)
             !           dtlsc  = temperature tendency from l.s. cond     (3-dim)
-            real(dp), intent(out) :: dtlsc_out(ngp,kx)
+            type(rpe_var), intent(out) :: dtlsc(ngp,kx)
             !           dqlsc  = hum. tendency [g/(kg s)] from l.s. cond (3-dim)
-            real(dp), intent(out) :: dqlsc_out(ngp,kx)
+            type(rpe_var), intent(out) :: dqlsc(ngp,kx)
 
             ! Local copies of input variables
             type(rpe_var) :: psa(ngp), rh(ngp,kx), qsat(ngp,kx)
-
-            ! Local copies of output variables
-            type(rpe_var) :: precls(ngp), dtlsc(ngp,kx), dqlsc(ngp,kx)
 
             ! Local variables
             integer :: j, k
@@ -144,8 +141,6 @@ module phy_lscond
                 precls(j) = precls(j)*psa(j)
             end do
 
-            precls_out = precls
-            dtlsc_out = dtlsc
-            dqlsc_out = dqlsc*qsat
+            dqlsc = dqlsc*qsat
         end subroutine lscond
 end module phy_lscond

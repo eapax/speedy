@@ -21,7 +21,7 @@ subroutine ini_atm()
 
     ! 3. set post-processing levels
     do k = 1, kx
-        ppl(k) = prlev(fsg(k))
+        ppl(k) = prlev(fsg(k)%val)
     end do
 
     ! 4. initialize forcing fields (boundary cond.)

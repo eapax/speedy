@@ -96,7 +96,7 @@
     istart=1,
     ! Start date
     ! YYYY
-    iyear0=1983,
+    iyear0=1982,
     ! MM
     imonth0=1,
     ! DD
@@ -106,7 +106,7 @@
     ! No. of days in the last month of int. (max=30)
     ndaysl=0,
     ! Seasonal cycle flag (0=no, 1=yes)
-    iseasc=0,
+    iseasc=1,
 /
 
 ! mod_dyncon0

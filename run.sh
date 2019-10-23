@@ -56,4 +56,4 @@ time ./imp.exe | tee out.lis
 
 # Copy output to experiment directory
 mkdir -p ${OUT}
-mv prognostics_pressure.nc ${OUT}
+mv *.nc ${OUT}

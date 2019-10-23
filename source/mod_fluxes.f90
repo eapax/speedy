@@ -1,17 +1,18 @@
 module mod_fluxes
     use mod_atparam
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     ! Net heat flux into land sfc.end module
-    real(dp), allocatable :: hflux_l(:)
+    type(rpe_var), allocatable :: hflux_l(:)
 
     ! Net heat flux into sea sfc.
-    real(dp), allocatable :: hflux_s(:)
+    type(rpe_var), allocatable :: hflux_s(:)
 
     ! Net heat flux into sea-ice sfc.
-    real(dp), allocatable :: hflux_i(:)
+    type(rpe_var), allocatable :: hflux_i(:)
 
     contains
         subroutine setup_fluxes()
@@ -60,17 +61,17 @@ module mod_fluxes
             use mod_fordate, only: albsea, albice
             use phy_radlw, only: emisfc
 
-            real(dp) :: difice(ngp)
-            real(dp) :: fland(ngp), esbc, rsteps, sstfr, sstfr4
+            type(rpe_var) :: difice(ngp)
+            type(rpe_var) :: fland(ngp), esbc, rsteps, sstfr, sstfr4
 
             fland = reshape(fmask1,(/ngp/))
-            rsteps = 1.0_dp/nsteps
+            rsteps = rpe_literal(1.0_dp)/rpe_literal(nsteps)
 
             ! SST at freezing point
             sstfr  = 273.2_dp-1.8_dp
 
             sstfr4 = sstfr**4
-            esbc   = emisfc%val*sbc
+            esbc   = emisfc*sbc
 
             ! 2. Store fluxes over land (SI units, all heat fluxes downw.)
             hflux_l(:) = hflux_l(:) + hfluxn(:,1)*rsteps
@@ -82,13 +83,13 @@ module mod_fluxes
 
             hflux_s(:) = hflux_s(:) + rsteps* hfluxn(:,2)
             hflux_i(:) = hflux_i(:) + &
-                    rsteps*(hfluxn(:,2)+difice(:)*(1.0_dp-sice_am(:)))
+                    rsteps*(hfluxn(:,2)+difice(:)*(rpe_literal(1.0_dp)-sice_am(:)))
 
             ! 4.1 Store fluxes for daily-mean output
 
             ! Multiply net heat fluxes by land or sea fractions
             hfluxn(:,1) = hfluxn(:,1)*fland(:)
-            hfluxn(:,2) = hfluxn(:,2)*(1.0_dp-fland(:))
+            hfluxn(:,2) = hfluxn(:,2)*(rpe_literal(1.0_dp)-fland(:))
 
             ! End of flux increment
         end subroutine increment_fluxes

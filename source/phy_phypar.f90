@@ -26,12 +26,13 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use phy_suflux, only: suflux
     use phy_vdifsc, only: vdifsc
     use phy_sppt, only: sppt_on, gen_sppt, additive_forcing
+    use rp_emulator
     use mod_prec
 
     implicit none
 
     ! Physics tendencies of prognostic variables
-    real(dp), dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
+    type(rpe_var), dimension(ngp,kx), intent(out) :: utend, vtend, ttend, qtend
 
     ! Index of the top layer of deep convection (diagnosed in convmf)
     integer :: iptop(ngp)
@@ -40,36 +41,36 @@ subroutine phypar(utend,vtend,ttend,qtend)
     integer :: icltop(ngp), icnv(ngp)
 
     ! Conversion constant between (heat) fluxes and tendencies
-    real(dp) :: flx2tend(ngp,kx)
-    real(dp) :: hflx2tend(ngp,kx)
+    type(rpe_var) :: flx2tend(ngp,kx)
+    type(rpe_var) :: hflx2tend(ngp,kx)
 
     integer :: j, k
 
     ! Reciprocal of surface pressure 1/psg
-    real(dp), dimension(ngp) :: rps
+    type(rpe_var), dimension(ngp) :: rps
 
     ! gradient of dry static energy (dSE/dPHI)
-    real(dp), dimension(ngp) :: gse
+    type(rpe_var), dimension(ngp) :: gse
 
     ! 1. Compute thermodynamic variables
     do j=1,ngp
         psg(j)=exp(pslg1(j))
-        rps(j)=1.0_dp/psg(j)
+        rps(j)=rpe_literal(1.0_dp)/psg(j)
     end do
 
     do k=1,kx
         do j=1,ngp
             ! Conversion for fluxes->tendencies
-            flx2tend(j,k)  = rps(j)*grdsig(k)*3600.0_dp
+            flx2tend(j,k)  = rps(j)*grdsig(k)*rpe_literal(3600.0_dp)
             ! Conversion for heat fluxes->tendencies
-            hflx2tend(j,k) = rps(j)*grdscp(k)*3600.0_dp
+            hflx2tend(j,k) = rps(j)*grdscp(k)*rpe_literal(3600.0_dp)
         end do
     end do
 
     do k=1,kx
         do j=1,ngp
             ! Remove negative humidity values
-            qg1(j,k)=max(qg1(j,k),0.0_dp)
+            qg1(j,k)=max(qg1(j,k),rpe_literal(0.0_dp))
             se(j,k)=cp*tg1(j,k)+phig1(j,k)
         end do
     end do
@@ -161,6 +162,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Add SPPT noise
     if (sppt_on) then
+        call set_precision('SPPT')
         sppt = gen_sppt()
 
         utend = sppt * ut_phy

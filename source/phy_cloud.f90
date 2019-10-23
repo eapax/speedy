@@ -69,38 +69,35 @@ module phy_cloud
 
         subroutine cloud(&
                 qa_in, rh_in, precnv_in, precls_in, iptop, gse_in, fmask_in,&
-                icltop, cloudc_out, clstr_out)
+                icltop, cloudc, clstr)
             !  subroutine cloud (qa,rh,precnv,precls,iptop,gse,fmask,
             ! &                  icltop,cloudc,clstr)
             !
             !  Purpose: Compute cloud-top level and cloud cover
             !  Input:   qa     = specific humidity [g/kg]                (3-dim)
-            real(dp), intent(in) :: qa_in(ngp,kx)
+            type(rpe_var), intent(in) :: qa_in(ngp,kx)
             !           rh     = relative humidity                       (3-dim)
-            real(dp), intent(in) :: rh_in(ngp,kx)
+            type(rpe_var), intent(in) :: rh_in(ngp,kx)
             !           precnv = convective precipitation                (2-dim)
-            real(dp), intent(in) :: precnv_in(ngp)
+            type(rpe_var), intent(in) :: precnv_in(ngp)
             !           precls = large-scale precipitation               (2-dim)
-            real(dp), intent(in) :: precls_in(ngp)
+            type(rpe_var), intent(in) :: precls_in(ngp)
             !           iptop  = top level of precipitating cloud        (2-dim)
             integer, intent(in) :: iptop(ngp)
             !           gse    = gradient of dry st. energy (dSE/dPHI)   (2-dim)
-            real(dp), intent(in) :: gse_in(ngp)
+            type(rpe_var), intent(in) :: gse_in(ngp)
             !           fmask  = fractional land-sea mask                (2-dim)
-            real(dp), intent(in) :: fmask_in(ngp)
+            type(rpe_var), intent(in) :: fmask_in(ngp)
             !  Output:  icltop = cloud top level (all clouds)            (2-dim)
             integer, intent(out) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
-            real(dp), intent(out) :: cloudc_out(ngp)
+            type(rpe_var), intent(out) :: cloudc(ngp)
             !           clstr  = stratiform cloud cover                  (2-dim)
-            real(dp), intent(out) :: clstr_out(ngp)
+            type(rpe_var), intent(out) :: clstr(ngp)
 
             ! Local copies of input variables
             type(rpe_var) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), precls(ngp), &
                     gse(ngp), fmask(ngp)
-
-            ! Local copies of output variables
-            type(rpe_var) :: cloudc(ngp), clstr(ngp)
 
             ! Local variables
             integer :: j, k
@@ -164,8 +161,5 @@ module phy_cloud
                 clstrl   = max(clstr(j),clsminl)*rh(j,kx)
                 clstr(j) = clstr(j)+fmask(j)*(clstrl-clstr(j))
             end do
-
-            cloudc_out = cloudc
-            clstr_out = clstr
         end subroutine cloud
 end module phy_cloud

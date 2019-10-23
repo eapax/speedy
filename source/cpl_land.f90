@@ -104,6 +104,7 @@ subroutine rest_land(imode)
     use mod_cpl_flags, only: icland
     use mod_var_land, only: stl_am, stl_lm
     use mod_downscaling, only: ix_in, il_in, regrid
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -111,12 +112,14 @@ subroutine rest_land(imode)
     integer, intent(in) :: imode
 
     ! land surface temperature at input resolution
+    ! Data loaded in at full precision
     real(dp) :: stl_lm_in(ix_in*il_in)
 
     if (imode==0) then
         read (3)  stl_lm_in
         if (ix_in/=ix .or. il_in/=il) then
-            call regrid(stl_lm_in, stl_lm)
+            call regrid(stl_lm_in, stl_lm%val)
+            call apply_truncation(stl_lm)
         else
             stl_lm = stl_lm_in
         end if

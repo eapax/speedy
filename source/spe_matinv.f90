@@ -1,26 +1,28 @@
 subroutine ludcmp(a,n,np,indx,d)
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n, np
-    real(dp), intent(inout) :: a(np,np), d
+    type(rpe_var), intent(inout) :: a(np,np), d
     integer, intent(inout) :: indx(n)
 
     integer, parameter :: nmax = 100
-    real(dp), parameter :: tiniest = 1.0e-20
+    type(rpe_var) :: tiniest
     integer :: i, j, k, imax
-    real(dp) :: vv(nmax), aamax, dum, accum
+    type(rpe_var) :: vv(nmax), aamax, dum, accum
 
     d = 1.0_dp
+    tiniest = 1.0d-20
 
     do i=1,n
         aamax=0.0_dp
         do j=1,n
             if(abs(a(i,j))>aamax) aamax=abs(a(i,j))
         end do
-        if(aamax==0.0_dp) stop 'singular'
-        vv(i)=1.0_dp/aamax
+        if(aamax==rpe_literal(0.0_dp)) stop 'singular'
+        vv(i)=rpe_literal(1.0_dp)/aamax
     end do
 
     do j=1,n
@@ -65,26 +67,26 @@ subroutine ludcmp(a,n,np,indx,d)
         indx(j)=imax
         if(j/=n) then
             if(a(j,j)==0) a(j,j)=tiniest
-            dum=1.0_dp/a(j,j)
+            dum=rpe_literal(1.0_dp)/a(j,j)
             do i=j+1,n
                 a(i,j)=a(i,j)*dum
             end do
         end if
     end do
 
-    if(a(n,n)==0.0_dp) a(n,n)=tiniest
+    if(a(n,n)==rpe_literal(0.0_dp)) a(n,n)=tiniest
 end subroutine ludcmp
 
 subroutine lubksb(a,n,np,indx,b)
-    use mod_prec, only: dp
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: n, np, indx(n)
-    real(dp), intent(inout) :: a(np,np), b(n)
+    type(rpe_var), intent(inout) :: a(np,np), b(n)
 
     integer :: ii, i, ll, j
-    real(dp) :: accum
+    type(rpe_var) :: accum
 
     ii=0
 
@@ -114,16 +116,17 @@ subroutine lubksb(a,n,np,indx,b)
 end subroutine lubksb
 
 subroutine inv(a,y,indx,n)
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: n
-    real(dp), intent(inout) :: a(n,n), y(n,n)
+    type(rpe_var), intent(inout) :: a(n,n), y(n,n)
     integer, intent(inout) :: indx(n)
 
     integer :: i
-    real(dp) :: d
+    type(rpe_var) :: d
 
     y = 0.0_dp
 

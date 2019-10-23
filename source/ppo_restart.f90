@@ -12,7 +12,7 @@ subroutine restart(jday)
     use mod_date, only: iyear, imonth, iday, ihour
     use mod_downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, &
             calc_grid_weights
-    use mod_prec, only: dp
+    use mod_prec
 
     implicit none
 
@@ -85,7 +85,8 @@ subroutine restart(jday)
         Ps  = CMPLX(0.0_dp, 0.0_dp, kind=dp)
         tr  = CMPLX(0.0_dp, 0.0_dp, kind=dp)
 
-        ! Pass input fields to resolution of run (truncate)
+        ! Reduce precision of input fields
+        call set_precision('Initial Values')
         vor(1:mx_tr, 1:nx_tr, :, :)    = vor_in(1:mx_tr, 1:nx_tr, :, :)
         div(1:mx_tr, 1:nx_tr, :, :)    = div_in(1:mx_tr, 1:nx_tr, :, :)
         T  (1:mx_tr, 1:nx_tr, :, :)    = T_in  (1:mx_tr, 1:nx_tr, :, :)

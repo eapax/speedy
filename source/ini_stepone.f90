@@ -6,11 +6,12 @@ subroutine stepone()
 
     use mod_tsteps, only: delt, delt2, alph, rob, wil
     use mod_date, only: istart
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    real(dp) :: delth
+    type(rpe_var) :: delth
 
     if (istart==0 .or. istart==2) then
 

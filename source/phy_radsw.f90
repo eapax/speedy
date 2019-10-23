@@ -92,7 +92,7 @@ module phy_radsw
 
         subroutine radsw(&
                 psa_in, qa_in, icltop, cloudc_in, clstr_in, flx2tend_in, &
-                fsfcd_out, fsfc_out, ftop_out, dfabs_out)
+                fsfcd, fsfc, ftop, dfabs)
             ! Compute the absorption of shortwave radiation
 
             ! The following variables are derived once per day in other
@@ -102,33 +102,29 @@ module phy_radsw
             use mod_solar, only: fsol, ozone, ozupp, zenit
 
             !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
-            real(dp), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa_in(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
-            real(dp), intent(in) :: qa_in(ngp,kx)
+            type(rpe_var), intent(in) :: qa_in(ngp,kx)
             !           icltop = cloud top level                         (2-dim)
             integer, intent(in) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
-            real(dp), intent(in) :: cloudc_in(ngp)
+            type(rpe_var), intent(in) :: cloudc_in(ngp)
             !           clstr  = stratiform cloud cover                  (2-dim)
-            real(dp), intent(in) :: clstr_in(ngp)
+            type(rpe_var), intent(in) :: clstr_in(ngp)
             !         flx2tend = Conversion factor between fluxes and T tendency
-            real(dp), intent(in) :: flx2tend_in(ngp,kx)
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
             !  output:  fsfcd  = downward-only flux of sw rad. at the surface (2-dim)
-            real(dp), intent(out) :: fsfcd_out(ngp)
+            type(rpe_var), intent(out) :: fsfcd(ngp)
             !           fsfc   = net (downw.) flux of sw rad. at the surface  (2-dim)
-            real(dp), intent(out) :: fsfc_out(ngp)
+            type(rpe_var), intent(out) :: fsfc(ngp)
             !           ftop   = net (downw.) flux of sw rad. at the atm. top (2-dim)
-            real(dp), intent(out) :: ftop_out(ngp)
+            type(rpe_var), intent(out) :: ftop(ngp)
             !           dfabs  = flux of sw rad. absorbed by each atm. layer  (3-dim)
-            real(dp), intent(out) :: dfabs_out(ngp,kx)
+            type(rpe_var), intent(out) :: dfabs(ngp,kx)
 
             ! Local copies of input variables
             type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp), &
                     flx2tend(ngp,kx)
-
-            ! Local copies of output variables
-            type(rpe_var) :: fsfcd(ngp), fsfc(ngp), ftop(ngp), dfabs(ngp,kx)
-
             ! flux   = radiative flux in different spectral bands
             type(rpe_var) :: flux(ngp,2)
 
@@ -259,9 +255,6 @@ module phy_radsw
             ftop = ftop - flux(:,1)
 
             ! Convert SW fluxes to temperature tendencies
-            dfabs_out = dfabs*flx2tend
-            fsfcd_out = fsfcd
-            fsfc_out = fsfc
-            ftop_out = ftop
+            dfabs = dfabs*flx2tend
         end subroutine radsw
 end module phy_radsw

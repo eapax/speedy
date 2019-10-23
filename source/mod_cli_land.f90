@@ -1,27 +1,27 @@
 module mod_cli_land
     use mod_atparam
-    use mod_prec, only: dp
+    use rp_emulator
 
     implicit none
 
     ! Land masks
     ! Fraction of land
-    real(dp), allocatable :: fmask_l(:,:)
+    type(rpe_var), allocatable :: fmask_l(:,:)
 
     ! Binary land mask
-    real(dp), allocatable :: bmask_l(:,:)
+    type(rpe_var), allocatable :: bmask_l(:,:)
 
     ! Monthly-mean climatological fields over land
     ! Loaded in ini_inbcon
     ! Used to interpolate to current date in cpl_land.atm2land
     ! Land surface temperature
-    real(dp), allocatable :: stl12(:,:,:)
+    type(rpe_var), allocatable :: stl12(:,:,:)
 
     ! Snow depth (water equiv.)
-    real(dp), allocatable :: snowd12(:,:,:)
+    type(rpe_var), allocatable :: snowd12(:,:,:)
 
     ! Soil water availabilityend module
-    real(dp), allocatable :: soilw12(:,:,:)
+    type(rpe_var), allocatable :: soilw12(:,:,:)
 
     contains
         subroutine setup_cli_land()
@@ -31,4 +31,12 @@ module mod_cli_land
             allocate(snowd12(ix, il, 12))
             allocate(soilw12(ix, il, 12))
         end subroutine setup_cli_land
+
+        subroutine truncate_cli_land()
+            call apply_truncation(fmask_l)
+            call apply_truncation(bmask_l)
+            call apply_truncation(stl12)
+            call apply_truncation(snowd12)
+            call apply_truncation(soilw12)
+        end subroutine truncate_cli_land
 end module

@@ -235,7 +235,7 @@ module ppo_output_stream
             integer, intent(in) :: istep
 
             ! Write the next entry in the time dimension
-            call check( nf90_put_var(stream%file_ID, stream%rec_varid, (/istep*delt/), &
+            call check( nf90_put_var(stream%file_ID, stream%rec_varid, (/istep*delt%val/), &
                                      start=(/stream%rec/), count=(/1/)) )
 
             if (stream%spectral) then
@@ -1211,13 +1211,13 @@ module ppo_output_stream
 
             ! Write the coordinate variable data
             call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=0, ix-1) /)) )
-            call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s) )
+            call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s%val) )
             if (stream%plevs) then
-                call check( nf90_put_var(stream%file_ID, lvl_varid, pout*1000) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, pout%val*1000) )
             else
-                call check( nf90_put_var(stream%file_ID, lvl_varid, sig) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, sig%val) )
             end if
-            call check( nf90_put_var(stream%file_ID, stream%rec_varid, 0.0) )
+            call check( nf90_put_var(stream%file_ID, stream%rec_varid, 0.0_dp) )
         end subroutine init_nc
 
         subroutine check(status)

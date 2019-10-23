@@ -1,6 +1,7 @@
 !> @brief
 !> Length of the integration and time stepping constants.
 module mod_tsteps
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -18,19 +19,19 @@ module mod_tsteps
 
     ! Time step in seconds
     integer :: idelt
-    real(dp) :: delt
+    type(rpe_var) :: delt
 
     ! 2 * time step in seconds
-    real(dp) :: delt2
+    type(rpe_var) :: delt2
 
     ! Damping factor in Robert time filter
-    real(dp) :: rob
+    type(rpe_var) :: rob
 
     ! Parameter of Williams filter
-    real(dp) :: wil
+    type(rpe_var) :: wil
 
     ! Coefficient for semi-implicit computations
-    real(dp) :: alph
+    type(rpe_var) :: alph
 
     contains
         subroutine setup_timestepping(fid)
@@ -43,4 +44,12 @@ module mod_tsteps
 
             write(*, timestepping)
         end subroutine setup_timestepping
+
+        subroutine truncate_tsteps()
+            call apply_truncation(delt)
+            call apply_truncation(delt2)
+            call apply_truncation(rob)
+            call apply_truncation(wil)
+            call apply_truncation(alph)
+        end subroutine truncate_tsteps
 end module

@@ -96,40 +96,37 @@ module phy_convmf
 
         subroutine convmf (&
                 psa_in, se_in, qa_in, qsat_in, flx2tend_in, &
-                itop, cbmf_out, precnv_out, dfse_out, dfqa_out)
+                itop, cbmf, precnv, dfse, dfqa)
             ! SUBROUTINE CONVMF (PSA,SE,QA,QSAT, ITOP,CBMF,PRECNV,DFSE,DFQA)
             !
             ! Purpose: Compute convective fluxes of dry static energy and
             !          moisture using a simplified mass-flux scheme
 
             ! Input:  PSA    = norm. surface pressure [p/p0]            (2-dim)
-            real(dp), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa_in(ngp)
             !         SE     = dry static energy                        (3-dim)
-            real(dp), intent(in) :: se_in(ngp, kx)
+            type(rpe_var), intent(in) :: se_in(ngp, kx)
             !         QA     = specific humidity [g/kg]                 (3-dim)
-            real(dp), intent(in) :: qa_in(ngp, kx)
+            type(rpe_var), intent(in) :: qa_in(ngp, kx)
             !         QSAT   = saturation spec. hum. [g/kg]             (3-dim)
-            real(dp), intent(in) :: qsat_in(ngp, kx)
+            type(rpe_var), intent(in) :: qsat_in(ngp, kx)
             !         flx2tend = Conversion factor between fluxes and tendencies
-            real(dp), intent(in) :: flx2tend_in(ngp,kx)
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
 
             ! Output: ITOP   = top of convection (layer index)          (2-dim)
             integer, intent(out) :: itop(ngp)
             !         CBMF   = cloud-base mass flux                     (2-dim)
-            real(dp), intent(out) :: cbmf_out(ngp)
+            type(rpe_var), intent(out) :: cbmf(ngp)
             !         PRECNV = convective precipitation [g/(m^2 s)]     (2-dim)
-            real(dp), intent(out) :: precnv_out(ngp)
+            type(rpe_var), intent(out) :: precnv(ngp)
             !         DFSE   = net flux of d.s.en. into each atm. layer (3-dim)
-            real(dp), intent(out) :: dfse_out(ngp,kx)
+            type(rpe_var), intent(out) :: dfse(ngp,kx)
             !         DFQA   = net flux of sp.hum. into each atm. layer (3-dim)
-            real(dp), intent(out) :: dfqa_out(ngp,kx)
+            type(rpe_var), intent(out) :: dfqa(ngp,kx)
 
             ! Local copies of input variables
             type(rpe_var) :: psa(ngp), se(ngp,kx), qa(ngp,kx), qsat(ngp,kx), &
                     flx2tend(ngp,kx)
-
-            ! Local copies of output variables
-            type(rpe_var) :: cbmf(ngp), precnv(ngp), dfse(ngp,kx), dfqa(ngp,kx)
 
             ! Local variables
             integer :: j, k, k1
@@ -239,11 +236,9 @@ module phy_convmf
                 dfqa(j,k)=fuq-fdq-precnv(j)
             end do
 
-            cbmf_out = cbmf
-            precnv_out = precnv
             ! Convert fluxes to temperature tendencies
-            dfse_out = dfse*flx2tend / 3600.0_dp
-            dfqa_out = dfqa*flx2tend / 3600.0_dp
+            dfse = dfse*flx2tend / 3600.0_dp
+            dfqa = dfqa*flx2tend / 3600.0_dp
         end subroutine convmf
 
         subroutine diagnose_convection(psa, se, qa, qsat, itop, qdif)

@@ -36,16 +36,17 @@ subroutine atm2sea(jday)
     use mod_cli_sea, only: fmask_s, sst12, sice12, sstan3, hfseacl, sstom12
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: jday
 
-    real(dp) :: fmasks(ngp)        ! sea fraction
-    real(dp) :: hfyearm(ngp)       ! annual mean heat flux into the ocean
+    type(rpe_var) :: fmasks(ngp)        ! sea fraction
+    type(rpe_var) :: hfyearm(ngp)       ! annual mean heat flux into the ocean
     integer :: j
-    real(dp) :: sstcl0, sstfr
+    type(rpe_var) :: sstcl0, sstfr
 
     ! 1. Interpolate climatological fields and obs. SST anomaly
     !    to actual date
@@ -70,20 +71,20 @@ subroutine atm2sea(jday)
     ! Adjust climatological fields over sea ice
 
     ! SST at freezing point
-    sstfr = 273.2_dp-1.8_dp
+    sstfr = rpe_literal(273.2_dp)-rpe_literal(1.8_dp)
 
     do j=1,ngp
         sstcl0 = sstcl_ob(j)
 
         if (sstcl_ob(j)>sstfr) then
-            sicecl_ob(j) = min(0.5_dp,sicecl_ob(j))
+            sicecl_ob(j) = min(rpe_literal(0.5_dp),sicecl_ob(j))
             ticecl_ob(j) = sstfr
-            if (sicecl_ob(j)>0.0_dp) then
+            if (sicecl_ob(j)>rpe_literal(0.0_dp)) then
                 sstcl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/&
-                        (1.0_dp-sicecl_ob(j))
+                        (rpe_literal(1.0_dp)-sicecl_ob(j))
             end if
         else
-            sicecl_ob(j) = max(0.5_dp,sicecl_ob(j))
+            sicecl_ob(j) = max(rpe_literal(0.5_dp),sicecl_ob(j))
             ticecl_ob(j) = sstfr+(sstcl_ob(j)-sstfr)/sicecl_ob(j)
             sstcl_ob(j)  = sstfr
         end if
@@ -183,41 +184,46 @@ subroutine rest_sea(imode)
     use mod_atparam
     use mod_var_sea, only: sst_om, tice_om, sice_om, sst_am, tice_am, sice_am
     use mod_downscaling, only: ix_in, il_in, regrid
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: imode
 
-    real(dp) :: sst_c(ngp)              ! sst corrected for sea-ice values
-    real(dp) :: sstfr
+    type(rpe_var) :: sst_c(ngp)              ! sst corrected for sea-ice values
+    type(rpe_var) :: sstfr
 
     ! Sea variables at input resolution
+    ! Data loaded in at full precision
     real(dp) :: sst_om_in(ix_in*il_in)
     real(dp) :: tice_om_in(ix_in*il_in)
     real(dp) :: sice_om_in(ix_in*il_in)
 
     if (imode==0) then
-        ! Load data on iput grid
+        ! Load data at full precision
         read (3)  sst_om_in     ! sst
         read (3) tice_om_in     ! sea ice temperature
         read (3) sice_om_in     ! sea ice fraction
 
         ! Interpolate to new grid
         if (ix_in/=ix .or. il_in/=il) then
-            call regrid(sst_om_in, sst_om)
+            call regrid(sst_om_in, sst_om%val)
+            call apply_truncation(sst_om)
         else
             sst_om = sst_om_in
         end if
 
         if (ix_in/=ix .or. il_in/=il) then
-            call regrid(tice_om_in, tice_om)
+            call regrid(tice_om_in, tice_om%val)
+            call apply_truncation(tice_om)
         else
             tice_om = tice_om_in
         end if
 
         if (ix_in/=ix .or. il_in/=il) then
-            call regrid(sice_om_in, sice_om)
+            call regrid(sice_om_in, sice_om%val)
+            call apply_truncation(sice_om)
         else
             sice_om = sice_om
         end if
@@ -254,6 +260,7 @@ subroutine obs_ssta()
     use mod_date, only: imonth, iyear, issty0
     use ppo_output_stream, only: check
     use mod_prec, only: dp
+    use rp_emulator
 
     implicit none
 

@@ -23,23 +23,25 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_physvar, only: ug1, vg1, tg1, qg1, phig1, pslg1
     use mod_dyncon1, only: coriol
     use spectral, only: uvspec, grid
+    use mod_prec, only: set_precision
+    use rp_emulator
 
     implicit none
 
-    complex(dp), dimension(mx,nx,kx),     intent(inout) :: vordt, &
+    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, &
             divdt, tdt
-    complex(dp), dimension(mx,nx),        intent(inout) :: psdt
-    complex(dp), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
+    type(rpe_complex_var), dimension(mx,nx),        intent(inout) :: psdt
+    type(rpe_complex_var), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
     integer, intent(in) :: j1, j2
 
     ! Gridpoint tendencies. Updated in phypar and dyntend
-    real(dp), dimension(ix,il,kx)     :: utend, vtend, ttend
-    real(dp), dimension(ix,il,kx,ntr) :: trtend
+    type(rpe_var), dimension(ix,il,kx)     :: utend, vtend, ttend
+    type(rpe_var), dimension(ix,il,kx,ntr) :: trtend
 
     ! Local gridpoint variables from spectral transform for calculating dynamics
     ! tendencies. Only calculate ug/vg/tg when j1/=j2
-    real(dp), dimension(ix,il,kx)     :: ug, vg, tg, vorg, divg
-    real(dp), dimension(ix,il,kx,ntr) :: trg
+    type(rpe_var), dimension(ix,il,kx)     :: ug, vg, tg, vorg, divg
+    type(rpe_var), dimension(ix,il,kx,ntr) :: trg
 
     integer :: k, i, itr, j
 
@@ -48,6 +50,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     call geop(j1)
 
     ! 1.2 Grid-point variables for physics tendencies
+    call set_precision('Spectral Transform')
     do k=1,kx
       call uvspec(vor(:,:,k, j1),div(:,:,k, j1),ug1(:,k),vg1(:,k))
     end do
@@ -127,31 +130,34 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     use mod_dyncon1, only: akap, rgas, dhs, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
-    use mod_prec, only: dp
+    use mod_prec, only: dp, set_precision
+    use rp_emulator
 
     implicit none
 
     integer, intent(in) :: j2
 
-    complex(dp), dimension(mx,nx,kx),     intent(inout) :: vordt, &
+    type(rpe_complex_var), dimension(mx,nx,kx),     intent(inout) :: vordt, &
             divdt, tdt
-    complex(dp), dimension(mx,nx),        intent(inout) :: psdt
-    complex(dp), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
+    type(rpe_complex_var), dimension(mx,nx),        intent(inout) :: psdt
+    type(rpe_complex_var), dimension(mx,nx,kx,ntr), intent(inout) :: trdt
 
-    real(dp), dimension(ix,il,kx),     intent(inout) :: utend, vtend, ttend
-    real(dp), dimension(ix,il,kx,ntr), intent(inout) :: trtend
+    type(rpe_var), dimension(ix,il,kx),     intent(inout) :: utend, vtend, ttend
+    type(rpe_var), dimension(ix,il,kx,ntr), intent(inout) :: trtend
 
-    real(dp), dimension(ix,il,kx),     intent(in) :: ug, vg, tg, vorg, divg
-    real(dp), dimension(ix,il,kx,ntr), intent(in) :: trg
+    type(rpe_var), dimension(ix,il,kx),     intent(in) :: ug, vg, tg, vorg, divg
+    type(rpe_var), dimension(ix,il,kx,ntr), intent(in) :: trg
 
-    complex(dp) :: dumc(mx,nx,3)
+    type(rpe_complex_var) :: dumc(mx,nx,3)
 
-    real(dp), dimension(ix,il,kx) :: tgg, puv
-    real(dp), dimension(ix,il) :: px, py, umean, vmean, dmean
-    real(dp) :: sigdt(ix,il,kxp)
-    real(dp) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
+    type(rpe_var), dimension(ix,il,kx) :: tgg, puv
+    type(rpe_var), dimension(ix,il) :: px, py, umean, vmean, dmean
+    type(rpe_var) :: sigdt(ix,il,kxp)
+    type(rpe_var) :: temp(ix,il,kxp), sigm(ix,il,kxp), dumr(ix,il,3)
 
     integer :: i, j, k, itr
+
+    call set_precision('Grid Dynamics')
 
     umean(:,:) = 0.0_dp
     vmean(:,:) = 0.0_dp
@@ -164,13 +170,17 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     end do
 
     ! Compute tendency of log(surface pressure)
+    call set_precision('Spectral Transform')
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
     call grid(dumc(:,:,2),px,2)
     call grid(dumc(:,:,3),py,2)
+    call set_precision('Grid Dynamics')
 
     dumr(:,:,1) = -umean * px - vmean * py
 
+    call set_precision('Spectral Transform')
     call spec(dumr(:,:,1),psdt)
+    call set_precision('Grid Dynamics')
     psdt(1,1)=(0.0_dp,0.0_dp)
 
     ! Compute "vertical" velocity
@@ -270,15 +280,18 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to
         !  spectral vor and div
+        call set_precision('Spectral Transform')
         call vdspec(utend(:,:,k),vtend(:,:,k),vordt(:,:,k),divdt(:,:,k),2)
+        call set_precision('Grid Dynamics')
 
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
-        dumr(:,:,1)=0.5_dp* &
+        dumr(:,:,1)=rpe_literal(0.5_dp)* &
                 (ug(:,:,k)*ug(:,:,k) + vg(:,:,k)*vg(:,:,k))
         dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)
         dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)
 
+        call set_precision('Spectral Transform')
         !  divergence tendency
         call spec(dumr(:,:,1),dumc(:,:,1))
         call lap (dumc(:,:,1),dumc(:,:,2))
@@ -292,17 +305,20 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
         !fk--   Change to keep dimensions
         tdt(:,:,k) = tdt(:,:,k) + dumc(:,:,2)
+        call set_precision('Grid Dynamics')
 
         ! tracer tendency
         do itr=1,ntr
             dumr(:,:,2)=-ug(:,:,k)*trg(:,:,k,itr)
             dumr(:,:,3)=-vg(:,:,k)*trg(:,:,k,itr)
 
+            call set_precision('Spectral Transform')
             call spec(trtend(:,:,k,itr),dumc(:,:,2))
             call vdspec(dumr(:,:,2),dumr(:,:,3),dumc(:,:,1),trdt(:,:,k,itr),2)
 
             !fk--   Change to keep dimensions
             trdt(:,:,k,itr) = trdt(:,:,k,itr) + dumc(:,:,2)
+            call set_precision('Grid Dynamics')
         end do
     end do
 end subroutine dyntend

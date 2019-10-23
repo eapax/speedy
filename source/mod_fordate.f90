@@ -6,7 +6,7 @@ module mod_fordate
     implicit none
 
     private
-    public setup_forcing, ini_fordate, fordate
+    public setup_forcing, ini_fordate, truncate_fordate, fordate
     public ablco2, albsea, albice
     public alb_l, alb_s, albsfc, snowc
 
@@ -19,18 +19,17 @@ module mod_fordate
     ! If lco2=.true., the year corresponding to ablco2 baseline
     integer :: iyear_ref
     ! If lco2=.true., the yearly increase in co2 absorbtion from iyear_ref
-    real(dp) :: del_co2
+    type(rpe_var) :: del_co2
     ! ablco2 = abs. of air in CO2 band
-    type(rpe_var) :: ablco2
-    real(dp) :: ablco2_ref
+    type(rpe_var) :: ablco2, ablco2_ref
 
     ! Constants for surface albedos
     ! albsea = Albedo over sea
-    real(dp) :: albsea
+    type(rpe_var) :: albsea
     ! albice = Albedo over sea ice (for ice fraction = 1)
-    real(dp) :: albice
+    type(rpe_var) :: albice
     ! albsn  = Albedo over snow (for snow cover = 1)
-    real(dp) :: albsn
+    type(rpe_var) :: albsn
 
     ! Radiative properties of the surface (updated in fordate)
     ! alb_l, alb_s and snowc used in phy_suflux. albsfc used in phy_radsw
@@ -40,7 +39,7 @@ module mod_fordate
     ! snowc  = effective snow cover (fraction)
     type(rpe_var), dimension(:), allocatable :: alb_l, alb_s, albsfc, snowc
 
-    real(dp) :: gamlat, pexp
+    type(rpe_var) :: gamlat, pexp
 
     contains
         subroutine setup_forcing(fid)
@@ -68,6 +67,17 @@ module mod_fordate
             call fordate()
         end subroutine ini_fordate
 
+        subroutine truncate_fordate()
+            call apply_truncation(del_co2)
+            call apply_truncation(ablco2)
+            call apply_truncation(ablco2_ref)
+            call apply_truncation(gamlat)
+            call apply_truncation(pexp)
+            call apply_truncation(albsea)
+            call apply_truncation(albice)
+            call apply_truncation(albsn)
+        end subroutine truncate_fordate
+
         subroutine fordate()
             !
             !   subroutine fordate (imode)
@@ -87,9 +97,9 @@ module mod_fordate
             use humidity, only: q_sat
             use spectral, only: spec
 
-            real(dp), dimension(ix, il) :: corh, tsfc, tref, psfc
-            real(dp), dimension(ngp) :: qsfc, qref
-            real(dp) :: fland(ngp), alb_0(ngp)
+            type(rpe_var), dimension(ix, il) :: corh, tsfc, tref, psfc
+            type(rpe_var), dimension(ngp) :: qsfc, qref
+            type(rpe_var) :: fland(ngp), alb_0(ngp)
 
             integer :: i, j, ij
 
@@ -100,7 +110,7 @@ module mod_fordate
 
             ! 1. daily-mean radiative forcing
             ! incoming solar radiation
-            call sol_oz(tyear)
+            call sol_oz(rpe_literal(tyear))
 
             ! total surface albedo
             do j = 1, ngp
@@ -146,8 +156,8 @@ module mod_fordate
             end do
 
             qref = q_sat(ngp, reshape(tref, (/ngp/)), &
-                    (/1.0_dp/), -1.0_dp)
-            qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  1.0_dp)
+                    (/rpe_literal(1.0_dp)/), rpe_literal(-1.0_dp))
+            qsfc = q_sat(ngp, reshape(tsfc, (/ngp/)), psfc,  rpe_literal(1.0_dp))
 
             corh = refrh1 * reshape((qref - qsfc), (/ix, il/))
 

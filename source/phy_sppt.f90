@@ -12,7 +12,7 @@ module phy_sppt
     implicit none
 
     private
-    public sppt_on, setup_sppt, ini_sppt, gen_sppt, additive_forcing
+    public sppt_on, setup_sppt, ini_sppt, truncate_sppt, gen_sppt, additive_forcing
 
     namelist /sppt/ sppt_on, nscales, l_additive
     namelist /sppt_parameters/ mu, time_decorr, len_decorr, stddev, additive_magnitude
@@ -22,7 +22,7 @@ module phy_sppt
 
     ! Array for tapering value of SPPT in the different layers of the atmosphere
     ! A value of 1 means the tendency is not tapered at that level
-    real(dp), allocatable :: mu(:)
+    type(rpe_var), allocatable :: mu(:)
 
     ! Number of correlation scales for SPPT perturbations
     integer :: nscales = 3
@@ -39,16 +39,16 @@ module phy_sppt
     real(dp), allocatable :: stddev(:)
 
     ! Additive random forcing standard deviation
-    real(dp) :: additive_magnitude
+    type(rpe_var) :: additive_magnitude
 
     ! SPPT parameters initialised in ini_sppt
     ! Time autocorrelation of spectral AR(1) signals
-    real(dp), allocatable :: phi(:)
+    type(rpe_var), allocatable :: phi(:)
     ! Total wavenumber-wise standard deviation of spectral signals
-    real(dp), allocatable :: sigma(:, :, :)
+    type(rpe_var), allocatable :: sigma(:, :, :)
 
     ! Perturbations in spectral space
-    complex(dp), allocatable :: sppt_spec(:, :, :)
+    type(rpe_complex_var), allocatable :: sppt_spec(:, :, :)
 
     logical :: first = .true.
 
@@ -71,6 +71,13 @@ module phy_sppt
             write(*, sppt_parameters)
         end subroutine setup_sppt
 
+        subroutine truncate_sppt()
+            call apply_truncation(mu)
+            call apply_truncation(additive_magnitude)
+            call apply_truncation(phi)
+            call apply_truncation(sigma)
+        end subroutine truncate_sppt
+
         !> @brief
         !> Generate grid point space SPPT pattern
         !> distribution.
@@ -79,25 +86,26 @@ module phy_sppt
             use spectral, only: grid
 
             integer :: m, n, k
-            real(dp) :: sppt_grid(ix, il), sppt_grid_total(ix, il)
-            type(rpe_var) :: sppt_grid_out(ngp, kx)
-            complex(dp) :: eta(mx, nx, nscales)
-            real(dp) :: randreal, randimag
+            type(rpe_var) :: sppt_grid(ix, il), sppt_grid_total(ix, il), &
+                             sppt_grid_out(ngp, kx)
+            type(rpe_complex_var) :: eta(mx, nx, nscales)
+            type(rpe_var) :: randreal, randimag
 
             ! Generate Gaussian noise
             do k=1, nscales
                 do n=1, nx
                     do m=1, mx
-                        randreal = randn(0.0_dp, 1.0_dp)
-                        randimag = randn(0.0_dp, 1.0_dp)
+                        randreal = randn( &
+                                rpe_literal(0.0_dp), rpe_literal(1.0_dp))
+                        randimag = randn( &
+                                rpe_literal(0.0_dp), rpe_literal(1.0_dp))
 
                         ! Clip noise to +- 10 standard deviations
                         eta(m,n,k) = cmplx(&
-                                min(10.0_dp, abs(randreal)) * &
-                                        sign(1.0_dp, randreal),&
-                                min(10.0_dp, abs(randimag)) * &
-                                        sign(1.0_dp, randimag), &
-                                kind=dp)
+                                min(rpe_literal(10.0_dp), abs(randreal)) * &
+                                        sign(rpe_literal(1.0_dp), randreal),&
+                                min(rpe_literal(10.0_dp), abs(randimag)) * &
+                                        sign(rpe_literal(1.0_dp), randimag))
                     end do
                 end do
             end do
@@ -107,7 +115,7 @@ module phy_sppt
                 ! First AR(1) step
                 do n=1, nscales
                     sppt_spec(:,:,n) = &
-                            (1 - phi(n)**2)**(-0.5_dp) * &
+                            (1 - phi(n)**2)**(rpe_literal(-0.5_dp)) * &
                                     sigma(:,:,n) * eta(:,:,n)
                 end do
                 first = .false.
@@ -128,8 +136,8 @@ module phy_sppt
             end do
 
             ! Clip to +/- 1.0
-            sppt_grid_total = min(1.0_dp, abs(sppt_grid_total)) * &
-                    sign(1.0_dp, sppt_grid_total)
+            sppt_grid_total = min(rpe_literal(1.0_dp), abs(sppt_grid_total)) * &
+                    sign(rpe_literal(1.0_dp), sppt_grid_total)
 
             ! Apply tapering
             do k=1,kx
@@ -167,13 +175,13 @@ module phy_sppt
 
         ! Add random noise to the temperature tendency
         subroutine additive_forcing(tendency)
-            real(dp), intent(inout):: tendency(ngp, kx)
+            type(rpe_var), intent(inout):: tendency(ngp, kx)
             integer :: j, k
 
             if (L_additive) then
                 do k=1,kx
                     do j=1,ngp
-                        tendency(j,k) = tendency(j,k) + randn(0.0_dp, additive_magnitude)
+                        tendency(j,k) = tendency(j,k) + randn(rpe_literal(0.0_dp), additive_magnitude)
                     end do
                 end do
             end if
@@ -186,17 +194,17 @@ module phy_sppt
         !> @param stdev the standard deviation of the distribution to draw from
         !> @return randn the generated random number
         function randn(mean, stdev)
-            use mod_prec, only: dp
+            use mod_prec
 
-            real(dp), intent(in) :: mean, stdev
-            real(dp) :: u, v, randn
+            type(rpe_var), intent(in) :: mean, stdev
+            type(rpe_var) :: u, v, randn
             real(dp) :: rand(2)
 
             call random_number(rand)
 
             ! Box-Muller method
-            u = (-2.0_dp * log(rand(1))) ** 0.5_dp
-            v = 6.28318530718_dp * rand(2)
+            u = (-rpe_literal(2.0_dp) * log(rand(1))) ** rpe_literal(0.5_dp)
+            v = rpe_literal(6.28318530718_dp) * rand(2)
             randn = mean + stdev * u * sin(v)
         end function randn
 

@@ -77,8 +77,6 @@ module phy_radlw
         end subroutine setup_lw_radiation
 
         subroutine ini_radlw()
-            use mod_physcon, only: dsig
-
             ! Calculate local variables for long-wave radiation scheme
             use mod_physcon, only: sbc, wvi, dsig
 
@@ -147,7 +145,6 @@ module phy_radlw
 
         subroutine radlw_transmissivity(psa_in, qa_in, icltop, cloudc_in)
             ! 5.  Initialization of longwave radiation model
-            use mod_physcon, only: dsig
 
             ! The following variables are derived once per day in other
             ! subroutines and are only used here.
@@ -155,13 +152,13 @@ module phy_radlw
             use mod_solar, only: stratz
 
             !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
-            real(dp), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa_in(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
-            real(dp), intent(in) :: qa_in(ngp,kx)
+            type(rpe_var), intent(in) :: qa_in(ngp,kx)
             !           icltop = cloud top level                         (2-dim)
             integer, intent(in) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
-            real(dp), intent(in) :: cloudc_in(ngp)
+            type(rpe_var), intent(in) :: cloudc_in(ngp)
 
             ! Local copies of input variables
             type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp)
@@ -182,7 +179,7 @@ module phy_radlw
             ! Cloud-free levels (stratosphere + PBL)
             k=1
             do j=1,ngp
-                deltap=psa(j)*dsig(k)
+                deltap=psa(j)*dsig_lw(k)
                 tau2(j,k,1)=exp(-deltap*ablwin)
                 tau2(j,k,2)=exp(-deltap*ablco2)
                 tau2(j,k,3)=1.0_dp
@@ -191,7 +188,7 @@ module phy_radlw
 
             do k=2,kx,kx-2
                 do j=1,ngp
-                    deltap=psa(j)*dsig(k)
+                    deltap=psa(j)*dsig_lw(k)
                     tau2(j,k,1)=exp(-deltap*ablwin)
                     tau2(j,k,2)=exp(-deltap*ablco2)
                     tau2(j,k,3)=exp(-deltap*ablwv1*qa(j,k))
@@ -204,7 +201,7 @@ module phy_radlw
 
             do k=3,kxm
                do j=1,ngp
-                 deltap=psa(j)*dsig(k)
+                 deltap=psa(j)*dsig_lw(k)
                  if (k<icltop(j)) then
                    acloud1=acloud(j)
                  else
@@ -225,22 +222,18 @@ module phy_radlw
 
         end subroutine radlw_transmissivity
 
-        subroutine radlw_down(ta_in,fsfcd_out)
+        subroutine radlw_down(ta_in,fsfcd)
             !  Purpose: Compute the absorption of longwave radiation
             !           downward flux only
-            use mod_physcon, only: sbc, wvi
 
             !  input:  ta     = absolute temperature (3-dim)
-            real(dp), intent(in) :: ta_in(ngp,kx)
+            type(rpe_var), intent(in) :: ta_in(ngp,kx)
 
             !  output:  fsfcd  = downward flux of lw rad. at the sfc.
-            real(dp), intent(out) :: fsfcd_out(ngp)
+            type(rpe_var), intent(out) :: fsfcd(ngp)
 
             ! Local copies of input variables
             type(rpe_var) :: ta(ngp,kx)
-
-            ! Local copies of output variables
-            type(rpe_var) :: fsfcd(ngp)
 
             ! Local variables
             integer :: j, jb, k
@@ -356,42 +349,34 @@ module phy_radlw
                 fsfcd(j)     =fsfcd(j)     +corlw
             end do
 
-            fsfcd_out = fsfcd
-
         end subroutine radlw_down
 
         subroutine radlw_up(ta_in, ts_in, fsfcd_in, fsfcu_in, flx2tend_in, &
-                fsfc_out, ftop_out, tt_rlw_out)
+                fsfc, ftop, tt_rlw)
             !  Purpose: Compute the absorption of longwave radiation
             !           upward flux only
 
-            ! Variables calculated only on sub set of timesteps in radsw
-            use mod_physcon, only: dsig
-
             !           ta     = absolute temperature (3-dim)
-            real(dp), intent(in) :: ta_in(ngp,kx)
+            type(rpe_var), intent(in) :: ta_in(ngp,kx)
             !           ts     = surface temperature
-            real(dp), intent(in) :: ts_in(ngp)
+            type(rpe_var), intent(in) :: ts_in(ngp)
             !           fsfcd  = downward flux of lw rad. at the sfc.
-            real(dp), intent(in) :: fsfcd_in(ngp)
+            type(rpe_var), intent(in) :: fsfcd_in(ngp)
             !           fsfcu  = surface blackbody emission (upward)
-            real(dp), intent(in) :: fsfcu_in(ngp)
+            type(rpe_var), intent(in) :: fsfcu_in(ngp)
             !           flx2tend = Conversion from fluxes to temperature tendencies
-            real(dp), intent(in) :: flx2tend_in(ngp,kx)
+            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
 
             !  Output:  fsfc   = net upw. flux of lw rad. at the sfc.
-            real(dp), intent(out) :: fsfc_out(ngp)
+            type(rpe_var), intent(out) :: fsfc(ngp)
             !           ftop   = outgoing flux of lw rad. at the top
-            real(dp), intent(out) :: ftop_out(ngp)
+            type(rpe_var), intent(out) :: ftop(ngp)
             !           tt_rlw = Temperature tendency due to LW radiation
-            real(dp), intent(out) :: tt_rlw_out(ngp,kx)
+            type(rpe_var), intent(out) :: tt_rlw(ngp,kx)
 
             ! Local copies of input variables
             type(rpe_var) :: ta(ngp,kx), ts(ngp), fsfcd(ngp), fsfcu(ngp), &
                     flx2tend(ngp,kx)
-
-            ! Local copies of output variables
-            type(rpe_var) :: fsfc(ngp), ftop(ngp), tt_rlw(ngp,kx)
 
             ! Local variables
             integer :: j, jb, k
@@ -462,8 +447,6 @@ module phy_radlw
             end do
 
             ! Convert fluxes to temperature tendencies
-            fsfc_out = fsfc
-            ftop_out = ftop
-            tt_rlw_out = dfabs*flx2tend
+            tt_rlw = dfabs*flx2tend
         end subroutine radlw_up
 end module phy_radlw

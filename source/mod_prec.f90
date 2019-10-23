@@ -10,19 +10,31 @@ module mod_prec
     integer, parameter :: dp = real64
     integer, parameter :: sp = real32
     integer :: &
+            rp_initial_values=52, &
+            rp_spectral_transform=52, &
             rp_convection=52, &
             rp_condensation=52, &
             rp_cloud=52, &
             rp_sw_radiation=52, &
             rp_lw_radiation=52, &
             rp_surface_fluxes=52, &
-            rp_vertical_diffusion=52
+            rp_vertical_diffusion=52, &
+            rp_sppt=52, &
+            rp_grid_dynamics=52, &
+            rp_spectral_dynamics=52, &
+            rp_diffusion=52, &
+            rp_timestepping=52, &
+            rp_prognostics=52, &
+            rp_tendencies=52
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, &
+            rp_initial_values, rp_spectral_transform, &
             rp_convection, rp_condensation, rp_cloud, &
             rp_sw_radiation, rp_lw_radiation, rp_surface_fluxes, &
-            rp_vertical_diffusion
+            rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
+            rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
+            rp_prognostics, rp_tendencies
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -58,6 +70,12 @@ module mod_prec
                 case('Half')
                 RPE_DEFAULT_SBITS = 10
 
+                case('Initial Values')
+                RPE_DEFAULT_SBITS = rp_initial_values
+
+                case('Spectral Transform')
+                RPE_DEFAULT_SBITS = rp_spectral_transform
+
                 case('Convection')
                 RPE_DEFAULT_SBITS = rp_convection
 
@@ -78,6 +96,27 @@ module mod_prec
 
                 case('Vertical Diffusion')
                 RPE_DEFAULT_SBITS = rp_vertical_diffusion
+
+                case('SPPT')
+                RPE_DEFAULT_SBITS = rp_sppt
+
+                case('Grid Dynamics')
+                RPE_DEFAULT_SBITS = rp_grid_dynamics
+
+                case('Spectral Dynamics')
+                RPE_DEFAULT_SBITS = rp_spectral_dynamics
+
+                case('Diffusion')
+                RPE_DEFAULT_SBITS = rp_diffusion
+
+                case('Timestepping')
+                RPE_DEFAULT_SBITS = rp_timestepping
+
+                case('Prognostics')
+                RPE_DEFAULT_SBITS = rp_prognostics
+
+                case('Tendencies')
+                RPE_DEFAULT_SBITS = rp_tendencies
 
                 case('Previous')
                 RPE_DEFAULT_SBITS = rp_previous

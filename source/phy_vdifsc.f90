@@ -100,7 +100,7 @@ module phy_vdifsc
         end subroutine truncate_vdifsc
 
         subroutine vdifsc(se_in, rh_in, qa_in, qsat_in, phi_in, icnv, &
-                utenvd_out, vtenvd_out, ttenvd_out, qtenvd_out)
+                utenvd, vtenvd, ttenvd, qtenvd)
             !   subroutine vdifsc (se,rh,qa,qsat,phi,icnv,
             !  &                   utenvd,vtenvd,ttenvd,qtenvd)
             !
@@ -108,32 +108,30 @@ module phy_vdifsc
             !            due to vertical diffusion and shallow convection
 
             !            se     = dry static energy                (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: se_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: se_in
             !            rh     = relative humidity [0-1]          (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: rh_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: rh_in
             !            qa     = specific humidity [g/kg]         (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: qa_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: qa_in
             !            qsat   = saturation sp. humidity [g/kg]   (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: qsat_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: qsat_in
             !            phi    = geopotential                     (3-dim)
-            real(dp), dimension(ngp,kx), intent(in) :: phi_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: phi_in
             !            icnv   = index of deep convection         (2-dim)
             integer, intent(in) :: icnv(ngp)
 
             !   Output:  utenvd = u-wind tendency                  (3-dim)
-            real(dp), dimension(ngp,kx), intent(out) :: utenvd_out
+            type(rpe_var), dimension(ngp,kx), intent(out) :: utenvd
             !            vtenvd = v-wind tendency                  (3-dim)
-            real(dp), dimension(ngp,kx), intent(out) :: vtenvd_out
+            type(rpe_var), dimension(ngp,kx), intent(out) :: vtenvd
             !            ttenvd = temperature tendency             (3-dim)
-            real(dp), dimension(ngp,kx), intent(out) :: ttenvd_out
+            type(rpe_var), dimension(ngp,kx), intent(out) :: ttenvd
             !            qtenvd = sp. humidity tendency [g/(kg s)] (3-dim)
-            real(dp), dimension(ngp,kx), intent(out) :: qtenvd_out
+            type(rpe_var), dimension(ngp,kx), intent(out) :: qtenvd
 
             ! Local copies of input variables
             type(rpe_var), dimension(ngp, kx) :: se, rh, qa, qsat, phi
 
-            ! Local copies of output variables
-            type(rpe_var), dimension(ngp,kx) :: utenvd, vtenvd, ttenvd, qtenvd
 
             ! Local variables
             integer :: j, k, k1
@@ -209,10 +207,5 @@ module phy_vdifsc
                     end if
                 end do
             end do
-
-            utenvd_out = utenvd
-            vtenvd_out = vtenvd
-            ttenvd_out = ttenvd
-            qtenvd_out = qtenvd
         end subroutine vdifsc
 end module phy_vdifsc

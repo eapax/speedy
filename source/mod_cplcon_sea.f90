@@ -1,6 +1,7 @@
 module mod_cplcon_sea
     use mod_atparam
-    use mod_prec, only: dp
+    use rp_emulator
+    use mod_prec
 
     implicit none
 
@@ -10,16 +11,16 @@ module mod_cplcon_sea
 
     ! Constant parameters and fields in sea/ice model
     ! 1./heat_capacity (sea)
-    real(dp), allocatable :: rhcaps(:,:)
+    type(rpe_var), allocatable :: rhcaps(:,:)
 
     ! 1./heat_capacity (ice)
-    real(dp), allocatable :: rhcapi(:,:)
+    type(rpe_var), allocatable :: rhcapi(:,:)
 
     ! 1./dissip_time (sea)
-    real(dp), allocatable :: cdsea(:,:)
+    type(rpe_var), allocatable :: cdsea(:,:)
 
     ! 1./dissip_time (ice)
-    real(dp), allocatable :: cdice(:,:)
+    type(rpe_var), allocatable :: cdice(:,:)
 
     ! Namelist parameters used to set up model constants
     ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
@@ -37,7 +38,7 @@ module mod_cplcon_sea
 
     ! Namelist parameters used to integrate sea model
     ! Heat flux coef. at sea/ice int.
-    real(dp) :: beta
+    type(rpe_var) :: beta
 
     ! Geographical domain
     ! note : more than one regional domain may be set .true.
@@ -68,4 +69,12 @@ module mod_cplcon_sea
 
             write(*, sea)
         end subroutine setup_sea
+
+        subroutine truncate_cplcon_sea()
+            call apply_truncation(rhcaps)
+            call apply_truncation(rhcapi)
+            call apply_truncation(cdsea)
+            call apply_truncation(cdice)
+            call apply_truncation(beta)
+        end subroutine truncate_cplcon_sea
 end module

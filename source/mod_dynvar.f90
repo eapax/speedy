@@ -3,32 +3,32 @@
 !> Initialised in invars.
 module mod_dynvar
     use mod_atparam
-    use mod_prec, only: dp
+    use rp_emulator
 
     implicit none
 
     ! Prognostic spectral variables (updated in step)
     ! Vorticity
-    complex(dp), allocatable :: vor(:,:,:,:)
+    type(rpe_complex_var), allocatable :: vor(:,:,:,:)
 
     ! Divergence
-    complex(dp), allocatable :: div(:,:,:,:)
+    type(rpe_complex_var), allocatable :: div(:,:,:,:)
 
     ! Absolute temperature
-    complex(dp), allocatable :: t(:,:,:,:)
+    type(rpe_complex_var), allocatable :: t(:,:,:,:)
 
     ! Log of (norm.) sfc pressure (p_s/p0)
-    complex(dp), allocatable :: PS(:,:,:)
+    type(rpe_complex_var), allocatable :: PS(:,:,:)
 
     ! Tracers (tr.1: spec. humidity in g/kg)
-    complex(dp), allocatable :: TR(:,:,:,:,:)
+    type(rpe_complex_var), allocatable :: TR(:,:,:,:,:)
 
     ! Geopotential (updated in geop)
     ! Atmos. geopotential
-    complex(dp), allocatable :: PHI(:,:,:)
+    type(rpe_complex_var), allocatable :: PHI(:,:,:)
 
     ! Surface geopotential
-    complex(dp), allocatable :: PHIS(:,:)
+    type(rpe_complex_var), allocatable :: PHIS(:,:)
 
     contains
         subroutine setup_dynvar()
@@ -40,4 +40,14 @@ module mod_dynvar
             allocate(PHI(MX,NX,KX))
             allocate(PHIS(MX,NX))
         end subroutine setup_dynvar
+
+        subroutine truncate_prognostics()
+            call apply_truncation(vor)
+            call apply_truncation(div)
+            call apply_truncation(t)
+            call apply_truncation(ps)
+            call apply_truncation(tr)
+            call apply_truncation(phi)
+            call apply_truncation(phis)
+        end subroutine truncate_prognostics
 end module

@@ -1,26 +1,27 @@
 module mod_cpl_land_model
     use mod_atparam
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     private
     public vland_input, vland_output
-    public setup_land, land_model_init, land_model
+    public setup_land, truncate_land_model, land_model_init, land_model
 
     namelist /land/ depth_soil, depth_lice, tdland, flandmin
 
     ! Derived model constants set up in land_model_init
     ! 1./heat_capacity (land)
-    real(dp), allocatable :: rhcapl(:, :)
+    type(rpe_var), allocatable :: rhcapl(:, :)
     ! 1./dissip_time (land)
-    real(dp), allocatable :: cdland(:, :)
+    type(rpe_var), allocatable :: cdland(:, :)
 
     ! Input and output land variables exchanged by coupler
     ! Land model input variables
-    real(dp), allocatable :: vland_input(:, :)
+    type(rpe_var), allocatable :: vland_input(:, :)
     ! Land model output variables
-    real(dp), allocatable :: vland_output(:, :)
+    type(rpe_var), allocatable :: vland_output(:, :)
 
     ! Namelist parameters used to set up model constants
     ! Soil layer depth (m)
@@ -47,6 +48,15 @@ module mod_cpl_land_model
             write(*, land)
         end subroutine setup_land
 
+        subroutine truncate_land_model()
+            ! Truncate constants
+            call apply_truncation(rhcapl)
+            call apply_truncation(cdland)
+            ! Truncate variables
+            call apply_truncation(vland_input)
+            call apply_truncation(vland_output)
+        end subroutine truncate_land_model
+
         subroutine land_model_init(fmask_l,alb0)
             ! subroutine land_model_init (fmask_l,alb0)
             !
@@ -55,9 +65,9 @@ module mod_cpl_land_model
 
             ! Input variables
             ! Land mask (fraction of land)
-            real(dp), intent(in) :: fmask_l(ix,il)
+            type(rpe_var), intent(in) :: fmask_l(ix,il)
             ! Annual-mean albedo
-            real(dp), intent(in) :: alb0(ix,il)
+            type(rpe_var), intent(in) :: alb0(ix,il)
 
             ! Auxiliary variables
             integer :: i, j
@@ -102,16 +112,16 @@ module mod_cpl_land_model
 
 
             ! Input variables:
-            real(dp) :: stl0(ngp)    ! land temp. at initial time
-            real(dp) :: hfland(ngp)    ! land sfc. heat flux between t0 and t1
-            real(dp) :: stlcl1(ngp)    ! clim. land temp. at final time
+            type(rpe_var) :: stl0(ngp)    ! land temp. at initial time
+            type(rpe_var) :: hfland(ngp)    ! land sfc. heat flux between t0 and t1
+            type(rpe_var) :: stlcl1(ngp)    ! clim. land temp. at final time
 
             ! Output variables
-            real(dp) :: stl1(ngp)     ! land temp. at final time
+            type(rpe_var) :: stl1(ngp)     ! land temp. at final time
 
             ! Auxiliary variables
-            real(dp) :: hflux(ngp)   ! net sfc. heat flux
-            real(dp) :: tanom(ngp)   ! sfc. temperature anomaly
+            type(rpe_var) :: hflux(ngp)   ! net sfc. heat flux
+            type(rpe_var) :: tanom(ngp)   ! sfc. temperature anomaly
 
             ! Initialise variables
             stl0 = vland_input(:,1)

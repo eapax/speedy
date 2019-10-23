@@ -6,13 +6,14 @@ subroutine sea_model_init(fmask_s,rlat)
 
     use mod_atparam
     use mod_cplcon_sea
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     ! Input variables
-    real(dp) :: fmask_s(ix,il)            ! sea mask (fraction of sea)
-    real(dp) :: rlat(il)                  ! latitudes in degrees
+    type(rpe_var) :: fmask_s(ix,il)            ! sea mask (fraction of sea)
+    type(rpe_var) :: rlat(il)                  ! latitudes in degrees
 
     ! Auxiliary variables
 
@@ -84,32 +85,33 @@ subroutine sea_model()
     use mod_atparam
     use mod_cplcon_sea
     use mod_cplvar_sea
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     ! Input variables:
-    real(dp) ::  sst0(ix,il)     ! SST at initial time
-    real(dp) :: tice0(ix,il)     ! sea ice temp. at initial time
-    real(dp) :: sice0(ix,il)     ! sea ice fraction at initial time
-    real(dp) :: hfsea(ix,il)     ! sea+ice  sfc. heat flux between t0 and t1
-    real(dp) :: hfice(ix,il)     ! ice-only sfc. heat flux between t0 and t1
+    type(rpe_var) ::  sst0(ix,il)     ! SST at initial time
+    type(rpe_var) :: tice0(ix,il)     ! sea ice temp. at initial time
+    type(rpe_var) :: sice0(ix,il)     ! sea ice fraction at initial time
+    type(rpe_var) :: hfsea(ix,il)     ! sea+ice  sfc. heat flux between t0 and t1
+    type(rpe_var) :: hfice(ix,il)     ! ice-only sfc. heat flux between t0 and t1
 
-    real(dp) ::  sstcl1(ix,il)   ! clim. SST at final time
-    real(dp) :: ticecl1(ix,il)   ! clim. sea ice temp. at final time
-    real(dp) :: hfseacl(ix,il)   ! clim. heat flux due to advection/upwelling
+    type(rpe_var) ::  sstcl1(ix,il)   ! clim. SST at final time
+    type(rpe_var) :: ticecl1(ix,il)   ! clim. sea ice temp. at final time
+    type(rpe_var) :: hfseacl(ix,il)   ! clim. heat flux due to advection/upwelling
 
     ! Output variables
-    real(dp) ::  sst1(ix,il)     ! SST at final time
-    real(dp) :: tice1(ix,il)     ! sea ice temp. at final time
-    real(dp) :: sice1(ix,il)     ! sea ice fraction at final time
+    type(rpe_var) ::  sst1(ix,il)     ! SST at final time
+    type(rpe_var) :: tice1(ix,il)     ! sea ice temp. at final time
+    type(rpe_var) :: sice1(ix,il)     ! sea ice fraction at final time
 
     ! Auxiliary variables
-    real(dp) :: hflux(ix,il)   ! net sfc. heat flux
-    real(dp) :: tanom(ix,il)   ! sfc. temperature anomaly
-    real(dp) :: cdis(ix,il)    ! dissipation ceofficient
+    type(rpe_var) :: hflux(ix,il)   ! net sfc. heat flux
+    type(rpe_var) :: tanom(ix,il)   ! sfc. temperature anomaly
+    type(rpe_var) :: cdis(ix,il)    ! dissipation ceofficient
 
-    real(dp) :: anom0, sstfr
+    type(rpe_var) :: anom0, sstfr
 
     sst0 = reshape(vsea_input(:,1), (/ix, il/))
     tice0 = reshape(vsea_input(:,2), (/ix, il/))
@@ -120,7 +122,7 @@ subroutine sea_model()
     ticecl1 = reshape(vsea_input(:,7), (/ix, il/))
     hfseacl = reshape(vsea_input(:,8), (/ix, il/))
 
-    sstfr = 273.2_dp-1.8_dp    ! SST at freezing point
+    sstfr = rpe_literal(273.2_dp)-rpe_literal(1.8_dp)    ! SST at freezing point
 
     ! 1. Ocean mixed layer
     ! Net heat flux
@@ -168,6 +170,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
     ! Purpose : Definition of ocean domains
 
     use mod_atparam
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
@@ -175,7 +178,7 @@ subroutine sea_domain(cdomain,rlat,dmask)
     ! Input variables
 
     character(len=6), intent(in) :: cdomain           ! domain name
-    real(dp), intent(in) :: rlat(il)               ! latitudes in degrees
+    type(rpe_var), intent(in) :: rlat(il)               ! latitudes in degrees
 
     ! Output variables (initialized by calling routine)
     real(dp), intent(inout) :: dmask(ix,il)         ! domain mask
@@ -185,22 +188,22 @@ subroutine sea_domain(cdomain,rlat,dmask)
 
     print *, 'sea domain : ', cdomain
 
-    dlon = 360.0_dp/ix
+    dlon = rpe_literal(360.0_dp)/rpe_literal(ix)
 
     if (cdomain=='northe') then
         do j=1,il
-            if (rlat(j)>20.0_dp) dmask(:,j) = 1.0_dp
+            if (rlat(j)>rpe_literal(20.0_dp)) dmask(:,j) = 1.0_dp
         end do
     end if
 
     if (cdomain=='natlan') then
          do j=1,il
-           if (rlat(j)>20.0_dp &
-                   .and.rlat(j) <80.0_dp) then
+           if (rlat(j)>rpe_literal(20.0_dp) &
+                   .and.rlat(j)<rpe_literal(80.0_dp)) then
              do i=1,ix
                rlon = (i-1)*dlon
-               if (rlon<45.0_dp &
-                   .or.rlon >260.0_dp) dmask(i,j) = 1.0_dp
+               if (rlon<rpe_literal(45.0_dp) &
+                   .or.rlon>rpe_literal(260.0_dp)) dmask(i,j) = 1.0_dp
              end do
            end if
          end do
@@ -208,12 +211,12 @@ subroutine sea_domain(cdomain,rlat,dmask)
 
     if (cdomain=='npacif') then
         do j=1,il
-            if (rlat(j)>20.0_dp &
-                    .and.rlat(j) <65.0_dp) then
+            if (rlat(j)>rpe_literal(20.0_dp) &
+                    .and.rlat(j)<rpe_literal(65.0_dp)) then
                 do i=1,ix
                     rlon = (i-1)*dlon
-                    if (rlon>120.0_dp &
-                        .and.rlon <260.0_dp) dmask(i,j) = 1.0_dp
+                    if (rlon>rpe_literal(120.0_dp) &
+                        .and.rlon<rpe_literal(260.0_dp)) dmask(i,j) = 1.0_dp
                 end do
             end if
         end do
@@ -221,19 +224,19 @@ subroutine sea_domain(cdomain,rlat,dmask)
 
     if (cdomain=='tropic') then
         do j=1,il
-            if (rlat(j)>-30.0_dp &
-                .and.rlat(j) <30.0_dp) dmask(:,j) = 1.0_dp
+            if (rlat(j)>rpe_literal(-30.0_dp) &
+                .and.rlat(j)<rpe_literal(30.0_dp)) dmask(:,j) = 1.0_dp
         end do
     end if
 
     if (cdomain=='indian') then
         do j=1,il
-            if (rlat(j)>-30.0_dp &
-                    .and.rlat(j) <30.0_dp) then
+            if (rlat(j)>rpe_literal(-30.0_dp) &
+                    .and.rlat(j)<rpe_literal(30.0_dp)) then
                 do i=1,ix
                     rlon = (i-1)*dlon
-                    if (rlon>30.0_dp&
-                        .and.rlon <120.0_dp) dmask(i,j) = 1.0_dp
+                    if (rlon>rpe_literal(30.0_dp)&
+                        .and.rlon<rpe_literal(120.0_dp)) dmask(i,j) = 1.0_dp
                 end do
             end if
         end do
@@ -242,20 +245,20 @@ subroutine sea_domain(cdomain,rlat,dmask)
     if (cdomain=='elnino') then
         do j=1,il
             arlat = abs(rlat(j))
-            if (arlat<25.0_dp) then
+            if (arlat<rpe_literal(25.0_dp)) then
                 wlat = 1.0_dp
-                if (arlat>15.0_dp) then
-                    wlat = (0.1_dp*(25.0_dp-arlat))**2
+                if (arlat>rpe_literal(15.0_dp)) then
+                    wlat = (rpe_literal(0.1_dp)*(rpe_literal(25.0_dp)-arlat))**2
                 end if
-                rlonw = 300.0_dp-2*max(rlat(j),0.0_dp)
+                rlonw = rpe_literal(300.0_dp)-2*max(rlat(j),rpe_literal(0.0_dp))
                 do i=1,ix
                     rlon = (i-1)*dlon
-                    if (rlon>165.0_dp .and. rlon<rlonw) then
+                    if (rlon>rpe_literal(165.0_dp).and.rlon<rlonw) then
                         dmask(i,j) = wlat
-                    else if (rlon>155.0_dp&
-                            .and. rlon<165.0_dp) then
-                        dmask(i,j) = wlat*0.1_dp*&
-                                (rlon-155.0_dp)
+                    else if (rlon>rpe_literal(155.0_dp)&
+                            .and.rlon<rpe_literal(165.0_dp)) then
+                        dmask(i,j) = wlat*rpe_literal(0.1_dp)*&
+                                (rlon-rpe_literal(155.0_dp))
                     end if
                 end do
             end if

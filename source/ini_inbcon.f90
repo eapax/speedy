@@ -14,12 +14,13 @@ subroutine inbcon(grav0,radlat)
     use mod_cli_land
     use mod_cli_sea
     use ppo_output_stream, only: check
+    use rp_emulator
     use mod_prec, only: sp, dp
 
     implicit none
 
-    real(dp), intent(in) :: grav0
-    real(dp), intent(in) :: radlat(il)
+    type(rpe_var), intent(in) :: grav0
+    type(rpe_var), intent(in) :: radlat(il)
 
     real(sp) :: r4inp(ix,il)
     real(sp) :: inp(ix,il)
@@ -35,13 +36,13 @@ subroutine inbcon(grav0,radlat)
 
     ! 1. Read topographical fields (orography, land-sea mask)
     call check(NF90_OPEN('climatology.nc', NF90_NOWRITE, NCID))
-    call NC_extract_variable(NCID, 'orog', 1, phi0)
+    call NC_extract_variable(NCID, 'orog', 1, phi0%val)
 
     phi0 = grav0*phi0
 
     call truncg (ntrun,phi0,phis0)
 
-    call NC_extract_variable(NCID, 'lsm', 1, fmask)
+    call NC_extract_variable(NCID, 'lsm', 1, fmask%val)
 
     ! 2. Initialize land-sfc boundary conditions
 
@@ -60,19 +61,19 @@ subroutine inbcon(grav0,radlat)
     fmask1 = fmask_l
 
     ! 2.2 Annual-mean surface albedo
-    call NC_extract_variable(NCID, 'alb', 1, alb0)
+    call NC_extract_variable(NCID, 'alb', 1, alb0%val)
 
     ! 2.3 Land-surface temp.
-    call NC_extract_variable(NCID, 'stl', 12, stl12)
+    call NC_extract_variable(NCID, 'stl', 12, stl12%val)
 
     do it = 1,12
-        call fillsf(stl12(:,:,it),ix,il,0.0_dp)
+        call fillsf(stl12(:,:,it)%val,ix,il,0.0_dp)
     end do
 
     call forchk(bmask_l,stl12,ngp,12,0.0_dp,400.0_dp,273.0_dp)
 
     ! 2.4 Snow depth
-    call NC_extract_variable(NCID, 'snowd', 12, snowd12)
+    call NC_extract_variable(NCID, 'snowd', 12, snowd12%val)
 
     call FORCHK (bmask_l,snowd12,ngp,12,0.0_dp,20000.0_dp,0.0_dp)
 
@@ -129,16 +130,16 @@ subroutine inbcon(grav0,radlat)
     deglat_s = rad2deg*radlat
 
     ! 3.2 SST
-    call NC_extract_variable(NCID, 'sst', 12, sst12)
+    call NC_extract_variable(NCID, 'sst', 12, sst12%val)
 
     do it = 1,12
-        call fillsf(sst12(:,:,it),ix,il,0.0_dp)
+        call fillsf(sst12(:,:,it)%val,ix,il,0.0_dp)
     end do
 
     call forchk(bmask_s,sst12,ngp,12,100.0_dp,400.0_dp,273.0_dp)
 
     ! 3.3 Sea ice concentration
-    call NC_extract_variable(NCID, 'icec', 12, sice12)
+    call NC_extract_variable(NCID, 'icec', 12, sice12%val)
     sice12 = max(sice12, 0.0_dp)
 
     call forchk(bmask_s,sice12,ngp,12,0.0_dp,1.0_dp,0.0_dp)
@@ -215,13 +216,14 @@ subroutine forchk (fmask,field,ngp,nf,fmin,fmax,fset)
     ! Aux. routine forchk: Check consistency of sfc fields with land-sea mask
     ! and set undefined values to a constant (to avoid over/underflow)
 
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: ngp, nf
-    real(dp), intent(in) :: fmask(ngp)
-    real(dp), intent(inout) :: field(ngp,nf)
+    type(rpe_var), intent(in) :: fmask(ngp)
+    type(rpe_var), intent(inout) :: field(ngp,nf)
     real(dp), intent(in) :: fmin, fmax, fset
 
     integer :: jf, jgp, nfault
@@ -254,15 +256,16 @@ subroutine truncg (itr,fg1,fg2)
 
     USE mod_atparam
     use spectral, only: grid, spec
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
     integer, intent(in) :: itr
 
-    real(dp), intent(in) :: fg1 (ix,il)
-    real(dp), intent(out) :: fg2(ix,il)
-    complex(dp) :: fsp(mx,nx), zero
+    type(rpe_var), intent(in) :: fg1 (ix,il)
+    type(rpe_var), intent(out) :: fg2(ix,il)
+    type(rpe_complex_var) :: fsp(mx,nx), zero
     integer :: n, m, itwn
 
     print *, 'Filter applied at wavenumber ', itr

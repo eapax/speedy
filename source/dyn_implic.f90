@@ -10,12 +10,13 @@ subroutine implic(divdt,tdt,psdt)
 
     use mod_atparam
     use mod_dyncon2, only: tref1, xc, xd, xj, dhsx, elz
+    use rp_emulator
     use mod_prec, only: dp
 
     implicit none
 
-    complex(dp), intent(inout) :: divdt(mx,nx,kx), tdt(mx,nx,kx), psdt(mx,nx)
-    complex(dp) ::  ye(mx,nx,kx), yf(mx,nx,kx), zero
+    type(rpe_complex_var), intent(inout) :: divdt(mx,nx,kx), tdt(mx,nx,kx), psdt(mx,nx)
+    type(rpe_complex_var) ::  ye(mx,nx,kx), yf(mx,nx,kx), zero
     integer :: k1, k, m, n, ll, mm
 
     zero = (0.0_dp,0.0_dp)
