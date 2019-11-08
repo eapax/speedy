@@ -1,6 +1,8 @@
 &precisions
     RPE_ACTIVE=.true.,
     RPE_IEEE_HALF=.true.,
+    rp_initial_values=52,
+    rp_spectral_transform=52,
     rp_convection=52,
     rp_condensation=52,
     rp_cloud=52,
@@ -8,4 +10,11 @@
     rp_lw_radiation=52,
     rp_surface_fluxes=52,
     rp_vertical_diffusion=52,
+    rp_sppt=52,
+    rp_grid_dynamics=52,
+    rp_spectral_dynamics=52,
+    rp_diffusion=52,
+    rp_timestepping=52,
+    rp_prognostics=52,
+    rp_tendencies=52,
 /
