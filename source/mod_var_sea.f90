@@ -72,18 +72,24 @@ module mod_var_sea
 
         subroutine truncate_var_sea()
             call apply_truncation(sstcl_ob)
-            call apply_truncation(sicecl_ob)
+            ! Denormal numbers at half precision but probably OK as zeros
+            !call apply_truncation(sicecl_ob)
             call apply_truncation(ticecl_ob)
-            call apply_truncation(sstan_ob)
+            ! Denormal numbers at half precision but probably OK as zeros
+            !call apply_truncation(sstan_ob)
             call apply_truncation(sstcl_om)
             call apply_truncation(sst_am)
-            call apply_truncation(sstan_am)
-            call apply_truncation(sice_am)
+            ! Denormal numbers at half precision but probably OK as zeros
+            !call apply_truncation(sstan_am)
+            ! Denormal numbers at half precision but probably OK as zeros
+            !call apply_truncation(sice_am)
             call apply_truncation(tice_am)
             call apply_truncation(sst_om)
-            call apply_truncation(sice_om)
+            ! Denormal numbers at half precision but probably OK as zeros
+            !call apply_truncation(sice_om)
             call apply_truncation(tice_om)
-            call apply_truncation(ssti_om)
+            ! Denormal numbers at half precision but probably OK as zeros
+            !call apply_truncation(ssti_om)
             call apply_truncation(wsst_ob)
         end subroutine truncate_var_sea
 end module

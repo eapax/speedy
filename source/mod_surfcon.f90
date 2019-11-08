@@ -52,8 +52,11 @@ module mod_surfcon
             call apply_truncation(swcap)
             call apply_truncation(swwil)
             call apply_truncation(sd2sc)
+            
+            ! Some denormal numbers should be fine
             call apply_truncation(fmask)
             call apply_truncation(fmask1)
+            
             call apply_truncation(phi0)
             call apply_truncation(phis0)
             call apply_truncation(alb0)

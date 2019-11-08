@@ -36,7 +36,10 @@ module mod_cli_land
             call apply_truncation(fmask_l)
             call apply_truncation(bmask_l)
             call apply_truncation(stl12)
+
+            ! Denormal numbers at half precision but probably OK as zeros
             call apply_truncation(snowd12)
+
             call apply_truncation(soilw12)
         end subroutine truncate_cli_land
 end module

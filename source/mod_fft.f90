@@ -12,6 +12,7 @@ module mod_fft
         end subroutine setup_fft
 
         subroutine truncate_fft()
+            ! One denormal number and one underflow (could be OK)
             call apply_truncation(wsave(1:2*ix))
         end subroutine
 end module

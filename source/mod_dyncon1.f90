@@ -53,8 +53,12 @@ module mod_dyncon1
             call apply_truncation(dhsr)
             call apply_truncation(fsgr)
             call apply_truncation(radang)
-            call apply_truncation(coriol)
+            
+            ! Probably a problem for underflows
+            !call apply_truncation(coriol)
+
             call apply_truncation(xgeop1)
+            ! xgeop2(1) is 6.95...E-310. So fine for underflowing
             call apply_truncation(xgeop2)
         end subroutine truncate_dyncon1
 

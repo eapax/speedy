@@ -49,7 +49,10 @@ module mod_cli_sea
             call apply_truncation(bmask_s)
             call apply_truncation(deglat_s)
             call apply_truncation(sst12)
+
+            ! Denormal numbers at half precision but probably OK as zeros
             call apply_truncation(sice12)
+
             call apply_truncation(sstan3)
             call apply_truncation(hfseacl)
             call apply_truncation(sstom12)

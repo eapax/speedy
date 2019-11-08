@@ -31,10 +31,16 @@ module mod_var_land
 
         subroutine truncate_var_land()
             call apply_truncation(stlcl_ob)
+            
+            ! Denormal numbers at half precision but probably OK as zeros
             call apply_truncation(snowdcl_ob)
+
             call apply_truncation(soilwcl_ob)
             call apply_truncation(stl_am)
+            
+            ! Denormal numbers at half precision but probably OK as zeros
             call apply_truncation(snowd_am)
+            
             call apply_truncation(soilw_am)
             call apply_truncation(stl_lm)
         end subroutine truncate_var_land

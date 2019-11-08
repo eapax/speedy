@@ -47,7 +47,7 @@ subroutine impint(dt,alph)
     rgam = rgas*gamma/(1000.0_dp*grav)
 
     do k=1,kx
-        tref(k)=288.0_dp*max(0.2_dp,fsg(k))**rgam
+        tref(k)=288.0_dp*max(0.2_dp,fsg(k))**rgam !- 273.0_dp
         print *, '  tref = ', tref(k)
         tref1(k)=rgas*tref(k)
         tref2(k)=akap*tref(k)

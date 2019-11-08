@@ -73,9 +73,11 @@ module phy_sppt
 
         subroutine truncate_sppt()
             call apply_truncation(mu)
-            call apply_truncation(additive_magnitude)
+            ! Denormal in namelist. Should adapt to be in units K/hour
+            !call apply_truncation(additive_magnitude)
             call apply_truncation(phi)
-            call apply_truncation(sigma)
+            ! A lot of underflows and denormal numbers. Definitely wont work
+            !call apply_truncation(sigma)
         end subroutine truncate_sppt
 
         !> @brief

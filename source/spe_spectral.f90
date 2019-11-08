@@ -20,7 +20,7 @@ module spectral
     public cpol, nsh2, wt, trfilt
 
     ! Initial. in parmtr
-    type(rpe_var), dimension(:,:), allocatable :: el2, elm2, trfilt
+    type(rpe_var), dimension(:,:), allocatable :: el2, trfilt
     integer, allocatable :: nsh2(:)
 
     ! Initial. in parmtr
@@ -44,7 +44,6 @@ module spectral
     contains
         subroutine setup_spectral()
             allocate(el2(mx, nx))
-            allocate(elm2(mx, nx))
             allocate(trfilt(mx, nx))
             allocate(nsh2(nx))
             allocate(sia(iy))
@@ -62,22 +61,23 @@ module spectral
             allocate(vddyp(mx, nx))
         end subroutine setup_spectral
 
-subroutine truncate_spectral()
-            call apply_truncation(el2)
-            call apply_truncation(elm2)
+        subroutine truncate_spectral()
+            ! Anything that is a function of Earth radius either overflows or
+            ! underflows
+            !call apply_truncation(el2)
             call apply_truncation(trfilt)
             call apply_truncation(wt)
             call apply_truncation(cosgr)
             call apply_truncation(cosgr2)
-            call apply_truncation(gradx)
-            call apply_truncation(gradym)
-            call apply_truncation(gradyp)
-            call apply_truncation(cpol)
-            call apply_truncation(uvdx)
-            call apply_truncation(uvdym)
-            call apply_truncation(uvdyp)
-            call apply_truncation(vddym)
-            call apply_truncation(vddyp)
+            !call apply_truncation(gradx)
+            !call apply_truncation(gradym)
+!            call apply_truncation(gradyp)
+!            call apply_truncation(cpol)
+!            call apply_truncation(uvdx)
+!            call apply_truncation(uvdym)
+!            call apply_truncation(uvdyp)
+!            call apply_truncation(vddym)
+!            call apply_truncation(vddyp)
         end subroutine truncate_spectral
 
         !******************************************************************
@@ -135,15 +135,16 @@ subroutine truncate_spectral()
             real(dp), intent(in) :: a
             real(dp) :: poly(mx, nx), coa(iy)
             integer :: l2(mx,nx), ll(mx,nx), mm(mx)
-            real(dp) :: am1, am2, cosqr, el1, ell2, emm2, sqrhlf
+            real(dp) :: am2, cosqr, el1, ell2, emm2, sqrhlf
             real(dp) :: consq(mxp), epsi(mxp,nxp), repsi(mxp,nxp), emm(mxp), &
                     ell(mxp,nxp)
 
             integer :: j, jj, m, m1, m2, n
 
             call gaussl(sia,wt%val,iy)
-            am1 = 1.0_dp/a
             am2=  1.0_dp/(a*a)
+
+            print *, am2
 
             ! COA(IY) = cos(lat)
             do j=1,iy
@@ -167,8 +168,6 @@ subroutine truncate_spectral()
             !  LL = total wavenumber of spherical harmonic = l
             !  L2 = l*(l+1)
             !  EL2 = l*(l+1)/(a**2)
-            !  EL4 = EL2*EL2 ; for biharmonic diffusion
-            !  ELM2 = 1./EL2
             !  TRFILT used to filter out "non-triangular" part of rhomboidal
             !  truncation
             do n=1,nx
@@ -185,17 +184,6 @@ subroutine truncate_spectral()
                       trfilt(m,n)=0.0_dp
                     end if
                 end do
-            end do
-
-            elm2(1,1)=0.0_dp
-            do m=2,mx
-                do n=1,nx
-                    elm2(m,n)=1.0_dp/el2(m,n)
-                end do
-            end do
-
-            do n=2,nx
-                elm2(1,n)=1.0_dp/el2(1,n)
             end do
 
             ! quantities needed to generate and differentiate Legendre
@@ -326,7 +314,7 @@ subroutine truncate_spectral()
             type(rpe_complex_var), intent(in) :: vorm(mx,nx)
             type(rpe_complex_var), intent(inout) :: strm(mx,nx)
 
-            strm = -vorm * elm2
+            strm = -vorm / el2
         end subroutine invlap
         !*********************************************************************
         subroutine grad(psi,psdx,psdy)

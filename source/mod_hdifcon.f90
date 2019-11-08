@@ -31,14 +31,18 @@ module mod_hdifcon
         end subroutine setup_hdifcon
 
         subroutine truncate_hdifcon()
+            ! Underflows and denormal numbers not sure if a problem
             call apply_truncation(dmp)
             call apply_truncation(dmpd)
             call apply_truncation(dmps)
+
             call apply_truncation(dmp1)
             call apply_truncation(dmp1d)
             call apply_truncation(dmp1s)
             call apply_truncation(tcorv)
             call apply_truncation(qcorv)
+            
+            ! Some very small values. Should be fine
             call apply_truncation(tcorh)
             call apply_truncation(qcorh)
         end subroutine truncate_hdifcon

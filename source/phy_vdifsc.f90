@@ -63,8 +63,8 @@ module phy_vdifsc
             cvdi = (sigh(kxm)-sigh(1))/(kxm-1)
 
             fshcq  = cshc/trshc
-            fshcse = cshc/(trshc*cp)
-            fvdise = cvdi/(trvds*cp)
+            fshcse = cshc/trshc
+            fvdise = cvdi/trvds
 
             rsig=1.0_dp/dsig
             rsig1=1.0_dp/(1.0_dp-sigh)
@@ -86,8 +86,11 @@ module phy_vdifsc
 
             ! Derived variables
             call apply_truncation(fshcq)
+
+            ! Denormal numbers
             call apply_truncation(fshcse)
             call apply_truncation(fvdise)
+
             call apply_truncation(rsig)
             call apply_truncation(rsig1)
             call apply_truncation(drh0)
@@ -163,7 +166,7 @@ module phy_vdifsc
                 if (dmse>=rpe_literal(0.0_dp)) then
                     if (icnv(j)>0) fcnv = redshc
 
-                    fluxse         = fcnv*fshcse*dmse*cp_vdif
+                    fluxse         = fcnv*fshcse*dmse
                     ttenvd(j,kxm)  = fluxse*rsig(kxm)
                     ttenvd(j,kx) =-fluxse*rsig(kx)
 
@@ -199,7 +202,7 @@ module phy_vdifsc
                     se0 = se(j,k+1)+segrad*(phi(j,k)-phi(j,k+1))
 
                     if (se(j,k)<se0) then
-                        fluxse      = fvdise*(se0-se(j,k))*cp_vdif
+                        fluxse      = fvdise*(se0-se(j,k))
                         ttenvd(j,k) = ttenvd(j,k)+fluxse*rsig(k)
                         do k1=k+1,kx
                             ttenvd(j,k1) = ttenvd(j,k1)-fluxse*rsig1(k)
