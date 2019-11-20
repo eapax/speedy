@@ -624,59 +624,59 @@ module ppo_output_stream
 
                 ! tt_cnv  =  temperature tendency due to convection
                 case(101)
-                output = tt_cnv / 3600.0_dp
+                output = tt_cnv
 
                 ! qt_cnv  = sp. humidity tendency due to convection
                 case(102)
-                output = qt_cnv / 3600.0_dp
+                output = qt_cnv
 
                 ! tt_lsc  =  temperature tendency due to large-scale condensation
                 case(103)
-                output = tt_lsc / 3600.0_dp
+                output = tt_lsc
 
                 ! qt_lsc  = sp. humidity tendency due to large-scale condensation
                 case(104)
-                output = qt_lsc / 3600.0_dp
+                output = qt_lsc
 
                 ! tt_rsw  =  temperature tendency due to short-wave radiation
                 case(105)
-                output = tt_rsw / 3600.0_dp
+                output = tt_rsw
 
                 ! tt_rlw  =  temperature tendency due to long-wave radiation
                 case(106)
-                output = tt_rlw / 3600.0_dp
+                output = tt_rlw
 
                 ! ut_sflx  =       u-wind tendency due to surface fluxes
                 case(107)
-                output = ut_sflx / 3600.0_dp
+                output = ut_sflx
 
                 ! vt_sflx  =       v-wind tendency due to surface fluxes
                 case(108)
-                output = vt_sflx / 3600.0_dp
+                output = vt_sflx
 
                 ! tt_sflx  =  temperature tendency due to surface fluxes
                 case(109)
-                output = tt_sflx / 3600.0_dp
+                output = tt_sflx
 
                 ! qt_sflx  = sp. humidity tendency due to surface fluxes
                 case(110)
-                output = qt_sflx / 3600.0_dp
+                output = qt_sflx
 
                 ! ut_pbl  =       u-wind tendency due to PBL and diffusive processes
                 case(111)
-                output = ut_pbl / 3600.0_dp
+                output = ut_pbl
 
                 ! vt_pbl  =       v-wind tendency due to PBL and diffusive processes
                 case(112)
-                output = vt_pbl / 3600.0_dp
+                output = vt_pbl
 
                 ! tt_pbl  =  temperature tendency due to PBL and diffusive processes
                 case(113)
-                output = tt_pbl / 3600.0_dp
+                output = tt_pbl
 
                 ! qt_pbl  = sp. humidity tendency due to PBL and diffusive processes
                 case(114)
-                output = qt_pbl / 3600.0_dp
+                output = qt_pbl
 
                 ! ut_phy  =       u-wind tendency due to all physics processes
                 case(115)
@@ -1213,9 +1213,9 @@ module ppo_output_stream
             call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=0, ix-1) /)) )
             call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s%val) )
             if (stream%plevs) then
-                call check( nf90_put_var(stream%file_ID, lvl_varid, pout%val*1000) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, pout%val(kx:1:-1)*1000) )
             else
-                call check( nf90_put_var(stream%file_ID, lvl_varid, sig%val) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, sig%val(kx:1:-1)) )
             end if
             call check( nf90_put_var(stream%file_ID, stream%rec_varid, 0.0_dp) )
         end subroutine init_nc
