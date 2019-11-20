@@ -1213,9 +1213,9 @@ module ppo_output_stream
             call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=0, ix-1) /)) )
             call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s%val) )
             if (stream%plevs) then
-                call check( nf90_put_var(stream%file_ID, lvl_varid, pout%val(kx:1:-1)*1000) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, pout(kx:1:-1)%val*1000) )
             else
-                call check( nf90_put_var(stream%file_ID, lvl_varid, sig%val(kx:1:-1)) )
+                call check( nf90_put_var(stream%file_ID, lvl_varid, sig(kx:1:-1)%val) )
             end if
             call check( nf90_put_var(stream%file_ID, stream%rec_varid, 0.0_dp) )
         end subroutine init_nc
