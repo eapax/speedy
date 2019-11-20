@@ -465,12 +465,12 @@ module ppo_output_stream
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total
                 case(31)
-                output(:, 1) = precnv
+                output(:, 1) = precnv / 3600.0_dp
                 l_3d = .false.
 
                 ! precls = large-scale precipitation [g/(m^2 s)], total
                 case(32)
-                output(:, 1) = precls
+                output(:, 1) = precls / 3600.0_dp
                 l_3d = .false.
 
                 ! snowcv = convective precipitation  [g/(m^2 s)], snow only

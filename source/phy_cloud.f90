@@ -68,26 +68,26 @@ module phy_cloud
         end subroutine truncate_cloud
 
         subroutine cloud(&
-                qa_in, rh_in, precnv_in, precls_in, iptop, gse_in, fmask_in,&
+                qa, rh, precnv, precls, iptop, gse, fmask,&
                 icltop, cloudc, clstr)
             !  subroutine cloud (qa,rh,precnv,precls,iptop,gse,fmask,
             ! &                  icltop,cloudc,clstr)
             !
             !  Purpose: Compute cloud-top level and cloud cover
             !  Input:   qa     = specific humidity [g/kg]                (3-dim)
-            type(rpe_var), intent(in) :: qa_in(ngp,kx)
+            type(rpe_var), intent(in) :: qa(ngp,kx)
             !           rh     = relative humidity                       (3-dim)
-            type(rpe_var), intent(in) :: rh_in(ngp,kx)
+            type(rpe_var), intent(in) :: rh(ngp,kx)
             !           precnv = convective precipitation                (2-dim)
-            type(rpe_var), intent(in) :: precnv_in(ngp)
+            type(rpe_var), intent(in) :: precnv(ngp)
             !           precls = large-scale precipitation               (2-dim)
-            type(rpe_var), intent(in) :: precls_in(ngp)
+            type(rpe_var), intent(in) :: precls(ngp)
             !           iptop  = top level of precipitating cloud        (2-dim)
             integer, intent(in) :: iptop(ngp)
             !           gse    = gradient of dry st. energy (dSE/dPHI)   (2-dim)
-            type(rpe_var), intent(in) :: gse_in(ngp)
+            type(rpe_var), intent(in) :: gse(ngp)
             !           fmask  = fractional land-sea mask                (2-dim)
-            type(rpe_var), intent(in) :: fmask_in(ngp)
+            type(rpe_var), intent(in) :: fmask(ngp)
             !  Output:  icltop = cloud top level (all clouds)            (2-dim)
             integer, intent(out) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
@@ -95,22 +95,9 @@ module phy_cloud
             !           clstr  = stratiform cloud cover                  (2-dim)
             type(rpe_var), intent(out) :: clstr(ngp)
 
-            ! Local copies of input variables
-            type(rpe_var) :: qa(ngp,kx), rh(ngp,kx), precnv(ngp), precls(ngp), &
-                    gse(ngp), fmask(ngp)
-
             ! Local variables
             integer :: j, k
             type(rpe_var) :: cl1, clstrl, drh, fstab, pr1, rgse
-
-            ! 0. Pass input variables to local copies, triggering call to
-            !    apply_truncation
-            qa = qa_in
-            rh = rh_in
-            precnv = precnv_in
-            precls = precls_in
-            gse = gse_in
-            fmask = fmask_in
 
             ! 1.  Cloud cover, defined as the sum of:
             !     - a term proportional to the square-root of precip. rate
@@ -143,7 +130,7 @@ module phy_cloud
 
             do j=1,ngp
                 cl1 = min(rpe_literal(1.0_dp),cloudc(j)*rrcl)
-                pr1 = min(pmaxcl,rpe_literal(86.4_dp)*(precnv(j)+precls(j)))
+                pr1 = min(pmaxcl,rpe_literal(86.4_dp/3600.0_dp)*(precnv(j)+precls(j)))
                 cloudc(j) = min(rpe_literal(1.0_dp),wpcl*sqrt(pr1)+cl1*cl1)
                 icltop(j) = min(iptop(j),icltop(j))
             end do

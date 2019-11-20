@@ -17,7 +17,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
     use mod_fluxes, only: increment_fluxes
-    use humidity, only: shtorh
+    use humidity, only: shtorh_celsius, zero_c
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
     use phy_cloud, only: cloud
@@ -82,13 +82,34 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
     end do
 
+    ! Temperature in Celsius
+    tg1 = tg1 - zero_c
+
+    ! Normalise geopotential by cp
+    phig1 = phig1 / cp
+
     do k=1,kx
-        call shtorh(1,ngp,tg1(:,k),psg,sig(k),qg1(:,k),rh(:,k),qsat(:,k))
+        call shtorh_celsius(1,ngp,tg1(:,k),psg,sig(k),qg1(:,k),rh(:,k),qsat(:,k))
     end do
+
+    ! Truncate all variables
+    call set_precision('Half')
+    call apply_truncation(psg)
+    call apply_truncation(ug1)
+    call apply_truncation(vg1)
+    call apply_truncation(tg1)
+    call apply_truncation(qg1)
+    call apply_truncation(phig1)
+
+    call apply_truncation(flx2tend)
+    call apply_truncation(hflx2tend)
+    call apply_truncation(se)
+    call apply_truncation(rh)
+    call apply_truncation(qsat)
 
     ! 2. Precipitation
     ! 2.1 Deep convection
-    call set_precision('Convection')
+    call set_precision('Double')
     call convmf(psg,se,qg1,qsat,flx2tend,&
             iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
@@ -97,22 +118,16 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end do
 
     ! 2.2 Large-scale condensation
-    call set_precision('Condensation')
     call lscond(psg,rh,qsat,iptop,precls,tt_lsc,qt_lsc)
-
-    call set_precision('Double')
-    precnv = precnv / 3600.0_dp
-    precls = precls / 3600.0_dp
 
     ! 3. Radiation (shortwave and longwave) and surface fluxes
     ! 3.1 Compute shortwave tendencies and initialize lw transmissivity
     ! The sw radiation may be called at selected time steps
     if (lradsw) then
         do j=1,ngp
-            gse(j) = cp*(se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
+            gse(j) = (se(j,kx-1)-se(j,kx))/(phig1(j,kx-1)-phig1(j,kx))
         end do
 
-        call set_precision('Cloud')
         call cloud(qg1,rh,precnv,precls,iptop,gse,fmask1,icltop,cloudc,clstr)
 
         do j=1,ngp
@@ -120,19 +135,15 @@ subroutine phypar(utend,vtend,ttend,qtend)
             prtop(j)=float(iptop(j))
         end do
 
-        call set_precision('Short-Wave Radiation')
         call radsw(psg,qg1,icltop,cloudc,clstr,hflx2tend,ssrd,ssr,tsr,tt_rsw)
 
-        call set_precision('Long-Wave Radiation')
         call radlw_transmissivity(psg, qg1, icltop, cloudc)
     end if
 
     ! 3.2 Compute downward longwave fluxes
-    call set_precision('Long-Wave Radiation')
     call radlw_down(tg1,slrd)
 
     ! 3.3. Compute surface fluxes and land skin temperature
-    call set_precision('Surface Fluxes')
     call suflux(psg,ug1,vg1,tg1,qg1,rh,phig1,&
             phis0,fmask1,stl_am,sst_am,ssti_om,soilw_am,ssrd,slrd,&
             hflx2tend, flx2tend, &
@@ -142,12 +153,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 3.4 Compute upward longwave fluxes, convert them to tendencies
     !     and add shortwave tendencies
-    call set_precision('Long-Wave Radiation')
     call radlw_up(tg1,ts,slrd,slru(:,3),hflx2tend,slr,olr,tt_rlw)
 
     ! 4. PBL interactions with lower troposphere
     ! 4.1 Vertical diffusion and shallow convection
-    call set_precision('Vertical Diffusion')
     call vdifsc(se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 5. Store all fluxes for coupling and daily-mean output

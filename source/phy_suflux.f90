@@ -79,10 +79,6 @@ module phy_suflux
     type(rpe_var) :: esbc_1_3, esbc_1_4, prd, rcp, chlcp, chscp, rdphi0
     type(rpe_var), allocatable :: sqclat(:)
 
-    ! Local copies of mod_physcon variables
-    type(rpe_var) :: cp_sflx, alhc_sflx
-    type(rpe_var), allocatable :: wvi_sflx(:,:)
-
     contains
         subroutine setup_surface_fluxes(fid)
             integer, intent(in) :: fid
@@ -93,12 +89,10 @@ module phy_suflux
             allocate(sqclat(il))
 
             write(*, surface_fluxes)
-
-            allocate(wvi_sflx(kx,2))
         end subroutine setup_surface_fluxes
 
         subroutine ini_suflux()
-            use mod_physcon, only: p0, rd, cp, alhc, sbc, clat, sigl, wvi
+            use mod_physcon, only: p0, rd, cp, sbc, clat, sigl
             use phy_radlw, only: emisfc
 
             ! Local derived variables
@@ -111,11 +105,6 @@ module phy_suflux
             rdphi0 =-1.0_dp/(rd*288.0_dp*sigl(kx))
             sqclat=sqrt(clat(:))
             call sflset()
-
-            ! Local copies of mod_physcon
-            cp_sflx = cp
-            alhc_sflx = alhc
-            wvi_sflx = wvi
         end subroutine ini_suflux
 
         subroutine truncate_suflux()
@@ -146,11 +135,6 @@ module phy_suflux
             call apply_truncation(chscp)
             call apply_truncation(rdphi0)
             call apply_truncation(sqclat)
-
-            ! Local copies of mod_physcon
-            call apply_truncation(cp_sflx)
-            call apply_truncation(alhc_sflx)
-            call apply_truncation(wvi_sflx)
         end subroutine truncate_suflux
 
         subroutine sflset()
@@ -182,10 +166,10 @@ module phy_suflux
         end subroutine sflset
 
         subroutine suflux( &
-                psa_in, ua_in, va_in, ta_in, qa_in, rh_in, phi_in, &
-                phi0_in, fmask_in, tland_in, tsea_lm_in, tsea_om_in, &
-                swav_in, ssrd_in, slrd_in, &
-                hflx2tend_in, flx2tend_in, &
+                psa, ua, va, ta, qa, rh, phi, &
+                phi0_in, fmask, tland_in, tsea_lm_in, tsea_om_in, &
+                swav, ssrd, slrd, &
+                hflx2tend, flx2tend, &
                 ustr, vstr, shf, evap, slru, hfluxn, &
                 tsfc, tskin, u0, v0, t0, q0, &
                 ut_sflx, vt_sflx, tt_sflx, qt_sflx, &
@@ -197,26 +181,27 @@ module phy_suflux
             ! then truncated to the precision for suflux as they are only used
             ! here.
             use mod_fordate, only: alb_l, snowc
+            use mod_physcon, only: alhc, cp, wvi
 
             !  Input:   PSA    = norm. surface pressure [p/p0]   (2-dim)
-            type(rpe_var), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa(ngp)
             !           UA     = u-wind                          (3-dim)
-            type(rpe_var), intent(in) :: ua_in(ngp,kx)
+            type(rpe_var), intent(in) :: ua(ngp,kx)
             !           VA     = v-wind                          (3-dim)
-            type(rpe_var), intent(in) :: va_in(ngp,kx)
+            type(rpe_var), intent(in) :: va(ngp,kx)
             !           TA     = temperature                     (3-dim)
-            type(rpe_var), intent(in) :: ta_in(ngp,kx)
+            type(rpe_var), intent(in) :: ta(ngp,kx)
             !           QA     = specific humidity [g/kg]        (3-dim)
-            type(rpe_var), intent(in) :: qa_in(ngp,kx)
+            type(rpe_var), intent(in) :: qa(ngp,kx)
             !           RH     = relative humidity [0-1]         (3-dim)
-            type(rpe_var), intent(in) :: rh_in(ngp,kx)
+            type(rpe_var), intent(in) :: rh(ngp,kx)
             !           PHI    = geopotential                    (3-dim)
-            type(rpe_var), intent(in) :: phi_in(ngp,kx)
+            type(rpe_var), intent(in) :: phi(ngp,kx)
 
             !           PHI0   = surface geopotential            (2-dim)
             type(rpe_var), intent(in) :: phi0_in(ngp)
             !           FMASK  = fractional land-sea mask        (2-dim)
-            type(rpe_var), intent(in) :: fmask_in(ngp)
+            type(rpe_var), intent(in) :: fmask(ngp)
             !           TLAND  = land-surface temperature        (2-dim)
             type(rpe_var), intent(in) :: tland_in(ngp)
             !           TSEA_LM=  sea-surface temperature (land model) (2-dim)
@@ -224,16 +209,16 @@ module phy_suflux
             !           TSEA_OM=  sea-surface temperature (ocean model)(2-dim)
             type(rpe_var), intent(in) :: tsea_om_in(ngp)
             !           SWAV   = soil wetness availability [0-1] (2-dim)
-            type(rpe_var), intent(in) :: swav_in(ngp)
+            type(rpe_var), intent(in) :: swav(ngp)
             !           SSRD   = sfc sw radiation (downw. flux)  (2-dim)
-            type(rpe_var), intent(in) :: ssrd_in(ngp)
+            type(rpe_var), intent(in) :: ssrd(ngp)
             !           SLRD   = sfc lw radiation (downw. flux)  (2-dim)
-            type(rpe_var), intent(in) :: slrd_in(ngp)
+            type(rpe_var), intent(in) :: slrd(ngp)
 
             ! hflx2tend = Conversion factor between heat fluxes and T tendency
-            type(rpe_var), intent(in) :: hflx2tend_in(ngp,kx)
+            type(rpe_var), intent(in) :: hflx2tend(ngp,kx)
             ! flx2tend = Conversion factor between fluxes and tendencies
-            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
+            type(rpe_var), intent(in) :: flx2tend(ngp,kx)
 
             !           LFLUXSEA   = Logical related to flux-correction
             logical, intent(in) :: lfluxsea
@@ -274,11 +259,7 @@ module phy_suflux
             type(rpe_var), intent(out) :: qt_sflx(ngp,kx)
 
             ! Local copies of input variables
-            type(rpe_var) :: psa(ngp)
-            type(rpe_var), dimension(ngp,kx) :: ua, va, ta, qa, rh, phi
-            type(rpe_var), dimension(ngp) :: &
-                    phi0, fmask, tland, tsea_lm, tsea_om, swav, ssrd, slrd
-            type(rpe_var), dimension(ngp,kx) :: hflx2tend, flx2tend
+            type(rpe_var), dimension(ngp) :: phi0, tland, tsea_lm, tsea_om
 
             ! Local variables
             integer :: j, j0, jlat
@@ -291,26 +272,11 @@ module phy_suflux
 
             ! 0. Pass input variables to local copies, triggering call to
             !    apply_truncation
-            psa = psa_in
-            ua = ua_in
-            va = va_in
-            ! Express Ta in Celsius. Should be done at double-precision then
-            ! truncated as ta is not truncated on input
-            ta = ta_in-zero_c
-            qa = qa_in
-            rh = rh_in
-            phi = phi_in*rcp
             phi0 = phi0_in*rcp
-            fmask = fmask_in
             ! Express other temperature quantities in Celsius
             tland = tland_in-zero_c
             tsea_lm = tsea_lm_in-zero_c
             tsea_om = tsea_om_in-zero_c
-            swav = swav_in
-            ssrd = ssrd_in
-            slrd = slrd_in
-            hflx2tend = hflx2tend_in
-            flx2tend = flx2tend_in
 
             ! Initialisation
             ghum0 = rpe_literal(1.0_dp)-fhum0
@@ -328,11 +294,11 @@ module phy_suflux
 
             do j=1,ngp
                 ! Temperature difference between lowest level and sfc
-                dt1 = wvi_sflx(kx,2)*(ta(j,kx)-ta(j,kxm))
+                dt1 = wvi(kx,2)*(ta(j,kx)-ta(j,kxm))
                 ! Extrapolated temperature using actual lapse rate
                 ! (1:land, 2:sea)
                 t1(j,1) = ta(j,kx)+dt1
-                t1(j,2) = t1(j,1)+phi0(j)*dt1*rdphi0*cp_sflx
+                t1(j,2) = t1(j,1)+phi0(j)*dt1*rdphi0*cp
                 ! Extrapolated temperature using dry-adiab. lapse rate
                 ! (1:land, 2:sea)
                 t2(j,2) = ta(j,kx)+phi(j,kx)
@@ -429,7 +395,7 @@ module phy_suflux
                         (esbc_1_3*(tskin(j) + rpe_literal(zero_c)))**3
                 slru(j,1)   = (esbc_1_4 *(tskin(j) + rpe_literal(zero_c)))**4
                 hfluxn(j,1) = ssrd(j)*(rpe_literal(1.0_dp) - alb_l(j)) + &
-                        slrd(j) - (slru(j,1) + shf(j,1) + alhc_sflx*evap(j,1))
+                        slrd(j) - (slru(j,1) + shf(j,1) + alhc*evap(j,1))
             end do
 
             ! 3.2 Re-definition of skin temperature from energy balance
@@ -455,7 +421,7 @@ module phy_suflux
                 ! Redefine skin temperature to balance the heat budget
                 do j=1,ngp
                     dhfdt = clamb(j) + dslr(j) + &
-                            chl*denvvs(j,1)*(cp_sflx+alhc_sflx*qsat0(j,2))
+                            chl*denvvs(j,1)*(cp+alhc*qsat0(j,2))
                     dtskin(j) = hfluxn(j,1)/dhfdt
                     tskin(j)  = tskin(j)+dtskin(j)
                 end do
@@ -557,6 +523,7 @@ module phy_suflux
             ! then truncated to the precision for suflux as they are only used
             ! here.
             use mod_fordate, only: alb_s
+            use mod_physcon, only: alhc
 
             !  Input:   PSA    = norm. surface pressure [p/p0]   (2-dim)
             type(rpe_var), intent(in) :: psa(ngp)
@@ -601,7 +568,7 @@ module phy_suflux
             do j=1,ngp
                 slru(j)   = (esbc_1_4 *(tsea(j) + rpe_literal(zero_c)))**4
                 hfluxn(j) = ssrd(j)*(rpe_literal(1.0_dp)-alb_s(j))+slrd(j)-&
-                    & (slru(j)+shf(j)+alhc_sflx*evap(j))
+                    & (slru(j)+shf(j)+alhc*evap(j))
             end do
 
         end subroutine sea_fluxes

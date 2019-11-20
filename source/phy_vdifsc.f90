@@ -33,10 +33,6 @@ module phy_vdifsc
     type(rpe_var) :: fshcq, fshcse, fvdise
     type(rpe_var), allocatable :: rsig(:), rsig1(:), drh0(:), fvdiq2(:)
 
-    ! Local copies of mod_atparam variables
-    type(rpe_var) :: alhc_vdif, cp_vdif
-    type(rpe_var), allocatable :: sigh_vdif(:)
-
     contains
         subroutine setup_vertical_diffusion(fid)
             ! Read namelist variables
@@ -50,12 +46,11 @@ module phy_vdifsc
             allocate(rsig1(kx))
             allocate(drh0(3:kxm))
             allocate(fvdiq2(3:kxm))
-            allocate(sigh_vdif(0:kx))
         end subroutine setup_vertical_diffusion
 
         subroutine ini_vdifsc()
             ! Calculate local variables for turbulence scheme
-            use mod_physcon, only: cp, alhc, sig, sigh, dsig
+            use mod_physcon, only: sig, sigh, dsig
 
             real(dp) :: cshc, cvdi
 
@@ -71,10 +66,6 @@ module phy_vdifsc
 
             drh0(3:kxm)   = rhgrad*(sig(4:kx)-sig(3:kxm))
             fvdiq2(3:kxm) = (cvdi/trvdi)*sigh(3:kxm)
-
-            alhc_vdif = alhc
-            sigh_vdif = sigh
-            cp_vdif = cp
         end subroutine ini_vdifsc
 
         subroutine truncate_vdifsc()
@@ -97,29 +88,27 @@ module phy_vdifsc
             call apply_truncation(fvdiq2)
 
             ! Local copies of mod_physcon
-            call apply_truncation(alhc_vdif)
-            call apply_truncation(sigh_vdif)
-            call apply_truncation(cp_vdif)
         end subroutine truncate_vdifsc
 
-        subroutine vdifsc(se_in, rh_in, qa_in, qsat_in, phi_in, icnv, &
+        subroutine vdifsc(se, rh, qa, qsat, phi, icnv, &
                 utenvd, vtenvd, ttenvd, qtenvd)
             !   subroutine vdifsc (se,rh,qa,qsat,phi,icnv,
             !  &                   utenvd,vtenvd,ttenvd,qtenvd)
             !
             !   Purpose: Compute tendencies of momentum, energy and moisture
             !            due to vertical diffusion and shallow convection
+            use mod_physcon, only: cp, alhc, sigh
 
             !            se     = dry static energy                (3-dim)
-            type(rpe_var), dimension(ngp,kx), intent(in) :: se_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: se
             !            rh     = relative humidity [0-1]          (3-dim)
-            type(rpe_var), dimension(ngp,kx), intent(in) :: rh_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: rh
             !            qa     = specific humidity [g/kg]         (3-dim)
-            type(rpe_var), dimension(ngp,kx), intent(in) :: qa_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: qa
             !            qsat   = saturation sp. humidity [g/kg]   (3-dim)
-            type(rpe_var), dimension(ngp,kx), intent(in) :: qsat_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: qsat
             !            phi    = geopotential                     (3-dim)
-            type(rpe_var), dimension(ngp,kx), intent(in) :: phi_in
+            type(rpe_var), dimension(ngp,kx), intent(in) :: phi
             !            icnv   = index of deep convection         (2-dim)
             integer, intent(in) :: icnv(ngp)
 
@@ -132,21 +121,9 @@ module phy_vdifsc
             !            qtenvd = sp. humidity tendency [g/(kg s)] (3-dim)
             type(rpe_var), dimension(ngp,kx), intent(out) :: qtenvd
 
-            ! Local copies of input variables
-            type(rpe_var), dimension(ngp, kx) :: se, rh, qa, qsat, phi
-
-
             ! Local variables
             integer :: j, k, k1
             type(rpe_var) :: dmse, drh, fluxse, fluxq, fcnv, se0
-
-            ! 0. Pass input variables to local copies, triggering call to
-            !    apply_truncation
-            se = se_in
-            rh = rh_in
-            qa = qa_in
-            qsat = qsat_in
-            phi = phi_in / cp_vdif
 
             ! 1. Initalization
             ! N.B. In this routine, fluxes of dry static energy and humidity
@@ -159,7 +136,7 @@ module phy_vdifsc
 
             ! 2. Shallow convection
             do j=1,ngp
-                dmse = (se(j,kx)-se(j,kxm))+(alhc_vdif/cp_vdif)*(qa(j,kx)-qsat(j,kxm))
+                dmse = (se(j,kx)-se(j,kxm))+(alhc/cp)*(qa(j,kx)-qsat(j,kxm))
                 drh  = rh(j,kx)-rh(j,kxm)
                 fcnv = 1.0_dp
 
@@ -184,7 +161,7 @@ module phy_vdifsc
 
             ! 3. Vertical diffusion of moisture above the PBL
             do k=3,kx-2
-                if (sigh_vdif(k)>rpe_literal(0.5_dp)) then
+                if (sigh(k)>rpe_literal(0.5_dp)) then
                     do j=1,ngp
                         drh=rh(j,k+1)-rh(j,k)
                         if (drh>=drh0(k)) then

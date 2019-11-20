@@ -55,18 +55,16 @@ module phy_radsw
             write(*, sw_radiation)
 
             allocate(abs1(2:kx))
-            allocate(dsig_sw(kx))
         end subroutine setup_sw_radiation
 
         subroutine ini_radsw()
             ! Calculate local variables for short-wave radiation scheme
-            use mod_physcon, only: sig, dsig
+            use mod_physcon, only: sig
             use phy_radlw, only: epslw
 
             fband2 = 0.05_dp
             fband1 = 1.0_dp-fband2
             abs1(2:kx)=absdry+absaer*sig(2:kx)**2
-            dsig_sw(1:kx) = dsig(1:kx)
         end subroutine ini_radsw
 
         subroutine truncate_radsw()
@@ -85,13 +83,10 @@ module phy_radsw
             call apply_truncation(fband1)
             call apply_truncation(fband2)
             call apply_truncation(abs1)
-
-            ! Local copies of mod_physcon
-            call apply_truncation(dsig_sw)
         end subroutine truncate_radsw
 
         subroutine radsw(&
-                psa_in, qa_in, icltop, cloudc_in, clstr_in, flx2tend_in, &
+                psa, qa, icltop, cloudc, clstr, flx2tend, &
                 fsfcd, fsfc, ftop, dfabs)
             ! Compute the absorption of shortwave radiation
 
@@ -100,19 +95,20 @@ module phy_radsw
             ! after being calculated to the precision of radsw
             use mod_fordate, only: albsfc
             use mod_solar, only: fsol, ozone, ozupp, zenit
+            use mod_physcon, only: dsig
 
             !  input:   psa    = norm. surface pressure [p/p0] (2-dim)
-            type(rpe_var), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa(ngp)
             !           qa     = specific humidity [g/kg]                (3-dim)
-            type(rpe_var), intent(in) :: qa_in(ngp,kx)
+            type(rpe_var), intent(in) :: qa(ngp,kx)
             !           icltop = cloud top level                         (2-dim)
             integer, intent(in) :: icltop(ngp)
             !           cloudc = total cloud cover                       (2-dim)
-            type(rpe_var), intent(in) :: cloudc_in(ngp)
+            type(rpe_var), intent(in) :: cloudc(ngp)
             !           clstr  = stratiform cloud cover                  (2-dim)
-            type(rpe_var), intent(in) :: clstr_in(ngp)
+            type(rpe_var), intent(in) :: clstr(ngp)
             !         flx2tend = Conversion factor between fluxes and T tendency
-            type(rpe_var), intent(in) :: flx2tend_in(ngp,kx)
+            type(rpe_var), intent(in) :: flx2tend(ngp,kx)
             !  output:  fsfcd  = downward-only flux of sw rad. at the surface (2-dim)
             type(rpe_var), intent(out) :: fsfcd(ngp)
             !           fsfc   = net (downw.) flux of sw rad. at the surface  (2-dim)
@@ -122,9 +118,6 @@ module phy_radsw
             !           dfabs  = flux of sw rad. absorbed by each atm. layer  (3-dim)
             type(rpe_var), intent(out) :: dfabs(ngp,kx)
 
-            ! Local copies of input variables
-            type(rpe_var) :: psa(ngp), qa(ngp,kx), cloudc(ngp), clstr(ngp), &
-                    flx2tend(ngp,kx)
             ! flux   = radiative flux in different spectral bands
             type(rpe_var) :: flux(ngp,2)
 
@@ -133,14 +126,6 @@ module phy_radsw
             ! Local variables
             integer :: j, k
             type(rpe_var) :: acloud(ngp), psaz(ngp), deltap
-
-            ! 0. Pass input variables to local copies, triggering call to
-            !    apply_truncation
-            psa = psa_in
-            qa = qa_in
-            cloudc = cloudc_in
-            clstr = clstr_in
-            flx2tend = flx2tend_in
 
             ! 1.  Initialization
             tau2 = 0.0_dp
@@ -164,14 +149,14 @@ module phy_radsw
             end do
 
             do j=1,ngp
-                deltap=psaz(j)*dsig_sw(1)
+                deltap=psaz(j)*dsig(1)
                 tau2(j,1,1)=exp(-deltap*absdry)
             end do
 
             do k=2,kxm
 
                 do j=1,ngp
-                    deltap=psaz(j)*dsig_sw(k)
+                    deltap=psaz(j)*dsig(k)
                     if (k>=icltop(j)) then
                         tau2(j,k,1)=exp(-deltap*(abs1(k)+abswv1*qa(j,k)+acloud(j)))
                     else
@@ -182,13 +167,13 @@ module phy_radsw
 
 
             do j=1,ngp
-                deltap=psaz(j)*dsig_sw(kx)
+                deltap=psaz(j)*dsig(kx)
                 tau2(j,kx,1)=exp(-deltap*(abs1(kx)+abswv1*qa(j,kx)))
             end do
 
             do k=2,kx
                 do j=1,ngp
-                  deltap=psaz(j)*dsig_sw(k)
+                  deltap=psaz(j)*dsig(k)
                   tau2(j,k,2)=exp(-deltap*abswv2*qa(j,k))
                 end do
             end do

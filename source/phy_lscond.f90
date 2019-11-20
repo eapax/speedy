@@ -72,18 +72,18 @@ module phy_lscond
             call apply_truncation(dqmax)
         end subroutine truncate_lscond
 
-        subroutine lscond(psa_in, rh_in, qsat_in, itop, &
+        subroutine lscond(psa, rh, qsat, itop, &
                 precls, dtlsc, dqlsc)
             !  subroutine lscond (psa,qa,qsat,itop,precls,dtlsc,dqlsc)
             !
             !  Purpose: Compute large-scale precipitation and
             !           associated tendencies of temperature and moisture
             !  Input:   psa    = norm. surface pressure [p/p0]           (2-dim)
-            type(rpe_var), intent(in) :: psa_in(ngp)
+            type(rpe_var), intent(in) :: psa(ngp)
             !           rh     = relative humidity                       (3-dim)
-            type(rpe_var), intent(in) :: rh_in(ngp,kx)
+            type(rpe_var), intent(in) :: rh(ngp,kx)
             !           qsat   = saturation spec. hum. [g/kg]            (3-dim)
-            type(rpe_var), intent(in) :: qsat_in(ngp,kx)
+            type(rpe_var), intent(in) :: qsat(ngp,kx)
 
             !           itop   = top of convection (layer index)         (2-dim)
             !  Output:  itop   = top of conv+l.s.condensat.(layer index) (2-dim)
@@ -95,18 +95,9 @@ module phy_lscond
             !           dqlsc  = hum. tendency [g/(kg s)] from l.s. cond (3-dim)
             type(rpe_var), intent(out) :: dqlsc(ngp,kx)
 
-            ! Local copies of input variables
-            type(rpe_var) :: psa(ngp), rh(ngp,kx), qsat(ngp,kx)
-
             ! Local variables
             integer :: j, k
             type(rpe_var) ::  drh
-
-            ! 0. Pass input variables to local copies, triggering call to
-            !    apply_truncation
-            psa = psa_in
-            rh = rh_in
-            qsat = qsat_in
 
             ! 1. Initialization
             dtlsc(:,1) = 0.0_dp
