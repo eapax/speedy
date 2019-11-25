@@ -71,14 +71,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
         do j=1,ngp
             ! Remove negative humidity values
             qg1(j,k)=max(qg1(j,k),rpe_literal(0.0_dp))
-            se(j,k)=cp*tg1(j,k)+phig1(j,k)
-        end do
-    end do
-
-    ! Static energy as an anomaly
-    do k=1,kx
-        do j=1,ngp
-            se(j,k) = (se(j,k) - se(j,kx))/ cp
         end do
     end do
 
@@ -87,6 +79,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Normalise geopotential by cp
     phig1 = phig1 / cp
+
+    ! Use normalised geopotential and temperature in Celsius to calculate static
+    ! energy as an anomaly
+    se = tg1 + phig1
 
     do k=1,kx
         call shtorh_celsius(1,ngp,tg1(:,k),psg,sig(k),qg1(:,k),rh(:,k),qsat(:,k))
@@ -109,7 +105,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2. Precipitation
     ! 2.1 Deep convection
-    call set_precision('Double')
     call convmf(psg,se,qg1,qsat,flx2tend,&
             iptop,cbmf,precnv,tt_cnv,qt_cnv)
 
@@ -193,4 +188,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Additive random noise
     call additive_forcing(tt_phy)
+
+    ! Convert temperature back to Kelvin
+    tg1 = tg1 + zero_c
 end subroutine phypar
