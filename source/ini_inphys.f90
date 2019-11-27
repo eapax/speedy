@@ -36,7 +36,7 @@ subroutine inphys(hsg,ppl,rlat)
         sigh(k) = hsg(k)
         dsig(k) = hsg(k)-hsg(k-1)
         pout(k) = ppl(k)
-        grdsig(k) = gg/(dsig(k)*p0)
+        grdsig(k) = gg/(dsig(k)*p0)*3600.0_dp
         grdscp(k) = grdsig(k)/cp
     end do
 

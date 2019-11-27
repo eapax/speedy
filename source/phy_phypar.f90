@@ -61,9 +61,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         do j=1,ngp
             ! Conversion for fluxes->tendencies
-            flx2tend(j,k)  = rps(j)*grdsig(k)*rpe_literal(3600.0_dp)
+            flx2tend(j,k)  = rps(j)*grdsig(k)
             ! Conversion for heat fluxes->tendencies
-            hflx2tend(j,k) = rps(j)*grdscp(k)*rpe_literal(3600.0_dp)
+            hflx2tend(j,k) = rps(j)*grdscp(k)
         end do
     end do
 

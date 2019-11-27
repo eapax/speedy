@@ -48,6 +48,9 @@ module mod_physcon
     !    pout   = norm. pressure level [p/p0] for post-processing
     !    grdsig = g/(d_sigma p0) : to convert fluxes of u,v,q into d(u,v,q)/dt
     !    grdscp = g/(d_sigma p0 c_p): to convert energy fluxes into dT/dt
+    !        Note that grdsig and grdscp are also both multiplied by 3600
+    !        (1 hour in seconds) resulting in tendencies being calculated as per
+    !        hour when converting from fluxes.
     !    wvi    = weights for vertical interpolation
     !    slat   = sin(lat)
     !    clat   = cos(lat)
@@ -95,9 +98,7 @@ module mod_physcon
             call apply_truncation(dsig)
             call apply_truncation(pout)
             call apply_truncation(grdsig)
-
-            ! underflows at half precision
-            !call apply_truncation(grdscp)
+            call apply_truncation(grdscp)
 
             call apply_truncation(wvi)
             call apply_truncation(sigh)
