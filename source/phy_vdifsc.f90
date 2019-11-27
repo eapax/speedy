@@ -77,8 +77,6 @@ module phy_vdifsc
 
             ! Derived variables
             call apply_truncation(fshcq)
-
-            ! Denormal numbers
             call apply_truncation(fshcse)
             call apply_truncation(fvdise)
 
