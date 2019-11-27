@@ -155,10 +155,10 @@ subroutine phypar(utend,vtend,ttend,qtend)
     call vdifsc(se,rh,qg1,qsat,phig1,icnv,ut_pbl,vt_pbl,tt_pbl,qt_pbl)
 
     ! 5. Store all fluxes for coupling and daily-mean output
-    call set_precision('Double')
     call increment_fluxes()
 
     ! Sum physics tendencies
+    call set_precision('Double')
     ut_phy = ut_sflx / 3600.0_dp
     vt_phy = vt_sflx / 3600.0_dp
     tt_phy = (tt_cnv + tt_lsc + tt_rsw + tt_sflx + tt_rlw + tt_pbl) / 3600.0_dp
