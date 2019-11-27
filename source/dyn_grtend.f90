@@ -74,7 +74,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
         do j=1,il
             do i=1,ix
-                vorg(i,j,k)=(vorg(i,j,k)+coriol(j))*3600.0_dp
+                vorg(i,j,k)=vorg(i,j,k)*3600.0_dp+coriol(j)
             end do
         end do
     end do

@@ -77,8 +77,8 @@ subroutine indyns()
         rad1 = asin(sia(j))
         radang(j)  = -rad1
         radang(jj) =  rad1
-        coriol(j)  = -2.0_dp*omega*sia(j)
-        coriol(jj) =  2.0_dp*omega*sia(j)
+        coriol(j)  = -2.0_dp*omega*sia(j)*3600.0_dp
+        coriol(jj) =  2.0_dp*omega*sia(j)*3600.0_dp
     end do
 
     ! 4. Coefficients to compute geopotential
