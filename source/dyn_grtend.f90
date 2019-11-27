@@ -23,7 +23,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_physvar, only: ug1, vg1, tg1, qg1, phig1, pslg1
     use mod_dyncon1, only: coriol
     use spectral, only: uvspec, grid
-    use mod_prec, only: set_precision
+    use mod_prec, only: set_precision, dp
     use rp_emulator
 
     implicit none
@@ -74,10 +74,12 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
         do j=1,il
             do i=1,ix
-                vorg(i,j,k)=vorg(i,j,k)+coriol(j)
+                vorg(i,j,k)=(vorg(i,j,k)+coriol(j))*3600.0_dp
             end do
         end do
     end do
+
+    divg = divg * 3600.0_dp
 
     ! 2. Parametrized physics tendencies
     call phypar(utend, vtend, ttend, trtend)
@@ -175,6 +177,9 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     call grid(dumc(:,:,2),px,2)
     call grid(dumc(:,:,3),py,2)
     call set_precision('Grid Dynamics')
+
+    px = px * 3600.0_dp
+    py = py * 3600.0_dp
 
     dumr(:,:,1) = -umean * px - vmean * py
 
@@ -287,9 +292,9 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
         dumr(:,:,1)=rpe_literal(0.5_dp)* &
-                (ug(:,:,k)*ug(:,:,k) + vg(:,:,k)*vg(:,:,k))
-        dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)
-        dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)
+                (ug(:,:,k)*ug(:,:,k) + vg(:,:,k)*vg(:,:,k))*3600.0_dp
+        dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)*3600.0_dp
+        dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)*3600.0_dp
 
         call set_precision('Spectral Transform')
         !  divergence tendency
@@ -309,8 +314,8 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
         ! tracer tendency
         do itr=1,ntr
-            dumr(:,:,2)=-ug(:,:,k)*trg(:,:,k,itr)
-            dumr(:,:,3)=-vg(:,:,k)*trg(:,:,k,itr)
+            dumr(:,:,2)=-ug(:,:,k)*trg(:,:,k,itr)*3600.0_dp
+            dumr(:,:,3)=-vg(:,:,k)*trg(:,:,k,itr)*3600.0_dp
 
             call set_precision('Spectral Transform')
             call spec(trtend(:,:,k,itr),dumc(:,:,2))
