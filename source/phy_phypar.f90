@@ -52,6 +52,21 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! gradient of dry static energy (dSE/dPHI)
     type(rpe_var), dimension(ngp) :: gse
 
+    ! Temperature in Celsius
+    tg1 = tg1 - zero_c
+
+    ! Normalise geopotential by cp
+    phig1 = phig1 / cp
+
+    ! Truncate all variables
+    call set_precision('Half')
+    call apply_truncation(pslg1)
+    call apply_truncation(ug1)
+    call apply_truncation(vg1)
+    call apply_truncation(tg1)
+    call apply_truncation(qg1)
+    call apply_truncation(phig1)
+
     ! 1. Compute thermodynamic variables
     do j=1,ngp
         psg(j)=exp(pslg1(j))
@@ -74,12 +89,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
         end do
     end do
 
-    ! Temperature in Celsius
-    tg1 = tg1 - zero_c
-
-    ! Normalise geopotential by cp
-    phig1 = phig1 / cp
-
     ! Use normalised geopotential and temperature in Celsius to calculate static
     ! energy as an anomaly
     se = tg1 + phig1
@@ -87,21 +96,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do k=1,kx
         call shtorh_celsius(1,ngp,tg1(:,k),psg,sig(k),qg1(:,k),rh(:,k),qsat(:,k))
     end do
-
-    ! Truncate all variables
-    call set_precision('Half')
-    call apply_truncation(psg)
-    call apply_truncation(ug1)
-    call apply_truncation(vg1)
-    call apply_truncation(tg1)
-    call apply_truncation(qg1)
-    call apply_truncation(phig1)
-
-    call apply_truncation(flx2tend)
-    call apply_truncation(hflx2tend)
-    call apply_truncation(se)
-    call apply_truncation(rh)
-    call apply_truncation(qsat)
 
     ! 2. Precipitation
     ! 2.1 Deep convection
