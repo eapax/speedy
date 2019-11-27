@@ -5,6 +5,12 @@ module mod_physcon
 
     implicit none
 
+    private
+    public setup_physcon, init_physcon, truncate_physcon, &
+            p0, gg, rd, cp, alhc, alhs, &
+            sig, sigl, sigh, dsig, pout, grdsig, grdscp, wvi, slat, clat, &
+            sbc_1_3, sbc_1_4
+
     ! Physical constants
     ! Reference pressure
     real(dp), parameter :: p0_ = 1.d+5
@@ -25,7 +31,7 @@ module mod_physcon
     real(dp), parameter :: alhs_ = 2801.0_dp
 
     ! Stefan-Boltzmann constant
-    real(dp), parameter :: sbc_ = 5.67d-8
+    real(dp), parameter :: sbc = 5.67d-8
 
     ! Reduced precision versions
     type(rpe_var) :: p0
@@ -34,7 +40,6 @@ module mod_physcon
     type(rpe_var) :: cp
     type(rpe_var) :: alhc
     type(rpe_var) :: alhs
-    type(rpe_var) :: sbc
 
     !   Functions of sigma and latitude (initial. in INPHYS)
     !    sig    = full-level sigma
@@ -51,6 +56,9 @@ module mod_physcon
             sig, sigl, dsig, pout, grdsig, grdscp
     type(rpe_var), allocatable :: wvi(:,:), sigh(:)
     type(rpe_var), dimension(:), allocatable :: slat, clat
+
+    ! Powers of Stefan-Boltzmann constant
+    type(rpe_var) :: sbc_1_3, sbc_1_4
 
     contains
         subroutine setup_physcon()
@@ -73,7 +81,8 @@ module mod_physcon
             cp = cp_
             alhc = alhc_
             alhs = alhs_
-            sbc = sbc_
+            sbc_1_3 = sbc ** (1.0_dp/3.0_dp)
+            sbc_1_4 = sbc ** (1.0_dp/4.0_dp)
         end subroutine init_physcon
 
         subroutine truncate_physcon()
@@ -85,22 +94,22 @@ module mod_physcon
             call apply_truncation(cp)
             call apply_truncation(alhc)
             call apply_truncation(alhs)
-            
-            ! Overflows at half precision
-            !call apply_truncation(sbc)
 
             call apply_truncation(sig)
             call apply_truncation(sigl)
             call apply_truncation(dsig)
             call apply_truncation(pout)
             call apply_truncation(grdsig)
-            
+
             ! underflows at half precision
             !call apply_truncation(grdscp)
-            
+
             call apply_truncation(wvi)
             call apply_truncation(sigh)
             call apply_truncation(slat)
             call apply_truncation(clat)
+
+            call apply_truncation(sbc_1_3)
+            call apply_truncation(sbc_1_4)
         end subroutine truncate_physcon
 end module

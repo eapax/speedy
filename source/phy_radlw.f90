@@ -55,9 +55,6 @@ module phy_radlw
     ! Local derived variables
     type(rpe_var) :: refsfc, eps1
 
-    ! Local copies of mod_physcon variables
-    type(rpe_var) :: sbc_1_3, sbc_1_4
-
     contains
         subroutine setup_lw_radiation(fid)
             ! Read namelist variables
@@ -75,16 +72,12 @@ module phy_radlw
 
         subroutine ini_radlw()
             ! Calculate local variables for long-wave radiation scheme
-            use mod_physcon, only: sbc, dsig
+            use mod_physcon, only: dsig
 
             ! Derived variables
             refsfc=1.0_dp-emisfc
             eps1=epslw/(dsig(1)+dsig(2))
             call radset()
-
-            ! Local copies of mod_physcon
-            sbc_1_3 = sbc**(1.0_dp/3.0_dp)
-            sbc_1_4 = sbc**(1.0_dp/4.0_dp)
         end subroutine ini_radlw
 
         subroutine truncate_radlw()
@@ -102,10 +95,6 @@ module phy_radlw
             call apply_truncation(eps1)
             call apply_truncation(fband)
             call apply_truncation(refsfc)
-
-            ! Local copies of mod_physcon
-            call apply_truncation(sbc_1_3)
-            call apply_truncation(sbc_1_4)
         end subroutine truncate_radlw
 
         subroutine radset()
@@ -210,7 +199,7 @@ module phy_radlw
         subroutine radlw_down(ta_in,fsfcd)
             !  Purpose: Compute the absorption of longwave radiation
             !           downward flux only
-            use mod_physcon, only: wvi
+            use mod_physcon, only: wvi, sbc_1_3, sbc_1_4
 
             !  input:  ta     = absolute temperature (3-dim)
             type(rpe_var), intent(in) :: ta_in(ngp,kx)

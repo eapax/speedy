@@ -54,7 +54,7 @@ module mod_fluxes
             !          used in sea/land models
 
             use mod_tsteps, only: nsteps
-            use mod_physcon, only: alhc, sbc
+            use mod_physcon, only: alhc, sbc_1_4
             use mod_surfcon, only: fmask1
             use mod_physvar, only: hfluxn, ssrd, shf, evap
             use mod_var_sea, only: tice_am, sice_am
@@ -62,24 +62,22 @@ module mod_fluxes
             use phy_radlw, only: emisfc
 
             type(rpe_var) :: difice(ngp)
-            type(rpe_var) :: fland(ngp), esbc, rsteps, sstfr, sstfr4
+            type(rpe_var) :: fland(ngp), rsteps, sstfr
 
             fland = reshape(fmask1,(/ngp/))
             rsteps = rpe_literal(1.0_dp)/rpe_literal(nsteps)
 
             ! SST at freezing point
-            sstfr  = 273.2_dp-1.8_dp
-
-            sstfr4 = sstfr**4
-            esbc   = emisfc*sbc
+            sstfr  = 271.4_dp
 
             ! 2. Store fluxes over land (SI units, all heat fluxes downw.)
             hflux_l(:) = hflux_l(:) + hfluxn(:,1)*rsteps
 
             ! 3. Store fluxes over sea (SI units, all heat fluxes downw.)
             ! Difference in net (downw.) heat flux between ice and sea surface
-            difice(:) = (albsea-albice)*ssrd(:)+ esbc*(sstfr4-tice_am(:)**4)&
-                & + shf(:,2)+evap(:,2)*alhc
+            difice(:) = (albsea-albice)*ssrd(:) + &
+                    emisfc*((sbc_1_4*sstfr)**4-(sbc_1_4*tice_am(:))**4) + &
+                    shf(:,2)+evap(:,2)*alhc
 
             hflux_s(:) = hflux_s(:) + rsteps* hfluxn(:,2)
             hflux_i(:) = hflux_i(:) + &

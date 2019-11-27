@@ -3,21 +3,17 @@
 /
 
 &output_file
-    filename='model_output.nc',
+    filename='prognostics_pressure.nc',
     spectral=.false.,
-    plevs=.false.,
-    nstpinc=1,
-    nstpout=1,
+    plevs=.true.,
+    nstpinc=36,
+    nstpout=36,
     nstpopen=12500,
-    nvars=25,
+    nvars=2,
 /
 
 &variables
-    var_ids=1, 2, 3, 4, 5, 10,
-            48, 49, 50, 51,
-            52, 53, 54, 55, 56,
-            57, 58, 59, 60,
-            61, 62,
-            115, 116, 117, 118,
+    !var_ids=115, 116, 117, 118,
+    var_ids=3, 5,
 /
 /

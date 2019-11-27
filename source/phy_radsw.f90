@@ -44,7 +44,7 @@ module phy_radsw
 
     ! Local derived variables
     type(rpe_var) :: fband1, fband2
-    type(rpe_var), allocatable :: abs1(:), dsig_sw(:)
+    type(rpe_var), allocatable :: abs1(:)
 
     contains
         subroutine setup_sw_radiation(fid)

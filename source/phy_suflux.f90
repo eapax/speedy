@@ -76,7 +76,7 @@ module phy_suflux
     type(rpe_var), allocatable :: forog(:)
 
     ! Local derived variables
-    type(rpe_var) :: esbc_1_3, esbc_1_4, prd, rcp, chlcp, chscp, rdphi0
+    type(rpe_var) :: prd, rcp, chlcp, chscp, rdphi0
     type(rpe_var), allocatable :: sqclat(:)
 
     contains
@@ -92,12 +92,9 @@ module phy_suflux
         end subroutine setup_surface_fluxes
 
         subroutine ini_suflux()
-            use mod_physcon, only: p0, rd, cp, sbc, clat, sigl
-            use phy_radlw, only: emisfc
+            use mod_physcon, only: p0, rd, cp, clat, sigl
 
             ! Local derived variables
-            esbc_1_3  = (emisfc*sbc)**(1.0_dp/3.0_dp)
-            esbc_1_4  = (emisfc*sbc)**(1.0_dp/4.0_dp)
             prd = p0/rd
             rcp = 1.0_dp/cp
             chlcp = chl*cp
@@ -127,8 +124,6 @@ module phy_suflux
 
             ! Local derived variables
             call apply_truncation(forog)
-            call apply_truncation(esbc_1_3)
-            call apply_truncation(esbc_1_4)
             call apply_truncation(prd)
             call apply_truncation(rcp)
             call apply_truncation(chlcp)
@@ -181,7 +176,8 @@ module phy_suflux
             ! then truncated to the precision for suflux as they are only used
             ! here.
             use mod_fordate, only: alb_l, snowc
-            use mod_physcon, only: alhc, cp, wvi
+            use mod_physcon, only: alhc, cp, wvi, sbc_1_3, sbc_1_4
+            use phy_radlw, only: emisfc
 
             !  Input:   PSA    = norm. surface pressure [p/p0]   (2-dim)
             type(rpe_var), intent(in) :: psa(ngp)
@@ -392,8 +388,8 @@ module phy_suflux
             !      and net heat fluxes into land surface
             do j=1,ngp
                 dslr(j)     = rpe_literal(4.0_dp)* &
-                        (esbc_1_3*(tskin(j) + rpe_literal(zero_c)))**3
-                slru(j,1)   = (esbc_1_4 *(tskin(j) + rpe_literal(zero_c)))**4
+                        emisfc * (sbc_1_3*(tskin(j) + rpe_literal(zero_c)))**3
+                slru(j,1)   = emisfc * (sbc_1_4*(tskin(j) + rpe_literal(zero_c)))**4
                 hfluxn(j,1) = ssrd(j)*(rpe_literal(1.0_dp) - alb_l(j)) + &
                         slrd(j) - (slru(j,1) + shf(j,1) + alhc*evap(j,1))
             end do
@@ -523,7 +519,8 @@ module phy_suflux
             ! then truncated to the precision for suflux as they are only used
             ! here.
             use mod_fordate, only: alb_s
-            use mod_physcon, only: alhc
+            use mod_physcon, only: alhc, sbc_1_4
+            use phy_radlw, only: emisfc
 
             !  Input:   PSA    = norm. surface pressure [p/p0]   (2-dim)
             type(rpe_var), intent(in) :: psa(ngp)
@@ -566,7 +563,7 @@ module phy_suflux
             ! 4.5 Emission of lw radiation from the surface
             !     and net heat fluxes into sea surface
             do j=1,ngp
-                slru(j)   = (esbc_1_4 *(tsea(j) + rpe_literal(zero_c)))**4
+                slru(j)   = emisfc * (sbc_1_4*(tsea(j) + rpe_literal(zero_c)))**4
                 hfluxn(j) = ssrd(j)*(rpe_literal(1.0_dp)-alb_s(j))+slrd(j)-&
                     & (slru(j)+shf(j)+alhc*evap(j))
             end do
