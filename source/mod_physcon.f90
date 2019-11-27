@@ -13,7 +13,7 @@ module mod_physcon
 
     ! Physical constants
     ! Reference pressure
-    real(dp), parameter :: p0_ = 1.d+5
+    real(dp), parameter :: p0 = 1.d+5
 
     ! Gravity accel.
     real(dp), parameter :: gg_ = 9.81_dp
@@ -34,7 +34,6 @@ module mod_physcon
     real(dp), parameter :: sbc = 5.67d-8
 
     ! Reduced precision versions
-    type(rpe_var) :: p0
     type(rpe_var) :: gg
     type(rpe_var) :: rd
     type(rpe_var) :: cp
@@ -75,7 +74,6 @@ module mod_physcon
         end subroutine setup_physcon
 
         subroutine init_physcon()
-            p0 = p0_
             gg = gg_
             rd = rd_
             cp = cp_
@@ -86,9 +84,6 @@ module mod_physcon
         end subroutine init_physcon
 
         subroutine truncate_physcon()
-            ! Overflows at half precision
-            !call apply_truncation(p0)
-
             call apply_truncation(gg)
             call apply_truncation(rd)
             call apply_truncation(cp)
