@@ -144,8 +144,6 @@ module spectral
             call gaussl(sia,wt%val,iy)
             am2=  1.0_dp/(a*a)
 
-            print *, am2
-
             ! COA(IY) = cos(lat)
             do j=1,iy
                 cosqr = 1.0_dp-sia(j)**2
