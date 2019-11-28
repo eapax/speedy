@@ -64,20 +64,20 @@ module spectral
         subroutine truncate_spectral()
             ! Anything that is a function of Earth radius either overflows or
             ! underflows
-            !call apply_truncation(el2)
+            call apply_truncation(el2)
             call apply_truncation(trfilt)
             call apply_truncation(wt)
             call apply_truncation(cosgr)
             call apply_truncation(cosgr2)
-            !call apply_truncation(gradx)
-            !call apply_truncation(gradym)
-!            call apply_truncation(gradyp)
+            call apply_truncation(gradx)
+            call apply_truncation(gradym)
+            call apply_truncation(gradyp)
 !            call apply_truncation(cpol)
-!            call apply_truncation(uvdx)
-!            call apply_truncation(uvdym)
-!            call apply_truncation(uvdyp)
-!            call apply_truncation(vddym)
-!            call apply_truncation(vddyp)
+            call apply_truncation(uvdx)
+            call apply_truncation(uvdym)
+            call apply_truncation(uvdyp)
+            call apply_truncation(vddym)
+            call apply_truncation(vddyp)
         end subroutine truncate_spectral
 
         !******************************************************************
@@ -302,23 +302,29 @@ module spectral
         subroutine lap(strm,vorm)
             ! Laplacian in spectral space
 
+            use mod_dyncon1, only: rearth
+
             type(rpe_complex_var), intent(in) :: strm(mx,nx)
             type(rpe_complex_var), intent(inout) :: vorm(mx,nx)
 
-            vorm = -strm * el2
+            vorm = -strm*el2*(1/rearth**2)
         end subroutine lap
         !*******************************************************************
         subroutine invlap(vorm,strm)
             ! Inverse Laplacian in spectral space
 
+            use mod_dyncon1, only: rearth
+
             type(rpe_complex_var), intent(in) :: vorm(mx,nx)
             type(rpe_complex_var), intent(inout) :: strm(mx,nx)
 
-            strm = -vorm / el2
+            strm = -vorm*rearth**2/el2
         end subroutine invlap
         !*********************************************************************
         subroutine grad(psi,psdx,psdy)
             ! Gradient in spectral space
+
+            use mod_dyncon1, only: rearth
 
             type(rpe_complex_var), dimension(mx,nx), intent(inout) :: psi
             type(rpe_complex_var), dimension(mx,nx), intent(inout) :: psdx, psdy
@@ -327,19 +333,23 @@ module spectral
 
             do n=1,nx
                 psdx(:,n) = CMPLX(-gradx*REAL(AIMAG(psi(:,n)%val)), &
-                                   gradx*REAL( REAL(psi(:,n)%val)))
+                                   gradx*REAL( REAL(psi(:,n)%val))) * (1/rearth)
             end do
 
-            psdy(:,1) = gradyp(:,1)*psi(:,2)
-            psdy(:,nx) = -gradym(:,nx)*psi(:,ntrun1)
+            psdy(:,1) = gradyp(:,1)*psi(:,2)*(1/rearth)
+            psdy(:,nx) = -gradym(:,nx)*psi(:,ntrun1)*(1/rearth)
 
 
             do n=2,ntrun1
-                psdy(:,n) = -gradym(:,n)*psi(:,n-1) + gradyp(:,n)*psi(:,n+1)
+                psdy(:,n) = (-gradym(:,n)*psi(:,n-1) + &
+                              gradyp(:,n)*psi(:,n+1))*(1/rearth)
             end do
         end subroutine grad
         !******************************************************************
         subroutine vds(ucosm,vcosm,vorm,divm)
+
+            use mod_dyncon1, only: rearth
+
             type(rpe_complex_var), dimension(mx,nx) :: ucosm, vcosm
             type(rpe_complex_var), dimension(mx,nx), intent(inout) :: vorm, divm
             type(rpe_complex_var), dimension(mx,nx) :: zc, zp
@@ -348,25 +358,29 @@ module spectral
 
             do n=1,nx
                 zp(:,n) = CMPLX(-gradx*REAL(AIMAG(ucosm(:,n)%val)), &
-                                 gradx*REAL(REAL(ucosm(:,n)%val)))
+                                 gradx*REAL(REAL(ucosm(:,n)%val)))*(1/rearth)
                 zc(:,n) = CMPLX(-gradx*REAL(AIMAG(vcosm(:,n)%val)), &
-                                 gradx*REAL(REAL(vcosm(:,n)%val)))
+                                 gradx*REAL(REAL(vcosm(:,n)%val)))*(1/rearth)
             end do
 
-            vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)
-            vorm(:,nx) = vddym(:,nx)*ucosm(:,ntrun1)
-            divm(:,1) = zp(:,1) + vddyp(:,1)*vcosm(:,2)
-            divm(:,nx) = -vddym(:,nx)*vcosm(:,ntrun1)
+            vorm(:,1) = zc(:,1) - vddyp(:,1)*ucosm(:,2)*(1/rearth)
+            vorm(:,nx) = vddym(:,nx)*ucosm(:,ntrun1)*(1/rearth)
+            divm(:,1) = zp(:,1) + vddyp(:,1)*vcosm(:,2)*(1/rearth)
+            divm(:,nx) = -vddym(:,nx)*vcosm(:,ntrun1)*(1/rearth)
 
             do n=2,ntrun1
-                vorm(:,n)= vddym(:,n)*ucosm(:,n-1) - vddyp(:,n)*ucosm(:,n+1) + zc(:,n)
-                divm(:,n)=-vddym(:,n)*vcosm(:,n-1) + vddyp(:,n)*vcosm(:,n+1) + zp(:,n)
+                vorm(:,n)= vddym(:,n)*ucosm(:,n-1)*(1/rearth) - &
+                           vddyp(:,n)*ucosm(:,n+1)*(1/rearth) + zc(:,n)
+                divm(:,n)=-vddym(:,n)*vcosm(:,n-1)*(1/rearth) + &
+                           vddyp(:,n)*vcosm(:,n+1)*(1/rearth) + zp(:,n)
             end do
         end subroutine vds
         !******************************************************************
         subroutine uvspec(vorm, divm, um, vm)
             ! Calculate u and v in grid-point space from vorticity and
             ! divergence in spectral space
+
+            use mod_dyncon1, only: rearth
 
             type(rpe_complex_var), dimension(mx,nx), intent(in) :: vorm, divm
             type(rpe_var), dimension(ix,il), intent(out) :: um, vm
@@ -375,17 +389,19 @@ module spectral
 
             integer :: n
 
-            zp = CMPLX(-uvdx*REAL(AIMAG(vorm%val)), uvdx*REAL(REAL(vorm%val)))
-            zc = CMPLX(-uvdx*REAL(AIMAG(divm%val)), uvdx*REAL(REAL(divm%val)))
+            zp = CMPLX(-uvdx*REAL(AIMAG(vorm%val)), uvdx*REAL(REAL(vorm%val)))*rearth
+            zc = CMPLX(-uvdx*REAL(AIMAG(divm%val)), uvdx*REAL(REAL(divm%val)))*rearth
 
-            ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)
-            ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)
-            vcosm(:,1) = zp(:,1) + uvdyp(:,1)*divm(:,2)
-            vcosm(:,nx) = -uvdym(:,nx)*divm(:,ntrun1)
+            ucosm(:,1) = zc(:,1) - uvdyp(:,1)*vorm(:,2)*rearth
+            ucosm(:,nx) = uvdym(:,nx)*vorm(:,ntrun1)*rearth
+            vcosm(:,1) = zp(:,1) + uvdyp(:,1)*divm(:,2)*rearth
+            vcosm(:,nx) = -uvdym(:,nx)*divm(:,ntrun1)*rearth
 
             do n=2,ntrun1
-                vcosm(:,n) =-uvdym(:,n)*divm(:,n-1) + uvdyp(:,n)*divm(:,n+1) + zp(:,n)
-                ucosm(:,n) = uvdym(:,n)*vorm(:,n-1) - uvdyp(:,n)*vorm(:,n+1) + zc(:,n)
+                vcosm(:,n) =-uvdym(:,n)*divm(:,n-1)*rearth + &
+                             uvdyp(:,n)*divm(:,n+1)*rearth + zp(:,n)
+                ucosm(:,n) = uvdym(:,n)*vorm(:,n-1)*rearth - &
+                             uvdyp(:,n)*vorm(:,n+1)*rearth + zc(:,n)
             end do
 
             call grid(ucosm, um, 2)

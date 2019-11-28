@@ -168,7 +168,7 @@ module phy_sppt
                         -0.5_dp*(len_decorr(sc)/rearth)**2*n*(n+1) &
                         ), n=1,ntrun) /))
                 f0(sc) = sqrt((stddev(sc)**2*(1-phi(sc)**2))/f0(sc))
-                sigma(:,:,sc) = f0(sc) * exp(-0.25_dp*len_decorr(sc)**2 * el2)
+                sigma(:,:,sc) = f0(sc) * exp(-0.25_dp*len_decorr(sc)**2 * el2 / rearth**2)
             end do
 
             ! Initialise the random number generator
