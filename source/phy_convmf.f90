@@ -51,7 +51,7 @@ module phy_convmf
             integer :: k
             real(dp) :: sentr
 
-            fm0=p0*dsig(kx)/(gg*trcnv)
+            fm0=p0*dsig(kx)/(gg*trcnv*3600.0_dp)
 
             ! Entrainment profile (up to sigma = 0.5)
             sentr=0.0_dp
@@ -210,8 +210,8 @@ module phy_convmf
             end do
 
             ! Convert fluxes to temperature tendencies
-            dfse = dfse*flx2tend / 3600.0_dp
-            dfqa = dfqa*flx2tend / 3600.0_dp
+            dfse = dfse*flx2tend
+            dfqa = dfqa*flx2tend
         end subroutine convmf
 
         subroutine diagnose_convection(psa, se, qa, qsat, itop, qdif)
