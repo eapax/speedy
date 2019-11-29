@@ -72,7 +72,7 @@ module spectral
             call apply_truncation(gradx)
             call apply_truncation(gradym)
             call apply_truncation(gradyp)
-!            call apply_truncation(cpol)
+            call apply_truncation(cpol)
             call apply_truncation(uvdx)
             call apply_truncation(uvdym)
             call apply_truncation(uvdyp)
