@@ -41,6 +41,7 @@ subroutine agcm_1day(jday)
     use mod_date, only: iyear, imonth, iday
     use mod_fordate, only: fordate
     use mod_fluxes, only: ini_fluxes
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -52,7 +53,9 @@ subroutine agcm_1day(jday)
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
+    call set_precision('Half')
     call fordate()
+    call set_precision('Double')
 
     ! 2. set daily-average flux arrays to zero
     call ini_fluxes()

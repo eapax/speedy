@@ -125,17 +125,6 @@ module mod_fordate
                 ablco2 = ablco2_ref * exp(del_co2 * (iyear + tyear - iyear_ref))
             end if
 
-            ! Truncate derived variables used exclusively in radsw
-            call set_precision('Short-Wave Radiation')
-            call apply_truncation(albsfc)
-            call set_precision('Long-Wave Radiation')
-            call apply_truncation(ablco2)
-
-            ! Truncate derived variables used exclusively in suflux
-            call set_precision('Surface Fluxes')
-            call apply_truncation(snowc)
-            call apply_truncation(alb_l)
-            call apply_truncation(alb_s)
             call set_precision('Double')
 
             ! 2. temperature correction term for horizontal diffusion

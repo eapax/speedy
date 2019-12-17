@@ -161,7 +161,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Add SPPT noise
     if (sppt_on) then
-        call set_precision('SPPT')
         sppt = gen_sppt()
 
         utend = sppt * ut_phy

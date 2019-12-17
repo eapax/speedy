@@ -40,14 +40,4 @@ module mod_dynvar
             allocate(PHI(MX,NX,KX))
             allocate(PHIS(MX,NX))
         end subroutine setup_dynvar
-
-        subroutine truncate_prognostics()
-            call apply_truncation(vor)
-            call apply_truncation(div)
-            call apply_truncation(t)
-            call apply_truncation(ps)
-            call apply_truncation(tr)
-            call apply_truncation(phi)
-            call apply_truncation(phis)
-        end subroutine truncate_prognostics
 end module

@@ -86,7 +86,7 @@ clean:
 	rm -f *.o *.mod
 
 at_gcm.o               : at_gcm.f90 mod_tsteps.o mod_date.o mod_fordate.o\
-                         mod_fluxes.o ppo_output_stream.o
+                         mod_fluxes.o ppo_output_stream.o mod_prec.o
 cpl_bcinterp.o         : cpl_bcinterp.f90 mod_prec.o
 cpl_land.o             : cpl_land.f90 mod_atparam.o mod_var_land.o mod_date.o\
                          mod_cpl_flags.o mod_cpl_land_model.o mod_fluxes.o\
