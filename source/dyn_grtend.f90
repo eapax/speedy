@@ -164,7 +164,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     integer :: i, j, k, itr
 
-    call set_precision('Grid Dynamics')
+    call set_precision('Half')
 
     umean(:,:) = 0.0_dp
     vmean(:,:) = 0.0_dp
@@ -181,16 +181,14 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
     call grid(dumc(:,:,2),px,2)
     call grid(dumc(:,:,3),py,2)
-    call set_precision('Grid Dynamics')
+    call set_precision('Half')
 
     px = px * 3600.0_dp
     py = py * 3600.0_dp
 
     dumr(:,:,1) = -umean * px - vmean * py
 
-    call set_precision('Spectral Transform')
     call spec(dumr(:,:,1),psdt)
-    call set_precision('Grid Dynamics')
     psdt(1,1)=(0.0_dp,0.0_dp)
 
     ! Compute "vertical" velocity
@@ -286,13 +284,13 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     ! 4. Conversion of grid-point tendencies to spectral space and calculation
     !    of terms using grid-point and spectral components
+    call set_precision('Double')
     do k=1,kx
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to
         !  spectral vor and div
-        call set_precision('Spectral Transform')
+
         call vdspec(utend(:,:,k),vtend(:,:,k),vordt(:,:,k),divdt(:,:,k),2)
-        call set_precision('Grid Dynamics')
 
         !  add lapl(0.5*(u**2+v**2)) to div tendency,
         !  and add div(vT) to spectral t tendency
@@ -301,7 +299,6 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
         dumr(:,:,2)=-ug(:,:,k)*tgg(:,:,k)*3600.0_dp
         dumr(:,:,3)=-vg(:,:,k)*tgg(:,:,k)*3600.0_dp
 
-        call set_precision('Spectral Transform')
         !  divergence tendency
         call spec(dumr(:,:,1),dumc(:,:,1))
         call lap (dumc(:,:,1),dumc(:,:,2))
@@ -315,20 +312,17 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
         !fk--   Change to keep dimensions
         tdt(:,:,k) = tdt(:,:,k) + dumc(:,:,2)
-        call set_precision('Grid Dynamics')
 
         ! tracer tendency
         do itr=1,ntr
             dumr(:,:,2)=-ug(:,:,k)*trg(:,:,k,itr)*3600.0_dp
             dumr(:,:,3)=-vg(:,:,k)*trg(:,:,k,itr)*3600.0_dp
 
-            call set_precision('Spectral Transform')
             call spec(trtend(:,:,k,itr),dumc(:,:,2))
             call vdspec(dumr(:,:,2),dumr(:,:,3),dumc(:,:,1),trdt(:,:,k,itr),2)
 
             !fk--   Change to keep dimensions
             trdt(:,:,k,itr) = trdt(:,:,k,itr) + dumc(:,:,2)
-            call set_precision('Grid Dynamics')
         end do
     end do
 end subroutine dyntend
