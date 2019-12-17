@@ -16,10 +16,10 @@ module mod_physcon
     real(dp), parameter :: p0 = 1.d+5
 
     ! Gravity accel.
-    real(dp), parameter :: gg_ = 9.81_dp
+    real(dp), parameter :: gg = 9.81_dp
 
     ! Gas constant for dry air
-    real(dp), parameter :: rd_ = 287.0_dp
+    real(dp), parameter :: rd = 287.0_dp
 
     ! Specific heat at constant pressure
     real(dp), parameter :: cp_ = 1004.0_dp
@@ -33,9 +33,7 @@ module mod_physcon
     ! Stefan-Boltzmann constant
     real(dp), parameter :: sbc = 5.67d-8
 
-    ! Reduced precision versions
-    type(rpe_var) :: gg
-    type(rpe_var) :: rd
+    ! Reduced precision version
     type(rpe_var) :: cp
     type(rpe_var) :: alhc
     type(rpe_var) :: alhs
@@ -54,8 +52,9 @@ module mod_physcon
     !    wvi    = weights for vertical interpolation
     !    slat   = sin(lat)
     !    clat   = cos(lat)
+    real(dp), dimension(:), allocatable :: sigl, pout
     type(rpe_var), dimension(:), allocatable :: &
-            sig, sigl, dsig, pout, grdsig, grdscp
+            sig, dsig, grdsig, grdscp
     type(rpe_var), allocatable :: wvi(:,:), sigh(:)
     type(rpe_var), dimension(:), allocatable :: slat, clat
 
@@ -77,8 +76,6 @@ module mod_physcon
         end subroutine setup_physcon
 
         subroutine init_physcon()
-            gg = gg_
-            rd = rd_
             cp = cp_
             alhc = alhc_
             alhs = alhs_
@@ -87,16 +84,12 @@ module mod_physcon
         end subroutine init_physcon
 
         subroutine truncate_physcon()
-            call apply_truncation(gg)
-            call apply_truncation(rd)
             call apply_truncation(cp)
             call apply_truncation(alhc)
             call apply_truncation(alhs)
 
             call apply_truncation(sig)
-            call apply_truncation(sigl)
             call apply_truncation(dsig)
-            call apply_truncation(pout)
             call apply_truncation(grdsig)
             call apply_truncation(grdscp)
 

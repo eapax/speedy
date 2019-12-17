@@ -35,7 +35,7 @@ module ppo_plevs
 
             ! Vertical interpolation from sigma level to pressure level
             ! sigl is constant so this should only be done once
-            zinp = -sigl%val
+            zinp = -sigl
             do k=2,kx
                rdzinp(k) = 1.0_dp/(zinp(k-1)-zinp(k))
             end do
