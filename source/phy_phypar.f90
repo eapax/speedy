@@ -56,7 +56,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     tg1 = tg1 - zero_c
 
     ! Normalise geopotential by cp
-    phig1 = phig1 / cp
+!    phig1 = phig1 / cp
 
     ! Truncate all variables
     call set_precision('Half')

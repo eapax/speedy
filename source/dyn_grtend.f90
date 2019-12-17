@@ -22,6 +22,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_dynvar
     use mod_physvar, only: ug1, vg1, tg1, qg1, phig1, pslg1
     use mod_dyncon1, only: coriol
+    use mod_physcon, only: cp
     use spectral, only: uvspec, grid
     use mod_prec, only: set_precision, dp
     use rp_emulator
@@ -50,23 +51,29 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     call geop(j1)
 
     ! 1.2 Grid-point variables for physics tendencies
-    call set_precision('Spectral Transform')
+    do k=1,kx
+      call grid(t(:,:,k,j1), tg1(:,k), 1)
+    end do
+
     do k=1,kx
       call uvspec(vor(:,:,k, j1),div(:,:,k, j1),ug1(:,k),vg1(:,k))
     end do
 
+    call set_precision('Half')
     do k=1,kx
-      call grid(t(:,:,k,j1), tg1(:,k), 1)
-      call grid(tr(:,:,k,j1,1), qg1(:,k), 1)
-      call grid(phi(:,:,k), phig1(:,k), 1)
+      call grid(phi(:,:,k)*(1/cp), phig1(:,k), 1)
+    end do
+
+    do k=3,kx
+        call grid(tr(:,:,k,j1,1), qg1(:,k), 1)
     end do
 
     call grid(ps(:,:,j1),pslg1,1)
 
     ! 1.3 Grid-point variables for dynamics tendencies
     do k=1,kx
-        call grid(vor(:,:,k,j2),vorg(:,:,k),1)
-        call grid(div(:,:,k,j2),divg(:,:,k),1)
+        call grid(vor(:,:,k,j2)*3600.0_dp,vorg(:,:,k),1)
+        call grid(div(:,:,k,j2)*3600.0_dp,divg(:,:,k),1)
 
         do itr=1,ntr
           call grid(tr(:,:,k,j2,itr),trg(:,:,k,itr),1)
@@ -74,12 +81,10 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
         do j=1,il
             do i=1,ix
-                vorg(i,j,k)=vorg(i,j,k)*3600.0_dp+coriol(j)
+                vorg(i,j,k)=vorg(i,j,k)+coriol(j)
             end do
         end do
     end do
-
-    divg = divg * 3600.0_dp
 
     ! 2. Parametrized physics tendencies
     call phypar(utend, vtend, ttend, trtend)

@@ -419,12 +419,12 @@ module spectral
             integer, intent(in) :: kcos
             type(rpe_complex_var) :: varm(mx,il)
 
-            type(rpe_var) :: scaling_factor, vorm_max
+            real(dp) :: scaling_factor, vorm_max
 
             ! Scale the input so the maximum value is alpha
             vorm_max = max(maxval(real( real(vorm%val))), &
                            maxval(real(aimag(vorm%val))))
-            scaling_factor = rpe_literal(alpha) / vorm_max
+            scaling_factor = alpha / vorm_max
             vorm_sc = vorm * scaling_factor
 
             call gridy(vorm_sc,varm)
@@ -442,10 +442,10 @@ module spectral
             type(rpe_var) :: vorg_sc(ix,il)
             type(rpe_complex_var) :: varm(mx,il)
 
-            type(rpe_var) :: scaling_factor
+            real(dp) :: scaling_factor
 
             ! Scale the input so the maximum value is alpha
-            scaling_factor = rpe_literal(alpha) / maxval(vorg%val)
+            scaling_factor = alpha / maxval(vorg%val)
             vorg_sc = vorg * scaling_factor
 
             call specx(vorg_sc,varm)
