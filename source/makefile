@@ -105,7 +105,7 @@ dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
                          mod_prec.o
 dyn_grtend.o           : dyn_grtend.f90 mod_atparam.o mod_dynvar.o\
                          mod_physvar.o mod_dyncon1.o mod_physcon.o\
-                         spe_spectral.o mod_prec.o
+                         spe_spectral.o phy_shtorh.o mod_prec.o
 dyn_implic.o           : dyn_implic.f90 mod_atparam.o mod_dyncon2.o mod_prec.o
 dyn_sptend.o           : dyn_sptend.f90 mod_atparam.o mod_dynvar.o\
                          mod_dyncon1.o mod_dyncon2.o spe_spectral.o mod_prec.o

@@ -52,18 +52,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     ! gradient of dry static energy (dSE/dPHI)
     type(rpe_var), dimension(ngp) :: gse
 
-    ! Temperature in Celsius
-    tg1 = tg1 - zero_c
-
-    ! Normalise geopotential by cp
-!    phig1 = phig1 / cp
-
-    ! Truncate all variables
-    call set_precision('Half')
-    call apply_truncation(ug1)
-    call apply_truncation(vg1)
-    call apply_truncation(tg1)
-
     ! 1. Compute thermodynamic variables
     do j=1,ngp
         psg(j)=exp(pslg1(j))
@@ -179,7 +167,4 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Additive random noise
     call additive_forcing(tt_phy)
-
-    ! Convert temperature back to Kelvin
-    tg1 = tg1 + zero_c
 end subroutine phypar

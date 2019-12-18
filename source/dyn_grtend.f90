@@ -24,6 +24,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_dyncon1, only: coriol
     use mod_physcon, only: cp
     use spectral, only: uvspec, grid
+    use humidity, only: zero_c
     use mod_prec, only: set_precision, dp
     use rp_emulator
 
@@ -53,18 +54,31 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 1.2 Grid-point variables for physics tendencies
     do k=1,kx
-      call grid(t(:,:,k,j1), tg1(:,k), 1)
-    end do
-
-    do k=1,kx
       call uvspec(vor(:,:,k, j1),div(:,:,k, j1),ug1(:,k),vg1(:,k))
     end do
 
+    ! Convert temperature to Celsius prior to spectral transform
+    ! Subtract from zeroth mode taking into account sqrt(2) factor
+    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
+
     call set_precision('Half')
+
+    ! Truncate variables where the spectral transform is still done at double
+    ! precision
+    call apply_truncation(ug1)
+    call apply_truncation(vg1)
+
+    do k=1,kx
+      call grid(t(:,:,k,j1), tg1(:,k), 1)
+    end do
+
+    ! Normalise geopotential by cp to avoid overflows in physics
     do k=1,kx
       call grid(phi(:,:,k)*(1/cp), phig1(:,k), 1)
     end do
 
+    ! Don't transform the two stratospheric levels where humidity is set to zero
+    ! because it leads to overflows
     do k=3,kx
         call grid(tr(:,:,k,j1,1), qg1(:,k), 1)
     end do
@@ -72,6 +86,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     call grid(ps(:,:,j1),pslg1,1)
 
     ! 1.3 Grid-point variables for dynamics tendencies
+    ! Set units of vorticity and divergence to 'per hour' to reduce underflows
     do k=1,kx
         call grid(vor(:,:,k,j2)*3600.0_dp,vorg(:,:,k),1)
         call grid(div(:,:,k,j2)*3600.0_dp,divg(:,:,k),1)
@@ -99,8 +114,12 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         ! Only recalculate tg, ug and vg if phypar and dyntend use different
         ! time indices (j1/=j2)
         do k=1,kx
-            call grid(  t(:,:,k,j2),  tg(:,:,k),1)
             call uvspec(vor(:,:,k,j2), div(:,:,k,j2), ug(:,:,k), vg(:,:,k))
+        end do
+
+        call set_precision('Half')
+        do k=1,kx
+            call grid(t(:,:,k,j2), tg(:,:,k),1)
         end do
 
         call dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
@@ -108,6 +127,8 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
                      ug, vg, tg, vorg, divg, trg)
     end if
 
+    ! Convert spectral temperature back to Kelvin
+    t(1,1,:,:) = t(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 end subroutine grtend
 
 subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
@@ -138,6 +159,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     use mod_dyncon1, only: akap, rgas, dhs, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
+    use humidity, only: zero_C
     use mod_prec, only: dp, set_precision
     use rp_emulator
 
@@ -210,7 +232,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     ! Subtract part of temperature field that is used as reference for
     ! implicit terms
     do k=1,kx
-        tgg(:,:,k) = tg(:,:,k)-tref(k)
+        tgg(:,:,k) = tg(:,:,k)-(tref(k)-zero_c)
     end do
 
     px = rgas*px
@@ -252,7 +274,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
                     & -(temp(i,j,k+1)+temp(i,j,k))*dhsr(k)&
                     & +fsgr(k)*tgg(i,j,k)*(sigdt(i,j,k+1)+sigdt(i,j,k))&
                     & +tref3(k)*(sigm(i,j,k+1)+sigm(i,j,k))&
-                    & +akap*(tg(i,j,k)*puv(i,j,k)&
+                    & +akap*((tg(i,j,k)+zero_c)*puv(i,j,k)&
                     & -tgg(i,j,k)*dmean(i,j))
             end do
         end do
