@@ -55,7 +55,6 @@ subroutine agcm_1day(jday)
     ! 1. set forcing terms according to date
     call set_precision('Half')
     call fordate()
-    call set_precision('Double')
 
     ! 2. set daily-average flux arrays to zero
     call ini_fluxes()

@@ -48,6 +48,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 1. Compute grid-point fields
     ! 1.1 Update geopotential in spectral space
+    call set_precision('Double')
     call geop(j1)
 
     ! 1.2 Grid-point variables for physics tendencies
@@ -177,14 +178,11 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     end do
 
     ! Compute tendency of log(surface pressure)
-    call set_precision('Spectral Transform')
+    call set_precision('Double')
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
-    call grid(dumc(:,:,2),px,2)
-    call grid(dumc(:,:,3),py,2)
     call set_precision('Half')
-
-    px = px * 3600.0_dp
-    py = py * 3600.0_dp
+    call grid(dumc(:,:,2)*3600.0_dp, px, 2)
+    call grid(dumc(:,:,3)*3600.0_dp, py, 2)
 
     dumr(:,:,1) = -umean * px - vmean * py
 

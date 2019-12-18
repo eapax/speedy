@@ -60,12 +60,9 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! Truncate all variables
     call set_precision('Half')
-    call apply_truncation(pslg1)
     call apply_truncation(ug1)
     call apply_truncation(vg1)
     call apply_truncation(tg1)
-    call apply_truncation(qg1)
-    call apply_truncation(phig1)
 
     ! 1. Compute thermodynamic variables
     do j=1,ngp
