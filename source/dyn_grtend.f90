@@ -24,7 +24,6 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     use mod_dyncon1, only: coriol
     use mod_physcon, only: cp
     use spectral, only: uvspec, grid
-    use humidity, only: zero_c
     use mod_prec, only: set_precision, dp
     use rp_emulator
 
@@ -54,7 +53,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 1.2 Grid-point variables for physics tendencies
     do k=1,kx
-      call uvspec(vor(:,:,k, j1),div(:,:,k, j1),ug1(:,k),vg1(:,k))
+      call uvspec(vor(:,:,k, j1)*(1/3600.0_dp),div(:,:,k, j1),ug1(:,k),vg1(:,k))
     end do
 
     ! Truncate variables where the spectral transform is still done at double
@@ -83,7 +82,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     ! 1.3 Grid-point variables for dynamics tendencies
     ! Set units of vorticity and divergence to 'per hour' to reduce underflows
     do k=1,kx
-        call grid(vor(:,:,k,j2)*3600.0_dp,vorg(:,:,k),1)
+        call grid(vor(:,:,k,j2),vorg(:,:,k),1)
         call grid(div(:,:,k,j2)*3600.0_dp,divg(:,:,k),1)
 
         do itr=1,ntr
@@ -109,7 +108,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         ! Only recalculate tg, ug and vg if phypar and dyntend use different
         ! time indices (j1/=j2)
         do k=1,kx
-            call uvspec(vor(:,:,k,j2), div(:,:,k,j2), ug(:,:,k), vg(:,:,k))
+            call uvspec(vor(:,:,k,j2)*(1/3600.0_dp), div(:,:,k,j2), ug(:,:,k), vg(:,:,k))
         end do
 
         call set_precision('Half')

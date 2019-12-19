@@ -132,6 +132,9 @@ subroutine invars()
         stop
     endif
 
+    ! Convert vorticity to per hour
+    vor = vor * 3600.0_dp
+
     ! Convert temperature to Celsius
     ! Subtract from zeroth mode taking into account sqrt(2) factor
     t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
