@@ -102,7 +102,7 @@ cpl_sea.o              : cpl_sea.f90 mod_cpl_flags.o mod_atparam.o\
 cpl_sea_model.o        : cpl_sea_model.f90 mod_atparam.o mod_cplcon_sea.o\
                          mod_cplvar_sea.o mod_prec.o
 dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
-                         mod_prec.o
+                         phy_shtorh.o mod_prec.o
 dyn_grtend.o           : dyn_grtend.f90 mod_atparam.o mod_dynvar.o\
                          mod_physvar.o mod_dyncon1.o mod_physcon.o\
                          spe_spectral.o phy_shtorh.o mod_prec.o
@@ -208,8 +208,8 @@ phy_vdifsc.o           : phy_vdifsc.f90 mod_atparam.o mod_prec.o mod_physcon.o
 ppo_diagns.o           : ppo_diagns.f90 mod_tsteps.o mod_atparam.o mod_dynvar.o\
                          ppo_output_stream.o spe_spectral.o mod_prec.o
 ppo_output_stream.o    : ppo_output_stream.f90 mod_atparam.o mod_dynvar.o\
-                         mod_physvar.o mod_physcon.o mod_date.o ppo_plevs.o\
-                         spe_spectral.o mod_fordate.o mod_solar.o\
+                         mod_physvar.o mod_physcon.o mod_date.o phy_shtorh.o\
+                         ppo_plevs.o spe_spectral.o mod_fordate.o mod_solar.o\
                          mod_var_land.o mod_var_sea.o mod_surfcon.o mod_prec.o
 ppo_plevs.o            : ppo_plevs.f90 mod_atparam.o mod_dynvar.o mod_physvar.o\
                          mod_physcon.o spe_spectral.o mod_prec.o

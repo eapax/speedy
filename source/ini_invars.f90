@@ -5,10 +5,11 @@ subroutine invars()
 
     use mod_dyncon0, only: gamma, hscale, hshum, refrh1
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: vor, div, t, ps, tr, phis
     use mod_dyncon1, only: grav, rgas, fsg
     use mod_surfcon, only: phi0, phis0
     use mod_date, only: iyear0, imonth0, istart, iyear, imonth, iday, ihour
+    use humidity, only: zero_C
     use spectral, only: grid, spec
     use rp_emulator
     use mod_prec, only: dp
@@ -130,4 +131,8 @@ subroutine invars()
         print *, 'IMPOSSIBLE!! check the fort.2 file!'
         stop
     endif
+
+    ! Convert temperature to Celsius
+    ! Subtract from zeroth mode taking into account sqrt(2) factor
+    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 end subroutine invars

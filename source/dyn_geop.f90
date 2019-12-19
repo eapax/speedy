@@ -7,8 +7,9 @@ subroutine geop(jj)
     ! Modified common blocks : DYNSP2
 
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: t, phi, phis
     use mod_dyncon1, only: xgeop1, xgeop2, hsg, fsg
+    use humidity, only: zero_C
     use rp_emulator
     use mod_prec, only: dp
 
@@ -17,6 +18,9 @@ subroutine geop(jj)
     integer, intent(in) :: jj
     integer :: k
     type(rpe_var) :: corf
+
+    ! Convert temperature to Kelvin
+    t(1,1,:,:) = t(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 
     ! 1. Bottom layer (integration over half a layer)
     phi(:,:,kx) = phis + xgeop1(kx) * t(:,:,kx,jj)
@@ -33,4 +37,7 @@ subroutine geop(jj)
                 log(hsg(k+1)/fsg(k)) / log(fsg(k+1)/fsg(k-1))
         phi(1,:,k) = phi(1,:,k) + corf*(t(1,:,k+1,jj) - t(1,:,k-1,jj))
     end do
+
+    ! Convert temperature to Celsius
+    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 end subroutine geop

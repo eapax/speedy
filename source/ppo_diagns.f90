@@ -8,7 +8,7 @@ subroutine diagns(jj,istep)
 
     use mod_tsteps, only: nstdia
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: vor, div, t
     use spectral, only: invlap
     use ppo_output_stream, only: update_output
     use rp_emulator
@@ -57,20 +57,20 @@ subroutine diagns(jj,istep)
     end if
 
     ! 3. Stop integration if model variables are out of range
-    do k=1,kx
-        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<180 .or.&
-            & diag(k,3)>320.) then
-
-            print 2001, istep, (diag(kk,1),kk=1,kx)
-            print 2002,        (diag(kk,2),kk=1,kx)
-            print 2003,        (diag(kk,3),kk=1,kx)
-
-            ! Dump model fields to restart file
-            call restart(2)
-
-            stop '*** model variables out of accepted range ***'
-        end if
-    end do
+!    do k=1,kx
+!        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<180 .or.&
+!            & diag(k,3)>320.) then
+!
+!            print 2001, istep, (diag(kk,1),kk=1,kx)
+!            print 2002,        (diag(kk,2),kk=1,kx)
+!            print 2003,        (diag(kk,3),kk=1,kx)
+!
+!            ! Dump model fields to restart file
+!            call restart(2)
+!
+!            stop '*** model variables out of accepted range ***'
+!        end if
+!    end do
 
     2001 format(' step =',i6,' reke =',(10f8.2))
     2002 format         (13x,' deke =',(10f8.2))

@@ -8,11 +8,12 @@ subroutine restart(jday)
     !
 
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: vor, div, t, ps, tr
     use mod_date, only: iyear, imonth, iday, ihour
     use mod_downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, &
             calc_grid_weights
     use mod_prec
+    use rp_emulator
 
     implicit none
 

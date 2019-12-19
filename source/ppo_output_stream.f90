@@ -1,11 +1,12 @@
 module ppo_output_stream
 
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: vor, div, t, ps, tr, phi, phis
     use mod_physvar
     use mod_physcon, only: gg, sig, pout
     use mod_cli_sea, only: deglat_s
     use mod_date, only: imonth, month_start
+    use humidity, only: zero_C
     use spectral, only: uvspec, grid
     use ppo_plevs, only: pressure_levels, np
     use mod_prec, only: sp, dp
@@ -129,6 +130,9 @@ module ppo_output_stream
                 do k=1,kx
                     call grid(t(:,:,k,1), tg1(:,k), 1)
                 end do
+
+                ! Convert temperature to Kelvin
+                tg1 = tg1 + zero_C
             end if
 
             ! Humidity

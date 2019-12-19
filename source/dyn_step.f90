@@ -22,7 +22,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     use mod_dyncon0, only: tdrs
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: vor, div, t, ps, tr
     use mod_hdifcon
     use rp_emulator
     use mod_prec, only: dp, set_precision

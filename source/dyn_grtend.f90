@@ -19,7 +19,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     !
 
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: vor, div, t, ps, tr, phi
     use mod_physvar, only: ug1, vg1, tg1, qg1, phig1, pslg1
     use mod_dyncon1, only: coriol
     use mod_physcon, only: cp
@@ -57,14 +57,9 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
       call uvspec(vor(:,:,k, j1),div(:,:,k, j1),ug1(:,k),vg1(:,k))
     end do
 
-    ! Convert temperature to Celsius prior to spectral transform
-    ! Subtract from zeroth mode taking into account sqrt(2) factor
-    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
-
-    call set_precision('Half')
-
     ! Truncate variables where the spectral transform is still done at double
     ! precision
+    call set_precision('Half')
     call apply_truncation(ug1)
     call apply_truncation(vg1)
 
@@ -126,9 +121,6 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
                      utend, vtend, ttend, trtend, &
                      ug, vg, tg, vorg, divg, trg)
     end if
-
-    ! Convert spectral temperature back to Kelvin
-    t(1,1,:,:) = t(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 end subroutine grtend
 
 subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
@@ -155,7 +147,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     !           psdt  = spectral tendency of log(p_s)
     !           trdt  = spectral tendency of tracers
     use mod_atparam
-    use mod_dynvar
+    use mod_dynvar, only: ps
     use mod_dyncon1, only: akap, rgas, dhs, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
