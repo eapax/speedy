@@ -49,6 +49,9 @@ subroutine diagns(jj,istep)
         end do
     end do
 
+    diag(:, 1) = diag(:, 1) * (1/3600.0_dp)**2
+    diag(:, 2) = diag(:, 2) * (1/3600.0_dp)**2
+
     ! 2. Print results to screen
     if (mod(istep,nstdia)==0) then
         print 2001, istep, (diag(k,1),k=1,kx)
@@ -57,20 +60,20 @@ subroutine diagns(jj,istep)
     end if
 
     ! 3. Stop integration if model variables are out of range
-!    do k=1,kx
-!        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<180 .or.&
-!            & diag(k,3)>320.) then
-!
-!            print 2001, istep, (diag(kk,1),kk=1,kx)
-!            print 2002,        (diag(kk,2),kk=1,kx)
-!            print 2003,        (diag(kk,3),kk=1,kx)
-!
-!            ! Dump model fields to restart file
-!            call restart(2)
-!
-!            stop '*** model variables out of accepted range ***'
-!        end if
-!    end do
+    do k=1,kx
+        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<180 .or.&
+            & diag(k,3)>320.) then
+
+            print 2001, istep, (diag(kk,1),kk=1,kx)
+            print 2002,        (diag(kk,2),kk=1,kx)
+            print 2003,        (diag(kk,3),kk=1,kx)
+
+            ! Dump model fields to restart file
+            call restart(2)
+
+            stop '*** model variables out of accepted range ***'
+        end if
+    end do
 
     2001 format(' step =',i6,' reke =',(10f8.2))
     2002 format         (13x,' deke =',(10f8.2))
