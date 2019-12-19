@@ -14,7 +14,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
     use mod_dyncon2, only: tref, tref2, tref3
     use spectral, only: lap
     use rp_emulator
-    use mod_prec, only: dp
+    use mod_prec, only: dp, set_precision
 
     implicit none
 
@@ -59,6 +59,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
     end do
 
     ! Geopotential and divergence tendency
+    call set_precision('Double')
     call geop(j4)
 
     do k=1,kx

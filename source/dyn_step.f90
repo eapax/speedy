@@ -44,7 +44,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
 
     ! 2. Computation of spectral tendencies
-    call set_precision('Spectral Dynamics')
+    call set_precision('Half')
     if (alph==rpe_literal(0.0_dp)) then
         call sptend(divdt,tdt,psdt,j2)
     else
