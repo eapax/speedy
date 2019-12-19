@@ -104,8 +104,8 @@ cpl_sea_model.o        : cpl_sea_model.f90 mod_atparam.o mod_cplcon_sea.o\
 dyn_geop.o             : dyn_geop.f90 mod_atparam.o mod_dynvar.o mod_dyncon1.o\
                          phy_shtorh.o mod_prec.o
 dyn_grtend.o           : dyn_grtend.f90 mod_atparam.o mod_dynvar.o\
-                         mod_physvar.o mod_dyncon1.o mod_physcon.o\
-                         spe_spectral.o phy_shtorh.o mod_prec.o
+                         mod_physvar.o mod_dyncon1.o mod_dyncon2.o\
+                         mod_physcon.o spe_spectral.o phy_shtorh.o mod_prec.o
 dyn_implic.o           : dyn_implic.f90 mod_atparam.o mod_dyncon2.o mod_prec.o
 dyn_sptend.o           : dyn_sptend.f90 mod_atparam.o mod_dynvar.o\
                          mod_dyncon1.o mod_dyncon2.o spe_spectral.o mod_prec.o
@@ -216,6 +216,6 @@ ppo_plevs.o            : ppo_plevs.f90 mod_atparam.o mod_dynvar.o mod_physvar.o\
 ppo_restart.o          : ppo_restart.f90 mod_atparam.o mod_dynvar.o mod_date.o\
                          mod_downscaling.o mod_prec.o
 spe_matinv.o           : spe_matinv.f90 mod_prec.o
-spe_spectral.o         : spe_spectral.f90 mod_atparam.o mod_prec.o
+spe_spectral.o         : spe_spectral.f90 mod_atparam.o mod_prec.o mod_dyncon1.o
 spe_subfft_fftpack.o   : spe_subfft_fftpack.f90 mod_atparam.o spe_spectral.o\
                          mod_fft.o mod_prec.o

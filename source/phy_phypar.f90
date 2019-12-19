@@ -12,12 +12,12 @@ subroutine phypar(utend,vtend,ttend,qtend)
     use mod_atparam
     use mod_physvar
     use mod_cpl_flags, only: icsea
-    use mod_physcon, only: sig, sigh, grdsig, grdscp, cp
+    use mod_physcon, only: sig, sigh, grdsig, grdscp
     use mod_surfcon, only: fmask1, phis0
     use mod_var_land, only: stl_am, soilw_am
     use mod_var_sea, only: sst_am, ssti_om
     use mod_fluxes, only: increment_fluxes
-    use humidity, only: shtorh_celsius, zero_c
+    use humidity, only: shtorh_celsius
     use phy_convmf, only: convmf
     use phy_lscond, only: lscond
     use phy_cloud, only: cloud
