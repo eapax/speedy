@@ -58,7 +58,7 @@ subroutine truncate_rp()
     ! Truncate general dynamics constants used in multiple schemes
     call truncate_dyncon0()
     call truncate_dyncon1()
-    !call truncate_dyncon2()
+    call truncate_dyncon2()
     call truncate_hdifcon()
 
     ! Truncate timestepping constants

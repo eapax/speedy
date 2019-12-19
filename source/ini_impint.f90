@@ -21,7 +21,7 @@ subroutine impint(dt,alph)
     use mod_dyncon0, only: gamma
     use mod_atparam
     use mod_dyncon1, only: rearth, akap, rgas, hsg, dhs, fsg, fsgr, grav
-    use mod_dyncon2
+    use mod_dyncon2, only: tref, tref1, tref2, tref3, xc, xd, xe, xj, dhsx, elz
     use mod_hdifcon, only: dmp, dmpd, dmps, dmp1, dmp1d, dmp1s
     use rp_emulator
     use mod_prec, only: dp
@@ -32,6 +32,8 @@ subroutine impint(dt,alph)
     real(dp) :: dsum(kx), ya(kx,kx)
     integer :: indx(kx), m, n, k, k1, k2, l, ll, mm
     real(dp) :: rgam, xi, xxi, xxx
+    real(dp), dimension(kx, kx) :: xa, xb
+    real(dp), dimension(kx, kx, lmax) :: xf
 
     ! 1. Constants for backwards implicit biharmonic diffusion
     do m=1,mx
