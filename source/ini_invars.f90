@@ -108,23 +108,14 @@ subroutine invars()
             print *, 'vertical scale factor at level ', k, factk
             tr(:,:,k,1,1) = surfs * factk
         end do
-
-        ! Print diagnostics from initial conditions
-        call diagns (1,0)
     else if (istart==1) then
         ! 3. Start from restart file
         print*,' reading a restart file'
-
         call restart(0)
-
-        ! Print diagnostics from initial conditions
-        call diagns (2,0)
     else if (istart==2) then
         ! 4. Start from grid initial condition
-
         !TODO reimplement starting from gridded data
         !call iogrid(1)
-        !call diagns(1,0)
         print *, 'Starting from gridded data not implemented yet'
         stop
     else
@@ -139,4 +130,11 @@ subroutine invars()
     ! Convert temperature to Celsius
     ! Subtract from zeroth mode taking into account sqrt(2) factor
     t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
+
+    ! Print diagnostics from initial conditions
+    if(istart==1) then
+        call diagns (2,0)
+    else
+        call diagns (1,0)
+    end if
 end subroutine invars

@@ -61,8 +61,8 @@ subroutine diagns(jj,istep)
 
     ! 3. Stop integration if model variables are out of range
     do k=1,kx
-        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<180 .or.&
-            & diag(k,3)>320.) then
+        if (diag(k,1)>500 .or. diag(k,2)>500 .or. diag(k,3)<-100 .or.&
+            & diag(k,3)>50) then
 
             print 2001, istep, (diag(kk,1),kk=1,kx)
             print 2002,        (diag(kk,2),kk=1,kx)
