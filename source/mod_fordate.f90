@@ -125,8 +125,6 @@ module mod_fordate
                 ablco2 = ablco2_ref * exp(del_co2 * (iyear + tyear - iyear_ref))
             end if
 
-            call set_precision('Double')
-
             ! 2. temperature correction term for horizontal diffusion
             corh = gamlat * phis0
 
