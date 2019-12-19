@@ -45,7 +45,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! Convert tendencies to per second
     !vordt = vordt * (1.0_dp/3600.0_dp)
-    divdt = divdt * (1.0_dp/3600.0_dp)
+    !divdt = divdt * (1.0_dp/3600.0_dp)
     tdt = tdt * (1.0_dp/3600.0_dp)
     psdt = psdt * (1.0_dp/3600.0_dp)
     trdt = trdt * (1.0_dp/3600.0_dp)

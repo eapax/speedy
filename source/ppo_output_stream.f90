@@ -121,8 +121,11 @@ module ppo_output_stream
             ! u and/or v
             if (l_transform_field(1) .or. l_transform_field(2)) then
                 do k=1,kx
-                    call uvspec(vor(:,:,k,1)*(1/3600.0_dp), div(:,:,k,1), ug1(:,k), vg1(:,k))
+                    call uvspec(vor(:,:,k,1), div(:,:,k,1), ug1(:,k), vg1(:,k))
                 end do
+
+                ug1 = ug1 / 3600.0_dp
+                vg1 = vg1 / 3600.0_dp
             end if
 
             ! Temperature

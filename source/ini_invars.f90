@@ -132,8 +132,9 @@ subroutine invars()
         stop
     endif
 
-    ! Convert vorticity to per hour
+    ! Convert vorticity and divergence to per hour
     vor = vor * 3600.0_dp
+    div = div * 3600.0_dp
 
     ! Convert temperature to Celsius
     ! Subtract from zeroth mode taking into account sqrt(2) factor
