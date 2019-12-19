@@ -43,13 +43,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     ! (converted to spectral at the end of GRTEND)
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
 
-    ! Convert tendencies to per second
-    !vordt = vordt * (1.0_dp/3600.0_dp)
-    !divdt = divdt * (1.0_dp/3600.0_dp)
-    tdt = tdt * (1.0_dp/3600.0_dp)
-    psdt = psdt * (1.0_dp/3600.0_dp)
-    trdt = trdt * (1.0_dp/3600.0_dp)
-
     ! 2. Computation of spectral tendencies
     call set_precision('Spectral Dynamics')
     if (alph==rpe_literal(0.0_dp)) then
@@ -60,6 +53,11 @@ subroutine step(j1,j2,dt,alph,rob,wil)
         ! implicit correction
         call implic(divdt,tdt,psdt)
     endif
+
+    ! Convert tendencies to per second
+    tdt = tdt * (1.0_dp/3600.0_dp)
+    psdt = psdt * (1.0_dp/3600.0_dp)
+    trdt = trdt * (1.0_dp/3600.0_dp)
 
     ! 3. Horizontal diffusion
     call set_precision('Diffusion')

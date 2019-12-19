@@ -34,7 +34,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
         dmeanc = dmeanc + div(:,:,k,j4) * dhs(k)
     end do
 
-    psdt = psdt - dmeanc * (1/3600.0_dp)
+    psdt = psdt - dmeanc
     psdt(1,1) = zero
 
     ! Sigma-dot "velocity" and temperature tendency
@@ -42,7 +42,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
     sigdtc(:,:,kxp) = zero
 
     do k=1,kxm
-        sigdtc(:,:,k+1) = sigdtc(:,:,k) - dhs(k)*(div(:,:,k,j4) - dmeanc) * (1/3600.0_dp)
+        sigdtc(:,:,k+1) = sigdtc(:,:,k) - dhs(k)*(div(:,:,k,j4) - dmeanc)
     end do
 
     dumk(:,:,1) = zero
@@ -55,7 +55,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
     do k=1,kx
         tdt(:,:,k) = tdt(:,:,k) - (dumk(:,:,k+1) + dumk(:,:,k)) * dhsr(k)&
             & + tref3(k) * (sigdtc(:,:,k+1) + sigdtc(:,:,k))&
-            & - tref2(k) * dmeanc * (1/3600.0_dp)
+            & - tref2(k) * dmeanc
     end do
 
     ! Geopotential and divergence tendency

@@ -36,7 +36,7 @@ subroutine implic(divdt,tdt,psdt)
     do k=1,kx
         do m=1,mx
             do n=1,nx
-                yf(m,n,k)=divdt(m,n,k)+elz(m,n)*ye(m,n,k)*3600.0_dp
+                yf(m,n,k)=divdt(m,n,k)+elz(m,n)*ye(m,n,k)
             end do
         end do
     end do
@@ -56,12 +56,12 @@ subroutine implic(divdt,tdt,psdt)
     end do
 
     do k=1,kx
-        psdt = psdt - divdt(:,:,k) * dhsx(k) * (1/3600.0_dp)
+        psdt = psdt - divdt(:,:,k) * dhsx(k)
     end do
 
     do k=1,kx
         do k1=1,kx
-            tdt(:,:,k) = tdt(:,:,k) + xc(k,k1) * divdt(:,:,k1) * (1/3600.0_dp)
+            tdt(:,:,k) = tdt(:,:,k) + xc(k,k1) * divdt(:,:,k1)
         end do
     end do
 end subroutine implic
