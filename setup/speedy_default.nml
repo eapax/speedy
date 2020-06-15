@@ -96,17 +96,17 @@
     istart=1,
     ! Start date
     ! YYYY
-    iyear0=1982,
+    iyear0=1983,
     ! MM
     imonth0=1,
     ! DD
     iday0=1,
     ! Integration length in months
-    nmonts=1,
+    nmonts=12,
     ! No. of days in the last month of int. (max=30)
     ndaysl=0,
     ! Seasonal cycle flag (0=no, 1=yes)
-    iseasc=1,
+    iseasc=0,
 /
 
 ! mod_dyncon0
