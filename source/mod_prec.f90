@@ -25,7 +25,8 @@ module mod_prec
             rp_diffusion=52, &
             rp_timestepping=52, &
             rp_prognostics=52, &
-            rp_tendencies=52
+            rp_tendencies=52, &
+            rp_half_bits=10
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, &
@@ -34,7 +35,7 @@ module mod_prec
             rp_sw_radiation, rp_lw_radiation, rp_surface_fluxes, &
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
-            rp_prognostics, rp_tendencies
+            rp_prognostics, rp_tendencies,rp_half_bits
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -50,6 +51,7 @@ module mod_prec
             close(99)
 
             call set_precision('Double')
+            print*, "RPE_ACTIVE ", RPE_ACTIVE
         end subroutine
 
         subroutine set_precision(mode)
@@ -68,7 +70,7 @@ module mod_prec
                 RPE_DEFAULT_SBITS = 23
 
                 case('Half')
-                RPE_DEFAULT_SBITS = 10
+                RPE_DEFAULT_SBITS = rp_half_bits
 
                 case('Initial Values')
                 RPE_DEFAULT_SBITS = rp_initial_values
