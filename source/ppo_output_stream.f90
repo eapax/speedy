@@ -472,7 +472,7 @@ module ppo_output_stream
 
                 ! precnv = convective precipitation  [g/(m^2 s)], total
                 case(31)
-                output(:, 1) = precnv / 3600.0_dp
+                output(:, 1) = precnv
                 l_3d = .false.
 
                 ! precls = large-scale precipitation [g/(m^2 s)], total
@@ -1218,7 +1218,7 @@ module ppo_output_stream
 
             ! Write the coordinate variable data
             call check( nf90_put_var(stream%file_ID, lon_varid, (/ (n*(360.0_dp/ix), n=0, ix-1) /)) )
-            call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s%val) )
+            call check( nf90_put_var(stream%file_ID, lat_varid, deglat_s(il:1:-1)%val) )
             if (stream%plevs) then
                 call check( nf90_put_var(stream%file_ID, lvl_varid, pout(kx:1:-1)*1000) )
             else
