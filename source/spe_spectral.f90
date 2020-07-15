@@ -423,7 +423,8 @@ module spectral
 
             ! Scale the input so the maximum value is alpha
             vorm_max = max(maxval(real( real(vorm%val))), &
-                           maxval(real(aimag(vorm%val))))
+                 maxval(real(aimag(vorm%val))))
+            vorm_max = max(vorm_max,10d0**(-6))
             scaling_factor = alpha / vorm_max
             vorm_sc = vorm * scaling_factor
 
@@ -445,7 +446,7 @@ module spectral
             real(dp) :: scaling_factor
 
             ! Scale the input so the maximum value is alpha
-            scaling_factor = alpha / maxval(vorg%val)
+            scaling_factor = alpha / max(maxval(vorg%val),10d0**(-6))
             vorg_sc = vorg * scaling_factor
 
             call specx(vorg_sc,varm)

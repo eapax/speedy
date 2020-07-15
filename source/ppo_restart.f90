@@ -13,6 +13,7 @@ subroutine restart(jday)
     use mod_downscaling, only: mx_in, nx_in, kx_in, ix_in, il_in, &
             calc_grid_weights
     use mod_prec
+    use humidity,only: zero_c
     use rp_emulator
 
     implicit none
@@ -114,13 +115,22 @@ subroutine restart(jday)
 
         ! Write date to restart file
         write (10) iyear, imonth, iday, ihour
+        vor_in(1:mx, 1:nx, :, :)    = vor(1:mx, 1:nx, :, :)
+        vor_in = vor_in/ 3600.0_dp
+        div_in(1:mx, 1:nx, :, :)    = div(1:mx, 1:nx, :, :)
+        div_in = div_in / 3600.0_dp
+        T_in  (1:mx, 1:nx, :, :)    = T  (1:mx, 1:nx, :, :)
+        T_in(1,1,:,:) = T_in(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 
+        Ps_in (1:mx, 1:nx, :)       = Ps (1:mx, 1:nx, :)
+        tr_in (1:mx, 1:nx, :, :, :) = tr (1:mx, 1:nx, :, :, :)
+        ! print*, tr_in(:,:,1,1,1)
         ! Write prognostic variables to restart file
-        write (10) vor
-        write (10) div
-        write (10) t
-        write (10) ps
-        write (10) tr
+        write (10) vor_in
+        write (10) div_in
+        write (10) t_in
+        write (10) ps_in
+        write (10) tr_in
 
         ! Write surface fields to restart file
         call rest_land(1)

@@ -127,9 +127,9 @@ subroutine rest_land(imode)
         ! Write land model variables from coupled runs,
         ! otherwise write fields used by atmospheric model
         if (icland>0) then
-            write (10) stl_lm(:)
+            write (10) stl_lm(:)%val
         else
-            write (10) stl_am(:)
+            write (10) stl_am(:)%val
         end if
     end if
 end subroutine rest_land

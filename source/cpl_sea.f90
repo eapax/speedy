@@ -233,18 +233,18 @@ subroutine rest_sea(imode)
         sstfr = 273.2_dp-1.8_dp
 
         if (icsea>0) then
-            write (10) sst_om(:)
+            write (10) sst_om(:)%val
         else
             sst_c(:) = max(sst_am(:),sstfr)
-            write (10) sst_c(:)
+            write (10) sst_c(:)%val
         end if
 
         if (icice>0) then
-            write (10) tice_om(:)
-            write (10) sice_om(:)
+            write (10) tice_om(:)%val
+            write (10) sice_om(:)%val
         else
-            write (10) tice_am(:)
-            write (10) sice_am(:)
+            write (10) tice_am(:)%val
+            write (10) sice_am(:)%val
         end if
     end if
 end subroutine rest_sea
