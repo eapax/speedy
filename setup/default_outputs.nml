@@ -5,7 +5,7 @@
 &output_file
     filename='model_output.nc',
     spectral=.false.,
-    plevs=.false.,
+    plevs=.true.,
     nstpinc=9,
     nstpout=9,
     nstpopen=25000,
