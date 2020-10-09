@@ -28,8 +28,9 @@ else
     echo "Using fresh-start namelist"
     namelist=${UT}/setup/speedy_norestart.nml
 fi
-output=${UT}/setup/default_outputs.nml
-precisions=${UT}/setup/precisions_default.nml
+#output=${UT}/setup/default_outputs.nml
+output=${UT}/setup/plevs_outputs.nml
+precisions=${UT}/setup/double_precision.nml
 
 # Copy files from basic version directory
 mkdir -p ${TMP}
@@ -53,8 +54,8 @@ SH=${UT}/hflux
 cd ${TMP}
 ln -s ${BC}/climatology.nc climatology.nc
 #ln -s ${BC}/anomalies.nc   anomalies.nc
-#ln -s ${BC}/blank_anomalies.nc   anomalies.nc
-ln -s ${BC}/elNino_anomalies.nc anomalies.nc
+ln -s ${BC}/blank_anomalies.nc   anomalies.nc
+#ln -s ${BC}/elNino_anomalies.nc anomalies.nc
 ln -s ${SH}/hflux_speedy_ver41_1979_2008_clim.grd fort.31
 
 # Link netCDF library
@@ -64,7 +65,7 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${UT}/../rpe_complex/lib/
 time ./imp.exe | tee out.lis
 
 # Copy output to experiment directory
-mkdir -p ${OUT}
-# mv model_output.nc ${OUT}
+#mkdir -p ${OUT}
+#mv model_output.nc ${OUT}
 
 # mv *.rst ${OUT}
