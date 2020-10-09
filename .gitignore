@@ -3,6 +3,7 @@
 *.nc
 *.mod
 *.o
+nohup.out
 output
 rpe
 tmp
