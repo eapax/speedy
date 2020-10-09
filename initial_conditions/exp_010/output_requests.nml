@@ -1,0 +1,24 @@
+&output
+    nstreams=1,
+/
+
+&output_file
+    filename='model_output.nc',
+    spectral=.false.,
+    plevs=.true.,
+    nstpinc=9,
+    nstpout=9,
+    nstpopen=25000,
+    nvars=27,
+/
+
+&variables
+    var_ids=1, 2, 3, 4, 5, 10,
+	    31, 32,
+            48, 49, 50, 51,
+            52, 53, 54, 55, 56,
+            57, 58, 59, 60,
+            61, 62,
+            115, 116, 117, 118,
+/
+/

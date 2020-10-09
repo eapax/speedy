@@ -1,0 +1,358 @@
+  hallo from speedy_agcm
+ RPE_ACTIVE  T
+&RESOLUTION
+ NTRUN=         30,
+ MTRUN=         30,
+ IX=         96,
+ IY=         24,
+ KX=          8,
+ /
+&INPUT_RESOLUTION
+ NTRUN_IN=         30,
+ MTRUN_IN=         30,
+ IX_IN=         96,
+ IY_IN=         24,
+ KX_IN=          8,
+ /
+&COUPLING_FLAGS
+ ICLAND=          1,
+ ICSEA=          0,
+ ICICE=          1,
+ ISSTAN=          1,
+ /
+&LAND
+ DEPTH_SOIL=  1.0000000000000000     ,
+ DEPTH_LICE=  5.0000000000000000     ,
+ TDLAND=  40.000000000000000     ,
+ FLANDMIN= 0.33333333333333331     ,
+ /
+&SEA
+ DEPTH_ML=  60.000000000000000     ,
+ DEPT0_ML=  40.000000000000000     ,
+ DEPTH_ICE=  2.5000000000000000     ,
+ DEPT0_ICE=  1.5000000000000000     ,
+ TDSST=  90.000000000000000     ,
+ TDICE=  30.000000000000000     ,
+ FSEAMIN= 0.33333333333333331     ,
+ BETA%VAL=  1.0000000000000000     ,
+ L_GLOBE=T,
+ L_NORTHE=F,
+ L_NATLAN=F,
+ L_NPACIF=F,
+ L_TROPIC=F,
+ L_INDIAN=F,
+ /
+&DYNAMICS
+ GAMMA=  6.0000000000000000     ,
+ HSCALE=  7.5000000000000000     ,
+ HSHUM=  2.5000000000000000     ,
+ REFRH1= 0.69999999999999996     ,
+ THD=  2.3999999999999999     ,
+ THDD=  2.3999999999999999     ,
+ THDS=  12.000000000000000     ,
+ TDRS%VAL=  720.00000000000000     ,
+ /
+&FORCING
+ LCO2=F,
+ IYEAR_REF=       1950,
+ DEL_CO2%VAL=  5.0000000000000001E-003,
+ ABLCO2%VAL=  6.0000000000000000     ,
+ ALBSEA%VAL=  7.0000000000000007E-002,
+ ALBICE%VAL= 0.59999999999999998     ,
+ ALBSN%VAL= 0.59999999999999998     ,
+ /
+&SOLAR_FORCING
+ SOLC%VAL=  342.00000000000000     ,
+ EPSSW%VAL=  2.0000000000000000E-002,
+ /
+&SURFACE
+ SWCAP%VAL= 0.29999999999999999     ,
+ SWWIL%VAL= 0.17000000000000001     ,
+ SD2SC%VAL=  60.000000000000000     ,
+ /
+&TIMESTEPPING
+ NSTEPS=         36,
+ NSTDIA=        180,
+ NMONRS=         12,
+ ROB%VAL=  5.0000000000000003E-002,
+ WIL%VAL= 0.53000000000000003     ,
+ /
+&CONVECTION
+ PSMIN%VAL= 0.80000000000000004     ,
+ TRCNV=  6.0000000000000000     ,
+ RHBL%VAL= 0.90000000000000002     ,
+ RHIL%VAL= 0.69999999999999996     ,
+ ENTMAX= 0.50000000000000000     ,
+ SMF%VAL= 0.80000000000000004     ,
+ /
+&CONDENSATION
+ TRLSC%VAL=  4.0000000000000000     ,
+ RHLSC= 0.90000000000000002     ,
+ DRHLSC= 0.10000000000000001     ,
+ RHBLSC= 0.94999999999999996     ,
+ /
+&CLOUD_PARAMETERS
+ RHCL1%VAL= 0.29999999999999999     ,
+ RHCL2%VAL=  1.0000000000000000     ,
+ QACL%VAL= 0.20000000000000001     ,
+ WPCL%VAL= 0.20000000000000001     ,
+ PMAXCL%VAL=  10.000000000000000     ,
+ CLSMAX%VAL= 0.59999999999999998     ,
+ CLSMINL%VAL= 0.14999999999999999     ,
+ GSE_S0%VAL= 0.25000000000000000     ,
+ GSE_S1%VAL= 0.40000000000000002     ,
+ /
+&SW_RADIATION
+ NSTRAD=          3,
+ ABSDRY%VAL=  3.3000000000000002E-002,
+ ABSAER%VAL=  3.3000000000000002E-002,
+ ABSWV1%VAL=  2.1999999999999999E-002,
+ ABSWV2%VAL=  15.000000000000000     ,
+ ABSCL1%VAL=  1.4999999999999999E-002,
+ ABSCL2%VAL= 0.14999999999999999     ,
+ ALBCL%VAL= 0.42999999999999999     ,
+ ALBCLS%VAL= 0.50000000000000000     ,
+ /
+&LW_RADIATION
+ EPSLW%VAL=  5.0000000000000003E-002,
+ EMISFC%VAL= 0.97999999999999998     ,
+ ABLWIN%VAL= 0.29999999999999999     ,
+ ABLWV1%VAL= 0.69999999999999996     ,
+ ABLWV2%VAL=  50.000000000000000     ,
+ ABLCL1%VAL=  12.000000000000000     ,
+ ABLCL2%VAL= 0.59999999999999998     ,
+ /
+&SURFACE_FLUXES
+ FWIND0%VAL= 0.94999999999999996     ,
+ FTEMP0%VAL=  1.0000000000000000     ,
+ FHUM0%VAL=  0.0000000000000000     ,
+ CDL%VAL=  2.3999999999999998E-003,
+ CDS%VAL=  1.0000000000000000E-003,
+ CHL%VAL=  1.1999999999999999E-003,
+ CHS%VAL=  8.9999999999999998E-004,
+ VGUST%VAL=  5.0000000000000000     ,
+ CTDAY%VAL=  1.0000000000000000E-002,
+ DTHETA%VAL=  3.0000000000000000     ,
+ FSTAB%VAL= 0.67000000000000004     ,
+ HDRAG%VAL=  2000.0000000000000     ,
+ FHDRAG%VAL= 0.50000000000000000     ,
+ CLAMBDA%VAL=  7.0000000000000000     ,
+ CLAMBSN%VAL=  7.0000000000000000     ,
+ /
+&VERTICAL_DIFFUSION
+ TRSHC=  6.0000000000000000     ,
+ TRVDI=  24.000000000000000     ,
+ TRVDS=  6.0000000000000000     ,
+ REDSHC%VAL= 0.50000000000000000     ,
+ RHGRAD%VAL= 0.50000000000000000     ,
+ SEGRAD%VAL= 0.10000000000000001     ,
+ /
+&SPPT
+ SPPT_ON=F,
+ NSCALES=          3,
+ L_ADDITIVE=F,
+ /
+&SPPT_PARAMETERS
+ MU(1)%VAL=  1.0000000000000000     ,
+ MU(2)%VAL=  1.0000000000000000     ,
+ MU(3)%VAL=  1.0000000000000000     ,
+ MU(4)%VAL=  1.0000000000000000     ,
+ MU(5)%VAL=  1.0000000000000000     ,
+ MU(6)%VAL=  1.0000000000000000     ,
+ MU(7)%VAL=  1.0000000000000000     ,
+ MU(8)%VAL=  1.0000000000000000     ,
+ TIME_DECORR=  3.0000000000000000     ,  72.000000000000000     ,  720.00000000000000     ,
+ LEN_DECORR=  500000.00000000000     ,  1000000.0000000000     ,  2000000.0000000000     ,
+ STDDEV= 0.52000000000000002     , 0.17999999999999999     ,  5.9999999999999998E-002,
+ ADDITIVE_MAGNITUDE%VAL=  9.9999999999999995E-007,
+ /
+ Read namelist
+ start date         1983           1           1           0
+  Model half-level (*1000)           1           0
+  Model half-level (*1000)           2          50
+  Model half-level (*1000)           3         140
+  Model half-level (*1000)           4         260
+  Model half-level (*1000)           5         420
+  Model half-level (*1000)           6         600
+  Model half-level (*1000)           7         770
+  Model half-level (*1000)           8         900
+  Model half-level (*1000)           9        1000
+  Model full-level (*1000)           1          25
+  Model full-level (*1000)           2          95
+  Model full-level (*1000)           3         200
+  Model full-level (*1000)           4         340
+  Model full-level (*1000)           5         510
+  Model full-level (*1000)           6         685
+  Model full-level (*1000)           7         835
+  Model full-level (*1000)           8         950
+  temp/hum correction at level            2  0.66167368341273969        0.0000000000000000     
+  temp/hum correction at level            3  0.75399289734237440        8.0000000000000019E-003
+  temp/hum correction at level            4  0.82755908289241631        3.9303999999999992E-002
+  temp/hum correction at level            5  0.88857447279504564       0.13265100000000002     
+  temp/hum correction at level            6  0.93577679872957287       0.32141912500000008     
+  temp/hum correction at level            7  0.96885785555841186       0.58218287499999988     
+  temp/hum correction at level            8  0.99104107712276879       0.85737499999999989     
+ Filter applied at wavenumber           30
+  field:            1    no. of faulty points:           0
+  field:            2    no. of faulty points:           0
+  field:            3    no. of faulty points:           0
+  field:            4    no. of faulty points:           0
+  field:            5    no. of faulty points:           0
+  field:            6    no. of faulty points:           0
+  field:            7    no. of faulty points:           0
+  field:            8    no. of faulty points:           0
+  field:            9    no. of faulty points:           0
+  field:           10    no. of faulty points:           0
+  field:           11    no. of faulty points:           0
+  field:           12    no. of faulty points:           0
+  undefined values set to   273.00000000000000     
+  field:            1    no. of faulty points:           0
+  field:            2    no. of faulty points:           0
+  field:            3    no. of faulty points:           0
+  field:            4    no. of faulty points:           0
+  field:            5    no. of faulty points:           0
+  field:            6    no. of faulty points:           0
+  field:            7    no. of faulty points:           0
+  field:            8    no. of faulty points:           0
+  field:            9    no. of faulty points:           0
+  field:           10    no. of faulty points:           0
+  field:           11    no. of faulty points:           0
+  field:           12    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+  field:            1    no. of faulty points:           0
+  field:            2    no. of faulty points:           0
+  field:            3    no. of faulty points:           0
+  field:            4    no. of faulty points:           0
+  field:            5    no. of faulty points:           0
+  field:            6    no. of faulty points:           0
+  field:            7    no. of faulty points:           0
+  field:            8    no. of faulty points:           0
+  field:            9    no. of faulty points:           0
+  field:           10    no. of faulty points:           0
+  field:           11    no. of faulty points:           0
+  field:           12    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+  field:            1    no. of faulty points:           0
+  field:            2    no. of faulty points:           0
+  field:            3    no. of faulty points:           0
+  field:            4    no. of faulty points:           0
+  field:            5    no. of faulty points:           0
+  field:            6    no. of faulty points:           0
+  field:            7    no. of faulty points:           0
+  field:            8    no. of faulty points:           0
+  field:            9    no. of faulty points:           0
+  field:           10    no. of faulty points:           0
+  field:           11    no. of faulty points:           0
+  field:           12    no. of faulty points:           0
+  undefined values set to   273.00000000000000     
+  field:            1    no. of faulty points:           0
+  field:            2    no. of faulty points:           0
+  field:            3    no. of faulty points:           0
+  field:            4    no. of faulty points:           0
+  field:            5    no. of faulty points:           0
+  field:            6    no. of faulty points:           0
+  field:            7    no. of faulty points:           0
+  field:            8    no. of faulty points:           0
+  field:            9    no. of faulty points:           0
+  field:           10    no. of faulty points:           0
+  field:           11    no. of faulty points:           0
+  field:           12    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+ isst0 =           49
+  field:            1    no. of faulty points:           0
+  field:            2    no. of faulty points:           0
+  field:            3    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+  reading a restart file
+        1983           1           1           0
+        1984           1           1           0
+ WARNING: Date in restart file does not match requested date
+Read restart dataset for year/month/date/hour: 1983/01/01/00
+ step =     0 reke =   41.23  103.89  191.97  171.46   98.80   52.76   44.60   47.53
+              deke =    0.42    4.53    7.44    5.97    2.54    1.86    2.52    7.00
+              temp =  -62.95  -66.85  -50.10  -29.50  -13.05    0.27    8.15   13.61
+   tref =    217.14995443460384     
+   tref =    217.14995443460384     
+   tref =    217.14995443460384     
+   tref =    238.33701587301590     
+   tref =    255.90944816497316     
+   tref =    269.50371803411701     
+   tref =    279.03106240082263     
+   tref =    285.41983021135741     
+ integration length in days:          365
+  start of year/month =         1983           1
+ step =   180 reke =   37.37   94.47  172.38  152.69   84.57   43.07   39.16   43.07
+              deke =    0.54    5.37    7.87    5.17    2.50    1.45    2.61    7.09
+              temp =  -62.95  -66.80  -50.00  -29.80  -13.04    0.30    8.14   13.57
+ step =   360 reke =   40.74   97.62  176.22  136.89   81.25   42.14   38.12   40.79
+              deke =    0.41    6.00    7.49    5.19    2.47    1.63    2.50    7.25
+              temp =  -62.98  -66.78  -49.97  -29.77  -12.99    0.25    8.07   13.52
+ step =   540 reke =   49.06  127.01  216.96  173.61   98.89   52.58   47.18   49.65
+              deke =    0.91    6.55    8.97    4.36    2.08    2.24    3.26    7.82
+              temp =  -63.00  -66.75  -49.90  -29.74  -12.93    0.28    8.19   13.57
+ step =   720 reke =   66.22  109.73  180.16  151.90   90.83   51.62   45.01   48.50
+              deke =    1.03    8.44    6.49    5.03    1.92    1.87    2.40    7.11
+              temp =  -62.94  -66.80  -49.94  -30.00  -12.61    0.52    8.23   13.71
+ step =   900 reke =   50.59  120.07  198.83  169.31   96.35   51.42   44.15   48.55
+              deke =    0.62    7.71    8.79    4.63    1.85    1.99    2.95    7.71
+              temp =  -62.90  -66.90  -49.80  -29.92  -12.62    0.45    8.20   13.60
+ step =  1080 reke =   73.13  127.60  197.00  143.57   85.55   47.68   38.64   40.36
+              deke =    0.97    8.05    6.83    3.83    2.02    1.66    2.51    6.12
+              temp =  -62.92  -66.82  -49.82  -29.88  -12.99    0.26    8.12   13.64
+  field:            1    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+  start of year/month =         1983           2
+ step =  1260 reke =   61.17  148.54  220.82  174.88   96.99   52.97   46.63   49.72
+              deke =    0.68    7.76    8.83    4.59    2.15    1.31    2.60    7.32
+              temp =  -62.86  -66.86  -49.81  -29.81  -12.72    0.35    8.01   13.53
+ step =  1440 reke =   42.74  148.04  196.65  149.37   88.13   48.28   44.99   48.71
+              deke =    0.42    7.61    8.34    4.31    2.79    1.96    3.16    8.48
+              temp =  -62.84  -66.89  -49.88  -29.99  -12.72    0.44    8.06   13.56
+ step =  1620 reke =   41.35  122.82  178.36  154.50   93.87   52.97   50.63   53.38
+              deke =    0.51    8.25    6.41    4.92    2.77    2.34    3.92    9.40
+              temp =  -62.82  -66.88  -49.58  -29.90  -12.92    0.46    8.20   13.59
+ step =  1800 reke =   60.24  136.32  182.53  145.74   84.06   43.49   41.09   45.79
+              deke =    0.45    6.26    7.13    3.74    1.84    1.80    2.56    7.15
+              temp =  -62.79  -66.85  -49.49  -29.66  -12.77    0.53    8.31   13.62
+ step =  1980 reke =   34.52  133.16  166.63  140.95   77.15   41.74   37.12   39.56
+              deke =    0.43    6.57    7.42    5.21    1.77    2.19    2.47    7.61
+              temp =  -62.75  -66.78  -49.49  -29.89  -12.74    0.40    8.21   13.56
+  field:            1    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+  start of year/month =         1983           3
+ step =  2160 reke =   38.63  132.41  179.93  137.87   73.34   39.94   37.70   40.79
+              deke =    0.52    7.60    9.10    5.47    2.09    2.10    2.67    6.92
+              temp =  -62.76  -66.69  -49.59  -30.40  -13.08    0.27    8.22   13.61
+ step =  2340 reke =   42.67  128.15  201.86  157.01   82.09   44.49   40.40   45.07
+              deke =    0.63    7.36    7.55    4.10    1.93    1.63    2.37    7.25
+              temp =  -62.74  -66.65  -49.72  -30.23  -13.14    0.15    8.16   13.59
+ step =  2520 reke =   71.26  137.55  188.57  152.36   81.41   45.63   39.63   42.24
+              deke =    0.71    6.24    6.84    4.90    2.03    1.62    2.41    7.18
+              temp =  -62.79  -66.62  -49.70  -30.24  -12.81    0.38    8.15   13.73
+ step =  2700 reke =   41.61  130.95  177.12  139.37   74.35   40.62   38.77   44.47
+              deke =    0.61    5.92    9.07    5.06    1.98    1.98    3.03    7.36
+              temp =  -62.78  -66.68  -49.65  -29.84  -12.92    0.27    8.12   13.61
+ step =  2880 reke =   52.51  130.13  176.01  139.27   84.71   46.33   42.25   46.33
+              deke =    0.43    7.94    8.81    5.42    2.52    2.18    3.09    8.02
+              temp =  -62.80  -66.71  -49.62  -29.93  -13.02    0.14    8.02   13.56
+ step =  3060 reke =   48.02  142.66  183.76  144.94   83.39   47.50   43.50   45.39
+              deke =    1.22    8.63    5.98    3.72    2.27    1.57    2.76    6.79
+              temp =  -62.78  -66.68  -49.77  -30.07  -13.08    0.29    8.17   13.58
+ step =  3240 reke =   35.28  105.63  172.43  149.73   94.09   56.58   50.83   52.50
+              deke =    0.42    5.55    6.01    3.89    2.71    1.62    3.12    7.61
+              temp =  -62.80  -66.75  -49.76  -29.87  -12.97    0.43    8.25   13.63
+  field:            1    no. of faulty points:           0
+  undefined values set to   0.0000000000000000     
+  start of year/month =         1983           4
+ step =  3420 reke =   85.73  124.25  170.47  152.33   86.69   44.12   39.38   42.15
+              deke =    0.65    7.44    7.25    4.76    2.13    1.82    3.06    7.28
+              temp =  -62.83  -66.70  -49.63  -29.42  -12.93    0.41    8.34   13.67
+ step =  3600 reke =   86.21  152.52  228.60  172.34   89.67   47.13   43.99   48.91
+              deke =    0.67    7.52    9.42    5.04    2.05    2.14    3.08    7.59
+              temp =  -62.80  -66.70  -49.24  -29.58  -12.96    0.38    8.25   13.59
+ step =  3780 reke =   59.79  129.84  218.58  179.44  108.62   65.86   56.71   59.20
+              deke =    0.65    8.18    8.93    4.35    2.38    2.26    3.47    8.14
+              temp =  -62.82  -66.57  -49.06  -29.65  -12.79    0.52    8.33   13.65
+ step =  3960 reke =   62.23   96.77  150.46  119.61   66.34   33.99   31.26   36.09
+              deke =    0.62    6.31    6.73    4.15    1.85    1.71    2.03    6.17
+              temp =  -62.78  -66.57  -49.27  -29.81  -12.96    0.32    8.23   13.75
