@@ -12,7 +12,7 @@ if (($# != 3)); then
 fi
 
 # Define directory names
-UT=`pwd`
+UT=`pwd -P`
 TMP=${UT}/output/exp_${2}
 OUT=${UT}/output/exp_${2}
 INP=${UT}/output/exp_${3}
@@ -28,8 +28,7 @@ else
     echo "Using fresh-start namelist"
     namelist=${UT}/setup/speedy_norestart.nml
 fi
-#output=${UT}/setup/default_outputs.nml
-output=${UT}/setup/plevs_outputs.nml
+output=${UT}/setup/default_outputs.nml
 precisions=${UT}/setup/double_precision.nml
 
 # Copy files from basic version directory

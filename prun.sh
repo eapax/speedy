@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # $1 = experiment name (eg ElNino10s11e)
-# $2 = experiment no. for restart file (0 = no restart)
-# $3 = choice of SST forcing (0 = no forcing, 1 = El Nino forcing (static, scalefactor = 4, no mean adjust))
+# $2 = experiment no. for restart file (i.e. initial condition, 0 = from rest)
+# $3 = choice of SST anomaly (0 = no forcing, 1 = El Nino (static, scalefactor = 4, no mean adjust))
 # $4 = number of significand bits (52 = double, 23 = single, 10 = half)
 
 set -e
@@ -13,7 +13,7 @@ if (($# != 4)); then
 fi
 
 # Define directory names
-UT=`pwd`
+UT=`pwd -P`
 OUT=${UT}/output/${1}
 INP=${UT}/initial_conditions/exp_${2}
 mkdir -p ${OUT}
