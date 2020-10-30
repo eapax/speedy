@@ -14,7 +14,7 @@ fi
 
 # Define directory names
 UT=`pwd -P`
-OUT=${UT}/output/${1}
+OUT=/network/group/aopp/predict/TIP016_PAXTON_RPSPEEDY/$1
 INP=${UT}/initial_conditions/exp_${2}
 mkdir -p ${OUT}
 

@@ -8,7 +8,7 @@
     plevs=.true.,
     nstpinc=9,
     nstpout=9,
-    nstpopen=25000,
+    nstpopen=120,
     nvars=27,
 /
 
