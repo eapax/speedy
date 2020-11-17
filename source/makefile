@@ -5,7 +5,7 @@ NCDIR=/usr
 COMLIB1= -L${NCDIR}/lib -lnetcdff
 COMOTT1= -I${NCDIR}/include
 COMCONV= -fconvert=swap -std=gnu -ffpe-trap=overflow -g -Wall
-RPEPATH=../../rpe_complex
+RPEPATH=../../rpe_complex_stochastic
 
 FILES= \
        mod_prec.o \
