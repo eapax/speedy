@@ -29,7 +29,7 @@ module mod_prec
             rp_half_bits=10
 
     namelist /precisions/ &
-            RPE_ACTIVE, RPE_IEEE_HALF, &
+            RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
             rp_initial_values, rp_spectral_transform, &
             rp_convection, rp_condensation, rp_cloud, &
             rp_sw_radiation, rp_lw_radiation, rp_surface_fluxes, &
@@ -50,8 +50,11 @@ module mod_prec
             read(99, precisions)
             close(99)
 
+            CALL SETSEED()
+
             call set_precision('Double')
             print*, "RPE_ACTIVE ", RPE_ACTIVE
+            print*, "RPE_STOCHASTIC ", RPE_STOCHASTIC
         end subroutine
 
         subroutine set_precision(mode)
