@@ -56,7 +56,7 @@ ln -s ${SH}/hflux_speedy_ver41_1979_2008_clim.grd fort.31
 
 # Link netCDF library
 # export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/share/netcdf/lib
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${UT}/../rpe_complex/lib/
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${UT}/../rpe_complex_stochastic/lib/
 
 time ./imp.exe | tee out.lis
 
