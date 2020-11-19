@@ -14,9 +14,10 @@ fi
 
 # Define directory names
 UT=`pwd -P`
-OUT=/network/group/aopp/predict/TIP016_PAXTON_RPSPEEDY/$1
-INP=${UT}/initial_conditions/exp_${2}
-mkdir -p ${OUT}
+TMP=${UT}/output/$1
+OUT=/network/group/aopp/predict/TIP016_PAXTON_RPSPEEDY
+INP=${UT}/initial_conditions/exp_$2
+mkdir -p ${TMP}
 
 # Setup files
 executable=${UT}/source/imp.exe
@@ -26,23 +27,23 @@ output=${UT}/setup/default_outputs.nml
 precisions=${UT}/setup/${4}sig11exp.nml
 
 # Copy files from basic version directory
-mkdir -p ${OUT}
-find ${OUT} -type f -delete
-find ${OUT} -type l -delete
-find ${OUT} -mindepth 1 -type d -delete
-cp ${executable} ${OUT}/imp.exe
-cp ${namelist}   ${OUT}/speedy.nml
-cp ${output}     ${OUT}/output_requests.nml
-cp ${precisions} ${OUT}/precisions.nml
+mkdir -p ${TMP}
+find ${TMP} -type f -delete
+find ${TMP} -type l -delete
+find ${TMP} -mindepth 1 -type d -delete
+cp ${executable} ${TMP}/imp.exe
+cp ${namelist}   ${TMP}/speedy.nml
+cp ${output}     ${TMP}/output_requests.nml
+cp ${precisions} ${TMP}/precisions.nml
 
 # Link restart file (i.e. set initial conditions)
-cp ${INP}/*.rst ${OUT}
+cp ${INP}/*.rst ${TMP}
 
 # Link input files
 BC=${UT}/data/bc/t30
 SH=${UT}/hflux
 
-cd ${OUT}
+cd ${TMP}
 ln -s ${BC}/climatology.nc climatology.nc
 
 #set the SST anomaly forcing
@@ -60,3 +61,7 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${UT}/../rpe_complex_stochastic/lib/
 
 time ./imp.exe | tee out.lis
 
+echo 'Run completed, will now move output to shared storage before termination'
+
+cd ${UT}
+mv ${TMP} ${OUT}

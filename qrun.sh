@@ -4,6 +4,6 @@
 
 for i in {0..4}
 do
-	sbatch --job-name=EN10s11eSRMEM$i ./newqueue.sh EN10s11eSRMEM$i 06$i 1 10
-	sbatch --job-name=CONT10s11eSRMEM$i ./newqueue.sh CONT10s11eSRMEM$i 01$i 0 10
+	sbatch --job-name=SR_EN10s11eMEM$i ./newqueue.sh SR_EN10s11eMEM$i 06$i 1 10
+	sbatch --job-name=SR_CONT10s11eMEM$i ./newqueue.sh SR_CONT10s11eMEM$i 01$i 0 10
 done
