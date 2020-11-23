@@ -14,8 +14,13 @@
 #done
 
 for i in {0..4}
-do 
-	sbatch --job-name=SR_EN23s11eMEM$i ./newqueue.sh SR_EN23s11eMEM$i 06$i 1 23
-	sbatch --job-name=SR_CONT23s11eMEM$i ./newqueue.sh SR_CONT23s11eMEM$i 01$i 0 23
+do
+	sbatch --job-name=SR_CONT07s11eMEM$i ./newqueue.sh SR_CONT07s11eMEM$i 01$i 0 07
 done
 
+#for i in {0..4}
+#do 
+#	sbatch --job-name=SR_EN23s11eMEM$i ./newqueue.sh SR_EN23s11eMEM$i 06$i 1 23
+#	sbatch --job-name=SR_CONT23s11eMEM$i ./newqueue.sh SR_CONT23s11eMEM$i 01$i 0 23
+#done
+#
