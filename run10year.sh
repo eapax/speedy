@@ -7,6 +7,8 @@
 
 set -e
 
+ulimit -n 524288
+
 if (($# != 4)); then
 	echo 'Usage: '${0}' experiment name, restart no., choice of SST anomaly forcing (0 = none, 1=El Nino), number of significand bits (52 = double, 23 = single, 10 = half)' 1>&2
     exit 1
