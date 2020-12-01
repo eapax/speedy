@@ -3,12 +3,12 @@
 /
 
 &output_file
-    filename='model_output.nc',
+    filename='model_output',
     spectral=.false.,
     plevs=.true.,
-    nstpinc=9,
-    nstpout=9,
-    nstpopen=120,
+    nstpinc=1,
+    nstpout=1,
+    nstpopen=36,
     nvars=27,
 /
 
