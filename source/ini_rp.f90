@@ -74,7 +74,9 @@ subroutine truncate_rp()
     call truncate_surfcon()
 
     ! Truncate constants in individual physics schemes
+    call set_precision("Convection")
     call truncate_convmf()
+    call set_precision("Half")
     call truncate_lscond()
     call truncate_cloud()
     call truncate_radsw()
