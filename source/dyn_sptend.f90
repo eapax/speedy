@@ -59,7 +59,7 @@ subroutine sptend (divdt,tdt,psdt,j4)
     end do
 
     ! Geopotential and divergence tendency
-    call set_precision('Double')
+    call set_precision('Half')
     call geop(j4)
 
     do k=1,kx

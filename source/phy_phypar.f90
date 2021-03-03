@@ -142,7 +142,7 @@ subroutine phypar(utend,vtend,ttend,qtend)
     tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_sflx + tt_rlw + tt_pbl
     qt_phy = qt_cnv + qt_lsc + qt_sflx + qt_pbl
 
-    call set_precision('Double')
+    call set_precision('Half')
 
     ! Add SPPT noise
     if (sppt_on) then

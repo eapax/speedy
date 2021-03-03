@@ -22,10 +22,10 @@ module mod_prec
             rp_sppt=52, &
             rp_grid_dynamics=52, &
             rp_spectral_dynamics=52, &
-            rp_diffusion=52, &
-            rp_timestepping=52, &
+            rp_diffusion=10, &
+            rp_timestepping=10, &
             rp_prognostics=52, &
-            rp_tendencies=52, &
+            rp_tendencies=10, &
             rp_half_bits=10
 
     namelist /precisions/ &
