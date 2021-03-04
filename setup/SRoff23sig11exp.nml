@@ -2,5 +2,6 @@
     RPE_ACTIVE=.true.,
     RPE_STOCHASTIC=.false.,
     RPE_IEEE_HALF=.false.,
-    rp_half_bits=50,
+    rp_half_bits=23,
+    rp_convection=23,
 /

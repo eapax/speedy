@@ -4,6 +4,7 @@
 *.mod
 *.o
 *.out
+*.lis
 setup/14sig11exp.nml
 setup/#*#
 output

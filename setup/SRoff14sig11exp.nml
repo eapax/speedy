@@ -3,4 +3,5 @@
     RPE_STOCHASTIC=.false.,
     RPE_IEEE_HALF=.false.,
     rp_half_bits=14,
+    rp_convection=14,
 /
