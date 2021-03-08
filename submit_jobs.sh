@@ -11,17 +11,18 @@
 #	sbatch --job-name=SR_RPEFALSE_CONT10s11eMEM$i Q.sh ./run10year.sh SR_RPEFALSE_CONT10s11eMEM$i 01$i 0 10RPEFALSE
 #done
 
-for i in {0..9}
-do
-	sbatch --job-name=C52MEM$i Q.sh ./run10year.sh CONT52s11eMEM$i 01$i 0 52
-done
+#for i in {0..9}
+#do
+#	sbatch --job-name=C52MEM$i Q.sh ./run10year.sh CONT52s11eMEM$i 01$i 0 52
+#done
+#
+#for i in {0..4}
+#do
+#	sbatch --job-name=C50MEM$i Q.sh ./run10year.sh CONT50s11eMEM$i 01$i 0 SRoff50
+#done
+#
 
-for i in {0..4}
-do
-	sbatch --job-name=C50MEM$i Q.sh ./run10year.sh CONT50s11eMEM$i 01$i 0 SRoff50
-done
-
-sbatch --job-name=EN52MEM0 Q.sh ./run10year.sh EN52s11eMEM0 060 1 52
+#sbatch --job-name=EN52MEM0 Q.sh ./run10year.sh EN52s11eMEM0 060 1 52
 
 #
 #for i in {0..4}
@@ -62,19 +63,21 @@ sbatch --job-name=EN52MEM0 Q.sh ./run10year.sh EN52s11eMEM0 060 1 52
 #	sbatch --job-name=10_${i}speedy Q.sh ./run10year.sh CONT10s11eMEM$i 01$i 0 SRoff10
 #	sbatch --job-name=12_${i}speedy Q.sh ./run10year.sh CONT12s11eMEM$i 01$i 0 SRoff12
 #	sbatch --job-name=14_${i}speedy Q.sh ./run10year.sh CONT14s11eMEM$i 01$i 0 SRoff14
-#	sbatch --job-name=SR14_${i}speedy Q.sh ./run10year.sh SR_CONT14s11eMEM$i 01$i 0 14
+##	sbatch --job-name=SR14_${i}speedy Q.sh ./run10year.sh SR_CONT14s11eMEM$i 01$i 0 14
 #	sbatch --job-name=23_${i}speedy Q.sh ./run10year.sh CONT23s11eMEM$i 01$i 0 SRoff23
 #done
+
+for i in {0..4}
+do
+	sbatch --job-name=alloff10_${i}speedy Q.sh ./run10year.sh alloffCONT10s11eMEM$i 01$i 0 SR+ALLoff10
+	sbatch --job-name=conoff10_${i}speedy Q.sh ./run10year.sh conoffCONT10s11eMEM$i 01$i 0 SR+CONoff10
+done
 
 #for i in {0..4}
 #do
 #	nohup ./run10year2.sh SR_CONT10s11eMEM$i 01$i 0 10 > SR10MEM$i.out &
-#done
-#
-
-#for i in {0..4}
-#do                                                                          
 #	nohup ./run10year2.sh SR_CONT12s11eMEM$i 01$i 0 12 > SR12MEM$i.out &
+#	nohup ./run10year2.sh SR_CONT14s11eMEM$i 01$i 0 14 > SR14MEM$i.out &
 #done   
 
 #for i in {0..9}

@@ -4,4 +4,7 @@
     RPE_IEEE_HALF=.false.,
     rp_half_bits=11,
     rp_convection=11,
+    rp_timestepping=11,
+    rp_tendencies=11,
+    rp_diffusion=11, 
 /
