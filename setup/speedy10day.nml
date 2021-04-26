@@ -102,9 +102,9 @@
     ! DD
     iday0=1,
     ! Integration length in months
-    nmonts=132,
+    nmonts=0,
     ! No. of days in the last month of int. (max=30)
-    ndaysl=0,
+    ndaysl=10,
     ! Seasonal cycle flag (0=no, 1=yes)
     iseasc=0,
 /
@@ -174,7 +174,7 @@
     ! Period (no. of steps) for diagnostic print-out
     nstdia=180,
     ! Period (no. of months) for restart file update
-    nmonrs=132,
+    nmonrs=120,
     ! Damping factor in Robert time filter
     rob=0.05,
     ! Parameter of Williams filter
@@ -337,7 +337,7 @@
 ! phy_sppt
 &sppt
     ! Turn on SPPT?
-    sppt_on=.true.,
+    sppt_on=.false.,
     ! Number of correlation scales for SPPT perturbations
     nscales=3,
 

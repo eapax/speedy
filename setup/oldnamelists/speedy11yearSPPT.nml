@@ -174,7 +174,7 @@
     ! Period (no. of steps) for diagnostic print-out
     nstdia=180,
     ! Period (no. of months) for restart file update
-    nmonrs=132,
+    nmonrs=120,
     ! Damping factor in Robert time filter
     rob=0.05,
     ! Parameter of Williams filter

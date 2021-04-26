@@ -56,29 +56,52 @@
 #	sbatch --job-name=10_${i}testspeedy Q.sh ./run10year.sh testCONT10s11eMEM$i 01$i 0 SRoff10 
 #done
 
+#sbatch --job-name=EN52speedy Q.sh ./run10year
 #sbatch --job-name=EN10speedy Q.sh ./run10year.sh EN10s11eMEM0 060 1 SRoff10
 
 #for i in {0..4}
 #do
 #	sbatch --job-name=10_${i}speedy Q.sh ./run10year.sh CONT10s11eMEM$i 01$i 0 SRoff10
 #	sbatch --job-name=12_${i}speedy Q.sh ./run10year.sh CONT12s11eMEM$i 01$i 0 SRoff12
+#	sbatch --job-name=13_${i}speedy Q.sh ./run10year.sh CONT13s11eMEM$i 01$i 0 SRoff13
 #	sbatch --job-name=14_${i}speedy Q.sh ./run10year.sh CONT14s11eMEM$i 01$i 0 SRoff14
 ##	sbatch --job-name=SR14_${i}speedy Q.sh ./run10year.sh SR_CONT14s11eMEM$i 01$i 0 14
 #	sbatch --job-name=23_${i}speedy Q.sh ./run10year.sh CONT23s11eMEM$i 01$i 0 SRoff23
 #done
 
-for i in {0..4}
-do
-	sbatch --job-name=alloff10_${i}speedy Q.sh ./run10year.sh alloffCONT10s11eMEM$i 01$i 0 SR+ALLoff10
-	sbatch --job-name=conoff10_${i}speedy Q.sh ./run10year.sh conoffCONT10s11eMEM$i 01$i 0 SR+CONoff10
-done
-
+#for i in {0..4}
+#do
+#	sbatch --job-name=alloff10_${i}speedy Q.sh ./run10year.sh alloffCONT10s11eMEM$i 01$i 0 SR+ALLoff10
+#	sbatch --job-name=conoff10_${i}speedy Q.sh ./run10year.sh conoffCONT10s11eMEM$i 01$i 0 SR+CONoff10
+#done
+#
 #for i in {0..4}
 #do
 #	nohup ./run10year2.sh SR_CONT10s11eMEM$i 01$i 0 10 > SR10MEM$i.out &
 #	nohup ./run10year2.sh SR_CONT12s11eMEM$i 01$i 0 12 > SR12MEM$i.out &
 #	nohup ./run10year2.sh SR_CONT14s11eMEM$i 01$i 0 14 > SR14MEM$i.out &
 #done   
+
+#nohup ./run10year2.sh EN52s11eMEM0 060 1 52 > EN52MEM0.out &
+#nohup ./run10year2.sh EN10s11eMEM0 060 1 SRoff10 > EN10MEM0.out &
+
+#for i in {0..9}
+#do
+#	nohup ./run.sh tenday52mem$i 01$i 0 52 10day > tenday52mem$i.out &
+#	nohup ./run.sh tenday23mem$i 01$i 0 23 10day > tenday23mem$i.out &
+#	nohup ./run.sh tenday52SPPTmem$i 01$i 0 52 10daySPPT > tenday52SPPTmem$i.out &
+#done
+#
+#for i in {0..9}
+#do
+#	nohup ./run.sh SPPT_CONT52s11eMEM$i 01$i 0 52 11yearSPPT > 11year52SPPTmem$i.out &
+#done
+#
+for i in {1..4}
+do
+	#nohup ./run10year2.sh EN52s11eMEM$i 06$i 1 52 > EN52m$i.out &
+	nohup ./run10year2.sh EN10s11eMEM$i 06$i 1 10 > EN10m$i.out &
+done
 
 #for i in {0..9}
 #do

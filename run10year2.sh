@@ -26,7 +26,7 @@ executable=${UT}/source/imp.exe
 echo "Using restart namelist"
 namelist=${UT}/setup/speedy10year.nml
 output=${UT}/setup/default_outputs.nml
-precisions=${UT}/setup/${4}sig11exp.nml
+precisions=${UT}/setup/precisions/${4}sig11exp.nml
 
 # Copy files from basic version directory
 find ${TMP} -type f -delete
