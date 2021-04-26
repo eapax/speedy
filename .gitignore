@@ -17,4 +17,8 @@ data/bc/t39/
 _build
 _static
 _templates
+run1*.sh
+submit_jobs.sh
+Q.sh
+scancel.sh
 junk/
