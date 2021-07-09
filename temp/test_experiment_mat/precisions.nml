@@ -1,0 +1,6 @@
+&precisions
+    RPE_ACTIVE=.false.,
+    RPE_STOCHASTIC=.false.,
+    RPE_IEEE_HALF=.false.,
+    rp_half_bits=52,
+/

@@ -97,11 +97,11 @@
 #	nohup ./run.sh SPPT_CONT52s11eMEM$i 01$i 0 52 11yearSPPT > 11year52SPPTmem$i.out &
 #done
 #
-for i in {1..4}
-do
-	#nohup ./run10year2.sh EN52s11eMEM$i 06$i 1 52 > EN52m$i.out &
-	nohup ./run10year2.sh EN10s11eMEM$i 06$i 1 10 > EN10m$i.out &
-done
+#for i in {1..4}
+#do
+#	#nohup ./run10year2.sh EN52s11eMEM$i 06$i 1 52 > EN52m$i.out &
+#	nohup ./run10year2.sh EN10s11eMEM$i 06$i 1 10 > EN10m$i.out &
+#done
 
 #for i in {0..9}
 #do
@@ -124,3 +124,17 @@ done
 #	sbatch --job-name=sr12m$i Q.sh ./run10year.sh SR_CONT12s11eMEM$i 01$i 0 12
 #	sbatch --job-name=sr14m$i Q.sh ./run10year.sh SR_CONT14s11eMEM$i 01$i 0 14
 #done
+
+#nohup time ./run.sh speedtest10 010 2 SRoff10 1year > speedtest10.out & 
+
+for i in {0..4}
+do
+##runonQ	sbatch --job-name=abruptCO2_52sbit_m$i Q.sh ./run_noscratch.sh abrupt4xCO2_52sbit_m$i 01$i 2 52 100year_21ablco2
+##runonatm5	nohup time ./run.sh abrupt4xCO2_52sbit_lowCO2_m$i 01$i 2 52 100year > abrupt4xCO2_52sbit_m${i}_lowCO2 &
+##runonatm5	nohup time ./run.sh abrupt4xCO2_10sbit_m$i 01$i 2 SRoff10 100year_21ablco2 > abrupt4xCO2_10sbit_m$i &
+##nohup time ./run.sh abrupt4xCO2_10sbit_m$i 01$i 2 SRoff10 100year_21ablco2 > abrupt4xCO2_10sbit_m$i.out &
+##nohup time ./run.sh abrupt4xCO2_12sbit_m$i 01$i 2 SRoff12 100year_21ablco2 > abrupt4xCO2_12sbit_m$i.out &
+nohup time ./run.sh abrupt4xCO2_10sbitSR_m$i 01$i 2 10 100year_21ablco2 > abrupt4xCO2_10sbitSR_m$i.out &
+##runonatm6	nohup time ./run.sh abrupt4xCO2_14sbit_m$i 01$i 2 SRoff14 100year_21ablco2 > abrupt4xCO2_14sbit_m$i &
+##runonatm6	nohup time ./run.sh abrupt4xCO2_23sbit_m$i 01$i 2 SRoff23 100year_21ablco2 > abrupt4xCO2_23sbit_m$i &
+done
