@@ -1,0 +1,362 @@
+! mod_atparam
+&resolution
+    ! Spectral truncation
+    ntrun=30,
+    mtrun=30,
+    ! Grid resolution (lon,lat/2,z)
+    ix=96,
+    iy=24,
+    kx=8,
+/
+
+! downscaling
+! Resolution of data in the restart file
+&input_resolution
+    ! Spectral truncation
+    ntrun_in = 30,
+    mtrun_in = 30,
+    ! Grid resolution (lon,lat/2,z)
+    ix_in = 96,
+    iy_in = 24,
+    kx_in = 8,
+/
+
+! mod_cpl_flags
+&coupling_flags
+    ! Flag for land-coupling
+    ! 0=no, 1=land-model
+    icland=1,
+    ! Flag for sea (SST) coupling
+    ! 0 = precribed SST, no coupling
+    ! 1 = precribed SST, ocean model forced by atm.
+    ! 2 = full (uncorrected) SST from coupled ocean model
+    ! 3 = SST anomaly from coupled ocean model + obs. SST clim.
+    ! 4 = as 3 with prescribed SST anomaly in ElNino region
+    icsea=0,
+    ! Flag for sea-ice coupling
+    ! 0=no, 1=ice-model
+    icice=1,
+    ! Flag for observed SST anomaly
+    ! 0 = no (clim. SST), 1 = observed anomaly
+    ! (active if ICSEA = 0, 1; set to 1 if ICSEA = 4)
+    isstan=1,
+/
+
+! mod_cpl_land_model
+&land
+    ! Soil layer depth (m)
+    depth_soil=1.0,
+    ! Land-ice depth (m)
+    depth_lice=5.0,
+    ! Dissipation time (days) for land-surface temp. anomalies
+    tdland=40.0,
+    ! Minimum fraction of land for the definition of anomalies (denominator)
+    flandmin=3.0,
+/
+
+! mod_cplcon_sea
+&sea
+    ! ocean mixed layer depth: d + (d0-d)*(cos_lat)^3
+    ! High-latitude depth
+    depth_ml = 60.0,
+    ! Minimum depth (tropics)
+    dept0_ml = 40.0,
+    ! sea-ice depth : d + (d0-d)*(cos_lat)^2
+    ! High-latitude depth
+    depth_ice = 2.5,
+    ! Minimum depth
+    dept0_ice = 1.5,
+    ! Dissipation time (days) for sea-surface temp. anomalies
+    tdsst  = 90.0,
+    ! Dissipation time (days) for sea-ice temp. anomalies
+    tdice = 30.0,
+    ! Minimum fraction of sea for the definition of anomalies (denominator)
+    fseamin = 3.0,
+    ! Heat flux coef. at sea/ice int.
+    beta = 1.0,
+    ! Geographical domain
+    ! note : more than one regional domain may be set .true.
+    ! global domain
+    l_globe  = .true.,
+    ! Northern hem. oceans (lat > 20N)
+    l_northe = .false.,
+    ! N. Atlantic (lat 20-80N, lon 100W-45E)
+    l_natlan = .false.,
+    ! N. Pacific  (lat 20-80N, lon 100E-100W)
+    l_npacif = .false.,
+    ! Tropics (lat 30S-30N)
+    l_tropic = .false.,
+    ! Indian Ocean (lat 30S-30N, lon 30-120E)
+    l_indian = .false.,
+/
+
+! mod_date
+&date
+    ! Start flag (0: from rest, 1: from restart file)
+    istart=1,
+    ! Start date
+    ! YYYY
+    iyear0=2003,
+    ! MM
+    imonth0=1,
+    ! DD
+    iday0=1,
+    ! Integration length in months
+    nmonts=780,
+    ! No. of days in the last month of int. (max=30)
+    ndaysl=0,
+    ! Seasonal cycle flag (0=no, 1=yes)
+    iseasc=0,
+/
+
+! mod_dyncon0
+&dynamics
+    ! Ref. temperature lapse rate (-dT/dz in deg/km)
+    gamma=6.0,
+    ! Ref. scale height for pressure (in km)
+    hscale=7.5,
+    ! Ref. scale height for spec. humidity (in km)
+    hshum=2.5,
+    ! Ref. relative humidity of near-surface air
+    refrh1=0.7,
+    ! Max damping time (in hours) for hor. diffusion (del^6) of temperature and
+    ! vorticity
+    thd=2.4,
+    ! Max damping time (in hours) for hor. diffusion (del^6) of divergence
+    thdd=2.4,
+    ! Max damping time (in hours) for extra diffusion (del^2) in the stratosphere
+    thds=12.0,
+    ! Damping time (in hours) for drag on zonal-mean wind in the stratosphere
+    tdrs=720.0,
+/
+
+!mod_fordate
+&forcing
+    ! Flag for CO2 optical thickness increase
+    lco2=.false.,
+    ! If lco2=.true., the year corresponding to ablco2 baseline
+    iyear_ref=1950,
+    ! If lco2=.true., the yearly increase in co2 absorbtion from
+    del_co2=0.005,
+    ! ablco2 = abs. of air in CO2 band
+    ablco2 =  21.0,
+
+    ! albsea = Albedo over sea
+    albsea = 0.07,
+    ! albice = Albedo over sea ice (for ice fraction = 1)
+    albice = 0.60,
+    ! albsn  = Albedo over snow (for snow cover = 1)
+    albsn  = 0.60,
+/
+
+!mod_solar
+&solar_forcing
+    ! solc   = Solar constant (area averaged) in W/m^2
+    solc = 342.0,
+    ! epssw  = fraction of incoming solar radiation absorbed by ozone
+    epssw  =  0.020,
+/
+
+! mod_surfcon
+&surface
+    ! Soil wetness at field capacity (volume fraction)
+    swcap=0.30,
+    ! Soil wetness at wilting point  (volume fraction)
+    swwil=0.17,
+    ! Snow depth (mm water) corresponding to snow cover = 1
+    sd2sc=60.0,
+/
+
+! mod_tsteps
+&timestepping
+    ! No. of time steps in one day
+    nsteps=36,
+    ! Period (no. of steps) for diagnostic print-out
+    nstdia=180,
+    ! Period (no. of months) for restart file update
+    nmonrs=120,
+    ! Damping factor in Robert time filter
+    rob=0.05,
+    ! Parameter of Williams filter
+    wil=0.53,
+/
+
+! phy_convmf
+&convection
+    ! Minimum (norm.) sfc. pressure for the occurrence of convection
+    psmin=0.8,
+    ! Time of relaxation (in hours) towards reference state
+    trcnv=6.0,
+    ! Relative hum. threshold in the boundary layer
+    rhbl=0.9,
+    ! Rel. hum. threshold in intermed. layers for secondary mass flux
+    rhil=0.7,
+    ! Max. entrainment as a fraction of cloud-base mass flux
+    entmax=0.5,
+    ! Ratio between secondary and primary mass flux at cloud-base
+    smf=0.8,
+/
+
+! phy_lscond
+&condensation
+    ! Relaxation time (in hours) for specific humidity
+    trlsc=4.0,
+    ! Maximum relative humidity threshold (at sigma=1)
+    rhlsc=0.9,
+    ! Vertical range of relative humidity threshold
+    drhlsc=0.1,
+    ! Relative humidity threshold for boundary layer
+    rhblsc=0.95,
+/
+
+!phy_cloud
+&cloud_parameters
+    ! rhcl1  = relative hum. threshold corr. to cloud cover = 0
+    rhcl1  =  0.30,
+    ! rhcl2  = relative hum. corr. to cloud cover = 1
+    rhcl2  =  1.00,
+    ! qacl   = specific hum. threshold for cloud cover
+    qacl   =  0.20,
+    ! wpcl   = cloud c. weight for the sq. root of precip. (for p = 1 mm/day)
+    wpcl   =  0.2,
+    ! pmaxcl = max. value of precip. (mm/day) contributing to cloud cover
+    pmaxcl = 10.0,
+
+    ! clsmax = maximum stratiform cloud cover
+    clsmax  = 0.60,
+    ! clsminl= minimum stratiform cloud cover over land (for RH = 1)
+    clsminl = 0.15,
+    ! gse_s0 = gradient of dry static energy corresp. to strat.c.c. = 0
+    gse_s0  = 0.25,
+    ! gse_s1 = gradient of dry static energy corresp. to strat.c.c. = 1
+    gse_s1  = 0.40,
+/
+
+!phy_radsw
+&sw_radiation
+    ! Period (no. of steps) for shortwave radiation
+    nstrad=3,
+
+    !          shortwave absorptivities (for dp = 10^5 Pa) :
+    ! absdry = abs. of dry air      (visible band)
+    absdry =  0.033,
+    ! absaer = abs. of aerosols     (visible band)
+    absaer =  0.033,
+    ! abswv1 = abs. of water vapour (visible band, for dq = 1 g/kg)
+    abswv1 =  0.022,
+    ! abswv2 = abs. of water vapour (near IR band, for dq = 1 g/kg)
+    abswv2 = 15.000,
+
+    ! abscl2 = abs. of clouds       (visible band, for dq_base = 1 g/kg)
+    abscl1 =  0.015,
+    ! abscl1 = abs. of clouds       (visible band, maximum value)
+    abscl2 =  0.15,
+
+    ! albcl  = cloud albedo (for cloud cover = 1)
+    albcl  =  0.43,
+    ! albcls = stratiform cloud albedo (for st. cloud cover = 1)
+    albcls =  0.50,
+/
+
+!phy_radlw
+&lw_radiation
+    ! epslw  = fraction of blackbody spectrum absorbed/emitted by PBL only
+    epslw  =  0.05,
+    ! emisfc = longwave surface emissivity
+    emisfc =  0.98,
+
+    !          longwave absorptivities (per dp = 10^5 Pa) :
+    ! ablwin = abs. of air in "window" band
+    ablwin =  0.3,
+    ! ablwv1 = abs. of water vapour in H2O band 1 (weak),   for dq = 1 g/kg
+    ablwv1 =  0.7,
+    ! ablwv2 = abs. of water vapour in H2O band 2 (strong), for dq = 1 g/kg
+    ablwv2 = 50.0,
+
+    ! ablcl1 = abs. of "thick" clouds in window band (below cloud top)
+    ablcl1 = 12.0,
+    ! ablcl2 = abs. of "thin" upper clouds in window and H2O bands
+    ablcl2 =  0.6,
+/
+
+! phy_suflux
+&surface_fluxes
+    !  Constants for surface fluxes
+    ! Ratio of near-sfc wind to lowest-level wind
+    fwind0=0.95,
+    ! Weight for near-sfc temperature extrapolation (0-1) :
+    !          1 : linear extrapolation from two lowest levels
+    !          0 : constant potential temperature ( = lowest level)
+    ftemp0=1.0,
+    ! Weight for near-sfc specific humidity extrapolation (0-1) :
+    !            1 : extrap. with constant relative hum. ( = lowest level)
+    !            0 : constant specific hum. ( = lowest level)
+    fhum0=0.0,
+    ! Drag coefficient for momentum over land
+    cdl=2.4e-3,
+    ! Drag coefficient for momentum over sea
+    cds=1.0e-3,
+    ! Heat exchange coefficient over land
+    chl=1.2e-3,
+    ! Heat exchange coefficient over sea
+    chs=0.9e-3,
+    ! Wind speed for sub-grid-scale gusts
+    vgust=5.0,
+    ! Daily-cycle correction (dTskin/dSSRad)
+    ctday=1.0e-2,
+    ! Potential temp. gradient for stability correction
+    dtheta=3.0,
+    ! Amplitude of stability correction (fraction)
+    fstab=0.67,
+    ! Height scale for orographic correction
+    hdrag=2000.0,
+    ! Amplitude of orographic correction (fraction)
+    fhdrag=0.5,
+    ! Heat conductivity in skin-to-root soil layer
+    clambda=7.0,
+    ! Heat conductivity in soil for snow cover = 1
+    clambsn=7.0,
+/
+
+! phy_vdifsc
+&vertical_diffusion
+    ! Relaxation time (in hours) for shallow convection
+    trshc=6.0,
+    ! Relaxation time (in hours) for moisture diffusion
+    trvdi=24.0,
+    ! Relaxation time (in hours) for super-adiab. conditions
+    trvds=6.0,
+    ! Reduction factor of shallow conv. in areas of deep conv.
+    redshc=0.5,
+    ! Maximum gradient of relative humidity (d_RH/d_sigma)
+    rhgrad=0.5,
+    ! Minimum gradient of dry static energy (d_DSE/d_phi)
+    segrad=0.1,
+/
+
+! phy_sppt
+&sppt
+    ! Turn on SPPT?
+    sppt_on=.false.,
+    ! Number of correlation scales for SPPT perturbations
+    nscales=3,
+
+    ! Additive random forcing
+    l_additive = .false.,
+/
+
+! Remaining arrays must be allocated first
+&sppt_parameters
+    ! Array for tapering value of SPPT in the different layers of the atmosphere
+    ! A value of 1 means the tendency is not tapered at that level
+    mu=1, 1, 1, 1, 1, 1, 1, 1,
+    ! Decorrelation time of SPPT perturbation (in hours)
+    time_decorr=3.0, 72.0, 720.0,
+    ! Correlation length scale of SPPT perturbation (in metres)
+    len_decorr=500000.0, 1000000.0, 2000000.0,
+    ! Standard deviation of SPPT perturbation (in grid point space)
+    stddev=0.52, 0.18, 0.06,
+
+    ! Additive random forcing standard deviation
+    additive_magnitude = 1.0e-6,
+/

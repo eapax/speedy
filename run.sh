@@ -74,4 +74,4 @@ time ./imp.exe | tee out.lis
 echo 'Run completed, will now move output to shared storage before termination'
 
 cd ${UT}
-mv ${TMP} ${OUT}
+cp ${TMP} ${OUT}

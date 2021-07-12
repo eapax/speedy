@@ -127,14 +127,35 @@
 
 #nohup time ./run.sh speedtest10 010 2 SRoff10 1year > speedtest10.out & 
 
-for i in {0..4}
-do
+#for i in {0..4}
+#do
 ##runonQ	sbatch --job-name=abruptCO2_52sbit_m$i Q.sh ./run_noscratch.sh abrupt4xCO2_52sbit_m$i 01$i 2 52 100year_21ablco2
 ##runonatm5	nohup time ./run.sh abrupt4xCO2_52sbit_lowCO2_m$i 01$i 2 52 100year > abrupt4xCO2_52sbit_m${i}_lowCO2 &
 ##runonatm5	nohup time ./run.sh abrupt4xCO2_10sbit_m$i 01$i 2 SRoff10 100year_21ablco2 > abrupt4xCO2_10sbit_m$i &
 ##nohup time ./run.sh abrupt4xCO2_10sbit_m$i 01$i 2 SRoff10 100year_21ablco2 > abrupt4xCO2_10sbit_m$i.out &
 ##nohup time ./run.sh abrupt4xCO2_12sbit_m$i 01$i 2 SRoff12 100year_21ablco2 > abrupt4xCO2_12sbit_m$i.out &
-nohup time ./run.sh abrupt4xCO2_10sbitSR_m$i 01$i 2 10 100year_21ablco2 > abrupt4xCO2_10sbitSR_m$i.out &
+#nohup time ./run.sh abrupt4xCO2_10sbitSR_m$i 01$i 2 10 100year_21ablco2 > abrupt4xCO2_10sbitSR_m$i.out &
 ##runonatm6	nohup time ./run.sh abrupt4xCO2_14sbit_m$i 01$i 2 SRoff14 100year_21ablco2 > abrupt4xCO2_14sbit_m$i &
 ##runonatm6	nohup time ./run.sh abrupt4xCO2_23sbit_m$i 01$i 2 SRoff23 100year_21ablco2 > abrupt4xCO2_23sbit_m$i &
-done
+#done
+
+#rerunning 14 & 23 sbit climate runs (due to lost data on scratch)
+#for i in {0..4}
+#do
+#nohup time ./run.sh abrupt4xCO2_14sbit_m$i 01$i 2 14 65year_21ablco2 > output/abrupt4xCO2_14sbit_m$i.out &
+#nohup time ./run.sh abrupt4xCO2_23sbit_m$i 01$i 2 23 65year_21ablco2 > output/abrupt4xCO2_23sbit_m$i.out &
+#done
+
+#test that increasing ablco2 indeed increases temperature
+#for i in {0..2}
+#do
+#nohup time ./run.sh test_ablco2_6_m$i 01$i 0 52 1year > output/test_ablco2_6_m$i.out &
+#nohup time ./run.sh test_ablco2_10_m$i 01$i 0 52 1year_10ablco2 > output/test_ablco2_10_m$i.out &
+#nohup time ./run.sh test_ablco2_20_m$i 01$i 0 52 1year_20ablco2 > output/test_ablco2_10_m$i.out &
+#done
+
+nohup time ./run.sh abrupt4xCO2_10sbitSR_m0_continued 800 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m0_continued.out &
+nohup time ./run.sh abrupt4xCO2_10sbitSR_m1_continued 801 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m1_continued.out &
+nohup time ./run.sh abrupt4xCO2_10sbitSR_m2_continued 802 2 10 65year_21ablco2_2003 > abrupt4xCO2_10sbitSR_m2_continued.out &
+nohup time ./run.sh abrupt4xCO2_10sbitSR_m3_continued 803 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m3_continued.out &
+nohup time ./run.sh abrupt4xCO2_10sbitSR_m4_continued 804 2 10 65year_21ablco2_2006 > abrupt4xCO2_10sbitSR_m4_continued.out &
