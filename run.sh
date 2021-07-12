@@ -40,7 +40,9 @@ cp ${output}     ${TMP}/output_requests.nml
 cp ${precisions} ${TMP}/precisions.nml
 
 # Link restart file (i.e. set initial conditions)
-cp ${INP}/*.rst ${TMP}
+if [ $2 != 0 ] ; then
+   cp ${INP}/*.rst ${TMP}
+fi
 
 # Link input files
 BC=${UT}/data/bc/t30
@@ -74,4 +76,4 @@ time ./imp.exe | tee out.lis
 echo 'Run completed, will now move output to shared storage before termination'
 
 cd ${UT}
-cp ${TMP} ${OUT}
+mv ${TMP} ${OUT}
