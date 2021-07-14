@@ -11,7 +11,7 @@ The code here is as cited in the paper [4]. Any errors in this code do not refle
 ## Usage.
 
 To run the model, first edit the `run.sh` script so that `LD_LIBRARY_PATH` points to the appropriate RPE library.
-Currently, the default branch of this repository is stochastic_rounding, which interacts with the branch of the 
+Currently, the default branch of this repository is `stochastic_rounding`, which interacts with the branch of the 
 RPE developed by Matthew Chantry to support stochastic rounding. 
 Next set 
 `OUT` to the directory in which you want the output to be 
@@ -28,8 +28,8 @@ The arguments passed to `run.sh` above are as follows (from left to right):
 1: A folder will be created with this name in which your experiment will be contained. 
 
 2: Specifies a choice of initial condition, which in this case is read from the "restart file" contained 
-in `initial_conditions/exp_010/`. The restart files in exp_010 through to exp_019 and in exp_060
-through to exp_069 were obtained by
+in `initial_conditions/exp_010/`. The restart files in `exp_010` through to `exp_019` and in `exp_060`
+through to `exp_069` were obtained by
 integrating the model for 10 years from rest at 51 significand bits (sbits) of precision (effectively double precision 
 plus a tiny rounding error)
 with a blank SST anomaly and an El Nino SST anomaly (see below) respectively. 
@@ -54,14 +54,13 @@ some additional parameters such as `rp_convection=X`.
 This functionality allows one to selectively turn off low-precision for certain parts of the code, for example in the
 convective precipitation parameterisation by setting `rp_convection=52` (or equivalently by omitting to specify
 `rp_convection`, which will then default to `52`).  
-This functionality is implemented through the `set_precision` subroutine in the `source/mod_prec.f90` module, and  
+This functionality is implemented through the `set_precision` subroutine in the `source/mod_prec.f90` module, and 
 one can check which parts of the code it currently affects by running
 ```
-cd source
-grep -irn set_precision .
+grep -irn set_precision source
 ```
 
-5: Specifies a namelist file from the `setup/` folder prefixed by 'speedy' which contains a list of parameters for the model. 
+5: Specifies a namelist file from the `setup/` folder prefixed by `speedy` which contains a list of parameters for the model. 
 Primarily this can be used for changing the integration length (for example, `10day` specifies a 10 day integration, with other 
 parameters set to some default values), but it can also be used to set more custom namelists (for example, changing the optical thickness of 
 atmospheric CO2, or turning on stochastically perturbed parameterisation tendencies (SPPT) as implemented by Saffin [5]). 
