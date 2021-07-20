@@ -64,6 +64,6 @@ subroutine agcm_1day(jday)
 
     ! 4. Write restart file at the end of selected months
     if (iday==1) then
-        if (mod(imonth, nmonrs)==0) call restart(2)
+        if (mod(imonth-1, nmonrs)==0) call restart(2)
     endif
 end subroutine agcm_1day
