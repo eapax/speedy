@@ -5,8 +5,8 @@
 *.o
 *.out
 *.lis
-setup/14sig11exp.nml
 setup/#*#
+setup/oldnamelists
 output
 rpe
 tmp
@@ -18,7 +18,8 @@ _build
 _static
 _templates
 run1*.sh
-submit_jobs.sh
-Q.sh
-scancel.sh
+./submit_jobs.sh
+./Q.sh
+./scancel.sh
 junk/
+temp/

@@ -154,8 +154,13 @@
 #nohup time ./run.sh test_ablco2_20_m$i 01$i 0 52 1year_20ablco2 > output/test_ablco2_10_m$i.out &
 #done
 
-nohup time ./run.sh abrupt4xCO2_10sbitSR_m0_continued 800 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m0_continued.out &
-nohup time ./run.sh abrupt4xCO2_10sbitSR_m1_continued 801 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m1_continued.out &
-nohup time ./run.sh abrupt4xCO2_10sbitSR_m2_continued 802 2 10 65year_21ablco2_2003 > abrupt4xCO2_10sbitSR_m2_continued.out &
-nohup time ./run.sh abrupt4xCO2_10sbitSR_m3_continued 803 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m3_continued.out &
-nohup time ./run.sh abrupt4xCO2_10sbitSR_m4_continued 804 2 10 65year_21ablco2_2006 > abrupt4xCO2_10sbitSR_m4_continued.out &
+#nohup time ./run.sh abrupt4xCO2_10sbitSR_m0_continued 800 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m0_continued.out &
+#nohup time ./run.sh abrupt4xCO2_10sbitSR_m1_continued 801 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m1_continued.out &
+#nohup time ./run.sh abrupt4xCO2_10sbitSR_m2_continued 802 2 10 65year_21ablco2_2003 > abrupt4xCO2_10sbitSR_m2_continued.out &
+#nohup time ./run.sh abrupt4xCO2_10sbitSR_m3_continued 803 2 10 65year_21ablco2_2004 > abrupt4xCO2_10sbitSR_m3_continued.out &
+#nohup time ./run.sh abrupt4xCO2_10sbitSR_m4_continued 804 2 10 65year_21ablco2_2006 > abrupt4xCO2_10sbitSR_m4_continued.out &
+
+for i in {0..4}
+do 
+	nohup time ./run.sh 10sbitSR_m0 01$i 2 10 65year_21ablco2 > 10sbitSR_m0.out &
+done
