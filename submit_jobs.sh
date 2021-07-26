@@ -162,5 +162,5 @@
 
 for i in {0..4}
 do 
-	nohup time ./run.sh 10sbitSR_m0 01$i 2 10 65year_21ablco2 > 10sbitSR_m0.out &
+	nohup time ./run.sh 10sbitSR_m$i 01$i 2 10 65year_21ablco2 > 10sbitSR_m$i.out &
 done

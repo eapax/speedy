@@ -19,6 +19,7 @@ Next set
 stored after completion, and `TMP` to the directory in which you want the model to run. 
 It's fine to choose the same directory for `OUT` and `TMP`, however for fast performance (especially when using the RPE) 
 it's better to set `TMP` to a folder on your computer's scratch space, if possible. 
+Next run `make` in the `source` directory to compile the Fortran code. 
 You can then run the model by
 
 ```
