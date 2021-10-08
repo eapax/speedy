@@ -1,6 +1,5 @@
 *.swp
 *.exe
-*.nc
 *.mod
 *.o
 *.out
