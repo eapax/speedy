@@ -1,5 +1,14 @@
 # speedy
-A branch of SPEEDY ver 41, originally cloned from Leo Saffin's gitlab [1], 
+A branch of SPEEDY ver 41, forked from [Adam Paxton](https://github.com/eapax/speedy)
+
+
+
+
+
+
+
+
+originally cloned from Leo Saffin's gitlab [1], 
 which has been ammended to accomodate the reduced precision emulator (RPE) of Dawson & Düben [2]. 
 A significant amount of work was done by Leo (see up to last commit in December 2019), 
 building on previous work by Sam Hatfield [3], to achieve this, including updating 
