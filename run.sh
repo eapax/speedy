@@ -17,7 +17,7 @@ fi
 
 # Define directory names
 UT=`pwd -P`
-TMP=/local/scratch/paxton_output/$1
+TMP=/local/scratch/kimpson/$1
 OUT=/network/group/aopp/predict/TIP016_PAXTON_RPSPEEDY
 INP=${UT}/initial_conditions/exp_$2
 mkdir -p ${TMP}
