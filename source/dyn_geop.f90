@@ -7,7 +7,7 @@ subroutine geop(jj)
     ! Modified common blocks : DYNSP2
 
     use mod_atparam
-    use mod_dynvar, only: t, phi, phis
+    use mod_dynvar, only: t, phi, phis, tcopy
     use mod_dyncon1, only: xgeop1, xgeop2, hsg, fsg
     use humidity, only: zero_C
     use rp_emulator
@@ -18,6 +18,9 @@ subroutine geop(jj)
     integer, intent(in) :: jj
     integer :: k
     type(rpe_var) :: corf
+
+    !Create a copy of the initial state of the spectral temperature
+    tcopy = t
 
     ! Convert temperature to Kelvin
     t(1,1,:,:) = t(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
@@ -39,5 +42,10 @@ subroutine geop(jj)
     end do
 
     ! Convert temperature to Celsius
-    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
+    !t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
+    
+    !Rather than doing the previous line, just return the copy we created at the start
+    t = tcopy
+
+
 end subroutine geop

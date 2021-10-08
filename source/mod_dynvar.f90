@@ -17,6 +17,10 @@ module mod_dynvar
     ! Absolute temperature
     type(rpe_complex_var), allocatable :: t(:,:,:,:)
 
+    ! Copy of Absolute temperature used for debugging
+    type(rpe_complex_var), allocatable :: tcopy(:,:,:,:)
+    
+
     ! Log of (norm.) sfc pressure (p_s/p0)
     type(rpe_complex_var), allocatable :: PS(:,:,:)
 
@@ -35,6 +39,7 @@ module mod_dynvar
             allocate(vor(MX,NX,KX,2))
             allocate(div(MX,NX,KX,2))
             allocate(t(MX,NX,KX,2))
+            allocate(tcopy(MX,NX,KX,2))
             allocate(PS(MX,NX,2))
             allocate(TR(MX,NX,KX,2,NTR))
             allocate(PHI(MX,NX,KX))
