@@ -20,7 +20,7 @@ subroutine geop(jj)
     type(rpe_var) :: corf
 
     !Create a copy of the initial state of the spectral temperature
-!    tcopy = t
+    tcopy = t
 
     ! Convert temperature to Kelvin
     t(1,1,:,:) = t(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
@@ -42,10 +42,10 @@ subroutine geop(jj)
     end do
 
     ! Convert temperature to Celsius
-    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
+!    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
     
     !Rather than doing the previous line, just return the copy we created at the start
-    !t = tcopy
+    t = tcopy
 
 
 end subroutine geop
