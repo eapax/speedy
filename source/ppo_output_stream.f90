@@ -137,7 +137,7 @@ module ppo_output_stream
                 end do
 
                 ! Convert temperature to Kelvin
-                tg1 = tg1 + zero_C
+                !tg1 = tg1 + zero_C
             end if
 
             ! Humidity
