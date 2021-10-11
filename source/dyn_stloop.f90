@@ -33,11 +33,5 @@ subroutine stloop(istep)
 
         istep = istep + 1
 
-        if (istep .GT. 5) then
-        print *, 'Artifical stop in dyn_stloop'
-        stop
-        endif
-
-
     end do
 end subroutine
