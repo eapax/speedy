@@ -726,6 +726,19 @@ module ppo_output_stream
                 case(123)
                 output = sppt
 
+
+                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
+                case(124)
+                output(:, 1) = shf(:, 1)
+                l_3d = .false.
+
+                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
+                case(125)
+                output(:, 1) = shf(:, 2)
+                l_3d = .false.
+
+
+
                 case default
                 print *, 'Variable no.', varID, ' unavailable for output'
             end select
@@ -1156,6 +1169,22 @@ module ppo_output_stream
                 case(123)
                 name = 'stochastic_perturbation'
                 units = ''
+
+                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
+                case(124)
+                name = 'sensible_heat_flux_land'
+                units = 'unknown'
+                l_3d = .false.
+                
+
+                ! shf    = sensible heat flux       (1:land, 2:sea, 3: wgt. average)
+                case(125)
+                name = 'sensible_heat_flux_sea'
+                units = 'unknown'
+                l_3d = .false.
+
+
+
 
                 case default
                 print *, 'Variable no.', varID, ' unavailable for output'

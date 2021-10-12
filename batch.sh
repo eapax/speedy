@@ -1,11 +1,11 @@
 #L1 - EL NINO BASIC
-#nohup time ./run.sh high_frequency_1_day_L1_50_RN_new_24hour 010 1 SRoff50 24hour > output/high_frequency_1_day-L1_50_RN_new.out &
-#nohup time ./run.sh high_frequency_1_day_L1_23_RN_new_24hour 010 1 SRoff23 24hour > output/high_frequency_1_day-L1_23_RN_new.out &
-#nohup time ./run.sh high_frequency_1_day_L1_10_RN_new_24hour 010 1 SRoff10 24hour > output/high_frequency_1_day-L1_10_RN_new.out &
-#nohup time ./run.sh high_frequency_1_day_L1_10_SR_new_24hour 010 1 10      24hour > output/high_frequency_1_day-L1_10_SR_new.out &
+nohup time ./run.sh high_frequency_1_day_L1_50_RN_new_24hour 010 1 SRoff50 24hour > output/high_frequency_1_day-L1_50_RN_new.out &
+nohup time ./run.sh high_frequency_1_day_L1_23_RN_new_24hour 010 1 SRoff23 24hour > output/high_frequency_1_day-L1_23_RN_new.out &
+nohup time ./run.sh high_frequency_1_day_L1_10_RN_new_24hour 010 1 SRoff10 24hour > output/high_frequency_1_day-L1_10_RN_new.out &
+nohup time ./run.sh high_frequency_1_day_L1_10_SR_new_24hour 010 1 10      24hour > output/high_frequency_1_day-L1_10_SR_new.out &
 
 
-#nohup time ./run.sh high_frequency_1_day_L2_50_RN_new_24hour 010 2 SRoff50 24hour > output/high_frequency_1_day-L2_50_RN_new.out &
+nohup time ./run.sh high_frequency_1_day_L2_50_RN_new_24hour 010 2 SRoff50 24hour > output/high_frequency_1_day-L2_50_RN_new.out &
 nohup time ./run.sh high_frequency_1_day_L2_23_RN_new_24hour 010 2 SRoff23 24hour > output/high_frequency_1_day-L2_23_RN_new.out &
 nohup time ./run.sh high_frequency_1_day_L2_10_RN_new_24hour 010 2 SRoff10 24hour > output/high_frequency_1_day-L2_10_RN_new.out &
 nohup time ./run.sh high_frequency_1_day_L2_10_SR_new_24hour 010 2 10      24hour > output/high_frequency_1_day-L2_10_SR_new.out &
