@@ -149,7 +149,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     !           psdt  = spectral tendency of log(p_s)
     !           trdt  = spectral tendency of tracers
     use mod_atparam
-    use mod_dynvar, only: ps
+    use mod_dynvar, only: ps, ttend_IO
     use mod_dyncon1, only: akap, rgas, dhs, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
@@ -261,18 +261,18 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
                         sigm(:,:,k)*(tref(k) - tref(k-1))
     end do
 
- !   do k=1,kx
- !       do j=1,il
- !           do i=1,ix
- !               ttend(i,j,k)= ttend(i,j,k) + tgg(i,j,k)*divg(i,j,k)&
- !                   & -(temp(i,j,k+1)+temp(i,j,k))*dhsr(k)&
- !                   & +fsgr(k)*tgg(i,j,k)*(sigdt(i,j,k+1)+sigdt(i,j,k))&
- !                   & +tref3(k)*(sigm(i,j,k+1)+sigm(i,j,k))&
- !                   & +akap*((tg(i,j,k)+zero_c)*puv(i,j,k)&
- !                   & -tgg(i,j,k)*dmean(i,j))
- !           end do
- !       end do
- !   end do
+    do k=1,kx
+        do j=1,il
+            do i=1,ix
+                ttend(i,j,k)= ttend(i,j,k) + tgg(i,j,k)*divg(i,j,k)&
+                    & -(temp(i,j,k+1)+temp(i,j,k))*dhsr(k)&
+                    & +fsgr(k)*tgg(i,j,k)*(sigdt(i,j,k+1)+sigdt(i,j,k))&
+                    & +tref3(k)*(sigm(i,j,k+1)+sigm(i,j,k))&
+                    & +akap*((tg(i,j,k)+zero_c)*puv(i,j,k)&
+                    & -tgg(i,j,k)*dmean(i,j))
+            end do
+        end do
+    end do
 
     ! Tracer tendency
 
@@ -298,7 +298,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     ! 4. Conversion of grid-point tendencies to spectral space and calculation
     !    of terms using grid-point and spectral components
-    call set_precision('Half')
+    !call set_precision('Half')
     do k=1,kx
         !  convert u and v tendencies to vor and div spectral tendencies
         !  vdspec takes a grid u and a grid v and converts them to
