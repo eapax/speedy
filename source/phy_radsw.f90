@@ -131,11 +131,6 @@ module phy_radsw
             tau2 = 0.0_dp
 
 
-           print *, 'CALLED RADSW'
-
-
-            print *, 'fband values', fband1, fband2
-
             do j=1,ngp
                 !fk-- change to ensure only icltop <= kx used
                 if(icltop(j)<=kx) then
