@@ -248,13 +248,5 @@ module phy_radsw
             ! Convert SW fluxes to temperature tendencies
             dfabs = dfabs*flx2tend
 
-
-
-            print *, SUM(dfabs(:,1))
-            print *, 'artifical stop in rad sw'
-            stop
-
-
-
         end subroutine radsw
 end module phy_radsw
