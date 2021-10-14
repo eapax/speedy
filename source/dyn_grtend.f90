@@ -261,18 +261,18 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
                         sigm(:,:,k)*(tref(k) - tref(k-1))
     end do
 
-    do k=1,kx
-        do j=1,il
-            do i=1,ix
-                ttend(i,j,k)= ttend(i,j,k) + tgg(i,j,k)*divg(i,j,k)&
-                    & -(temp(i,j,k+1)+temp(i,j,k))*dhsr(k)&
-                    & +fsgr(k)*tgg(i,j,k)*(sigdt(i,j,k+1)+sigdt(i,j,k))&
-                    & +tref3(k)*(sigm(i,j,k+1)+sigm(i,j,k))&
-                    & +akap*((tg(i,j,k)+zero_c)*puv(i,j,k)&
-                    & -tgg(i,j,k)*dmean(i,j))
-            end do
-        end do
-    end do
+ !   do k=1,kx
+ !       do j=1,il
+ !           do i=1,ix
+ !               ttend(i,j,k)= ttend(i,j,k) + tgg(i,j,k)*divg(i,j,k)&
+ !                   & -(temp(i,j,k+1)+temp(i,j,k))*dhsr(k)&
+ !                   & +fsgr(k)*tgg(i,j,k)*(sigdt(i,j,k+1)+sigdt(i,j,k))&
+ !                   & +tref3(k)*(sigm(i,j,k+1)+sigm(i,j,k))&
+ !                   & +akap*((tg(i,j,k)+zero_c)*puv(i,j,k)&
+ !                   & -tgg(i,j,k)*dmean(i,j))
+ !           end do
+ !       end do
+ !   end do
 
     ! Tracer tendency
 
