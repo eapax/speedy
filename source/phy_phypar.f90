@@ -168,5 +168,5 @@ subroutine phypar(utend,vtend,ttend,qtend)
     end if
 
     ! Additive random noise
-    call additive_forcing(tt_phy)
+!    call additive_forcing(tt_phy)
 end subroutine phypar

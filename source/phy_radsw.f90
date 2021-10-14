@@ -130,6 +130,12 @@ module phy_radsw
             ! 1.  Initialization
             tau2 = 0.0_dp
 
+
+           print *, 'CALLED RADSW'
+
+
+            print *, 'fband values', fband1, fband2
+
             do j=1,ngp
                 !fk-- change to ensure only icltop <= kx used
                 if(icltop(j)<=kx) then
@@ -241,5 +247,14 @@ module phy_radsw
 
             ! Convert SW fluxes to temperature tendencies
             dfabs = dfabs*flx2tend
+
+
+
+            print *, SUM(dfabs(:,1))
+            print *, 'artifical stop in rad sw'
+            stop
+
+
+
         end subroutine radsw
 end module phy_radsw
