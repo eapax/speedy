@@ -48,7 +48,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! 1. Compute grid-point fields
     ! 1.1 Update geopotential in spectral space
-    call set_precision('Half')
+    !call set_precision('Half')
     call geop(j1)
 
     ! 1.2 Grid-point variables for physics tendencies
@@ -58,7 +58,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
 
     ! Truncate variables where the spectral transform is still done at double
     ! precision
-    call set_precision('Half')
+    !call set_precision('Half')
     ug1 = ug1 / 3600.0_dp
     vg1 = vg1 / 3600.0_dp
 
@@ -111,7 +111,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
             call uvspec(vor(:,:,k,j2), div(:,:,k,j2), ug(:,:,k), vg(:,:,k))
         end do
 
-        call set_precision('Half')
+        !call set_precision('Half')
         ug = ug / 3600.0_dp
         vg = vg / 3600.0_dp
 
@@ -181,7 +181,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     integer :: i, j, k, itr
 
-    call set_precision('Half')
+   ! call set_precision('Half')
 
     umean(:,:) = 0.0_dp
     vmean(:,:) = 0.0_dp
@@ -194,9 +194,9 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     end do
 
     ! Compute tendency of log(surface pressure)
-    call set_precision('Half')
+   ! call set_precision('Half')
     call grad(ps(:,:,j2),dumc(:,:,2),dumc(:,:,3))
-    call set_precision('Half')
+   ! call set_precision('Half')
     call grid(dumc(:,:,2)*3600.0_dp, px, 2)
     call grid(dumc(:,:,3)*3600.0_dp, py, 2)
 
