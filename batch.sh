@@ -24,7 +24,7 @@
 #nohup time ./run.sh speedyone_L2_10_RNDIFFUSION_1year    010 2 SRoff10_rp_diffusion_    1year > output/speedyone-L2_10_RN_1year_RP5.out &
 
 
-nohup time ./run.sh speedyone_L2_10_RNTIMESTEPPING50_1month 010 2 SRoff10_rp_timestepping50_ 1month > output/speedyone-L2_10_RN_1month_RP3_50.out &
+nohup time ./run.sh speedyone_L2_10_RNTIMESTEPPING50_1year 010 2 SRoff10_rp_timestepping50_ 1year > output/speedyone-L2_10_RN_1year_RP3_50.out &
 
 
 
