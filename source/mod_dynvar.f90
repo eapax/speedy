@@ -34,8 +34,6 @@ module mod_dynvar
     ! Surface geopotential
     type(rpe_complex_var), allocatable :: PHIS(:,:)
 
-    !Temperature grid point tendency which will be output
-    type(rpe_var), allocatable :: ttend_IO(:,:)
 
 
     contains
@@ -48,7 +46,6 @@ module mod_dynvar
             allocate(TR(MX,NX,KX,2,NTR))
             allocate(PHI(MX,NX,KX))
             allocate(PHIS(MX,NX))
-            allocate(ttend_IO(ngp,kx))
 
         end subroutine setup_dynvar
 end module

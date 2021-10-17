@@ -149,7 +149,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
     !           psdt  = spectral tendency of log(p_s)
     !           trdt  = spectral tendency of tracers
     use mod_atparam
-    use mod_dynvar, only: ps, ttend_IO
+    use mod_dynvar, only: ps
     use mod_dyncon1, only: akap, rgas, dhs, dhsr, fsgr
     use mod_dyncon2, only: tref, tref3
     use spectral, only: lap, grad, grid, spec, vdspec
