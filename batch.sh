@@ -17,11 +17,11 @@
 #nohup time ./run.sh speedyone_L2_10_SR_1month_ 010 2 10      1month > output/speedyone-L2_10_SR_1month_.out &
 
 
-nohup time ./run.sh speedyone_L2_10_RNHALFBITS_1month     010 2 SRoff10_rp_half_bits_   1month > output/speedyone-L2_10_RN_1month_RP1.out &
-nohup time ./run.sh speedyone_L2_10_RNCONVECTION_1month   010 2 SRoff10_rp_convection_  1month > output/speedyone-L2_10_RN_1month_RP2.out &
-nohup time ./run.sh speedyone_L2_10_RNTIMESTEPPING_1month 010 2 SRoff10_rp_timstepping_ 1month > output/speedyone-L2_10_RN_1month_RP3.out &
-nohup time ./run.sh speedyone_L2_10_RNTENDENCIES_1month   010 2 SRoff10_rp_tendencies_  1month > output/speedyone-L2_10_RN_1month_RP4.out &
-nohup time ./run.sh speedyone_L2_10_RNDIFFUSION_1month    010 2 SRoff10_diffusion_      1month > output/speedyone-L2_10_RN_1month_RP5.out &
+nohup time ./run.sh speedyone_L2_10_RNHALFBITS_1month     010 2 SRoff10_rp_half_bits_    1month > output/speedyone-L2_10_RN_1month_RP1.out &
+nohup time ./run.sh speedyone_L2_10_RNCONVECTION_1month   010 2 SRoff10_rp_convection_   1month > output/speedyone-L2_10_RN_1month_RP2.out &
+nohup time ./run.sh speedyone_L2_10_RNTIMESTEPPING_1month 010 2 SRoff10_rp_timestepping_ 1month > output/speedyone-L2_10_RN_1month_RP3.out &
+nohup time ./run.sh speedyone_L2_10_RNTENDENCIES_1month   010 2 SRoff10_rp_tendencies_   1month > output/speedyone-L2_10_RN_1month_RP4.out &
+nohup time ./run.sh speedyone_L2_10_RNDIFFUSION_1month    010 2 SRoff10_rp_diffusion_    1month > output/speedyone-L2_10_RN_1month_RP5.out &
 
 
 
