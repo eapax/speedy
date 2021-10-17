@@ -98,12 +98,13 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     if (dt<=rpe_literal(0.0_dp)) return
 
     call set_precision('Tendencies')
- !   call apply_truncation(psdt)
- !   call apply_truncation(vordt)
- !   call apply_truncation(divdt)
- !   call apply_truncation(tdt)
- !   call apply_truncation(trdt)
+    call apply_truncation(psdt)
+    call apply_truncation(vordt)
+    call apply_truncation(divdt)
+    call apply_truncation(tdt)
+    call apply_truncation(trdt)
 
+    print *, 'Precision before timesepping call', RPE_DEFAULT_SBITS
     call set_precision('Timestepping')
 
     if (j1==1) then
@@ -120,6 +121,15 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
     enddo
+
+
+
+
+    print *, 'Precision at endof step timesepping call', RPE_DEFAULT_SBITS
+
+
+
+
 end subroutine step
 
 subroutine hordif(nlev,field,fdt,dmp,dmp1)

@@ -26,8 +26,12 @@ subroutine stloop(istep)
         lradsw = (mod(istep,nstrad)==1)
 
         ! Perform one leapfrog time step
+
+
+        print *, 'PRECISION BEFORE LF STEP IS:',RPE_DEFAULT_SBITS
         call step(2, 2, delt2, alph, rob, wil)
 
+        print *, 'PRECISION AFTER LF STEP IS:',RPE_DEFAULT_SBITS
         ! Do diagnostic, post-processing and I/O tasks
         call diagns(2, istep)
 

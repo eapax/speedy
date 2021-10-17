@@ -15,6 +15,8 @@ program agcm_main
 
     print *, 'integration length in days: ', ndays
 
+
+
     ! 2. do loop over total no. of integration days
     do jday = 1, ndays
         ! 2.1 run atmospheric model for 1 day
