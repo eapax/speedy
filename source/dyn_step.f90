@@ -113,13 +113,13 @@ subroutine step(j1,j2,dt,alph,rob,wil)
         eps = rob
     endif
 
-    call timint(j1,dt,eps,wil,1,ps,psdt)
-    call timint(j1,dt,eps,wil,kx,vor,vordt)
-    call timint(j1,dt,eps,wil,kx,div,divdt)
-    call timint(j1,dt,eps,wil,kx,t,  tdt)
+    call timint(j1,dt,eps,wil,1,ps,psdt,.False.)
+    call timint(j1,dt,eps,wil,kx,vor,vordt,.FALSE.)
+    call timint(j1,dt,eps,wil,kx,div,divdt,.FALSE.)
+    call timint(j1,dt,eps,wil,kx,t,  tdt,.TRUE.)
 
     do itr=1,ntr
-        call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
+        call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
     enddo
 
 
@@ -127,6 +127,8 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     print *, 'Precision at endof step timesepping call', RPE_DEFAULT_SBITS
 
+    print *, 'Stopping in timeint subroutine'
+    stop
 
 
 
@@ -158,7 +160,7 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
     end do
 end subroutine hordif
 
-subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
+subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     !  Aux. subr. timint (j1,dt,eps,wil,nlev,field,fdt)
     !  Purpose : Perform time integration of field at nlev levels
     !            using tendency fdt
@@ -169,6 +171,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     implicit none
 
+    logical, intent(in) :: printout
     integer, intent(in) :: j1, nlev
     type(rpe_var), intent(in) :: dt, eps, wil
     type(rpe_complex_var), intent(in) :: fdt(mx,nx,nlev)
@@ -179,18 +182,17 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
-    print *, 'rpe literal 1.0_dp', rpe_literal(1.0_dp)
-    print *, 'rpe literal 2.0_dp', rpe_literal(2.0_dp)
-    PRINT *, 'The value of eps is', eps
-    print *, 'The value of eps2 is =', eps2
-    print *, 'Stopping in timeint subroutine'
-    stop
-
     if (ix==iy*4) then
         do k=1,nlev
             call trunct(fdt(:,:,k))
         enddo
     endif
+
+
+    if (printout) then
+   print *, 'temperature timestep'
+   endif
+
 
     ! The actual leap frog with the robert filter
     do k=1,nlev
@@ -201,7 +203,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
                     &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
                 ! and here comes Williams' innovation to the filter
-                field(m,n,k,2) = fnew(m,n)-(1-wil)*eps*(field(m,n,k,1)&
+                field(m,n,k,2) = fnew(m,n)-(rpe_literal(1.0_dp)-wil)*eps*(field(m,n,k,1)&
                     &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
             end do
