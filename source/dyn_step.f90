@@ -179,6 +179,13 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
     eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
+    print *, 'rpe literal 1.0_dp', rpe_literal(1.0_dp)
+    print *, 'rpe literal 2.0_dp', rpe_literal(2.0_dp)
+    PRINT *, 'The value of eps is', eps
+    print *, 'The value of eps2 is =', eps2
+    print *, 'Stopping in timeint subroutine'
+    stop
+
     if (ix==iy*4) then
         do k=1,nlev
             call trunct(fdt(:,:,k))
