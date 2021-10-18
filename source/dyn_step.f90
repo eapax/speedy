@@ -179,9 +179,6 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     endif
 
 
-    if (printout) then
-   print *, 'temperature timestep', wil*eps, dt, fdt(1,1,1), dt*fdt(1,1,1)
-   endif
 
 
     ! The actual leap frog with the robert filter
@@ -199,4 +196,16 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
             end do
         end do
     end do
+
+
+
+
+
+    if (printout) then
+   print *, 'temperature timestep', fnew(1,1), eps2, field(1,1,1,1), field(1,1,1,2), fdt(1,1,1)
+   endif
+
+
+
+
 end subroutine timint
