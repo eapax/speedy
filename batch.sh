@@ -24,10 +24,10 @@
 #nohup time ./run.sh speedyone_L2_10_RNDIFFUSION_1year    010 2 SRoff10_rp_diffusion_    1year > output/speedyone-L2_10_RN_1year_RP5.out &
 
 
-nohup time ./run.sh throwaway_L2_50_RN 010 2 SRoff50 1year > output/throwaway-L2_50_RN.out &
-nohup time ./run.sh throwaway_L2_10_RN 010 2 SRoff10 1year > output/throwaway-L2_10_RN.out &
-nohup time ./run.sh throwaway_L2_10_SR 010 2 10      1year > output/throwaway-L2_10_SR.out &
-nohup time ./run.sh throwaway_L2_10_RNTIMESTEPPING50 010 2 SRoff10_rp_timestepping50_ 1year > output/throwaway-L2_10_RNTIMESTEPPING.out &
+nohup time ./run.sh check_unit_rounding_L2_50_RN 010 2 SRoff50 1month > output/check_unit_rounding-L2_50_RN.out &
+nohup time ./run.sh check_unit_rounding_L2_10_RN 010 2 SRoff10 1month > output/check_unit_rounding-L2_10_RN.out &
+nohup time ./run.sh check_unit_rounding_L2_10_SR 010 2 10      1month > output/check_unit_rounding-L2_10_SR.out &
+nohup time ./run.sh check_unit_rounding_L2_10_RNTIMESTEPPING50 010 2 SRoff10_rp_timestepping50_ 1month > output/check_unit_rounding-L2_10_RNTIMESTEPPING.out &
 
 
 
@@ -66,8 +66,8 @@ nohup time ./run.sh throwaway_L2_10_RNTIMESTEPPING50 010 2 SRoff10_rp_timesteppi
 
 
 
-#nohup time ./run.sh throwaway_L2_10_RN 010 2 SRoff10 24hour > output/throwaway-L2_10_RN.out &
-#nohup time ./run.sh throwaway_L2_10_SR 010 2 10      24hour > output/throwaway-L2_10_SR.out &
+#nohup time ./run.sh check_unit_rounding_L2_10_RN 010 2 SRoff10 24hour > output/check_unit_rounding-L2_10_RN.out &
+#nohup time ./run.sh check_unit_rounding_L2_10_SR 010 2 10      24hour > output/check_unit_rounding-L2_10_SR.out &
 
 
 

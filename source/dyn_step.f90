@@ -104,7 +104,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call apply_truncation(tdt)
     call apply_truncation(trdt)
 
-    print *, 'Precision before timesepping call', RPE_DEFAULT_SBITS
     call set_precision('Timestepping')
 
     if (j1==1) then
@@ -121,15 +120,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
     enddo
-
-
-
-
-    print *, 'Precision at endof step timesepping call', RPE_DEFAULT_SBITS
-
-    print *, 'Stopping in timeint subroutine'
-    stop
-
 
 
 end subroutine step
@@ -190,7 +180,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
 
 
     if (printout) then
-   print *, 'temperature timestep'
+   print *, 'temperature timestep', wil*eps, dt, fdt(1,1,1), dt*fdt(1,1,1)
    endif
 
 
