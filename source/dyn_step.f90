@@ -172,11 +172,11 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
 
     eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
-    if (ix==iy*4) then
-        do k=1,nlev
-            call trunct(fdt(:,:,k))
-        enddo
-    endif
+!    if (ix==iy*4) then
+!        do k=1,nlev
+!            call trunct(fdt(:,:,k))
+!        enddo
+!    endif
 
 
 
