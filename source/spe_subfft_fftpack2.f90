@@ -184,7 +184,8 @@ subroutine rffti1(n, wa, ifac)
     implicit none
 
     integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: wa(*),ifac(*)
+    type(rpe_var), intent(inout) :: wa(*)
+    type(integer), intent(inout) :: ifac(*)
     integer, save :: ntryh(4) = (/ 4, 2, 3, 5 /)
     integer :: nl, nf, i, j, ib, ido, ii, ip, ipm, is, k1, l1, l2, ld, nfm1,&
         & nq, nr, ntry
@@ -250,8 +251,8 @@ subroutine rfftb1(n, c, ch, wa, ifac)
 
     implicit none
 
-    integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: ch(*), c(*), wa(*),ifac(*)
+    integer, intent(in) :: n,ifac(*)
+    type(rpe_var), intent(inout) :: ch(*), c(*), wa(*)
     integer :: nf, na, l1, iw, ip, l2, ido, idl1, ix2, ix3, ix4, i, k1
 
     !***first executable statement  rfftb1
@@ -317,8 +318,8 @@ subroutine rfftf1 (n, c, ch, wa, ifac)
 
     implicit none
 
-    integer, intent(in) :: n
-    type(rpe_var), intent(inout) :: ch(*), wa(*), ifac(*)
+    integer, intent(in) :: n,ifac(*)
+    type(rpe_var), intent(inout) :: ch(*), wa(*)
     type(rpe_var), intent(inout) :: c(*)
     integer :: nf, na, l2, iw, k1, kh, ip, l1, ido, idl1, ix2, ix3, ix4, i
 
