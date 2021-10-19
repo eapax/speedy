@@ -4,7 +4,7 @@ COMPILE=gfortran
 NCDIR=/usr
 COMLIB1= -L${NCDIR}/lib -lnetcdff
 COMOTT1= -I${NCDIR}/include
-COMCONV= -fconvert=swap -std=gnu -ffpe-trap=overflow -g -Wall
+COMCONV= -fconvert=swap -std=gnu -fbacktrace -ffpe-trap=overflow,invalid -g -Wall
 RPEPATH=../../rpe_complex_stochastic
 
 FILES= \

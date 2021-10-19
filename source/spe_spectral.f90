@@ -320,7 +320,11 @@ module spectral
             type(rpe_complex_var), intent(in) :: vorm(mx,nx)
             type(rpe_complex_var), intent(inout) :: strm(mx,nx)
 
+            if (el2(1,1) .EQ. 0.0) then
+              strm = vorm !which is also 0
+            else
             strm = -vorm*rearth**2/el2
+            endif
         end subroutine invlap
         !*********************************************************************
         subroutine grad(psi,psdx,psdy)
