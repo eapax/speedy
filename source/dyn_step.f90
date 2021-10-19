@@ -186,15 +186,12 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
         do n=1,nx
             do m=1,mx
                 fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
-
-                field(m,n,k,1) = fnew(m,n)
-
- !               field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)&
- !                   &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
+                field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)&
+                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
                 ! and here comes Williams' innovation to the filter
-!                field(m,n,k,2) = fnew(m,n)-(rpe_literal(1.0_dp)-wil)*eps*(field(m,n,k,1)&
-!                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
+                field(m,n,k,2) = fnew(m,n)-(rpe_literal(1.0_dp)-wil)*eps*(field(m,n,k,1)&
+                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
             end do
         end do
