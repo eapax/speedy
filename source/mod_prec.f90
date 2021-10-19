@@ -69,6 +69,9 @@ module mod_prec
                 case('Double')
                 RPE_DEFAULT_SBITS = 52
 
+                case('Double50')
+                RPE_DEFAULT_SBITS = 50
+
                 case('Single')
                 RPE_DEFAULT_SBITS = 23
 

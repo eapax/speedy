@@ -320,7 +320,6 @@ module spectral
             type(rpe_complex_var), intent(in) :: vorm(mx,nx)
             type(rpe_complex_var), intent(inout) :: strm(mx,nx)
 
-            print *, 'throwaway comment'
 
             if (el2(1,1) .EQ. 0.0) then
               strm = vorm !which is also 0

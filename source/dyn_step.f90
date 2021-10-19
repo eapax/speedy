@@ -94,6 +94,11 @@ subroutine step(j1,j2,dt,alph,rob,wil)
         enddo
     endif
 
+
+    call set_precision('Double50') !turn off diffusion precision and return to 'high' precision
+
+
+
     ! 4. Time integration with Robert filter
     if (dt<=rpe_literal(0.0_dp)) return
 
@@ -103,6 +108,17 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call apply_truncation(divdt)
     call apply_truncation(tdt)
     call apply_truncation(trdt)
+
+
+    call set_precision('Double50') !turn off diffusion precision and return to 'high' precision
+
+
+
+
+
+
+
+
 
     call set_precision('Timestepping')
 
@@ -120,6 +136,10 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
     enddo
+
+
+    call set_precision('Double50') !turn off diffusion precision and return to 'high' precision
+
 
 
 end subroutine step
