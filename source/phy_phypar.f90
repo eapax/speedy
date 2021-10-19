@@ -91,6 +91,8 @@ subroutine phypar(utend,vtend,ttend,qtend)
     do j=1,ngp
         icnv(j)=kx-iptop(j)
     end do
+    call set_precision('Double50') !and turn it off
+
 
     call set_precision("Half")
     ! 2.2 Large-scale condensation

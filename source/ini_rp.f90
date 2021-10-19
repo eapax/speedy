@@ -76,6 +76,9 @@ subroutine truncate_rp()
     ! Truncate constants in individual physics schemes
     call set_precision("Convection")
     call truncate_convmf()
+    call set_precision("Double50")
+
+
     call set_precision("Half")
     call truncate_lscond()
     call truncate_cloud()
