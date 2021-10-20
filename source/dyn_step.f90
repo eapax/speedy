@@ -41,6 +41,8 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! 1. Computation of grid-point tendencies
     ! (converted to spectral at the end of GRTEND)
+    
+    call set_precision('Double50')
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
 
     ! 2. Computation of spectral tendencies

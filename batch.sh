@@ -17,11 +17,11 @@
 #nohup time ./run.sh speedyoneprec_L2_10_SR_1month_ 010 2 10      1month > output/speedyoneprec-L2_10_SR_1month_.out &
 
 
-#nohup time ./run.sh speedyoneprec_L2_10_RNHALFBITS_1month     010 2 SRoff10_rp_half_bits_    1month > output/speedyoneprec-L2_10_RN_1month_RP1.out &
+nohup time ./run.sh speedyoneprec_L2_10_RNHALFBITS_1month     010 2 SRoff10_rp_half_bits_    1month > output/speedyoneprec-L2_10_RN_1month_half.out &
 
 
 
-nohup time ./run.sh speedyoneprec_L2_10_RNCONVECTION_1month 010 2 SRoff10_rp_convection_ 1month > output/speedyoneprec-L2_10_RN_1month_cv.out &
+#nohup time ./run.sh speedyoneprec_L2_10_RNCONVECTION_1month 010 2 SRoff10_rp_convection_ 1month > output/speedyoneprec-L2_10_RN_1month_cv.out &
 
 #nohup time ./run.sh speedyoneprec_L2_50_RN                    010 2 SRoff50                  1month > output/speedyoneprec-L2_50_RN.out &
 #nohup time ./run.sh speedyoneprec_L2_10_SR                    010 2 10                       1month > output/speedyoneprec-L2_10_SR.out &
