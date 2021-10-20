@@ -316,7 +316,10 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
         !  temperature tendency
         call vdspec(dumr(:,:,2),dumr(:,:,3),dumc(:,:,1),tdt(:,:,k),2)
+        
+        call set_precision('Low')
         call spec(ttend(:,:,k),dumc(:,:,2))
+        call set_precision('Default')
 
         !fk--   Change to keep dimensions
         tdt(:,:,k) = tdt(:,:,k) + dumc(:,:,2)
