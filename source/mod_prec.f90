@@ -36,7 +36,7 @@ module mod_prec
             rp_sw_radiation, rp_lw_radiation, rp_surface_fluxes, &
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
-            rp_prognostics, rp_tendencies,rp_half_bits,rp_default
+            rp_prognostics, rp_tendencies,rp_half_bits,rp_default,rp_alternative
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -81,6 +81,9 @@ module mod_prec
 
                 case('Default')
                 RPE_DEFAULT_SBITS = rp_default
+
+                case('Alternative')
+                RPE_DEFAULT_SBITS = rp_alternative
 
                 case('Initial Values')
                 RPE_DEFAULT_SBITS = rp_initial_values

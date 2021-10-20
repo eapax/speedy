@@ -24,10 +24,10 @@ program agcm_main
         call agcm_1day(jday)
 
         ! 2.2 exchange data with coupler
-        call set_precision('Low')
+        call set_precision('Alternative') !Change precision just for the following
         call agcm_to_coupler(jday)
         call coupler_to_agcm(jday)
-        call set_precision('Default')
+        call set_precision('Default') !And return it to 'normal'
 
     enddo
 

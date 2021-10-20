@@ -4,4 +4,5 @@
     RPE_IEEE_HALF=.false.,
     rp_half_bits=50,
     rp_default=50,
+    rp_alternative=10,
 /
