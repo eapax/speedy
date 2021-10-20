@@ -70,11 +70,11 @@ module mod_prec
                 case('Double')
                 RPE_DEFAULT_SBITS = 52
 
-                case('Double50')
-                RPE_DEFAULT_SBITS = 50
-
                 case('Single')
                 RPE_DEFAULT_SBITS = 23
+
+                case('Low')
+                RPE_DEFAULT_SBITS = 10
 
                 case('Half')
                 RPE_DEFAULT_SBITS = rp_half_bits

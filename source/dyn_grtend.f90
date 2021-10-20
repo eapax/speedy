@@ -178,6 +178,7 @@ subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
 
     integer :: i, j, k, itr
 
+    print *, 'Precision inside dyngrtend is = ', RPE_DEFAULT_SBITS
 
     umean(:,:) = 0.0_dp
     vmean(:,:) = 0.0_dp
