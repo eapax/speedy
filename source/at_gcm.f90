@@ -2,7 +2,8 @@ program agcm_main
     use mod_tsteps, only: nmonrs
     use mod_date, only: imonth, iday, ndays
     use ppo_output_stream, only: close_output
-    
+    use mod_prec, only: set_precision
+
     implicit none
 
     ! program : agcm_main
@@ -23,8 +24,11 @@ program agcm_main
         call agcm_1day(jday)
 
         ! 2.2 exchange data with coupler
+        call set_precision('Low')
         call agcm_to_coupler(jday)
         call coupler_to_agcm(jday)
+        call set_precision('Default')
+
     enddo
 
     ! Write restart file at end of run if not already written
@@ -43,7 +47,7 @@ subroutine agcm_1day(jday)
     use mod_date, only: iyear, imonth, iday
     use mod_fordate, only: fordate
     use mod_fluxes, only: ini_fluxes
-    use mod_prec, only: set_precision
+    
 
     implicit none
 
