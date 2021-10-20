@@ -13,14 +13,14 @@ subroutine agcm_init()
 
     ! 0. Read namelist and allocate arrays
     ! Setup reduced precision emulator
-    call setup_precision()
-    call ini_namelist()
+    call setup_precision() !sets precision as double
+    call ini_namelist() !Reads in vars from file
 
     ! Initialise reduced precision constants
-    call ini_rp()
+    call ini_rp() 
 
     ! 1. set run initial time, duration, time-stepping and coupling options
-    call ini_date()
+    call ini_date() 
 
     ! check consistency of coupling and prescribed SST anomaly flags
     if (icsea>=4) isstan = 1
@@ -41,5 +41,5 @@ subroutine agcm_init()
     call initialise_output()
 
     ! Truncate parameters and derived constants
-    call truncate_rp()
+    call truncate_rp() !Calls set_precision(half) to set global and truncates everything. !Sets to double at end
 end subroutine

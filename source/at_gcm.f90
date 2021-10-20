@@ -2,7 +2,7 @@ program agcm_main
     use mod_tsteps, only: nmonrs
     use mod_date, only: imonth, iday, ndays
     use ppo_output_stream, only: close_output
-
+    
     implicit none
 
     ! program : agcm_main
@@ -55,7 +55,6 @@ subroutine agcm_1day(jday)
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
-    call set_precision('Half')
     call fordate()
 
     ! 2. set daily-average flux arrays to zero

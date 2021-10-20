@@ -89,7 +89,6 @@ subroutine restart(jday)
         tr  = CMPLX(0.0_dp, 0.0_dp, kind=dp)
 
         ! Reduce precision of input fields
-        call set_precision('Initial Values')
         vor(1:mx_tr, 1:nx_tr, :, :)    = vor_in(1:mx_tr, 1:nx_tr, :, :)
         div(1:mx_tr, 1:nx_tr, :, :)    = div_in(1:mx_tr, 1:nx_tr, :, :)
         T  (1:mx_tr, 1:nx_tr, :, :)    = T_in  (1:mx_tr, 1:nx_tr, :, :)

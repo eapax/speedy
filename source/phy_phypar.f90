@@ -84,17 +84,14 @@ subroutine phypar(utend,vtend,ttend,qtend)
 
     ! 2. Precipitation
     ! 2.1 Deep convection
-    call set_precision("Convection")
     call convmf(psg,se,qg1,qsat,flx2tend,&
             iptop,cbmf,precnv,tt_cnv,qt_cnv)
     
     do j=1,ngp
         icnv(j)=kx-iptop(j)
     end do
-    call set_precision('Double50') !and turn it off
 
 
-    call set_precision("Half")
     ! 2.2 Large-scale condensation
     call lscond(psg,rh,qsat,iptop,precls,tt_lsc,qt_lsc)
 
@@ -146,7 +143,6 @@ subroutine phypar(utend,vtend,ttend,qtend)
     tt_phy = tt_cnv + tt_lsc + tt_rsw + tt_sflx + tt_rlw + tt_pbl
     qt_phy = qt_cnv + qt_lsc + qt_sflx + qt_pbl
 
-    call set_precision('Half')
 
     ! Add SPPT noise
     if (sppt_on) then

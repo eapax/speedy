@@ -39,7 +39,7 @@ subroutine truncate_rp()
 
     use spectral, only: truncate_spectral
 
-    call set_precision('Half')
+    call set_precision('Half') !Sets global precision for entire model
     ! Truncate climatological fields used in surface model
     call truncate_cli_land()
     call truncate_cli_sea()
@@ -74,12 +74,9 @@ subroutine truncate_rp()
     call truncate_surfcon()
 
     ! Truncate constants in individual physics schemes
-    call set_precision("Convection")
     call truncate_convmf()
-    call set_precision("Double50")
 
 
-    call set_precision("Half")
     call truncate_lscond()
     call truncate_cloud()
     call truncate_radsw()
@@ -88,6 +85,4 @@ subroutine truncate_rp()
     call truncate_vdifsc()
     call truncate_sppt()
 
-    ! Set default precision to start model run
-    call set_precision('Double')
 end subroutine truncate_rp
