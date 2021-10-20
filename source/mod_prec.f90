@@ -27,7 +27,8 @@ module mod_prec
             rp_prognostics=52, &
             rp_tendencies=52, &
             rp_half_bits=52, &
-            rp_default=52
+            rp_default=52, &
+            rp_alternative=52
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
