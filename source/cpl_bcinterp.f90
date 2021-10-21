@@ -60,9 +60,9 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     t2 = rpe_literal(0.25_dp)*fmon*(one-fmon)
 
     wm2 =        -t1   +t2
-    wm1 =  -c0 +8*t1 -6*t2
-    w0  = 7*c0      +10*t2
-    wp1 =  -c0 +8*t0 -6*t2
+    wm1 =  -c0 +rpe_literal(8.0_dp)*t1 -rpe_literal(6.0_dp)*t2
+    w0  = rpe_literal(7.0_dp)*c0      +rpe_literal(10.0_dp)*t2
+    wp1 =  -c0 +rpe_literal(8.0_dp)*t0 -rpe_literal(6.0_dp)*t2
     wp2 =        -t0   +t2
 
     for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
