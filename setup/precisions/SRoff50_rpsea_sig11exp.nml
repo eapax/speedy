@@ -6,5 +6,5 @@
     rp_default=50,
     rp_alternative=10,
     rp_land=50,
-    rp_sea=50,
+    rp_sea=10,
 /

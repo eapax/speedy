@@ -28,7 +28,9 @@ module mod_prec
             rp_tendencies=52, &
             rp_half_bits=52, &
             rp_default=52, &
-            rp_alternative=52
+            rp_alternative=52,&
+            rp_land=52,&
+            rp_sea=52
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
@@ -37,7 +39,8 @@ module mod_prec
             rp_sw_radiation, rp_lw_radiation, rp_surface_fluxes, &
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
-            rp_prognostics, rp_tendencies,rp_half_bits,rp_default,rp_alternative
+            rp_prognostics, rp_tendencies,rp_half_bits,rp_default,rp_alternative,&
+            rp_land, rp_sea
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -85,6 +88,12 @@ module mod_prec
 
                 case('Alternative')
                 RPE_DEFAULT_SBITS = rp_alternative
+
+                case('rp_land')
+                RPE_DEFAULT_SBITS = rp_land
+
+                case('rp_sea')
+                RPE_DEFAULT_SBITS = rp_sea
 
                 case('Initial Values')
                 RPE_DEFAULT_SBITS = rp_initial_values
