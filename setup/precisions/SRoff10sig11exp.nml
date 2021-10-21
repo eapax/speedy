@@ -4,7 +4,7 @@
     RPE_IEEE_HALF=.false.,
     rp_half_bits=10,
     rp_default=10,
-    rp_alternative=50,
+    rp_alternative=10,
     rp_land=10,
     rp_sea_in=10,
     rp_sea_out=10,

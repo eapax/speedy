@@ -57,8 +57,10 @@ subroutine atm2sea(jday)
     call set_precision('rp_atm2sea_1') !And return it to 'normal'
     print *, 'Interpolating Climatological SST'
     print *, 'ngp,imont1,tmonth = ', ngp,imont1,tmonth
+    print *, 'The precision is now:', RPE_DEFAULT_SBITS
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
     call set_precision('Default') !And return it to 'normal'
+    print *, 'Completed and the precision is now:', RPE_DEFAULT_SBITS
 
 
     ! 2. Climatological sea ice fraction
