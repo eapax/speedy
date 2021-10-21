@@ -31,7 +31,14 @@ module mod_prec
             rp_alternative=52,&
             rp_land=52,&
             rp_sea_in=52,&
-            rp_sea_out=52
+            rp_sea_out=52,&
+            rp_atm2sea_1=52,&
+            rp_atm2sea_2=52,&
+            rp_atm2sea_3=52,&
+            rp_atm2sea_4=52,&
+            rp_atm2sea_5=52,&
+            rp_atm2sea_6=52,&
+            rp_atm2sea_7=52,&
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
@@ -41,7 +48,8 @@ module mod_prec
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,rp_alternative,&
-            rp_land, rp_sea_in, rp_sea_out
+            rp_land, rp_sea_in, rp_sea_out,&
+            rp_atm2sea_1,rp_atm2sea_2,rp_atm2sea_3,rp_atm2sea_4,rp_atm2sea_5,rp_atm2sea_6,rp_atm2sea_7
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -98,6 +106,27 @@ module mod_prec
 
                 case('rp_sea_out')
                 RPE_DEFAULT_SBITS = rp_sea_out
+
+                case('rp_atm2sea_1')
+                RPE_DEFAULT_SBITS = rp_atm2sea_1
+
+                case('rp_atm2sea_2')
+                RPE_DEFAULT_SBITS = rp_atm2sea_2
+
+                case('rp_atm2sea_3')
+                RPE_DEFAULT_SBITS = rp_atm2sea_3
+
+                case('rp_atm2sea_4')
+                RPE_DEFAULT_SBITS = rp_atm2sea_4
+
+                case('rp_atm2sea_5')
+                RPE_DEFAULT_SBITS = rp_atm2sea_5
+
+                case('rp_atm2sea_6')
+                RPE_DEFAULT_SBITS = rp_atm2sea_6
+
+                case('rp_atm2sea_7')
+                RPE_DEFAULT_SBITS = rp_atm2sea_7
 
                 case('Initial Values')
                 RPE_DEFAULT_SBITS = rp_initial_values

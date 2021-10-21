@@ -7,5 +7,12 @@
     rp_alternative=50,
     rp_land=10,
     rp_sea_in=10,
-    rp_sea_out=10
+    rp_sea_out=10,
+    rp_atm2sea_1=10,
+    rp_atm2sea_2=10,
+    rp_atm2sea_3=10,
+    rp_atm2sea_4=10,
+    rp_atm2sea_5=10,
+    rp_atm2sea_6=10,
+    rp_atm2sea_7=10,
 /

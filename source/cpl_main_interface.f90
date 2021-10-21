@@ -39,9 +39,7 @@ subroutine agcm_to_coupler(jday)
     call atm2land(jday)
 
     ! 2. send fields to sea and ice model
-    call set_precision('rp_sea_out') !Change precision just for the following
     call atm2sea(jday)
-    call set_precision('Default') !And return it to 'normal'
 end subroutine agcm_to_coupler
 
 subroutine coupler_to_agcm(jday)
@@ -57,8 +55,5 @@ subroutine coupler_to_agcm(jday)
     call land2atm(jday)
 
     ! 2. get updated fields from sea and ice model
-    call set_precision('rp_sea_in')
     call sea2atm(jday)
-    call set_precision('Default') !And return it to 'normal'
-
 end subroutine coupler_to_agcm

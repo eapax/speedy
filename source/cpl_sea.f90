@@ -37,8 +37,8 @@ subroutine atm2sea(jday)
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
         & sst_om, tice_om
     use rp_emulator
-    use mod_prec, only: dp
-
+    use mod_prec, only: dp,set_precision
+ 
     implicit none
 
     integer, intent(in) :: jday
@@ -53,25 +53,38 @@ subroutine atm2sea(jday)
 
     print *, '--- Inside atm2sea'
 
-    ! Climatological SST
+    ! 1. Climatological SST
+    call set_precision('rp_atm2sea_1') !And return it to 'normal'
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
+    call set_precision('Default') !And return it to 'normal'
 
-    ! Climatological sea ice fraction
+
+    ! 2. Climatological sea ice fraction
+    call set_precision('rp_atm2sea_2') !And return it to 'normal'
     call forint(ngp,imont1,tmonth,sice12,sicecl_ob)
+    call set_precision('Default') !And return it to 'normal'
 
-    ! SST anomaly
+
+    ! 3. SST anomaly
+    call set_precision('rp_atm2sea_3') !And return it to 'normal'
     if (isstan>0) then
         if (iday==1 .and. jday>0) call OBS_SSTA
         call forint (ngp,2,tmonth,sstan3,sstan_ob)
     end if
+    call set_precision('Default') !And return it to 'normal'
 
-    ! Ocean model climatological SST
+
+    ! 4. Ocean model climatological SST
+    call set_precision('rp_atm2sea_4') !And return it to 'normal'
     if (icsea>=3) then
         call forin5 (ngp,imont1,tmonth,sstom12,sstcl_om)
     end if
+    call set_precision('Default') !And return it to 'normal'
 
-    ! Adjust climatological fields over sea ice
 
+    ! 5. Adjust climatological fields over sea ice
+
+    call set_precision('rp_atm2sea_5') !And return it to 'normal'
     ! SST at freezing point
     sstfr = rpe_literal(273.2_dp)-rpe_literal(1.8_dp)
 
@@ -93,11 +106,18 @@ subroutine atm2sea(jday)
 
         if (icsea>=3) sstcl_om(j) = sstcl_om(j)+(sstcl_ob(j)-sstcl0)
     end do
+    call set_precision('Default') !And return it to 'normal'
 
+    !6. Reshaping
+    call set_precision('rp_atm2sea_6') !And return it to 'normal'
     hfyearm = reshape(hfseacl, (/ngp/))
     fmasks = reshape(fmask_s, (/ngp/))
+    call set_precision('Default') !And return it to 'normal'
 
     if (jday<=0) return
+    
+    call set_precision('rp_atm2sea_7') !And return it to 'normal'
+
         ! 2. Set input variables for mixed-layer/ocean model
         if (icsea>0 .or. icice>0) then
             vsea_input(:,1) = sst_om(:)
@@ -109,6 +129,7 @@ subroutine atm2sea(jday)
             vsea_input(:,7) = ticecl_ob(:)
             vsea_input(:,8) = hfyearm(:)
         end if
+    call set_precision('Default') !And return it to 'normal'
 
 
     print *, 'Final outputs, summed, are:'
