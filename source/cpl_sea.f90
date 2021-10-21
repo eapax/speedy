@@ -51,6 +51,8 @@ subroutine atm2sea(jday)
     ! 1. Interpolate climatological fields and obs. SST anomaly
     !    to actual date
 
+    print *, '--- Inside atm2sea'
+
     ! Climatological SST
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
 
@@ -107,6 +109,19 @@ subroutine atm2sea(jday)
             vsea_input(:,7) = ticecl_ob(:)
             vsea_input(:,8) = hfyearm(:)
         end if
+
+
+    print *, 'Final outputs, summed, are:'
+    print *, SUM(vsea_input(:,1)) 
+    print *, SUM(vsea_input(:,2)) 
+    print *, SUM(vsea_input(:,3)) 
+    print *, SUM(vsea_input(:,4)) 
+    print *, SUM(vsea_input(:,5)) 
+    print *, SUM(vsea_input(:,6)) 
+    print *, SUM(vsea_input(:,7))
+    print *, SUM(vsea_input(:,8)) 
+    print *, '------------'
+
 
         ! 3. Call message-passing routines to send data (if needed)
 end subroutine atm2sea
