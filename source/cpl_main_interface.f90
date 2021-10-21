@@ -36,9 +36,11 @@ subroutine agcm_to_coupler(jday)
     integer, intent(in) :: jday
 
     ! 1. send fields to land model
+    print *, 'atm2land'
     call atm2land(jday)
 
     ! 2. send fields to sea and ice model
+    print *, 'atm2sea'
     call atm2sea(jday)
 end subroutine agcm_to_coupler
 
@@ -52,8 +54,10 @@ subroutine coupler_to_agcm(jday)
     integer, intent(in) :: jday
 
     ! 1. get updated fields from land model
+    print *, 'land2atm'
     call land2atm(jday)
 
     ! 2. get updated fields from sea and ice model
+    print *, 'sea2atm'
     call sea2atm(jday)
 end subroutine coupler_to_agcm

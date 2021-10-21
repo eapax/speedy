@@ -19,17 +19,19 @@ program agcm_main
 
 
     ! 2. do loop over total no. of integration days
-    do jday = 1, ndays
-        ! 2.1 run atmospheric model for 1 day
-        call agcm_1day(jday)
+        do jday = 1, ndays
+            ! 2.1 run atmospheric model for 1 day
+            call agcm_1day(jday)
 
-        ! 2.2 exchange data with coupler
-        call set_precision('Alternative') !Change precision just for the following
-        call agcm_to_coupler(jday)
-        call coupler_to_agcm(jday)
-        call set_precision('Default') !And return it to 'normal'
+            ! 2.2 exchange data with coupler
+            print *, 'EXCHANGING DATA WITH COUPLER'
+            call set_precision('Alternative') !Change precision just for the following
+            call agcm_to_coupler(jday)
+            call set_precision('Default') !And return it to 'normal'
+            call coupler_to_agcm(jday)
+            print *, 'EXCHANGE COMPLETED'
 
-    enddo
+        enddo
 
     ! Write restart file at end of run if not already written
     if (mod(imonth, nmonrs)/=0 .or. iday/=1) call restart(2)

@@ -199,9 +199,9 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
 
 
 
-    if (printout) then
-   print *, 'temperature timestep', fnew(1,1), eps2, field(1,1,1,1), field(1,1,1,2), fdt(1,1,1)
-   endif
+   ! if (printout) then
+   !print *, 'temperature timestep', fnew(1,1), eps2, field(1,1,1,1), field(1,1,1,2), fdt(1,1,1)
+   !endif
 
 
 
