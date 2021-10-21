@@ -25,10 +25,10 @@ program agcm_main
 
             ! 2.2 exchange data with coupler
             print *, 'EXCHANGING DATA WITH COUPLER'
-            call set_precision('Alternative') !Change precision just for the following
             call agcm_to_coupler(jday)
-            call set_precision('Default') !And return it to 'normal'
+            call set_precision('Alternative') !Change precision just for the following
             call coupler_to_agcm(jday)
+            call set_precision('Default') !And return it to 'normal'
             print *, 'EXCHANGE COMPLETED'
 
         enddo
