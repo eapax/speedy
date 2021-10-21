@@ -1,0 +1,11 @@
+&precisions
+    RPE_ACTIVE=.true.,
+    RPE_STOCHASTIC=.false.,
+    RPE_IEEE_HALF=.false.,
+    rp_half_bits=50,
+    rp_default=50,
+    rp_alternative=10,
+    rp_land=50,
+    rp_sea_in=10,
+    rp_sea_out=50
+/

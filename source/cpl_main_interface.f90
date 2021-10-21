@@ -36,14 +36,10 @@ subroutine agcm_to_coupler(jday)
     integer, intent(in) :: jday
 
     ! 1. send fields to land model
-    print *, 'atm2land'
-    call set_precision('rp_land') !Change precision just for the following
     call atm2land(jday)
-    call set_precision('Default') !And return it to 'normal'
 
     ! 2. send fields to sea and ice model
-    print *, 'atm2sea'
-    call set_precision('rp_sea') !Change precision just for the following
+    call set_precision('rp_sea_out') !Change precision just for the following
     call atm2sea(jday)
     call set_precision('Default') !And return it to 'normal'
 end subroutine agcm_to_coupler
@@ -58,14 +54,10 @@ subroutine coupler_to_agcm(jday)
     integer, intent(in) :: jday
 
     ! 1. get updated fields from land model
-    print *, 'land2atm'
-    call set_precision('rp_land')
     call land2atm(jday)
-    call set_precision('Default') !And return it to 'normal'
 
     ! 2. get updated fields from sea and ice model
-    print *, 'sea2atm'
-    call set_precision('rp_sea')
+    call set_precision('rp_sea_in')
     call sea2atm(jday)
     call set_precision('Default') !And return it to 'normal'
 
