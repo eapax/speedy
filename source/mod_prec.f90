@@ -38,7 +38,7 @@ module mod_prec
             rp_atm2sea_4=52,&
             rp_atm2sea_5=52,&
             rp_atm2sea_6=52,&
-            rp_atm2sea_7=52,&
+            rp_atm2sea_7=52
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
