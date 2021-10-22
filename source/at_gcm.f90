@@ -21,7 +21,7 @@ program agcm_main
     ! 2. do loop over total no. of integration days
         do jday = 1, ndays
             ! 2.1 run atmospheric model for 1 day
-            call set_precision('agcm_1day')
+            call set_precision('agcm_1_day')
             call agcm_1day(jday)
             call set_precision('Default')
 
