@@ -28,17 +28,15 @@ module mod_prec
             rp_tendencies=52, &
             rp_half_bits=52, &
             rp_default=52, &
-            rp_alternative=52,&
-            rp_land=52,&
-            rp_sea_in=52,&
-            rp_sea_out=52,&
-            rp_atm2sea_1=52,&
-            rp_atm2sea_2=52,&
-            rp_atm2sea_3=52,&
-            rp_atm2sea_4=52,&
-            rp_atm2sea_5=52,&
-            rp_atm2sea_6=52,&
-            rp_atm2sea_7=52
+            rp_agcm_1_day=52,&
+            rp_agcm_to_coupler=52,&
+            rp_coupler_to_agcm=52,&
+            rp_fordate=52,&
+            rp_ini_fluxes=52,&
+            rp_stloop=52,&
+            rp_step=52,&
+            rp_diagns=52
+    
 
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
@@ -47,9 +45,9 @@ module mod_prec
             rp_sw_radiation, rp_lw_radiation, rp_surface_fluxes, &
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
-            rp_prognostics, rp_tendencies,rp_half_bits,rp_default,rp_alternative,&
-            rp_land, rp_sea_in, rp_sea_out,&
-            rp_atm2sea_1,rp_atm2sea_2,rp_atm2sea_3,rp_atm2sea_4,rp_atm2sea_5,rp_atm2sea_6,rp_atm2sea_7
+            rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
+            rp_agcm_1_day,rp_agcm_to_coupler,rp_coupler_to_agcm,rp_fordate,&
+            rp_ini_fluxes,rp_stloop,rp_step,rp_diagns
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -95,38 +93,36 @@ module mod_prec
                 case('Default')
                 RPE_DEFAULT_SBITS = rp_default
 
-                case('Alternative')
-                RPE_DEFAULT_SBITS = rp_alternative
 
-                case('rp_land')
-                RPE_DEFAULT_SBITS = rp_land
+                !-------------added
 
-                case('rp_sea_in')
-                RPE_DEFAULT_SBITS = rp_sea_in
 
-                case('rp_sea_out')
-                RPE_DEFAULT_SBITS = rp_sea_out
+                case('agcm_1_day')
+                RPE_DEFAULT_SBITS = rp_agcm_1_day
 
-                case('rp_atm2sea_1')
-                RPE_DEFAULT_SBITS = rp_atm2sea_1
+                case('agcm_to_coupler')
+                RPE_DEFAULT_SBITS = rp_agcm_to_coupler
 
-                case('rp_atm2sea_2')
-                RPE_DEFAULT_SBITS = rp_atm2sea_2
+                case('coupler_to_agcm')
+                RPE_DEFAULT_SBITS = rp_coupler_to_agcm
 
-                case('rp_atm2sea_3')
-                RPE_DEFAULT_SBITS = rp_atm2sea_3
+                case('fordate')
+                RPE_DEFAULT_SBITS = rp_fordate
 
-                case('rp_atm2sea_4')
-                RPE_DEFAULT_SBITS = rp_atm2sea_4
+                case('ini_fluxes')
+                RPE_DEFAULT_SBITS = rp_ini_fluxes
 
-                case('rp_atm2sea_5')
-                RPE_DEFAULT_SBITS = rp_atm2sea_5
+                case('stloop')
+                RPE_DEFAULT_SBITS = rp_stloop
 
-                case('rp_atm2sea_6')
-                RPE_DEFAULT_SBITS = rp_atm2sea_6
+                case('step')
+                RPE_DEFAULT_SBITS = rp_step
 
-                case('rp_atm2sea_7')
-                RPE_DEFAULT_SBITS = rp_atm2sea_7
+                case('diagns')
+                RPE_DEFAULT_SBITS = rp_diagns
+
+
+                !------------
 
                 case('Initial Values')
                 RPE_DEFAULT_SBITS = rp_initial_values

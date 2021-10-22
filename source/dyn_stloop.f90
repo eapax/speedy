@@ -11,6 +11,7 @@ subroutine stloop(istep)
     use mod_date, only: update_time
     use phy_radsw, only: lradsw, nstrad
     use rp_emulator
+    use mod_prec, only: set_precision
 
     implicit none
 
@@ -26,14 +27,15 @@ subroutine stloop(istep)
         lradsw = (mod(istep,nstrad)==1)
 
         ! Perform one leapfrog time step
-
-
-        !print *, 'PRECISION BEFORE Leapfrog STEP IS:',RPE_DEFAULT_SBITS
+        call set_precision('step')
         call step(2, 2, delt2, alph, rob, wil)
-        !print *, 'PRECISION AFTER LF STEP IS:',RPE_DEFAULT_SBITS
+        call set_precision('Default')
+
         
         ! Do diagnostic, post-processing and I/O tasks
+        call set_precision('diagns')
         call diagns(2, istep)
+        call set_precision('Default')
 
         istep = istep + 1
 

@@ -11,5 +11,5 @@
     rp_ini_fluxes=50,
     rp_stloop=50,
     rp_step=50,
-    rp_diagns=50
+    rp_diagns=10
 /

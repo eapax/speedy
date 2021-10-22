@@ -8,7 +8,7 @@
     rp_agcm_to_coupler=50,
     rp_coupler_to_agcm=50,
     rp_fordate=50,
-    rp_ini_fluxes=50,
+    rp_ini_fluxes=10,
     rp_stloop=50,
     rp_step=50,
     rp_diagns=50
