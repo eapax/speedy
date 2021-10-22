@@ -1,9 +1,0 @@
-&precisions
-    RPE_ACTIVE=.true.,
-    RPE_IEEE_HALF=.false.,
-    rp_half_bits=23,
-    rp_convection=23,
-    rp_timestepping=23,
-    rp_tendencies=23,
-    rp_diffusion=23, 
-/
