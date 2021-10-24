@@ -1,0 +1,15 @@
+&precisions
+    RPE_ACTIVE=.true.,
+    RPE_STOCHASTIC=.false.,
+    RPE_IEEE_HALF=.false.,
+    rp_half_bits=10,
+    rp_default=50,
+    rp_agcm_1_day=50,
+    rp_agcm_to_coupler=50,
+    rp_coupler_to_agcm=50,
+    rp_fordate=50,
+    rp_ini_fluxes=50,
+    rp_stloop=50,
+    rp_step=50,
+    rp_diagns=50
+/

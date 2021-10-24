@@ -39,7 +39,9 @@ subroutine truncate_rp()
 
     use spectral, only: truncate_spectral
 
-    call set_precision('Half') !Sets global precision for entire model
+    call set_precision('half') !Sets global precision for entire model
+
+
     ! Truncate climatological fields used in surface model
     call truncate_cli_land()
     call truncate_cli_sea()
