@@ -41,5 +41,5 @@ subroutine agcm_init()
     call initialise_output()
 
     ! Truncate parameters and derived constants
-    call truncate_rp() !Calls set_precision(half) to set global and truncates everything. !Sets to double at end
+    call truncate_rp() !Calls set_precision(half) to set global and truncates everything. 
 end subroutine
