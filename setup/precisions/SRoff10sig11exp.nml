@@ -6,10 +6,4 @@
     rp_default=10,
     rp_agcm_1_day=10,
     rp_agcm_to_coupler=10,
-    rp_coupler_to_agcm=10,
-    rp_fordate=10,
-    rp_ini_fluxes=10,
-    rp_stloop=10,
-    rp_step=10,
-    rp_diagns=10
 /

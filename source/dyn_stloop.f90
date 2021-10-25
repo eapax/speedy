@@ -27,15 +27,11 @@ subroutine stloop(istep)
         lradsw = (mod(istep,nstrad)==1)
 
         ! Perform one leapfrog time step
-        call set_precision('step')
         call step(2, 2, delt2, alph, rob, wil)
-        call set_precision('Default')
 
         
         ! Do diagnostic, post-processing and I/O tasks
-        call set_precision('diagns')
         call diagns(2, istep)
-        call set_precision('Default')
 
         istep = istep + 1
 
