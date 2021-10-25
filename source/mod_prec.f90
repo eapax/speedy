@@ -29,7 +29,8 @@ module mod_prec
             rp_half_bits=52, &
             rp_default=52, &
             rp_agcm_1_day=52,&
-            rp_agcm_to_coupler=52
+            rp_agcm_to_coupler=52,&
+            rp_coupler_to_agcm=52
     
 
     namelist /precisions/ &
@@ -40,7 +41,7 @@ module mod_prec
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
-            rp_agcm_1_day,rp_agcm_to_coupler
+            rp_agcm_1_day,rp_agcm_to_coupler,rp_coupler_to_agcm
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -95,6 +96,9 @@ module mod_prec
 
                 case('agcm_to_coupler')
                 RPE_DEFAULT_SBITS = rp_agcm_to_coupler
+
+                case('coupler_to_agcm')
+                RPE_DEFAULT_SBITS = rp_coupler_to_agcm
 
                 !------------
 

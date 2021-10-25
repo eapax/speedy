@@ -6,5 +6,5 @@
     rp_default=50,
     rp_agcm_1_day=50,
     rp_agcm_to_coupler=10,
-    rp_coupler_to_agcm=50,
+    rp_coupler_to_agcm=10,
 /

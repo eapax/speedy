@@ -29,7 +29,10 @@ program agcm_main
             ! 2.2 exchange data with coupler
             call set_precision('agcm_to_coupler')
             call agcm_to_coupler(jday)
+            call set_precision('Default')
 
+
+            call set_precision('coupler_to_agcm')
             call coupler_to_agcm(jday)
             call set_precision('Default')
 
