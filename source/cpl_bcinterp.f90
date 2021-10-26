@@ -40,7 +40,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     type(rpe_var), intent(in) :: fmon, for12(ngp,12)
     type(rpe_var), intent(inout) :: for1(ngp)
     integer :: im1, im2, ip1, ip2
-    type(rpe_var) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one, u
+    type(rpe_var) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one
 
     one = 1.0_dp
 
