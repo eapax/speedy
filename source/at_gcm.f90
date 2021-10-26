@@ -32,9 +32,9 @@ program agcm_main
             call set_precision('Default')
 
 
-            call set_precision('coupler_to_agcm')
+            !call set_precision('coupler_to_agcm')
             call coupler_to_agcm(jday)
-            call set_precision('Default')
+            !call set_precision('Default')
 
         enddo
 
