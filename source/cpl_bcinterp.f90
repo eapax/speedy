@@ -68,6 +68,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     print *, 'forin5 weights = ', wm2,wm1,w0,wp1,wp2
     print *, 'wm2 deep dive:   ', wm2, -t1,t2, -t1+t2
     print *, '-t1 deep dive:   ', -t1,c0,one,fmon, c0*(one-fmon)
+    print *, 'c0 deep dive:    ', c0, one,rpe_literal(12.0_dp),one/rpe_literal(12.0_dp),rpe_literal(1.0_dp)/rpe_literal(12.0_dp)  
 
     for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
         & wp1*for12(:,ip1) + wp2*for12(:,ip2)
