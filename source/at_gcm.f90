@@ -23,10 +23,12 @@ program agcm_main
             ! 2.1 run atmospheric model for 1 day
             call agcm_1day(jday)
 
+            call set_precision('forin5')
             ! 2.2 exchange data with coupler
             call agcm_to_coupler(jday)            
             call coupler_to_agcm(jday)
-            
+            call set_precision('Default')
+
 
         enddo
 
