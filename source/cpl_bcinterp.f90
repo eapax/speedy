@@ -66,6 +66,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     wp2 =        -t0   +t2
 
     print *, 'forin5 weights = ', wm2,wm1,w0,wp1,wp2
+    print *, 'wm2 deep dive:', wm2, -t1,t2, -t1+t2
 
 
     for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
