@@ -77,11 +77,12 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     u = rpe_literal(1.0_dp) - fmon
 
     for1 = (u+3*fmon*u)*for12(:,im2) +& 
-           (1+8*u-18*fmon*u)*for12(:,im1) +& 
-           (7+30*fmon*u)*for12(:,imon) +&
-           (-1+8*fmon-18*fmon*u)*for12(:,ip1) +& 
-           (-fmon+3*fmon*u)*for12(:,ip2)
+           &(1+8*u-18*fmon*u)*for12(:,im1) +& 
+           &(7+30*fmon*u)*for12(:,imon) +&
+           &(-1+8*fmon-18*fmon*u)*for12(:,ip1) +& 
+           &(-fmon+3*fmon*u)*for12(:,ip2)
 
     print *, 'new weights:', (u+3*fmon*u),(1+8*u-18*fmon*u), (7+30*fmon*u), (-1+8*fmon-18*fmon*u),(-fmon+3*fmon*u)
+    print *, for1(1), for1(2), for1(3)
     print *, 'leaving forin5'
 end subroutine forin5
