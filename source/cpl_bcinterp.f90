@@ -54,15 +54,15 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     if (ip1>12) ip1 = ip1-12
     if (ip2>12) ip2 = ip2-12
 
-    c0 = one/rpe_literal(12.0_dp)
+    c0 = one !/rpe_literal(12.0_dp)
     t0 = c0*fmon
     t1 = c0*(one-fmon)
     t2 = rpe_literal(0.25_dp)*fmon*(one-fmon)
 
     wm2 =        -t1   +t2
-    wm1 =  -c0 +8*t1 -6*t2
-    w0  = 7*c0  +10*t2
-    wp1 =  -c0 +8*t0 -6*t2
+    wm1 =  -c0 +8*t1*rpe_literal(12.0_dp) -6*t2*rpe_literal(12.0_dp)
+    w0  = 7*c0  +10*t2*rpe_literal(12.0_dp)
+    wp1 =  -c0 +8*t0*rpe_literal(12.0_dp) -6*t2*rpe_literal(12.0_dp)
     wp2 =        -t0   +t2
 
     print *, 'forin5 weights = ', wm2,wm1,w0,wp1,wp2
@@ -70,6 +70,8 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     print *, '-t1 deep dive:   ', -t1,c0,one,fmon, c0*(one-fmon)
     print *, 'c0 deep dive:    ', c0, one,rpe_literal(12.0_dp),one/rpe_literal(12.0_dp),rpe_literal(1.0_dp)/rpe_literal(12.0_dp)  
 
-    for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
-        & wp1*for12(:,ip1) + wp2*for12(:,ip2)
+    for1 = rpe_literal(12.0_dp)*wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
+        & wp1*for12(:,ip1) + rpe_literal(12.0_dp)*wp2*for12(:,ip2)
+
+    for1 = for1/rpe_literal(12.0_dp)
 end subroutine forin5
