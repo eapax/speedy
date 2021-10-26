@@ -9,7 +9,7 @@
     rp_forin5=50,
     rp_forint=50,
     rp_SSTanomaly=50,
-    rp_oceanSST=50,
+    rp_oceanSST=10,
     rp_seaice=50,
     rp_seaIO=50
 /
