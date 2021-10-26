@@ -5,7 +5,7 @@
     rp_half_bits=50,
     rp_default=50,
     rp_agcm_1_day=50,
-    rp_agcm_to_coupler=10,
+    rp_agcm_to_coupler=50,
     rp_coupler_to_agcm=50,
     rp_atm2land=10,
     rp_atm2sea=50
