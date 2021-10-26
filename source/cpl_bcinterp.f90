@@ -40,9 +40,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     type(rpe_var), intent(in) :: fmon, for12(ngp,12)
     type(rpe_var), intent(inout) :: for1(ngp)
     integer :: im1, im2, ip1, ip2
-    !type(kind=dp) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one, u
-    real(kind=dp) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one, u
-
+    type(rpe_var) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one, u
 
     one = 1.0_dp
 
@@ -67,24 +65,8 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     wp1 =  -c0 +8*t0 -6*t2
     wp2 =        -t0   +t2
 
-    print *, 'forin5 weights = ', wm2,wm1,w0,wp1,wp2
-    print *, 'wm2 deep dive:   ', wm2, -t1,t2, -t1+t2
-    print *, '-t1 deep dive:   ', -t1,c0,one,fmon, c0*(one-fmon)
-    print *, 'c0 deep dive:    ', c0, one,rpe_literal(12.0_dp),one,rpe_literal(12.0_dp)  
-
+ 
     for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
         & wp1*for12(:,ip1) + wp2*for12(:,ip2)
 
-
-    ! u = rpe_literal(1.0_dp) - fmon
-
-    ! for1 = (u+3*fmon*u)*for12(:,im2) +& 
-    !        &(1+8*u-18*fmon*u)*for12(:,im1) +& 
-    !        &(7+30*fmon*u)*for12(:,imon) +&
-    !        &(-1+8*fmon-18*fmon*u)*for12(:,ip1) +& 
-    !        &(-fmon+3*fmon*u)*for12(:,ip2)
-
-    ! print *, 'new weights:', (u+3*fmon*u),(1+8*u-18*fmon*u), (7+30*fmon*u), (-1+8*fmon-18*fmon*u),(-fmon+3*fmon*u)
-    ! print *, for1(1), for1(2), for1(3)
-    ! print *, 'leaving forin5'
 end subroutine forin5

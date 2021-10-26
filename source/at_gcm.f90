@@ -21,20 +21,12 @@ program agcm_main
     ! 2. do loop over total no. of integration days
         do jday = 1, ndays
             ! 2.1 run atmospheric model for 1 day
-            call set_precision('agcm_1_day')
             call agcm_1day(jday)
-            call set_precision('Default')
 
- 
             ! 2.2 exchange data with coupler
-            call set_precision('agcm_to_coupler')
-            call agcm_to_coupler(jday)
-            call set_precision('Default')
-
-
-            !call set_precision('coupler_to_agcm')
+            call agcm_to_coupler(jday)            
             call coupler_to_agcm(jday)
-            !call set_precision('Default')
+            
 
         enddo
 

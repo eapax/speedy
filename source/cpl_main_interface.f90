@@ -36,15 +36,11 @@ subroutine agcm_to_coupler(jday)
     integer, intent(in) :: jday
 
     ! 1. send fields to land model
-    !call set_precision('atm2land')
     call atm2land(jday)
-    !call set_precision('Default')
 
 
     ! 2. send fields to sea and ice model
-    !call set_precision('atm2sea')
     call atm2sea(jday)
-    !call set_precision('Default')
     
 end subroutine agcm_to_coupler
 

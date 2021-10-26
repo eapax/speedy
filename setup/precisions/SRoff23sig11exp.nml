@@ -4,12 +4,5 @@
     RPE_IEEE_HALF=.false.,
     rp_half_bits=23,
     rp_default=23,
-    rp_agcm_1_day=23,
-    rp_agcm_to_coupler=23,
-    rp_coupler_to_agcm=23,
-    rp_fordate=23,
-    rp_ini_fluxes=23,
-    rp_stloop=23,
-    rp_step=23,
-    rp_diagns=23
+    rp_forin5=23,
 /
