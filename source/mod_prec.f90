@@ -28,7 +28,10 @@ module mod_prec
             rp_tendencies=52, &
             rp_half_bits=52, &
             rp_default=52, &
-            rp_forin5=52
+            rp_forin5=52,&
+            rp_fordate=52,&
+            rp_ini_fluxes=52,&
+            rp_stloop=52
     
 
     namelist /precisions/ &
@@ -39,7 +42,7 @@ module mod_prec
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
-            rp_forin5
+            rp_forin5,rp_fordate,rp_ini_fluxes,rp_stloop
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -90,6 +93,15 @@ module mod_prec
             
                 case('forin5')
                 RPE_DEFAULT_SBITS = rp_forin5
+
+                case('fordate')
+                RPE_DEFAULT_SBITS = rp_fordate
+
+                case('ini_fluxes')
+                RPE_DEFAULT_SBITS = rp_ini_fluxes
+
+                case('stloop')
+                RPE_DEFAULT_SBITS = rp_stloop
 
                 !------------
 
