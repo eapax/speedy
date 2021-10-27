@@ -56,7 +56,7 @@ subroutine atm2sea(jday)
     ! 1. Climatological SST
     call set_precision('forin5')
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
-    call set_precision('Default')
+    call set_precision('rp_coupler')
 
 
     ! 2. Climatological sea ice fraction

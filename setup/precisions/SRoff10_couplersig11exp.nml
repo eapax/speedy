@@ -2,8 +2,8 @@
     RPE_ACTIVE=.true.,
     RPE_STOCHASTIC=.false.,
     RPE_IEEE_HALF=.false.,
-    rp_half_bits=50,
+    rp_half_bits=10,
     rp_forin5=50,
-    rp_agcm=50,
+    rp_agcm=10,
     rp_coupler=50
 /
