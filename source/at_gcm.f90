@@ -21,12 +21,16 @@ program agcm_main
     ! 2. do loop over total no. of integration days
         do jday = 1, ndays
             ! 2.1 run atmospheric model for 1 day
+            call set_precision('rp_agcm')
             call agcm_1day(jday)
+            call set_precision('Default')
 
             
             ! 2.2 exchange data with coupler
+            call set_precision('rp_coupler')
             call agcm_to_coupler(jday)            
             call coupler_to_agcm(jday)
+            call set_precision('Default')
             
 
 
@@ -61,20 +65,16 @@ subroutine agcm_1day(jday)
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
-    call set_precision('fordate')
     call fordate()
-    call set_precision('Default')
 
 
     ! 2. set daily-average flux arrays to zero
-    call set_precision('ini_fluxes')
     call ini_fluxes()
-    call set_precision('Default')
 
     ! 3. integrate the atmospheric model for 1 day
-    call set_precision('stloop')
+    
     call stloop(istep)
-    call set_precision('Default')
+    
 
 
     ! 4. Write restart file at the end of selected months

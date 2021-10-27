@@ -5,7 +5,6 @@
     rp_half_bits=50,
     rp_default=50,
     rp_forin5=50,
-    rp_fordate=10,
-    rp_ini_fluxes=50,
-    rp_stloop=10
+    rp_coupler=50
+    rp_agcm=10
 /
