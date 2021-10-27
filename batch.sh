@@ -11,4 +11,3 @@ nohup time ./run.sh speedyonekangaroo_L2_10_RNboost_1month                 010 2
 
 
 
- 
