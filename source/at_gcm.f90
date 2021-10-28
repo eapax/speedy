@@ -64,15 +64,24 @@ subroutine agcm_1day(jday)
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
+    call set_precision('rp_fordate')
     call fordate()
+    call set_precision('rp_agcm')
+
 
 
     ! 2. set daily-average flux arrays to zero
+    call set_precision('rp_inifluxes')
     call ini_fluxes()
+    call set_precision('rp_agcm')
+
 
     ! 3. integrate the atmospheric model for 1 day
     
+    call set_precision('rp_stloop')
     call stloop(istep)
+    call set_precision('rp_agcm')
+
     
 
 
