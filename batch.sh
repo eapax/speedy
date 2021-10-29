@@ -1,10 +1,11 @@
 
 #nohup time ./run.sh speedyonellama_L2_10_SR_1year                 010 2 10                                   1year > output/speedyonellama-L2_10_SR_1year.out &
-nohup time ./run.sh speedyonellama_L2_10_RNfordatestloop_1year          010 2 SRoff10_fordate+stloop                     1year > output/speedyonellama-L2_10_RNfordatestloop_1year.out &
+#nohup time ./run.sh speedyonellama_L2_10_RNfordatestloop_1year          010 2 SRoff10_fordate+stloop                     1year > output/speedyonellama-L2_10_RNfordatestloop_1year.out &
 #nohup time ./run.sh speedyonellama_L2_10_RNinifluxes_1year        010 2 SRoff10_inifluxes                    1year > output/speedyonellama-L2_10_RNinifluxes_1year.out &
 #nohup time ./run.sh speedyonellama_L2_10_RNstloop_1year           010 2 SRoff10_stloop                       1year > output/speedyonellama-L2_10_RNstloop_1year.out &
 
 
+nohup time ./run.sh speedyoneflamingo_L2_10_RN_10day          010 2 SRoff10_stloop                     10day > output/speedyoneflamingo-L2_10_RN.out &
 
 
 
