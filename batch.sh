@@ -5,10 +5,10 @@
 #nohup time ./run.sh speedyonellama_L2_10_RNstloop_1year           010 2 SRoff10_stloop                       1year > output/speedyonellama-L2_10_RNstloop_1year.out &
 
 
-nohup time ./run.sh speedyoneflamingo_L2_50_RN_10day                     010 2 SRoff50                             10day > output/speedyoneflamingo-L2_10_RN.out &
-nohup time ./run.sh speedyoneflamingo_L2_50_RNcoupler_10day              010 2 SRoff50_coupler                     10day > output/speedyoneflamingo-L2_10_RNcpl.out &
-nohup time ./run.sh speedyoneflamingo_L2_50_RNcouplercorrected_10day     010 2 SRoff50_coupler_corrected           10day > output/speedyoneflamingo-L2_10_RNcplcorr.out &
-nohup time ./run.sh speedyoneflamingo_L2_50_RN_10day                     010 2 SRoff10                             10day > output/speedyoneflamingo-L2_10_RN.out &
+nohup time ./run.sh speedyoneflamingo_L2_50_RN_10day                     010 2 SRoff50                             10day > output/speedyoneflamingo-L2_50_RN.out &
+nohup time ./run.sh speedyoneflamingo_L2_50_RNcoupler_10day              010 2 SRoff50_coupler                     10day > output/speedyoneflamingo-L2_50_RNcpl.out &
+nohup time ./run.sh speedyoneflamingo_L2_50_RNcouplercorrected_10day     010 2 SRoff50_coupler_corrected           10day > output/speedyoneflamingo-L2_50_RNcplcorr.out &
+nohup time ./run.sh speedyoneflamingo_L2_10_RN_10day                     010 2 SRoff10                             10day > output/speedyoneflamingo-L2_10_RN.out &
 
 
 
