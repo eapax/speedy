@@ -45,6 +45,7 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
     type(rpe_var), dimension(ix,il,kx,ntr) :: trg
 
     integer :: k, i, itr, j
+    call set_precision('rp_gridfields')
 
     ! 1. Compute grid-point fields
     ! 1.1 Update geopotential in spectral space
@@ -94,10 +95,17 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
         end do
     end do
 
+    call set_precision('rp_grtend')
+
     ! 2. Parametrized physics tendencies
+    call set_precision('rp_phypar')
     call phypar(utend, vtend, ttend, trtend)
+    call set_precision('rp_grtend')
+
 
     ! 3. Dynamics tendencies
+    call set_precision('rp_dyntend')
+
     if (j1==j2) then
         call dyntend(vordt, divdt, tdt, psdt, trdt, j2, &
                      utend, vtend, ttend, trtend, &
@@ -120,6 +128,12 @@ subroutine grtend(vordt,divdt,tdt,psdt,trdt,j1,j2)
                      utend, vtend, ttend, trtend, &
                      ug, vg, tg, vorg, divg, trg)
     end if
+
+
+    call set_precision('rp_grtend')
+
+
+
 end subroutine grtend
 
 subroutine dyntend(vordt, divdt, tdt, psdt, trdt, j2, &

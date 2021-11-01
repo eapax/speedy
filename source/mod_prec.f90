@@ -38,7 +38,10 @@ module mod_prec
             rp_grtend=52,&  
             rp_sptend=52,& 
             rp_hordif=52,& 
-            rp_timeint=52
+            rp_timeint=52,&
+            rp_gridfields=52,&
+            rp_phypar=52,&
+            rp_dyntend=52
     
 
     namelist /precisions/ &
@@ -50,7 +53,8 @@ module mod_prec
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
             rp_forin5,rp_coupler,rp_agcm,rp_fordate,rp_inifluxes, rp_stloop,&
-            rp_step, rp_grtend, rp_sptend, rp_hordif,rp_timeint
+            rp_step, rp_grtend, rp_sptend, rp_hordif,rp_timeint,&
+            rp_gridfields,rp_phypar,rp_dyntend
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -131,6 +135,16 @@ module mod_prec
 
                 case('rp_timeint')
                 RPE_DEFAULT_SBITS = rp_timeint
+
+                case('rp_gridfields')
+                RPE_DEFAULT_SBITS = rp_gridfields
+
+                case('rp_phypar')
+                RPE_DEFAULT_SBITS = rp_phypar
+
+                case('rp_dyntend')
+                RPE_DEFAULT_SBITS = rp_dyntend
+
 
                 !------------
 
