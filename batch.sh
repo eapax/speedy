@@ -1,26 +1,6 @@
-
-#nohup time ./run.sh speedyonellama_L2_10_SR_1year                 010 2 10                                   1year > output/speedyonellama-L2_10_SR_1year.out &
-#nohup time ./run.sh speedyonellama_L2_10_RNfordatestloop_1year          010 2 SRoff10_fordate+stloop                     1year > output/speedyonellama-L2_10_RNfordatestloop_1year.out &
-#nohup time ./run.sh speedyonellama_L2_10_RNinifluxes_1year        010 2 SRoff10_inifluxes                    1year > output/speedyonellama-L2_10_RNinifluxes_1year.out &
-#nohup time ./run.sh speedyonellama_L2_10_RNstloop_1year           010 2 SRoff10_stloop                       1year > output/speedyonellama-L2_10_RNstloop_1year.out &
-
-
-#nohup time ./run.sh speedyoneyeti_L2_50_RNfordate_1year              010 2 SRoff50_fordate          1year > output/speedyoneyeti-L2_50_RNfordate.out &
-#nohup time ./run.sh speedyoneyeti_L2_50_RNinifluxes_1year           010 2 SRoff50_inifluxes        1year > output/speedyoneyeti-L2_50_RNinifluxes.out &
-nohup time ./run.sh speedyoneyeti_L2_50_RNstloop_1year              010 2 SRoff50_stloop           1year > output/speedyoneyeti-L2_50_RNstloop.out &
-#nohup time ./run.sh speedyoneyeti_L2_50_RNfordatestloop_1year        010 2 SRoff50_fordatestloop    1year > output/speedyoneyeti-L2_50_RNfordatestloop.out &
-
-# nohup time ./run.sh speedyonellama_L2_10_RN_1year                 010 2 SRoff10                                   1year > output/speedyonellama-L2_10_RN_1year.out &
-# nohup time ./run.sh speedyonellama_L2_10_RNagcm_1year             010 2 SRoff10_agcm                              1year > output/speedyonellama-L2_10_RNagcm_1year.out &
-# nohup time ./run.sh speedyonellama_L2_10_RNcpl_1year              010 2 SRoff10_coupler                           1year > output/speedyonellama-L2_10_RNcoupler_1year.out &
-# nohup time ./run.sh speedyonellama_L2_10_RNhalf_1year             010 2 SRoff10_half                              1year > output/speedyonellama-L2_10_RNhalf_1year.out &
-
-
-
-#nohup time ./run.sh speedyonellama_L2_50_RN_1year                 010 2 SRoff50                                1year > output/speedyonellama-L2_50_RN_1year.out &
-#nohup time ./run.sh speedyonellama_L2_50_RNagcm_1year             010 2 SRoff50_agcm                                1year > output/speedyonellama-L2_50_RNagcm_1year.out &
-#nohup time ./run.sh speedyonellama_L2_50_RNcoupler_1year          010 2 SRoff50_coupler                                1year > output/speedyonellama-L2_50_RNcoupler_1year.out &
-#nohup time ./run.sh speedyonellama_L2_10_RN_1year                 010 2 SRoff10                                1year > output/speedyonellama-L2_10_RN_1year.out &
-
-
+nohup time ./run.sh speedyonevixen_L2_50_RNstep_1year              010 2 SRoff50_step           1year > output/speedyonevixen-L2_50_RNstep.out &
+nohup time ./run.sh speedyonevixen_L2_50_RNgrtend_1year            010 2 SRoff50_grtend         1year > output/speedyonevixen-L2_50_RNgrtend.out &
+nohup time ./run.sh speedyonevixen_L2_50_RNsptend_1year            010 2 SRoff50_sptend         1year > output/speedyonevixen-L2_50_RNsptend.out &
+nohup time ./run.sh speedyonevixen_L2_50_RNhordif_1year            010 2 SRoff50_hordif         1year > output/speedyonevixen-L2_50_RNhordif.out &
+nohup time ./run.sh speedyonevixen_L2_50_RNtimeint_1year           010 2 SRoff50_timeint        1year > output/speedyonevixen-L2_50_RNtimeint.out &
 
