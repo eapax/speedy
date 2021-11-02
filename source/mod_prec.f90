@@ -44,7 +44,12 @@ module mod_prec
             rp_dyntend=52,&
             rp_gridfields11=52,&
             rp_gridfields12=52,&
-            rp_gridfields13=52
+            rp_gridfields13=52,&
+            rp_geop0=52,&
+            rp_geop1=52,&
+            rp_geop2=52,&
+            rp_geop3=52,&
+            rp_geop4=52
     
 
     namelist /precisions/ &
@@ -58,7 +63,8 @@ module mod_prec
             rp_forin5,rp_coupler,rp_agcm,rp_fordate,rp_inifluxes, rp_stloop,&
             rp_step, rp_grtend, rp_sptend, rp_hordif,rp_timeint,&
             rp_gridfields,rp_phypar,rp_dyntend,&
-            rp_gridfields11,rp_gridfields12,rp_gridfields13
+            rp_gridfields11,rp_gridfields12,rp_gridfields13,&
+            rp_geop0,rp_geop1,rp_geop2,rp_geop3,rp_geop4
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -151,11 +157,28 @@ module mod_prec
 
                 case('rp_gridfields11')
                 RPE_DEFAULT_SBITS = rp_gridfields11
+
                 case('rp_gridfields12')
                 RPE_DEFAULT_SBITS = rp_gridfields12
+
                 case('rp_gridfields13')
                 RPE_DEFAULT_SBITS = rp_gridfields13
 
+                
+                case('rp_geop0')
+                RPE_DEFAULT_SBITS = rp_geop0
+
+                case('rp_geop1')
+                RPE_DEFAULT_SBITS = rp_geop1
+
+                case('rp_geop2')
+                RPE_DEFAULT_SBITS = rp_geop2
+
+                case('rp_geop3')
+                RPE_DEFAULT_SBITS = rp_geop3
+
+                case('rp_geop4')
+                RPE_DEFAULT_SBITS = rp_geop4
 
                 !------------
 
