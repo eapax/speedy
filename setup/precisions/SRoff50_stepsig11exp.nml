@@ -9,9 +9,9 @@
     rp_fordate=50,
     rp_inifluxes=50,
     rp_stloop=50,
-    rp_step=50, 
+    rp_step=10, 
     rp_grtend=50,  
-    rp_sptend=10, 
+    rp_sptend=50, 
     rp_hordif=50, 
     rp_timeint=50
 /
