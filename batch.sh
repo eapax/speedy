@@ -4,8 +4,9 @@
 # nohup time ./run.sh speedyoneglenfiddich_L2_50_RN10mod_1year         010 2 SRoff10_modgeop      1year > output/speedyoneglenfiddich-L2_10_RNmod.out &
 
 
- nohup time ./run.sh speedyonevixenclone_L2_50_RNstep_1year              010 2 SRoff50_step          1year > output/speedyonevixenclone-L2_50_RNstep.out &
- nohup time ./run.sh speedyonevixenclone_L2_50_RNgrtend_1year            010 2 SRoff50_grtend         1year > output/speedyonevixenclone-L2_50_RNgrtend.out &
- nohup time ./run.sh speedyonevixenclone_L2_50_RNsptend_1year            010 2 SRoff50_sptend         1year > output/speedyonevixenclone-L2_50_RNsptend.out &
- nohup time ./run.sh speedyonevixenclone_L2_50_RNhordif_1year            010 2 SRoff50_hordif         1year > output/speedyonevixenclone-L2_50_RNhordif.out &
- nohup time ./run.sh speedyonevixenclone_L2_50_RNtimeint_1year           010 2 SRoff50_timeint        1year > output/speedyonevixenclone-L2_50_RNtimeint.out &
+
+ 
+nohup time ./run.sh speedyonetimeint_L2_50_RNtimeint1_1year           010 2 SRoff50_timeint1        1year > output/speedyonetimeint-L2_50_RNtimeint1.out &
+nohup time ./run.sh speedyonetimeint_L2_50_RNtimeint2_1year           010 2 SRoff50_timeint2        1year > output/speedyonetimeint-L2_50_RNtimeint2.out &
+nohup time ./run.sh speedyonetimeint_L2_50_RNtimeint3_1year           010 2 SRoff50_timeint3        1year > output/speedyonetimeint-L2_50_RNtimeint3.out &
+nohup time ./run.sh speedyonetimeint_L2_50_RNtimeint4_1year           010 2 SRoff50_timeint4        1year > output/speedyonetimeint-L2_50_RNtimeint4.out &

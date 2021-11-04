@@ -49,7 +49,11 @@ module mod_prec
             rp_geop1=52,&
             rp_geop2=52,&
             rp_geop3=52,&
-            rp_geop4=52
+            rp_geop4=52,&
+            rp_timeint1=52,&
+            rp_timeint2=52,&
+            rp_timeint3=52,&
+            rp_timeint4=52
     
 
     namelist /precisions/ &
@@ -64,7 +68,8 @@ module mod_prec
             rp_step, rp_grtend, rp_sptend, rp_hordif,rp_timeint,&
             rp_gridfields,rp_phypar,rp_dyntend,&
             rp_gridfields11,rp_gridfields12,rp_gridfields13,&
-            rp_geop0,rp_geop1,rp_geop2,rp_geop3,rp_geop4
+            rp_geop0,rp_geop1,rp_geop2,rp_geop3,rp_geop4,&
+            rp_timeint1, rp_timeint2, rp_timeint3, rp_timeint4
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -180,6 +185,18 @@ module mod_prec
                 case('rp_geop4')
                 RPE_DEFAULT_SBITS = rp_geop4
 
+
+                case('rp_timeint1')
+                RPE_DEFAULT_SBITS = rp_timeint1
+
+                case('rp_timeint2')
+                RPE_DEFAULT_SBITS = rp_timeint2
+
+                case('rp_timeint3')
+                RPE_DEFAULT_SBITS = rp_timeint3
+
+                case('rp_timeint4')
+                RPE_DEFAULT_SBITS = rp_timeint4
                 !------------
 
                 case('Initial Values')
