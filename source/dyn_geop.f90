@@ -19,18 +19,15 @@ subroutine geop(jj)
     type(rpe_var) :: corf
 
     !Create a copy of the initial state of the spectral temperature
-    !call set_precision('rp_geop0')
     tcopy = t
 
     ! Convert temperature to Kelvin
-    !call set_precision('rp_geop1')
     tcopy(1,1,:,:) = tcopy(1,1,:,:) + cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
 
     ! 1. Bottom layer (integration over half a layer)
     phi(:,:,kx) = phis + xgeop1(kx) * tcopy(:,:,kx,jj)
 
     ! 2. Other layers (integration two half-layers)
-    !call set_precision('rp_geop2')
 
     do k = kx-1,1,-1
         phi(:,:,k) = phi(:,:,k+1) + xgeop2(k+1)*tcopy(:,:,k+1,jj) + &
@@ -38,7 +35,6 @@ subroutine geop(jj)
     end do
 
     ! 3. lapse-rate correction in the free troposphere
-    !call set_precision('rp_geop3')
     do k = 2,kx-1
         corf=xgeop1(k)*rpe_literal(0.5_dp)* &
                 log(hsg(k+1)/fsg(k)) / log(fsg(k+1)/fsg(k-1))
@@ -49,7 +45,6 @@ subroutine geop(jj)
 !    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
     
     !Rather than doing the previous line, just return the copy we created at the start
-    !call set_precision('rp_geop4')
     !t = tcopy
 
 

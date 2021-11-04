@@ -41,12 +41,12 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! 1. Computation of grid-point tendencies
     ! (converted to spectral at the end of GRTEND)
-    call set_precision('rp_grtend')
+    
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
-    call set_precision('rp_agcm')
+    
     ! 2. Computation of spectral tendencies
     
-    call set_precision('rp_sptend')
+    
     if (alph==rpe_literal(0.0_dp)) then
         call sptend(divdt,tdt,psdt,j2)
     else
@@ -61,10 +61,10 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     psdt = psdt * (1.0_dp/3600.0_dp)
     trdt = trdt * (1.0_dp/3600.0_dp)
 
-    call set_precision('rp_agcm')
+   
 
     ! 3. Horizontal diffusion
-    call set_precision('rp_hordif')
+    
 
     ! 3.1 Diffusion of wind and temperature
     call hordif(kx,vor,vordt,dmp, dmp1)
@@ -97,12 +97,11 @@ subroutine step(j1,j2,dt,alph,rob,wil)
             call hordif(kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),dmp,dmp1)
         enddo
     endif
-    call set_precision('rp_agcm')
+   
 
     ! 4. Time integration with Robert filter
-    call set_precision('rp_timeint')
+    
 
-    !call set_precision('rp_timeint1')
     if (dt<=rpe_literal(0.0_dp)) return
 
     call apply_truncation(psdt)
@@ -120,22 +119,22 @@ subroutine step(j1,j2,dt,alph,rob,wil)
         eps = rob
     endif
 
-    !call set_precision('rp_timeint2')
+
 
     call timint(j1,dt,eps,wil,1,ps,psdt,.False.)
     call timint(j1,dt,eps,wil,kx,vor,vordt,.FALSE.)
     call timint(j1,dt,eps,wil,kx,div,divdt,.FALSE.)
 
-    !call set_precision('rp_timeint3')
+   
     call timint(j1,dt,eps,wil,kx,t,  tdt,.TRUE.)
 
 
-    !call set_precision('rp_timeint4')
+  
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
     enddo
 
-    call set_precision('rp_agcm')
+    
 
 end subroutine step
 
@@ -172,7 +171,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
 
     use mod_atparam
     use rp_emulator
-    use mod_prec, only: dp,set_precision
+    use mod_prec, only: dp
 
     implicit none
 
@@ -188,7 +187,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
 
-    call set_precision('rp_timeint1')
+
     if (ix==iy*4) then
         do k=1,nlev
             call trunct(fdt(:,:,k))
@@ -202,17 +201,14 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     do k=1,nlev
         do n=1,nx
             do m=1,mx
-                call set_precision('rp_timeint2')
+                
                 fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
-                call set_precision('rp_timeint3')
-                field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)&
-                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
+                field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n)) 
 
-                call set_precision('rp_timeint4')
+                
                 ! and here comes Williams' innovation to the filter
-                field(m,n,k,2) = fnew(m,n)-(rpe_literal(1.0_dp)-wil)*eps*(field(m,n,k,1)&
-                    &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
-                call set_precision('rp_timeint')
+                field(m,n,k,2) = fnew(m,n)-(rpe_literal(1.0_dp)-wil)*eps*(field(m,n,k,1)-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n)) 
+                
             end do
         end do
     end do
