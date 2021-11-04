@@ -172,7 +172,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
 
     use mod_atparam
     use rp_emulator
-    use mod_prec, only: dp
+    use mod_prec, only: dp,set_precision
 
     implicit none
 
@@ -184,7 +184,6 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     type(rpe_var) :: eps2
     type(rpe_complex_var) :: fnew(mx,nx)
     integer :: k, n, m
-    use mod_prec, only: set_precision
 
     eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
