@@ -100,9 +100,9 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call set_precision('rp_agcm')
 
     ! 4. Time integration with Robert filter
-    !call set_precision('rp_timeint')
+    call set_precision('rp_timeint')
 
-    call set_precision('rp_timeint1')
+    !call set_precision('rp_timeint1')
     if (dt<=rpe_literal(0.0_dp)) return
 
     call apply_truncation(psdt)
@@ -120,17 +120,17 @@ subroutine step(j1,j2,dt,alph,rob,wil)
         eps = rob
     endif
 
-    call set_precision('rp_timeint2')
+    !call set_precision('rp_timeint2')
 
     call timint(j1,dt,eps,wil,1,ps,psdt,.False.)
     call timint(j1,dt,eps,wil,kx,vor,vordt,.FALSE.)
     call timint(j1,dt,eps,wil,kx,div,divdt,.FALSE.)
 
-    call set_precision('rp_timeint3')
+    !call set_precision('rp_timeint3')
     call timint(j1,dt,eps,wil,kx,t,  tdt,.TRUE.)
 
 
-    call set_precision('rp_timeint4')
+    !call set_precision('rp_timeint4')
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
     enddo
@@ -184,9 +184,12 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     type(rpe_var) :: eps2
     type(rpe_complex_var) :: fnew(mx,nx)
     integer :: k, n, m
+    use mod_prec, only: set_precision
 
     eps2 = rpe_literal(1.0_dp)-rpe_literal(2.0_dp)*eps
 
+
+    call set_precision('rp_timeint1')
     if (ix==iy*4) then
         do k=1,nlev
             call trunct(fdt(:,:,k))
@@ -200,14 +203,17 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
     do k=1,nlev
         do n=1,nx
             do m=1,mx
+                call set_precision('rp_timeint2')
                 fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
+                call set_precision('rp_timeint3')
                 field(m,n,k,1) = field(m,n,k,j1) + wil*eps*(field(m,n,k,1)&
                     &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
 
+                call set_precision('rp_timeint4')
                 ! and here comes Williams' innovation to the filter
                 field(m,n,k,2) = fnew(m,n)-(rpe_literal(1.0_dp)-wil)*eps*(field(m,n,k,1)&
                     &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n))
-
+                call set_precision('rp_timeint')
             end do
         end do
     end do
