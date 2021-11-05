@@ -100,7 +100,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
    
 
     ! 4. Time integration with Robert filter
-    
+    call set_precision('rp_timeint')
 
     if (dt<=rpe_literal(0.0_dp)) return
 
@@ -134,7 +134,8 @@ subroutine step(j1,j2,dt,alph,rob,wil)
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
     enddo
 
-    
+    call set_precision('rp_agcm')
+
 
 end subroutine step
 
