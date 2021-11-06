@@ -64,8 +64,10 @@ subroutine agcm_1day(jday)
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
+    call set_precision('rp_fordate')
     call fordate()
-
+    call set_precision('rp_agcm')
+    
     ! 2. set daily-average flux arrays to zero
     call ini_fluxes()
 

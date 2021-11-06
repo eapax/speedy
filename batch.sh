@@ -6,7 +6,7 @@
 
 
  
-nohup time ./run.sh speedyoneRAW_L2_50_RNtimeintRA_1year           010 2 SRoff50_timeint       1yearRA > output/speedyoneRAW-L2_50_RN1.out &
-nohup time ./run.sh speedyoneRAW_L2_50_SRtimeintRA_1year           010 2 50_timeint            1yearRA > output/speedyoneRAW-L2_50_RN2.out &
-nohup time ./run.sh speedyoneRAW_L2_50_RNtimeintRAW_1year           010 2 SRoff50_timeint       1year > output/speedyoneRAW-L2_50_RN3.out &
-nohup time ./run.sh speedyoneRAW_L2_50_SRtimeintRAW_1year           010 2 50_timeint            1year > output/speedyoneRAW-L2_50_RN4.out &
+nohup time ./run.sh speedyoneALPHA_L2_10_RN_1year           010 2 SRoff10       1year > output/speedyoneALPHA-L2_10_RN.out &
+nohup time ./run.sh speedyoneALPHA_L2_10_SR_1year           010 2 10            1year > output/speedyoneALPHA-L2_10_SR.out &
+nohup time ./run.sh speedyoneALPHA_L2_10_RNinit_1year       010 2 SRoff10_init  1year > output/speedyoneALPHA-L2_10_RNinit.out &
+nohup time ./run.sh speedyoneALPHA_L2_10_SRinit_1year       010 2 10_init       1year > output/speedyoneALPHA-L2_10_SRinit.out &
