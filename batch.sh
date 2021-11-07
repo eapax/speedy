@@ -6,7 +6,13 @@
 
 
  
-nohup time ./run.sh speedyoneALPHA_L2_10_RNshift_1year           010 2 SRoff10       1year > output/speedyoneALPHA-L2_10_RN_1yr.out &
-#nohup time ./run.sh speedyoneALPHA_L2_10_SR_1year           010 2 10            1year > output/speedyoneALPHA-L2_10_SR.out &
-#nohup time ./run.sh speedyoneALPHA_L2_10_RNinit_1year       010 2 SRoff10_init  1year > output/speedyoneALPHA-L2_10_RNinit.out &
-#nohup time ./run.sh speedyoneALPHA_L2_10_SRinit_1year       010 2 10_init       1year > output/speedyoneALPHA-L2_10_SRinit.out &
+nohup time ./run.sh speedyoneBETA_L2_10_RNfordate_1year           010 2 SRoff10_fordate       1year > output/speedyoneBETA-L2_10_RNfordate_1yr.out &
+nohup time ./run.sh speedyoneBETA_L2_10_RNforin5_1year            010 2 SRoff10_forin5        1year > output/speedyoneBETA-L2_10_RNforin5_1yr.out &
+nohup time ./run.sh speedyoneBETA_L2_10_RNtimeint_1year           010 2 SRoff10_timeint       1year > output/speedyoneBETA-L2_10_RNtimeint_1yr.out &
+
+
+
+
+#nohup time ./run.sh speedyoneBETA_L2_10_SR_1year           010 2 10            1year > output/speedyoneBETA-L2_10_SR.out &
+#nohup time ./run.sh speedyoneBETA_L2_10_RNinit_1year       010 2 SRoff10_init  1year > output/speedyoneBETA-L2_10_RNinit.out &
+#nohup time ./run.sh speedyoneBETA_L2_10_SRinit_1year       010 2 10_init       1year > output/speedyoneBETA-L2_10_SRinit.out &
