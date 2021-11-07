@@ -100,7 +100,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
    
 
     ! 4. Time integration with Robert filter
-    call set_precision('rp_timeint')
+    !call set_precision('rp_timeint')
 
     if (dt<=rpe_literal(0.0_dp)) return
 
@@ -111,7 +111,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call apply_truncation(trdt)
 
 
-
+    call set_precision('rp_timeint')
 
     if (j1==1) then
         eps = 0.0_dp
