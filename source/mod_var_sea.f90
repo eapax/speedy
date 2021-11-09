@@ -8,6 +8,10 @@ module mod_var_sea
     ! Observed clim. SST
     type(rpe_var), allocatable :: sstcl_ob(:)
 
+    ! a debug copy
+    type(rpe_var), allocatable :: sstcl_ob_copy(:)
+
+
     ! Clim. sea ice fraction
     type(rpe_var), allocatable :: sicecl_ob(:)
 
@@ -55,6 +59,7 @@ module mod_var_sea
     contains
         subroutine setup_var_sea()
             allocate(sstcl_ob(ngp))
+            allocate(sstcl_ob_copy(ngp))
             allocate(sicecl_ob(ngp))
             allocate(ticecl_ob(ngp))
             allocate(sstan_ob(ngp))
@@ -72,6 +77,7 @@ module mod_var_sea
 
         subroutine truncate_var_sea()
             call apply_truncation(sstcl_ob)
+            call apply_truncation(sstcl_ob_copy)
             call apply_truncation(sstcl_om)
             call apply_truncation(sst_am)
             call apply_truncation(sst_om)

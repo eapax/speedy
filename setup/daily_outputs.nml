@@ -9,12 +9,12 @@
     nstpinc=36,
     nstpout=36,
     nstpopen=13140,
-    nvars=10,
+    nvars=11,
 /
 
 &variables
     var_ids=3, 45
             101,103,105,106,109,113
-            124,125,
+            124,125,126
 /
 /

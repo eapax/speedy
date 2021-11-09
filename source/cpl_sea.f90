@@ -35,7 +35,7 @@ subroutine atm2sea(jday)
     use mod_fluxes, only: hflux_s, hflux_i
     use mod_cli_sea, only: fmask_s, sst12, sice12, sstan3, hfseacl, sstom12
     use mod_var_sea, only: sstcl_ob, sicecl_ob, ticecl_ob, sstan_ob, sstcl_om,&
-        & sst_om, tice_om
+        & sst_om, tice_om,sstcl_ob_copy
     use rp_emulator
     use mod_prec, only: dp,set_precision
  
@@ -57,7 +57,7 @@ subroutine atm2sea(jday)
     call set_precision('forin5')
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
     call set_precision('rp_coupler')
-
+    sstcl_ob_copy = sstcl_ob
 
     ! 2. Climatological sea ice fraction
     call forint(ngp,imont1,tmonth,sice12,sicecl_ob)
