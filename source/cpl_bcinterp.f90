@@ -75,7 +75,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
             rpe_literal(6.0_dp)*for12(:,im1) + &
             rpe_literal(58.0_dp)*for12(:,imon) - &
             rpe_literal(6.0_dp)*for12(:,ip1) + &
-            rpe_literal(1.0_dp)*for12(:,ip2)
+            rpe_literal(1.0_dp)*for12(:,ip2)&
             )/rpe_literal(48.0_dp)
 
 end subroutine forin5
