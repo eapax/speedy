@@ -42,7 +42,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     integer :: im1, im2, ip1, ip2
     type(rpe_var) :: c0, t0, t1, t2, wm1, wm2, w0, wp1, wp2, one
 
-    one = 1.0_dp
+    one = rpe_literal(1.0_dp)
 
     im2 = imon-2
     im1 = imon-1
@@ -66,17 +66,17 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     wp2 =        -t0   +t2
 
  
-   ! for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
-    !    & wp1*for12(:,ip1) + wp2*for12(:,ip2)
+    for1 = wm2*for12(:,im2) + wm1*for12(:,im1) + w0*for12(:,imon) +&
+        & wp1*for12(:,ip1) + wp2*for12(:,ip2)
 
     !for1 = for12(:,imon)
 
 
 
-    for1 = (for12(:,im2) &
-            & +for12(:,im1) &
-            & +for12(:,imon) & 
-            & +for12(:,ip1) & 
-            & +for12(:,ip2))/rpe_literal(5.0_dp)
+   ! for1 = (for12(:,im2) &
+    !        & +for12(:,im1) &
+     !       & +for12(:,imon) & 
+      !      & +for12(:,ip1) & 
+       !     & +for12(:,ip2))/rpe_literal(5.0_dp)
 
 end subroutine forin5
