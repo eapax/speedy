@@ -49,7 +49,7 @@ subroutine forin5(ngp,imon,fmon,for12,for1)
     ip1 = imon+1
     ip2 = imon+2
 
-    if (im2<1)  im2 = im2+121
+    if (im2<1)  im2 = im2+12
     if (im1<1)  im1 = im1+12
     if (ip1>12) ip1 = ip1-12
     if (ip2>12) ip2 = ip2-12
