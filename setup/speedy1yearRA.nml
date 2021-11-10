@@ -176,7 +176,7 @@
     ! Period (no. of months) for restart file update
     nmonrs=120,
     ! Damping factor in Robert time filter
-    rob=0.05,
+    rob=0.20,
     ! Parameter of Williams filter
     wil=1.00,
 /
