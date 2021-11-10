@@ -6,8 +6,8 @@
 
 
  
-#nohup time ./run.sh speedyonetimeintLF_L2_50_RN           010 2 SRoff50           1yearLF > output/speedyonetimeintLF-L2_50_RN.out &
-#nohup time ./run.sh speedyonetimeintLF_L2_50_RNtimeint    010 2 SRoff50_timeint   1yearLF > output/speedyonetimeintLF-L2_50_RNtimeint.out &
+nohup time ./run.sh speedyonetimeintLF_L2_50_RN           010 2 SRoff50           1yearLF > output/speedyonetimeintLF-L2_50_RN.out &
+nohup time ./run.sh speedyonetimeintLF_L2_50_RNtimeint    010 2 SRoff50_timeint   1yearLF > output/speedyonetimeintLF-L2_50_RNtimeint.out &
 nohup time ./run.sh speedyonetimeintLF_L2_50_SRtimeint    010 2 50timeint        1yearLF > output/speedyonetimeintLF-L2_50_SRtimeint.out &
 
 
