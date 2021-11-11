@@ -170,7 +170,7 @@
 ! mod_tsteps
 &timestepping
     ! No. of time steps in one day
-    nsteps=72,
+    nsteps=36,
     ! Period (no. of steps) for diagnostic print-out
     nstdia=180,
     ! Period (no. of months) for restart file update
