@@ -6,12 +6,12 @@
 
 
  
-nohup time ./run.sh speedyoneFIG1_L2_52_RN           010 2 SRoff52           1year4CO2 > output/speedyoneFIG1-L2_52_RN.out &
-nohup time ./run.sh speedyoneFIG1_L2_23_RN           010 2 SRoff23           1year4CO2 > output/speedyoneFIG1-L2_23_RN.out &
-nohup time ./run.sh speedyoneFIG1_L2_10_RN           010 2 SRoff10           1year4CO2 > output/speedyoneFIG1-L2_10_RN.out &
-nohup time ./run.sh speedyoneFIG1_L2_52_SR           010 2 52                1year4CO2 > output/speedyoneFIG1-L2_52_SR.out &
-nohup time ./run.sh speedyoneFIG1_L2_23_SR           010 2 23                1year4CO2 > output/speedyoneFIG1-L2_23_SR.out &
-nohup time ./run.sh speedyoneFIG1_L2_10_SR           010 2 10                1year4CO2 > output/speedyoneFIG1-L2_10_SR.out &
+nohup time ./run.sh speedyoneFIG1_L2_52_RN_10year            010 2 SRoff52           10year4CO2 > output/speedyoneFIG1-L2_52_RN_10year.out &
+nohup time ./run.sh speedyoneFIG1_L2_23_RN_10year            010 2 SRoff23           10year4CO2 > output/speedyoneFIG1-L2_23_RN_10year.out &
+nohup time ./run.sh speedyoneFIG1_L2_10_RN_10year            010 2 SRoff10           10year4CO2 > output/speedyoneFIG1-L2_10_RN_10year.out &
+nohup time ./run.sh speedyoneFIG1_L2_52_SR_10year            010 2 52                10year4CO2 > output/speedyoneFIG1-L2_52_SR_10year.out &
+nohup time ./run.sh speedyoneFIG1_L2_23_SR_10year            010 2 23                10year4CO2 > output/speedyoneFIG1-L2_23_SR_10year.out &
+nohup time ./run.sh speedyoneFIG1_L2_10_SR_10year            010 2 10                10year4CO2 > output/speedyoneFIG1-L2_10_SR_10year.out &
 
 
 #nohup time ./run.sh speedyoneforin5_L2_50_SR           010 2 50              10day_iseasc > output/speedyoneforin5-L2_50_SR.out &
