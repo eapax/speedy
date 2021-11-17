@@ -113,7 +113,7 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     
   
 
-    call set_precision('rp_timeint') !Change the preicison just for the timestepping
+    call set_precision('rp_timeint') !Change the precision just for the timestepping
 
     if (j1==1) then
         eps = 0.0_dp

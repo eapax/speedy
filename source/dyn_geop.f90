@@ -42,11 +42,4 @@ subroutine geop(jj)
         phi(1,:,k) = phi(1,:,k) + corf*(tcopy(1,:,k+1,jj) - tcopy(1,:,k-1,jj))
     end do
 
-    ! Convert temperature to Celsius
-!    t(1,1,:,:) = t(1,1,:,:) - cmplx(sqrt(2.0_dp)*zero_c, kind=dp)
-    
-    !Rather than doing the previous line, just return the copy we created at the start
-    !t = tcopy
-
-
 end subroutine geop
