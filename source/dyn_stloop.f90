@@ -11,7 +11,6 @@ subroutine stloop(istep)
     use mod_date, only: update_time
     use phy_radsw, only: lradsw, nstrad
     use rp_emulator
-    use mod_prec, only: set_precision
 
     implicit none
 

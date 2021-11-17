@@ -18,7 +18,8 @@ subroutine geop(jj)
     integer :: k
     type(rpe_var) :: corf
 
-    !Create a copy of the initial state of the spectral temperature
+    !Create a copy of the initial state of the spectral temperature. All operations on this copy to avoid altering
+    
     tcopy = t
 
     ! Convert temperature to Kelvin

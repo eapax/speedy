@@ -103,8 +103,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     if (dt<=rpe_literal(0.0_dp)) return
 
-    !call set_precision('rp_timeint')
-
 
     call apply_truncation(psdt)
     call apply_truncation(vordt)
@@ -113,10 +111,9 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call apply_truncation(trdt)
     
     
-    !call set_precision('rp_agcm')
+  
 
-
-    call set_precision('rp_timeint')
+    call set_precision('rp_timeint') !Change the preicison just for the timestepping
 
     if (j1==1) then
         eps = 0.0_dp
@@ -126,20 +123,18 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
 
 
-    call timint(j1,dt,eps,wil,1,ps,psdt,.False.)
-    call timint(j1,dt,eps,wil,kx,vor,vordt,.FALSE.)
-    call timint(j1,dt,eps,wil,kx,div,divdt,.FALSE.)
-
-   
-    call timint(j1,dt,eps,wil,kx,t,  tdt,.TRUE.)
+    call timint(j1,dt,eps,wil,1,ps,psdt)
+    call timint(j1,dt,eps,wil,kx,vor,vordt)
+    call timint(j1,dt,eps,wil,kx,div,divdt)
+    call timint(j1,dt,eps,wil,kx,t,tdt)
 
 
   
     do itr=1,ntr
-        call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),.FALSE.)
+        call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
     enddo
 
-    call set_precision('rp_agcm')
+    call set_precision('rp_agcm') !And return it to whatever was set for the rp_agcm
 
 
 end subroutine step
@@ -170,7 +165,7 @@ subroutine hordif(nlev,field,fdt,dmp,dmp1)
     end do
 end subroutine hordif
 
-subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
+subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     !  Aux. subr. timint (j1,dt,eps,wil,nlev,field,fdt)
     !  Purpose : Perform time integration of field at nlev levels
     !            using tendency fdt
@@ -181,7 +176,6 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
 
     implicit none
 
-    logical, intent(in) :: printout
     integer, intent(in) :: j1, nlev
     type(rpe_var), intent(in) :: dt, eps, wil
     type(rpe_complex_var), intent(in) :: fdt(mx,nx,nlev)
@@ -220,15 +214,6 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt,printout)
             end do
         end do
     end do
-
-
-
-
-
-   ! if (printout) then
-   !print *, 'temperature timestep', fnew(1,1), eps2, field(1,1,1,1), field(1,1,1,2), fdt(1,1,1)
-   !endif
-
 
 
 
