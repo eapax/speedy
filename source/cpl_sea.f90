@@ -66,7 +66,7 @@ subroutine atm2sea(jday)
     ! 3. SST anomaly
     if (isstan>0) then
         if (iday==1 .and. jday>0) call OBS_SSTA
-        call forint (ngp,2,tmonth,sstan3,sstan_ob)
+        call forint(ngp,2,tmonth,sstan3,sstan_ob)
     end if
 
 
