@@ -29,7 +29,7 @@ module mod_prec
             rp_half_bits=52, &
             rp_default=52, &
             rp_coupler=52,&
-            rp_agcm=52,&
+            rp_agcm=52
             
     
 
