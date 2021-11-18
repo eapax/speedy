@@ -111,9 +111,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call apply_truncation(trdt)
     
     
-  
-
-    call set_precision('rp_timeint') !Change the precision just for the timestepping
 
     if (j1==1) then
         eps = 0.0_dp
@@ -133,8 +130,6 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
     enddo
-
-    call set_precision('rp_agcm') !And return it to whatever was set for the rp_agcm
 
 
 end subroutine step

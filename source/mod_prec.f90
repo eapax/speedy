@@ -28,32 +28,9 @@ module mod_prec
             rp_tendencies=52, &
             rp_half_bits=52, &
             rp_default=52, &
-            rp_forin5=52,&
             rp_coupler=52,&
             rp_agcm=52,&
-            rp_fordate=52,&
-            rp_inifluxes=52,&
-            rp_stloop=52,&
-            rp_step=52,& 
-            rp_grtend=52,&  
-            rp_sptend=52,& 
-            rp_hordif=52,& 
-            rp_timeint=52,&
-            rp_gridfields=52,&
-            rp_phypar=52,&
-            rp_dyntend=52,&
-            rp_gridfields11=52,&
-            rp_gridfields12=52,&
-            rp_gridfields13=52,&
-            rp_geop0=52,&
-            rp_geop1=52,&
-            rp_geop2=52,&
-            rp_geop3=52,&
-            rp_geop4=52,&
-            rp_timeint1=52,&
-            rp_timeint2=52,&
-            rp_timeint3=52,&
-            rp_timeint4=52
+            
     
 
     namelist /precisions/ &
@@ -64,12 +41,7 @@ module mod_prec
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
-            rp_forin5,rp_coupler,rp_agcm,rp_fordate,rp_inifluxes, rp_stloop,&
-            rp_step, rp_grtend, rp_sptend, rp_hordif,rp_timeint,&
-            rp_gridfields,rp_phypar,rp_dyntend,&
-            rp_gridfields11,rp_gridfields12,rp_gridfields13,&
-            rp_geop0,rp_geop1,rp_geop2,rp_geop3,rp_geop4,&
-            rp_timeint1, rp_timeint2, rp_timeint3, rp_timeint4
+            rp_coupler,rp_agcm
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -117,86 +89,13 @@ module mod_prec
 
 
                 !-------------added
-            
-                case('forin5')
-                RPE_DEFAULT_SBITS = rp_forin5
-
                 case('rp_coupler')
                 RPE_DEFAULT_SBITS = rp_coupler
 
                 case('rp_agcm')
                 RPE_DEFAULT_SBITS = rp_agcm
 
-                case('rp_fordate')
-                RPE_DEFAULT_SBITS = rp_fordate
-
-                case('rp_inifluxes')
-                RPE_DEFAULT_SBITS = rp_inifluxes
-
-                case('rp_stloop')
-                RPE_DEFAULT_SBITS = rp_stloop
-
-                case('rp_step')
-                RPE_DEFAULT_SBITS = rp_step
-
-                case('rp_grtend')
-                RPE_DEFAULT_SBITS = rp_grtend
-
-                case('rp_sptend')
-                RPE_DEFAULT_SBITS = rp_sptend
-
-                case('rp_hordif')
-                RPE_DEFAULT_SBITS = rp_hordif
-
-                case('rp_timeint')
-                RPE_DEFAULT_SBITS = rp_timeint
-
-                case('rp_gridfields')
-                RPE_DEFAULT_SBITS = rp_gridfields
-
-                case('rp_phypar')
-                RPE_DEFAULT_SBITS = rp_phypar
-
-                case('rp_dyntend')
-                RPE_DEFAULT_SBITS = rp_dyntend
-
-                case('rp_gridfields11')
-                RPE_DEFAULT_SBITS = rp_gridfields11
-
-                case('rp_gridfields12')
-                RPE_DEFAULT_SBITS = rp_gridfields12
-
-                case('rp_gridfields13')
-                RPE_DEFAULT_SBITS = rp_gridfields13
-
-                
-                case('rp_geop0')
-                RPE_DEFAULT_SBITS = rp_geop0
-
-                case('rp_geop1')
-                RPE_DEFAULT_SBITS = rp_geop1
-
-                case('rp_geop2')
-                RPE_DEFAULT_SBITS = rp_geop2
-
-                case('rp_geop3')
-                RPE_DEFAULT_SBITS = rp_geop3
-
-                case('rp_geop4')
-                RPE_DEFAULT_SBITS = rp_geop4
-
-
-                case('rp_timeint1')
-                RPE_DEFAULT_SBITS = rp_timeint1
-
-                case('rp_timeint2')
-                RPE_DEFAULT_SBITS = rp_timeint2
-
-                case('rp_timeint3')
-                RPE_DEFAULT_SBITS = rp_timeint3
-
-                case('rp_timeint4')
-                RPE_DEFAULT_SBITS = rp_timeint4
+            
                 !------------
 
                 case('Initial Values')
