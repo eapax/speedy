@@ -54,8 +54,10 @@ subroutine atm2sea(jday)
 
 
     ! 1. Climatological SST
+    call set_precision('rp_interpolation')
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
     sstcl_ob_copy = sstcl_ob
+    call set_precision('rp_coupler')
 
     ! 2. Climatological sea ice fraction
     call forint(ngp,imont1,tmonth,sice12,sicecl_ob)

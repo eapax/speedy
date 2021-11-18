@@ -29,7 +29,8 @@ module mod_prec
             rp_half_bits=52, &
             rp_default=52, &
             rp_coupler=52,&
-            rp_agcm=52
+            rp_agcm=52,
+            rp_interpolation=52
             
     
 
@@ -41,7 +42,7 @@ module mod_prec
             rp_vertical_diffusion, rp_sppt, rp_grid_dynamics, &
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
-            rp_coupler,rp_agcm
+            rp_coupler,rp_agcm,rp_interpolation
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -95,7 +96,9 @@ module mod_prec
                 case('rp_agcm')
                 RPE_DEFAULT_SBITS = rp_agcm
 
-            
+                case('rp_interpolation')
+                RPE_DEFAULT_SBITS = rp_interpolation
+
                 !------------
 
                 case('Initial Values')
