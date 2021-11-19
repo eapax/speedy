@@ -30,6 +30,7 @@ subroutine agcm_to_coupler(jday)
     !
     !   subroutine agcm_to_coupler (jday)
     !
+    use mod_prec, only: set_precision
     implicit none
 
     integer, intent(in) :: jday
@@ -49,6 +50,7 @@ subroutine coupler_to_agcm(jday)
     !
     !   subroutine coupler_to_agcm (jday)
     !
+    use mod_prec, only: set_precision
     implicit none
 
     integer, intent(in) :: jday
