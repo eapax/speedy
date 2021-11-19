@@ -34,7 +34,10 @@ module mod_prec
             rp_atm2land=52,&
             rp_atm2sea=52,&
             rp_land2atm=52,&
-            rp_sea2atm=52
+            rp_sea2atm=52,&
+            rp_fordate=52,&
+            rp_inifluxes=52,&
+            rp_stloop=52
             
     
     namelist /precisions/ &
@@ -46,7 +49,8 @@ module mod_prec
             rp_spectral_dynamics, rp_diffusion, rp_timestepping, &
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
             rp_coupler,rp_agcm,rp_interpolation,&
-            rp_atm2land,rp_atm2sea,rp_land2atm,rp_sea2atm
+            rp_atm2land,rp_atm2sea,rp_land2atm,rp_sea2atm,&
+            rp_fordate,rp_inifluxes,rp_stloop
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -103,6 +107,8 @@ module mod_prec
                 case('rp_interpolation')
                 RPE_DEFAULT_SBITS = rp_interpolation
 
+                !-coupling
+
                 case('rp_atm2land')
                 RPE_DEFAULT_SBITS = rp_atm2land
 
@@ -114,6 +120,21 @@ module mod_prec
 
                 case('rp_sea2atm')
                 RPE_DEFAULT_SBITS = rp_sea2atm
+
+                !-agcm
+
+
+                case('rp_fordate')
+                RPE_DEFAULT_SBITS = rp_fordate
+
+
+                case('rp_inifluxes')
+                RPE_DEFAULT_SBITS = rp_inifluxes
+
+
+                case('rp_stloop')
+                RPE_DEFAULT_SBITS = rp_stloop
+
 
 
                 !------------
