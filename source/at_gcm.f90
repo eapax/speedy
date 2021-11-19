@@ -60,7 +60,7 @@ subroutine agcm_1day(jday)
     integer :: istep
 
     if (iday==1) print *, ' start of year/month = ', iyear, imonth
-
+z§
     istep = 1 + (jday - 1) * nsteps
 
     ! 1. set forcing terms according to date
@@ -69,10 +69,8 @@ subroutine agcm_1day(jday)
     ! 2. set daily-average flux arrays to zero
     call ini_fluxes()
 
-
     ! 3. integrate the atmospheric model for 1 day
     call stloop(istep)
-
     
 
 
