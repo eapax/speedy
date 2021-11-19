@@ -27,7 +27,7 @@ program agcm_main
 
             
             ! 2.2 exchange data with coupler
-            call set_precision('rp_coupler')
+            !call set_precision('rp_coupler')
             call agcm_to_coupler(jday)            
             call coupler_to_agcm(jday)
             
