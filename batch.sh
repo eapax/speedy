@@ -33,12 +33,25 @@
 
 
 #10 year, 4CO2 breakdown run, coupling with a further breakdown around atm2sea
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNatm2land_10year                     010 2 SRoff52_cplA1              10year4CO2 > output/speedyoneCPL1.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNatm2sea_10year                      010 2 SRoff52_cplA2              10year4CO2 > output/speedyoneCPL2.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNland2atm_10year                     010 2 SRoff52_cplA3              10year4CO2 > output/speedyoneCPL3.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNsea2atm_10year                      010 2 SRoff52_cplA4              10year4CO2 > output/speedyoneCPL4.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateSST_10year                      010 2 SRoff52_cplA5              10year4CO2 > output/speedyoneCP5L.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateSEAICE_10year                   010 2 SRoff52_cplA6              10year4CO2 > output/speedyoneCPL6.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateANOM_10year                     010 2 SRoff52_cplA7              10year4CO2 > output/speedyoneCPL7.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateOCEAN_10year                    010 2 SRoff52_cplA8              10year4CO2 > output/speedyoneCPL8.out &
-nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateSEA5_10year                     010 2 SRoff52_cplA9              10year4CO2 > output/speedyoneCPL9.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNatm2land_10year                     010 2 SRoff52_cplA1              10year4CO2 > output/speedyoneCPL1.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNatm2sea_10year                      010 2 SRoff52_cplA2              10year4CO2 > output/speedyoneCPL2.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNland2atm_10year                     010 2 SRoff52_cplA3              10year4CO2 > output/speedyoneCPL3.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNsea2atm_10year                      010 2 SRoff52_cplA4              10year4CO2 > output/speedyoneCPL4.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateSST_10year                      010 2 SRoff52_cplA5              10year4CO2 > output/speedyoneCP5L.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateSEAICE_10year                   010 2 SRoff52_cplA6              10year4CO2 > output/speedyoneCPL6.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateANOM_10year                     010 2 SRoff52_cplA7              10year4CO2 > output/speedyoneCPL7.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateOCEAN_10year                    010 2 SRoff52_cplA8              10year4CO2 > output/speedyoneCPL8.out &
+# nohup time ./run.sh speedyoneCOUPLING_L2_50_RNinterpolateSEA5_10year                     010 2 SRoff52_cplA9              10year4CO2 > output/speedyoneCPL9.out &
+
+
+#10 year, 4CO2 breakdown run, agcm with further breakdown on stloop and fordate
+nohup time ./run.sh speedyoneAGCM_L2_50_RNfordate_10year                      010 2 SRoff52_agcmA               10year4CO2 > output/speedyoneagcmA.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNfordate1_10year                     010 2 SRoff52_agcmA1              10year4CO2 > output/speedyoneagcmA1.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNfordate2_10year                     010 2 SRoff52_agcmA2              10year4CO2 > output/speedyoneagcmA2.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNfordate3_10year                     010 2 SRoff52_agcmA3              10year4CO2 > output/speedyoneagcmA3.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNstloop_10year                       010 2 SRoff52_agcmB               10year4CO2 > output/speedyoneagcmB.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNstloop1_10year                      010 2 SRoff52_agcmB1              10year4CO2 > output/speedyoneagcmB1.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNstloop2_10year                      010 2 SRoff52_agcmB2              10year4CO2 > output/speedyoneagcmB2.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNstloop3_10year                      010 2 SRoff52_agcmB3              10year4CO2 > output/speedyoneagcmB3.out &
+nohup time ./run.sh speedyoneAGCM_L2_50_RNstloop4_10year                      010 2 SRoff52_agcmB4              10year4CO2 > output/speedyoneagcmB4.out &
+

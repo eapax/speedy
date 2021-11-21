@@ -96,6 +96,8 @@ module mod_fordate
             use mod_solar, only: sol_oz
             use humidity, only: q_sat
             use spectral, only: spec
+            use mod_prec, only: set_precision
+
 
             type(rpe_var), dimension(ix, il) :: corh, tsfc, tref, psfc
             type(rpe_var), dimension(ngp) :: qsfc, qref
@@ -110,6 +112,7 @@ module mod_fordate
 
             ! 1. daily-mean radiative forcing
             ! incoming solar radiation
+            call set_precision('rp_fordate1')
             call sol_oz(rpe_literal(tyear))
 
             ! total surface albedo
@@ -126,11 +129,13 @@ module mod_fordate
             end if
 
             ! 2. temperature correction term for horizontal diffusion
+            call set_precision('rp_fordate2')
             corh = gamlat * phis0
 
             call spec(corh,tcorh)
 
             ! 3. humidity correction term for horizontal diffusion
+            call set_precision('rp_fordate3')
             ij = 0
             do j = 1, il
                 do i = 1, ix

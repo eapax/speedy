@@ -42,7 +42,14 @@ module mod_prec
             rp_interpolate_seaice=52,&
             rp_interpolate_anomaly=52,&
             rp_interpolate_ocean=52,&
-            rp_sea5=52
+            rp_sea5=52,&
+            rp_fordate1=52,&
+            rp_fordate2=52,&
+            rp_fordate3=52,&
+            rp_stloop1=52,&
+            rp_stloop2=52,&
+            rp_stloop3=52,&
+            rp_stloop4=52
 
     
     namelist /precisions/ &
@@ -56,7 +63,10 @@ module mod_prec
             rp_coupler,rp_agcm,rp_interpolation,&
             rp_atm2land,rp_atm2sea,rp_land2atm,rp_sea2atm,&
             rp_fordate,rp_inifluxes,rp_stloop,&
-            rp_interpolate_SST, rp_interpolate_seaice, rp_interpolate_anomaly, rp_interpolate_ocean, rp_sea5
+            rp_interpolate_SST, rp_interpolate_seaice, rp_interpolate_anomaly, rp_interpolate_ocean, rp_sea5,&
+            rp_fordate1,rp_fordate2,rp_fordate3,&
+            rp_stloop1,rp_stloop2,rp_stloop3,rp_stloop4
+
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -150,6 +160,15 @@ module mod_prec
 
                 case('rp_fordate')
                 RPE_DEFAULT_SBITS = rp_fordate
+                
+                case('rp_fordate1')
+                RPE_DEFAULT_SBITS = rp_fordate1
+            
+                case('rp_fordate2')
+                RPE_DEFAULT_SBITS = rp_fordate2
+            
+                case('rp_fordate3')
+                RPE_DEFAULT_SBITS = rp_fordate3
 
 
                 case('rp_inifluxes')
@@ -157,6 +176,18 @@ module mod_prec
 
 
                 case('rp_stloop')
+                RPE_DEFAULT_SBITS = rp_stloop
+
+                case('rp_stloop1')
+                RPE_DEFAULT_SBITS = rp_stloop
+
+                case('rp_stloop2')
+                RPE_DEFAULT_SBITS = rp_stloop
+
+                case('rp_stloop3')
+                RPE_DEFAULT_SBITS = rp_stloop
+
+                case('rp_stloop4')
                 RPE_DEFAULT_SBITS = rp_stloop
 
 
