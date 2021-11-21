@@ -54,28 +54,36 @@ subroutine atm2sea(jday)
 
 
     ! 1. Climatological SST
+    call set_precision('rp_interpolate_SST')
     call forin5(ngp,imont1,tmonth,sst12,sstcl_ob)
     sstcl_ob_copy = sstcl_ob
+    call set_precision('rp_coupler')
+    
 
-    ! 2. Climatological sea ice fraction
-    call forint(ngp,imont1,tmonth,sice12,sicecl_ob)
 
     
+    ! 2. Climatological sea ice fraction
+    call set_precision('rp_interpolate_seaice')
+    call forint(ngp,imont1,tmonth,sice12,sicecl_ob)
+    call set_precision('rp_coupler')
+    
     ! 3. SST anomaly
+    call set_precision('rp_interpolate_anomaly')
     if (isstan>0) then
         if (iday==1 .and. jday>0) call OBS_SSTA
         call forint(ngp,2,tmonth,sstan3,sstan_ob)
     end if
-
+    call set_precision('rp_coupler')
 
     ! 4. Ocean model climatological SST
+    call set_precision('rp_interpolate_ocean')
     if (icsea>=3) then
         call forin5 (ngp,imont1,tmonth,sstom12,sstcl_om)
     end if
-
+    call set_precision('rp_coupler')
 
     ! 5. Adjust climatological fields over sea ice
-
+    call set_precision('rp_sea5')
     ! SST at freezing point
     sstfr = rpe_literal(273.2_dp)-rpe_literal(1.8_dp)
 
@@ -118,6 +126,7 @@ subroutine atm2sea(jday)
             vsea_input(:,8) = hfyearm(:)
         end if
         ! 3. Call message-passing routines to send data (if needed)
+        call set_precision('rp_coupler')
 end subroutine atm2sea
 
 subroutine sea2atm(jday)

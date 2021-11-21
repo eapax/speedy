@@ -37,8 +37,13 @@ module mod_prec
             rp_sea2atm=52,&
             rp_fordate=52,&
             rp_inifluxes=52,&
-            rp_stloop=52
-            
+            rp_stloop=52,&
+            rp_interpolate_SST=52,&
+            rp_interpolate_seaice=52,&
+            rp_interpolate_anomaly=52,&
+            rp_interpolate_ocean=52,&
+            rp_sea5=52
+
     
     namelist /precisions/ &
             RPE_ACTIVE, RPE_IEEE_HALF, RPE_STOCHASTIC, &
@@ -50,7 +55,8 @@ module mod_prec
             rp_prognostics, rp_tendencies,rp_half_bits,rp_default,&
             rp_coupler,rp_agcm,rp_interpolation,&
             rp_atm2land,rp_atm2sea,rp_land2atm,rp_sea2atm,&
-            rp_fordate,rp_inifluxes,rp_stloop
+            rp_fordate,rp_inifluxes,rp_stloop,&
+            rp_interpolate_SST, rp_interpolate_seaice, rp_interpolate_anomaly, rp_interpolate_ocean, rp_sea5
 
     ! Track previous precision
     integer :: rp_previous = 52
@@ -120,6 +126,24 @@ module mod_prec
 
                 case('rp_sea2atm')
                 RPE_DEFAULT_SBITS = rp_sea2atm
+
+
+                case('rp_interpolate_SST')
+                RPE_DEFAULT_SBITS = rp_interpolate_SST
+
+                case('rp_interpolate_seaice')
+                RPE_DEFAULT_SBITS = rp_interpolate_seaice
+
+                case('rp_interpolate_anomaly')
+                RPE_DEFAULT_SBITS = rp_interpolate_anomaly
+
+                case('rp_interpolate_ocean')
+                RPE_DEFAULT_SBITS = rp_interpolate_ocean
+
+                case('rp_sea5')
+                RPE_DEFAULT_SBITS = rp_sea5
+
+
 
                 !-agcm
 
