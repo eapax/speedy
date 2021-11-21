@@ -174,21 +174,20 @@ module mod_prec
                 case('rp_inifluxes')
                 RPE_DEFAULT_SBITS = rp_inifluxes
 
-
                 case('rp_stloop')
                 RPE_DEFAULT_SBITS = rp_stloop
 
                 case('rp_stloop1')
-                RPE_DEFAULT_SBITS = rp_stloop
+                RPE_DEFAULT_SBITS = rp_stloop1
 
                 case('rp_stloop2')
-                RPE_DEFAULT_SBITS = rp_stloop
+                RPE_DEFAULT_SBITS = rp_stloop2
 
                 case('rp_stloop3')
-                RPE_DEFAULT_SBITS = rp_stloop
+                RPE_DEFAULT_SBITS = rp_stloop3
 
                 case('rp_stloop4')
-                RPE_DEFAULT_SBITS = rp_stloop
+                RPE_DEFAULT_SBITS = rp_stloop4
 
 
 
