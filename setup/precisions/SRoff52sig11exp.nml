@@ -4,6 +4,5 @@
     RPE_IEEE_HALF=.false.,
     rp_half_bits=52,
     rp_agcm=52,
-    rp_coupler=52,
-    rp_interpolation=52
+    rp_coupler=52
 /
