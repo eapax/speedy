@@ -56,7 +56,32 @@
 # nohup time ./run.sh speedyoneAGCM_L2_50_RNstloop4_10year                      010 2 SRoff52_agcmB4              10year4CO2 > output/speedyoneagcmB4.out &
 
 #1 year, 4xCO2 RUN, with precipitation 
-nohup time ./run.sh speedyonePRECIP_L2_52_RN_1year            010 2 SRoff52           1year4CO2 > output/speedyonePRECIP-L2_52_RN_1year.out &
-nohup time ./run.sh speedyonePRECIP_L2_23_RN_1year            010 2 SRoff23           1year4CO2 > output/speedyonePRECIP-L2_23_RN_1year.out &
-nohup time ./run.sh speedyonePRECIP_L2_10_RN_1year            010 2 SRoff10           1year4CO2 > output/speedyonePRECIP-L2_10_RN_1year.out &
-nohup time ./run.sh speedyonePRECIP_L2_10_SR_1year            010 2 10                1year4CO2 > output/speedyonePRECIP-L2_10_SR_1year.out &
+#nohup time ./run.sh speedyonePRECIP_L2_52_RN_1year            010 2 SRoff52           1year4CO2 > output/speedyonePRECIP-L2_52_RN_1year.out &
+#nohup time ./run.sh speedyonePRECIP_L2_23_RN_1year            010 2 SRoff23           1year4CO2 > output/speedyonePRECIP-L2_23_RN_1year.out &
+#nohup time ./run.sh speedyonePRECIP_L2_10_RN_1year            010 2 SRoff10           1year4CO2 > output/speedyonePRECIP-L2_10_RN_1year.out &
+#nohup time ./run.sh speedyonePRECIP_L2_10_SR_1year            010 2 10                1year4CO2 > output/speedyonePRECIP-L2_10_SR_1year.out &
+
+
+
+#10 year ensemble run
+
+#Control
+for i in {0..4}
+do
+    nohup time ./run.sh speedyoneENSEMBLE_m$i_52_RN 01$i 2 SRoff52 10year4CO2 > speedyoneENSEMBLE_m$i_52_RN.out &
+done
+
+#Competitors
+for i in {5..9}
+do
+    nohup time ./run.sh speedyoneENSEMBLE_m$i_52_RN 01$i 2 SRoff52 10year4CO2 > speedyoneENSEMBLE_m$i_52_RN.out &
+    nohup time ./run.sh speedyoneENSEMBLE_m$i_23_RN 01$i 2 SRoff23 10year4CO2 > speedyoneENSEMBLE_m$i_23_RN.out &
+    nohup time ./run.sh speedyoneENSEMBLE_m$i_10_RN 01$i 2 SRoff10 10year4CO2 > speedyoneENSEMBLE_m$i_10_RN.out &
+    nohup time ./run.sh speedyoneENSEMBLE_m$i_10_SR 01$i 2 10      10year4CO2 > speedyoneENSEMBLE_m$i_10_SR.out &
+
+done
+
+
+
+
+
