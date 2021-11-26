@@ -370,8 +370,8 @@ module ppo_output_stream
         subroutine fetch_output_grid(varID, output, l_3d)
             use mod_fordate, only: alb_l, alb_s, albsfc, snowc
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
-            use mod_var_land, only: stl_am, soilw_am
-            use mod_var_sea, only: sst_am, ssti_om,sstcl_ob_copy,stlcl_ob_copy
+            use mod_var_land, only: stl_am, soilw_am,stlcl_ob_copy
+            use mod_var_sea, only: sst_am, ssti_om,sstcl_ob_copy
             use mod_surfcon, only: phis0, fmask1
 
             integer :: varID
