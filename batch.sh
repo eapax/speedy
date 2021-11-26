@@ -83,7 +83,7 @@
 
 
 #10 dayr run to get interpolated land fields
-nohup time ./run.sh speedyoneLAND_L2_52_RN_m1 011 2 SRoff52 10day4CO2 > output/speedyoneLAND_L2_52_RN_m1.out &
-nohup time ./run.sh speedyoneLAND_L2_10_RN_m1 011 2 SRoff10 10day4CO2 > output/speedyoneLAND_L2_10_RN_m1.out &
-nohup time ./run.sh speedyoneLAND_L2_10_SR_m1 011 2 10      10day4CO2 > output/speedyoneLAND_L2_10_SR_m1.out &
+nohup time ./run.sh speedyoneLAND_L2_52_RN_m1 011 2 SRoff52 10year4CO2 > output/speedyoneLAND_L2_52_RN_m1.out &
+nohup time ./run.sh speedyoneLAND_L2_10_RN_m1 011 2 SRoff10 10year4CO2 > output/speedyoneLAND_L2_10_RN_m1.out &
+nohup time ./run.sh speedyoneLAND_L2_10_SR_m1 011 2 10      10year4CO2 > output/speedyoneLAND_L2_10_SR_m1.out &
 
