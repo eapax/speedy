@@ -1213,9 +1213,6 @@ module ppo_output_stream
 
 
 
-                stlcl_ob_copy
-
-
                 case default
                 print *, 'Variable no.', varID, ' unavailable for output'
             end select
