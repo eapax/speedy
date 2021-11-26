@@ -40,6 +40,7 @@ subroutine atm2land(jday)
 
     ! Climatological land sfc. temperature
     call forin5(ngp,imont1,tmonth,stl12,stlcl_ob)
+    stlcl_ob_copy = stlcl_ob !make a copy for IO
 
     ! Climatological snow depth
     call forint(ngp,imont1,tmonth,snowd12,snowdcl_ob)

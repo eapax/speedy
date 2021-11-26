@@ -7,6 +7,7 @@ module mod_var_land
     ! Daily observed climatological fields over land
     ! Interpolated from climatological fields in cpl_land.atm2land
     type(rpe_var), allocatable :: stlcl_ob(:)     ! clim. land sfc. temperature
+    type(rpe_var), allocatable :: stlcl_ob_copy(:)     ! clim. land sfc. temperature
     type(rpe_var), allocatable :: snowdcl_ob(:)   ! clim. snow depth (water equiv)
     type(rpe_var), allocatable :: soilwcl_ob(:)   ! clim. soil water availability
 
@@ -21,6 +22,7 @@ module mod_var_land
     contains
         subroutine setup_var_land()
             allocate(stlcl_ob(ngp))
+            allocate(stlcl_ob_copy(ngp))
             allocate(snowdcl_ob(ngp))
             allocate(soilwcl_ob(ngp))
             allocate(stl_am(ngp))
@@ -31,6 +33,8 @@ module mod_var_land
 
         subroutine truncate_var_land()
             call apply_truncation(stlcl_ob)
+            call apply_truncation(stlcl_ob_copy)
+
             
             ! Denormal numbers at half precision but probably OK as zeros
             call apply_truncation(snowdcl_ob)

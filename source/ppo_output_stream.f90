@@ -371,7 +371,7 @@ module ppo_output_stream
             use mod_fordate, only: alb_l, alb_s, albsfc, snowc
             use mod_solar, only: fsol, ozone, ozupp, zenit, stratz
             use mod_var_land, only: stl_am, soilw_am
-            use mod_var_sea, only: sst_am, ssti_om,sstcl_ob_copy
+            use mod_var_sea, only: sst_am, ssti_om,sstcl_ob_copy,stlcl_ob_copy
             use mod_surfcon, only: phis0, fmask1
 
             integer :: varID
@@ -741,6 +741,15 @@ module ppo_output_stream
                 case(126)
                 output(:, 1) = sstcl_ob_copy
                 l_3d = .false.
+
+
+                ! sstcl_ob = Land surface temperature, component for forin5 investigation
+                case(127)
+                output(:, 1) = stlcl_ob_copy
+                l_3d = .false.
+
+
+
 
 
 
@@ -1193,6 +1202,18 @@ module ppo_output_stream
                 name = 'sstcl_ob'
                 units = 'unknown'
                 l_3d = .false.
+
+
+                ! stlcl_ob = Land surface temperature from the ocean model
+                case(127)
+                name = 'stlcl_ob'
+                units = 'unknown'
+                l_3d = .false.
+
+
+
+
+                stlcl_ob_copy
 
 
                 case default

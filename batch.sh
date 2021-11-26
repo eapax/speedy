@@ -64,21 +64,26 @@
 
 #10 year ensemble run
 
-#Control
-for i in {0..4}
-do
-nohup time ./run.sh speedyoneCONTROL_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCONTROL_L2_52_RN_m$i.out &
-done
+# #Control
+# for i in {0..4}
+# do
+# nohup time ./run.sh speedyoneCONTROL_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCONTROL_L2_52_RN_m$i.out &
+# done
 
 
-#Competitors
-for i in {5..9}
-do
-nohup time ./run.sh speedyoneCOMPETITOR_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCOMPETITOR_L2_52_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_23_RN_m$i 01$i 2 SRoff23 10year4CO2 > output/speedyoneCOMPETITOR_L2_23_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RN_m$i 01$i 2 SRoff10 10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_SR_m$i 01$i 2 10      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_SR_m$i.out &
-done
+# #Competitors
+# for i in {5..9}
+# do
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCOMPETITOR_L2_52_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_23_RN_m$i 01$i 2 SRoff23 10year4CO2 > output/speedyoneCOMPETITOR_L2_23_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RN_m$i 01$i 2 SRoff10 10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_SR_m$i 01$i 2 10      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_SR_m$i.out &
+# done
 
 
+
+#10 dayr run to get interpolated land fields
+nohup time ./run.sh speedyoneLAND_L2_52_RN_m1 011 2 SRoff52 10day4CO2 > output/speedyoneLAND_L2_52_RN_m1.out &
+nohup time ./run.sh speedyoneLAND_L2_10_RN_m1 011 2 SRoff10 10day4CO2 > output/speedyoneLAND_L2_10_RN_m1.out &
+nohup time ./run.sh speedyoneLAND_L2_10_SR_m1 011 2 10      10day4CO2 > output/speedyoneLAND_L2_10_SR_m1.out &
 
