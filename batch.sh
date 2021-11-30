@@ -82,8 +82,18 @@
 
 
 
-#10 dayr run to get interpolated land fields
-nohup time ./run.sh speedyoneLAND_L2_52_RN_m1 011 2 SRoff52 10year4CO2 > output/speedyoneLAND_L2_52_RN_m1.out &
-nohup time ./run.sh speedyoneLAND_L2_10_RN_m1 011 2 SRoff10 10year4CO2 > output/speedyoneLAND_L2_10_RN_m1.out &
-nohup time ./run.sh speedyoneLAND_L2_10_SR_m1 011 2 10      10year4CO2 > output/speedyoneLAND_L2_10_SR_m1.out &
+# #10 year run to get interpolated land fields
+# nohup time ./run.sh speedyoneLAND_L2_52_RN_m1 011 2 SRoff52 10year4CO2 > output/speedyoneLAND_L2_52_RN_m1.out &
+# nohup time ./run.sh speedyoneLAND_L2_10_RN_m1 011 2 SRoff10 10year4CO2 > output/speedyoneLAND_L2_10_RN_m1.out &
+# nohup time ./run.sh speedyoneLAND_L2_10_SR_m1 011 2 10      10year4CO2 > output/speedyoneLAND_L2_10_SR_m1.out &
 
+
+
+#10 year ensemble run extras
+#Also do a low precision run, but with the coupling done in high precision
+#Competitors
+for i in {5..9}
+do
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNMOD_m$i 01$i 2 SRoff10MOD 10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNMOD_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_SRMOD_m$i 01$i 2 10MOD      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_SRMOD_m$i.out &
+done
