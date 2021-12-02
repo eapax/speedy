@@ -97,5 +97,7 @@ do
 nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNinit_m$i    01$i 2 SRoff10_init    10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNinit_m$i.out &
 nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNagcm_m$i    01$i 2 SRoff10_agcm    10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNagcm_m$i.out &
 nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNcoupler_m$i 01$i 2 SRoff10_coupler 10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNcoupler_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNcheck_m$i   01$i 2 SRoff10_check   10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNcheck_m$i.out &
+
 
 done
