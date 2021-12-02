@@ -90,10 +90,12 @@
 
 
 #10 year ensemble run extras
-#Also do a low precision run, but with the coupling done in high precision
+#Also do a low precision run, but with a breakdown by sector
 #Competitors
 for i in {5..9}
 do
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNMOD_m$i 01$i 2 SRoff10MOD 10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNMOD_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_SRMOD_m$i 01$i 2 10MOD      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_SRMOD_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNinit_m$i    01$i 2 SRoff10_init    10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNinit_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNagcm_m$i    01$i 2 SRoff10_agcm    10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNagcm_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNcoupler_m$i 01$i 2 SRoff10_coupler 10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNcoupler_m$i.out &
+
 done
