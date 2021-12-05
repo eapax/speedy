@@ -41,10 +41,13 @@ subroutine step(j1,j2,dt,alph,rob,wil)
 
     ! 1. Computation of grid-point tendencies
     ! (converted to spectral at the end of GRTEND)
-    
+    call set_precision('rp_stloop1')
     call grtend(vordt,divdt,tdt,psdt,trdt,1,j2)
+    call set_precision('rp_step')
     
     ! 2. Computation of spectral tendencies
+    call set_precision('rp_stloop2')
+
     
     if (alph==rpe_literal(0.0_dp)) then
         call sptend(divdt,tdt,psdt,j2)
@@ -60,10 +63,10 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     psdt = psdt * (1.0_dp/3600.0_dp)
     trdt = trdt * (1.0_dp/3600.0_dp)
 
-   
+    call set_precision('rp_step')
 
     ! 3. Horizontal diffusion
-    
+    call set_precision('rp_stloop3')
 
     ! 3.1 Diffusion of wind and temperature
     call hordif(kx,vor,vordt,dmp, dmp1)
@@ -96,12 +99,13 @@ subroutine step(j1,j2,dt,alph,rob,wil)
             call hordif(kx,tr(:,:,:,1,itr),trdt(:,:,:,itr),dmp,dmp1)
         enddo
     endif
-   
+    call set_precision('rp_step')
 
     ! 4. Time integration with Robert filter
 
     if (dt<=rpe_literal(0.0_dp)) return
 
+    call set_precision('rp_stloop4')
 
     call apply_truncation(psdt)
     call apply_truncation(vordt)
@@ -109,7 +113,11 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     call apply_truncation(tdt)
     call apply_truncation(trdt)
     
-    
+    !end
+    call set_precision('rp_step')
+
+    !next
+    call set_precision('rp_stloop5')
 
     if (j1==1) then
         eps = 0.0_dp
@@ -129,6 +137,9 @@ subroutine step(j1,j2,dt,alph,rob,wil)
     do itr=1,ntr
         call timint(j1,dt,eps,wil,kx,tr(:,:,:,1,itr),trdt(:,:,:,itr))
     enddo
+
+    call set_precision('rp_step')
+
 
 end subroutine step
 

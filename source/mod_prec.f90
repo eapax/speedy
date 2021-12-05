@@ -49,7 +49,9 @@ module mod_prec
             rp_stloop1=52,&
             rp_stloop2=52,&
             rp_stloop3=52,&
-            rp_stloop4=52
+            rp_stloop4=52,&
+            rp_step = 52,&
+            rp_stloop5=52
 
     
     namelist /precisions/ &
@@ -65,7 +67,7 @@ module mod_prec
             rp_fordate,rp_inifluxes,rp_stloop,&
             rp_interpolate_SST, rp_interpolate_seaice, rp_interpolate_anomaly, rp_interpolate_ocean, rp_sea5,&
             rp_fordate1,rp_fordate2,rp_fordate3,&
-            rp_stloop1,rp_stloop2,rp_stloop3,rp_stloop4
+            rp_stloop1,rp_stloop2,rp_stloop3,rp_stloop4,rp_step,rp_stloop5
 
 
     ! Track previous precision
@@ -177,6 +179,9 @@ module mod_prec
                 case('rp_stloop')
                 RPE_DEFAULT_SBITS = rp_stloop
 
+                case('rp_step')
+                RPE_DEFAULT_SBITS = rp_stloop
+
                 case('rp_stloop1')
                 RPE_DEFAULT_SBITS = rp_stloop1
 
@@ -187,6 +192,9 @@ module mod_prec
                 RPE_DEFAULT_SBITS = rp_stloop3
 
                 case('rp_stloop4')
+                RPE_DEFAULT_SBITS = rp_stloop4
+
+                case('rp_stloop5')
                 RPE_DEFAULT_SBITS = rp_stloop4
 
 
