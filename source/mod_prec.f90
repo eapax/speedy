@@ -180,7 +180,7 @@ module mod_prec
                 RPE_DEFAULT_SBITS = rp_stloop
 
                 case('rp_step')
-                RPE_DEFAULT_SBITS = rp_stloop
+                RPE_DEFAULT_SBITS = rp_step
 
                 case('rp_stloop1')
                 RPE_DEFAULT_SBITS = rp_stloop1
@@ -195,7 +195,7 @@ module mod_prec
                 RPE_DEFAULT_SBITS = rp_stloop4
 
                 case('rp_stloop5')
-                RPE_DEFAULT_SBITS = rp_stloop4
+                RPE_DEFAULT_SBITS = rp_stloop5
 
 
 
