@@ -103,19 +103,28 @@
 #10 year ensemble run extras extras
 #Also do a low precision run, but with a further breakdown by sector to explore the agcm effects
 #Competitors
+# for i in {5..9}
+# do
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNfordate_m$i       01$i 2 SRoff10_fordate      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNfordate_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNinifluxes_m$i     01$i 2 SRoff10_inifluxes    10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNinifluxes_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop_m$i        01$i 2 SRoff10_stloop       10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstep_m$i          01$i 2 SRoff10_step         10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstep_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop1_m$i       01$i 2 SRoff10_stloop1      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop1_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop2_m$i       01$i 2 SRoff10_stloop2      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop2_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop3_m$i       01$i 2 SRoff10_stloop3      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop3_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop4_m$i       01$i 2 SRoff10_stloop4      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop4_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop5_m$i       01$i 2 SRoff10_stloop5      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop5_m$i.out &
+
+
+
+
+# done
+
+
+#10 year ensemble run extras
+#Do one more check with agcm and cpl at high prec.
+#Competitors
 for i in {5..9}
 do
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNfordate_m$i       01$i 2 SRoff10_fordate      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNfordate_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNinifluxes_m$i     01$i 2 SRoff10_inifluxes    10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNinifluxes_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop_m$i        01$i 2 SRoff10_stloop       10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstep_m$i          01$i 2 SRoff10_step         10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstep_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop1_m$i       01$i 2 SRoff10_stloop1      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop1_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop2_m$i       01$i 2 SRoff10_stloop2      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop2_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop3_m$i       01$i 2 SRoff10_stloop3      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop3_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop4_m$i       01$i 2 SRoff10_stloop4      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop4_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNstloop5_m$i       01$i 2 SRoff10_stloop5      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNstloop5_m$i.out &
-
-
-
-
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNchecklite_m$i   01$i 2 SRoff10_checklite   10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNchecklite_m$i.out &
 done
