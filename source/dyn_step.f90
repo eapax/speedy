@@ -218,40 +218,38 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
 
 
     ! ! Turn off williams filter
-    ! do k=1,nlev
-    !     do n=1,nx
-    !         do m=1,mx
-                
-    !             fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
-    !             field(m,n,k,1) = field(m,n,k,j1)
-                
-    !             ! and here comes Williams' innovation to the filter
-    !             field(m,n,k,2) = fnew(m,n) -eps*(field(m,n,k,1)&
-    !                &-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n)) 
-                
-    !         end do
-    !     end do
-    ! end do
-
-
-
-
-
-    ! Turn off williams filter AND make the parameters explicit doubles
     do k=1,nlev
         do n=1,nx
             do m=1,mx
                 
-                fnew (m,n)     = field(m,n,k,1) + 4800.0_dp*fdt(m,n,k)
-                field(m,n,k,1) = field(m,n,k,j1)
-                
+                fnew (m,n)     = field(m,n,k,1) + dt*fdt(m,n,k)
+                field(m,n,k,1) = field(m,n,k,j1) + eps*(field(m,n,k,1)-rpe_literal(2.0_dp)*field(m,n,k,j1)+fnew(m,n)) 
+
                 ! and here comes Williams' innovation to the filter
-                field(m,n,k,2) = fnew(m,n) -0.050_dp*(field(m,n,k,1)&
-                   &-2.0_dp *field(m,n,k,j1)+fnew(m,n)) 
+                field(m,n,k,2) = fnew(m,n) 
                 
             end do
         end do
     end do
+
+
+
+
+    ! ! Turn off williams filter AND make the parameters explicit doubles
+    ! do k=1,nlev
+    !     do n=1,nx
+    !         do m=1,mx
+                
+    !             fnew (m,n)     = field(m,n,k,1) + 4800.0_dp*fdt(m,n,k)
+    !             field(m,n,k,1) = field(m,n,k,j1)
+                
+    !             ! and here comes Williams' innovation to the filter
+    !             field(m,n,k,2) = fnew(m,n) -0.050_dp*(field(m,n,k,1)&
+    !                &-2.0_dp *field(m,n,k,j1)+fnew(m,n)) 
+                
+    !         end do
+    !     end do
+    ! end do
 
 
 
