@@ -183,7 +183,7 @@ subroutine timint(j1,dt,eps,wil,nlev,field,fdt)
     integer, intent(in) :: j1, nlev
     type(rpe_var), intent(in) :: dt, eps, wil
     type(rpe_complex_var), intent(in) :: fdt(mx,nx,nlev)
-    type(RPE_DOUBLE_KIND), intent(inout) :: field(mx,nx,nlev,2)
+    REAL(KIND=RPE_DOUBLE_KIND), intent(inout) :: field(mx,nx,nlev,2)
     type(rpe_var) :: eps2
     type(rpe_complex_var) :: fnew(mx,nx)
     integer :: k, n, m

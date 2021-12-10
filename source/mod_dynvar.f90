@@ -15,7 +15,7 @@ module mod_dynvar
     type(rpe_complex_var), allocatable :: div(:,:,:,:)
 
     ! Absolute temperature
-    type(RPE_DOUBLE_KIND), allocatable :: t(:,:,:,:)
+    REAL(KIND=RPE_DOUBLE_KIND), allocatable :: t(:,:,:,:)
 
     ! Copy of Absolute temperature used for debugging
     type(rpe_complex_var), allocatable :: tcopy(:,:,:,:)
