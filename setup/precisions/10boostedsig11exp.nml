@@ -1,6 +1,6 @@
 &precisions
     RPE_ACTIVE=.true.,
-    RPE_STOCHASTIC=.false.,
+    RPE_STOCHASTIC=.true.,
     RPE_IEEE_HALF=.false.,
     rp_half_bits=10,
     rp_agcm=10,
@@ -9,9 +9,10 @@
     rp_inifluxes=10,
     rp_stloop=10,
     rp_step=10,
-    rp_stloop1=52,
+    rp_stloop1=10,
     rp_stloop2=10,
     rp_stloop3=10,
     rp_stloop4=10,
-    rp_stloop5=52,
+    rp_stloop5=52
 /
+
