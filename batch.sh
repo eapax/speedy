@@ -132,22 +132,44 @@
 
 
 
-#1 year ensemble run with williams filter turned off
+# #1 year ensemble run with williams filter turned off
+
+# #Control
+# # #Control
+# for i in {0..4}
+# do
+# nohup time ./run.sh speedyoneCONTRORA_L2_52_RN_m$i 01$i 2 SRoff52 1year4CO2 > output/speedyoneCONTROLRA_L2_52_RN_m$i.out &
+# done
+
+
+# #Competitors
+# for i in {5..9}
+# do
+# nohup time ./run.sh speedyoneCOMPETITORRA_L2_52_RN_m$i           01$i 2 SRoff52           1year4CO2 > output/speedyoneCOMPETITORRA_L2_52_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA_L2_10_RN_m$i           01$i 2 SRoff10           1year4CO2 > output/speedyoneCOMPETITORRA_L2_10_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA_L2_10_SR_m$i           01$i 2 10                1year4CO2 > output/speedyoneCOMPETITORRA_L2_10_SR_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA_L2_10_RNstloop5_m$i    01$i 2 SRoff10_stloop5   1year4CO2 > output/speedyoneCOMPETITORRA_L2_10_RNstloop5_m$i.out &
+
+# done
+
+
+
+#1 year ensemble run with timeint() modifications to explore truncation theory. H1 = hypothesis one
 
 #Control
 # #Control
 for i in {0..4}
 do
-nohup time ./run.sh speedyoneCONTRORA_L2_52_RN_m$i 01$i 2 SRoff52 1year4CO2 > output/speedyoneCONTROLRA_L2_52_RN_m$i.out &
+nohup time ./run.sh speedyoneCONTROLH1_L2_52_RN_m$i 01$i 2 SRoff52 1year4CO2 > output/speedyoneCONTROLH1_L2_52_RN_m$i.out &
 done
 
 
 #Competitors
 for i in {5..9}
 do
-nohup time ./run.sh speedyoneCOMPETITORRA_L2_52_RN_m$i           01$i 2 SRoff52           1year4CO2 > output/speedyoneCOMPETITORRA_L2_52_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA_L2_10_RN_m$i           01$i 2 SRoff10           1year4CO2 > output/speedyoneCOMPETITORRA_L2_10_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA_L2_10_SR_m$i           01$i 2 10                1year4CO2 > output/speedyoneCOMPETITORRA_L2_10_SR_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA_L2_10_RNstloop5_m$i    01$i 2 SRoff10_stloop5   1year4CO2 > output/speedyoneCOMPETITORRA_L2_10_RNstloop5_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORH1_L2_52_RN_m$i           01$i 2 SRoff52           1year4CO2 > output/speedyoneCOMPETITORH1_L2_52_RN_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORH1_L2_10_RN_m$i           01$i 2 SRoff10           1year4CO2 > output/speedyoneCOMPETITORH1_L2_10_RN_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORH1_L2_10_SR_m$i           01$i 2 10                1year4CO2 > output/speedyoneCOMPETITORH1_L2_10_SR_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORH1_L2_10_RNstloop5_m$i    01$i 2 SRoff10_stloop5   1year4CO2 > output/speedyoneCOMPETITORH1_L2_10_RNstloop5_m$i.out &
 
 done
