@@ -180,11 +180,11 @@
 #Competitors
 for i in {5..9}
 do
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNboosted_m$i       01$i 2 SRoff10_boosted      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNboosted_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_SRboosted_m$i       01$i 2 10_boosted           10year4CO2 > output/speedyoneCOMPETITOR_L2_10_SRboosted_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNBstloop1_m$i       01$i 2 SRoff10_stloop1      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNBstloop1_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNBstloop2_m$i       01$i 2 SRoff10_stloop2      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNBstloop2_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNBstloop3_m$i       01$i 2 SRoff10_stloop3      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNBstloop3_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNboosted_m$i       01$i 2 SRoff10boosted      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNboosted_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITOR_L2_10_SRboosted_m$i       01$i 2 10boosted           10year4CO2 > output/speedyoneCOMPETITOR_L2_10_SRboosted_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNBstloop1_m$i       01$i 2 SRoff10_stloop1      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNBstloop1_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNBstloop2_m$i       01$i 2 SRoff10_stloop2      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNBstloop2_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITOR_L2_10_RNBstloop3_m$i       01$i 2 SRoff10_stloop3      10year4CO2 > output/speedyoneCOMPETITOR_L2_10_RNBstloop3_m$i.out &
 
 
 done
