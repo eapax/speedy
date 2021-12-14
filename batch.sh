@@ -194,21 +194,28 @@
 
 #Control
 # #Control
-for i in {0..4}
-do
-nohup time ./run.sh speedyoneCONTRORA10y_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCONTROLRA_L2_52_RN_m$i.out &
-done
+# for i in {0..4}
+# do
+# nohup time ./run.sh speedyoneCONTRORA10y_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCONTROLRA_L2_52_RN_m$i.out &
+# done
 
 
-#Competitors
-for i in {5..9}
-do
-nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_52_RN_m$i           01$i 2 SRoff52           10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_52_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RN_m$i           01$i 2 SRoff10           10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_SR_m$i           01$i 2 10                10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_SR_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RNstloop5_m$i    01$i 2 SRoff10_stloop5   10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RNstloop5_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RNstloop_m$i    01$i 2 SRoff10_stloop   10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RNstloop_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RNcpl_m$i    01$i 2 SRoff10_coupler   10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RNcpl_m$i.out &
+# #Competitors
+# for i in {5..9}
+# do
+# nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_52_RN_m$i           01$i 2 SRoff52           10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_52_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RN_m$i           01$i 2 SRoff10           10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RN_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_SR_m$i           01$i 2 10                10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_SR_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RNstloop5_m$i    01$i 2 SRoff10_stloop5   10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RNstloop5_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RNstloop_m$i    01$i 2 SRoff10_stloop   10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RNstloop_m$i.out &
+# nohup time ./run.sh speedyoneCOMPETITORRA10y_L2_10_RNcpl_m$i    01$i 2 SRoff10_coupler   10year4CO2 > output/speedyoneCOMPETITORRA10y_L2_10_RNcpl_m$i.out &
 
 
-done
+# done
+
+
+#Try a corrected williams filter
+
+nohup time ./run.sh speedyoneWILLIAMS_L2_52_RN   010 2 SRoff52               1year4CO2 > output/speedyoneWILLIAMS52.out &
+nohup time ./run.sh speedyoneWILLIAMS_L2_10_RN   010 2 SRoff10               1year4CO2 > output/speedyoneWILLIAMS10.out &
+nohup time ./run.sh speedyoneWILLIAMS_L2_10_SR   010 2 10                    1year4CO2 > output/speedyoneWILLIAMS10SR.out &
