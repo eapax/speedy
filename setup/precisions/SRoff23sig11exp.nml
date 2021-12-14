@@ -2,5 +2,16 @@
     RPE_ACTIVE=.true.,
     RPE_STOCHASTIC=.false.,
     RPE_IEEE_HALF=.false.,
-    rp_half_bits=23
+    rp_half_bits=23,
+    rp_agcm=23,
+    rp_coupler=23,
+    rp_fordate=23,
+    rp_inifluxes=23,
+    rp_stloop=23,
+    rp_step=23,
+    rp_stloop1=23,
+    rp_stloop2=23,
+    rp_stloop3=23,
+    rp_stloop4=23,
+    rp_stloop5=23
 /

@@ -216,6 +216,7 @@
 
 #Try a corrected williams filter
 
-nohup time ./run.sh speedyoneWILLIAMS_L2_52_RN   010 2 SRoff52               1year4CO2 > output/speedyoneWILLIAMS52.out &
-nohup time ./run.sh speedyoneWILLIAMS_L2_10_RN   010 2 SRoff10               1year4CO2 > output/speedyoneWILLIAMS10.out &
-nohup time ./run.sh speedyoneWILLIAMS_L2_10_SR   010 2 10                    1year4CO2 > output/speedyoneWILLIAMS10SR.out &
+nohup time ./run.sh speedyoneWILLIAMS_L2_52_RN_10y   010 2 SRoff52               10year4CO2 > output/speedyoneWILLIAMS52_10y.out &
+nohup time ./run.sh speedyoneWILLIAMS_L2_10_RN_10y   010 2 SRoff23               10year4CO2 > output/speedyoneWILLIAMS10_10y.out &
+nohup time ./run.sh speedyoneWILLIAMS_L2_10_RN_10y   010 2 SRoff10               10year4CO2 > output/speedyoneWILLIAMS10_10y.out &
+nohup time ./run.sh speedyoneWILLIAMS_L2_10_SR_10y   010 2 10                    10year4CO2 > output/speedyoneWILLIAMS10SR_10y.out &
