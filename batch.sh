@@ -235,26 +235,26 @@
 #Control
 for i in {0..4}
 do
-nohup time ./run.sh speedyoneCONTROLW_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCONTROLW_L2_52_RN_m$i.out &
+nohup time ./run.sh speedyoneCONTROLTRUNC_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCONTROLTRUNC_L2_52_RN_m$i.out &
 done
 
 
 #Competitors
 for i in {5..9}
 do
-nohup time ./run.sh speedyoneCOMPETITORW_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCOMPETITORW_L2_52_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_23_RN_m$i 01$i 2 SRoff23 10year4CO2 > output/speedyoneCOMPETITORW_L2_23_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_RN_m$i 01$i 2 SRoff10 10year4CO2 > output/speedyoneCOMPETITORW_L2_10_RN_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SR_m$i 01$i 2 10      10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SR_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_52_RN_m$i 01$i 2 SRoff52 10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_52_RN_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_23_RN_m$i 01$i 2 SRoff23 10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_23_RN_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_10_RN_m$i 01$i 2 SRoff10 10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_10_RN_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_10_SR_m$i 01$i 2 10      10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_10_SR_m$i.out &
 
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_RNstloop_m$i        01$i 2 SRoff10_stloop                 10year4CO2 > output/speedyoneCOMPETITORW_L2_10_RNstloop_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_RNstloop5_m$i       01$i 2 SRoff10_stloop5               10year4CO2 > output/speedyoneCOMPETITORW_L2_10_RNstloop5_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_RNcoupler_m$i       01$i 2 SRoff10_coupler               10year4CO2 > output/speedyoneCOMPETITORW_L2_10_RNcoupler_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_RNcplstloop5_m$i    01$i 2 SRoff10_cpl_stloop5           10year4CO2 > output/speedyoneCOMPETITORW_L2_10_RNcpl_stloop5_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_10_RNstloop_m$i        01$i 2 SRoff10_stloop                 10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_10_RNstloop_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_10_RNstloop5_m$i       01$i 2 SRoff10_stloop5               10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_10_RNstloop5_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_10_RNcoupler_m$i       01$i 2 SRoff10_coupler               10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_10_RNcoupler_m$i.out &
+nohup time ./run.sh speedyoneCOMPETITORTRUNC_L2_10_RNcplstloop5_m$i    01$i 2 SRoff10_cpl_stloop5           10year4CO2 > output/speedyoneCOMPETITORTRUNC_L2_10_RNcpl_stloop5_m$i.out &
 
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRstloop_m$i        01$i 2 10_stloop                10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRstloop_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRstloop5_m$i       01$i 2 10_stloop5               10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRstloop5_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRcoupler_m$i       01$i 2 10_coupler               10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRcoupler_m$i.out &
-nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRcplstloop5_m$i    01$i 2 10_cpl_stloop5           10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRcpl_stloop5_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRstloop_m$i        01$i 2 10_stloop                10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRstloop_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRstloop5_m$i       01$i 2 10_stloop5               10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRstloop5_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRcoupler_m$i       01$i 2 10_coupler               10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRcoupler_m$i.out &
+#nohup time ./run.sh speedyoneCOMPETITORW_L2_10_SRcplstloop5_m$i    01$i 2 10_cpl_stloop5           10year4CO2 > output/speedyoneCOMPETITORW_L2_10_SRcpl_stloop5_m$i.out &
 
 done

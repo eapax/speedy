@@ -39,6 +39,8 @@ subroutine truncate_rp()
 
     use spectral, only: truncate_spectral
 
+    use mod_dynvar, only: t
+
     call set_precision('Half') !Sets global precision for entire model
 
 
@@ -86,5 +88,10 @@ subroutine truncate_rp()
     call truncate_suflux()
     call truncate_vdifsc()
     call truncate_sppt()
+
+
+
+    !Extra truncations added in for debugging by TK 04/01/22
+    call apply_truncation(t)
 
 end subroutine truncate_rp
