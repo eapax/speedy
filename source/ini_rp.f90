@@ -93,6 +93,6 @@ subroutine truncate_rp()
 
 
     !Extra truncations added in for debugging by TK 04/01/22
-    call apply_truncation(t)
+    !call apply_truncation(t)
 
 end subroutine truncate_rp

@@ -5,3 +5,11 @@ Please see the original repo and references therein.
 
 Changes in this fork compared to the original can be seen via the [draft PR](https://github.com/eapax/speedy/pull/1/files)
 
+
+ \begin{itemize}
+ 	\item Weighting by same latitude bug
+ 	\item Wrong integrator
+     \item geopotential dont plus/minus
+     \item 
+
+ \end{itemize}
