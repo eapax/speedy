@@ -255,4 +255,4 @@
 # done
 
 #Quick test re runtime and IO
-nohup time ./run.sh speedyone10day_L2_52_RN_m$i 01$i 2 SRoff52 10day4CO2 > output/speedyone10day_L2_52_RN_m$i.out &
+nohup time ./run.sh speedyone10day_L2_52_RN_m0 010 2 SRoff52 10day4CO2 > output/speedyone10day_L2_52_RN_m$i.out &
