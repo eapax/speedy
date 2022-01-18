@@ -39,8 +39,8 @@ subroutine truncate_rp()
 
     use spectral, only: truncate_spectral
 
-    use rp_emulator
-    use mod_dynvar, only: t
+   ! use rp_emulator
+  !  use mod_dynvar, only: t
 
     call set_precision('Half') !Sets global precision for entire model
 
