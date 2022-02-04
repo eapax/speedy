@@ -53,6 +53,9 @@ subroutine restart(jday)
 
         read (3,end=200) yyyy, mm, dd, hh
 
+        print *, filename, yyyy,mm,dd,hh
+        STOP
+
         if (yyyy/=iyear .or. mm/=imonth .or. dd/=iday .or. hh/=ihour) then
             print *, iyear, imonth, iday, ihour
             print *, yyyy, mm, dd, hh
