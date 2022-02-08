@@ -1,0 +1,20 @@
+&output
+    nstreams=1,
+/
+
+&output_file
+    filename='model_output',
+    spectral=.false.,
+    plevs=.true.,
+    nstpinc=13140,
+    nstpout=13140,
+    nstpopen=13140,
+    nvars=14,
+/
+
+&variables
+    var_ids=3,31,32, 45
+            101,103,105,106,109,113
+            124,125,126,127
+/
+/

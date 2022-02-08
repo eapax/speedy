@@ -255,4 +255,6 @@
 # done
 
 
-nohup time ./run.sh TESTSR 015 2 10      100year4CO2 > output/TESTSR.out &
+nohup time ./run.sh speedyone100yr_L2_52_RN_m5 015 2 SRoff52 100year4CO2 > output/speedyone100yr_L2_52_RN_m5.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m5 015 2 10      100year4CO2 > output/speedyone100yr_L2_10_SR_m5.out &
+
