@@ -1,0 +1,39 @@
+[I 2022-02-07 11:38:52.825 ServerApp] jupyterlab | extension was successfully linked.
+[I 2022-02-07 11:38:55.410 ServerApp] nbclassic | extension was successfully linked.
+[I 2022-02-07 11:38:55.743 ServerApp] nbclassic | extension was successfully loaded.
+[I 2022-02-07 11:38:55.747 LabApp] JupyterLab extension loaded from /home/kimpson/miniconda3/envs/ML/lib/python3.8/site-packages/jupyterlab
+[I 2022-02-07 11:38:55.747 LabApp] JupyterLab application directory is /home/kimpson/miniconda3/envs/ML/share/jupyter/lab
+[I 2022-02-07 11:38:55.754 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2022-02-07 11:38:55.755 ServerApp] Serving notebooks from local directory: /network/aopp/chaos/pred/kimpson/speedy-1/jupyter_notebooks
+[I 2022-02-07 11:38:55.755 ServerApp] Jupyter Server 1.11.2 is running at:
+[I 2022-02-07 11:38:55.755 ServerApp] http://localhost:9170/lab
+[I 2022-02-07 11:38:55.755 ServerApp]  or http://127.0.0.1:9170/lab
+[I 2022-02-07 11:38:55.755 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 2022-02-07 11:41:52.036 ServerApp] 302 GET / (::1) 1.76ms
+[I 2022-02-07 11:41:52.084 LabApp] 302 GET /lab? (::1) 2.23ms
+[I 2022-02-07 11:41:56.413 ServerApp] 302 POST /login?next=%2Flab%3F (::1) 2.85ms
+[W 2022-02-07 11:42:01.581 LabApp] Could not determine jupyterlab build status without nodejs
+[W 2022-02-07 11:43:11.345 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1/100_year_runs/Fig1-Williams-Copy1.ipynb?content=0&1644234190572 (::1): No such file or directory: SpeedyOne/Clean/Ox1/100_year_runs/Fig1-Williams-Copy1.ipynb
+[W 2022-02-07 11:43:11.345 ServerApp] No such file or directory: SpeedyOne/Clean/Ox1/100_year_runs/Fig1-Williams-Copy1.ipynb
+[W 2022-02-07 11:43:11.346 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1/100_year_runs/Fig1-Williams-Copy1.ipynb?content=0&1644234190572 (::1) 5.84ms referer=http://localhost:8884/lab?
+[W 2022-02-07 11:43:11.346 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1/Fig5a-WDT-boosted-Williams-with-truncation.ipynb?content=0&1644234190573 (::1): No such file or directory: SpeedyOne/Clean/Ox1/Fig5a-WDT-boosted-Williams-with-truncation.ipynb
+[W 2022-02-07 11:43:11.346 ServerApp] No such file or directory: SpeedyOne/Clean/Ox1/Fig5a-WDT-boosted-Williams-with-truncation.ipynb
+[W 2022-02-07 11:43:11.346 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1/Fig5a-WDT-boosted-Williams-with-truncation.ipynb?content=0&1644234190573 (::1) 5.38ms referer=http://localhost:8884/lab?
+[W 2022-02-07 11:43:11.347 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1/100_year_runs/scriptsV2.py?content=0&1644234190573 (::1): No such file or directory: SpeedyOne/Clean/Ox1/100_year_runs/scriptsV2.py
+[W 2022-02-07 11:43:11.347 ServerApp] No such file or directory: SpeedyOne/Clean/Ox1/100_year_runs/scriptsV2.py
+[W 2022-02-07 11:43:11.348 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1/100_year_runs/scriptsV2.py?content=0&1644234190573 (::1) 5.94ms referer=http://localhost:8884/lab?
+[W 2022-02-07 11:43:11.999 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1?1644234191973 (::1): No such file or directory: SpeedyOne/Clean/Ox1
+[W 2022-02-07 11:43:12.000 ServerApp] No such file or directory: SpeedyOne/Clean/Ox1
+[W 2022-02-07 11:43:12.001 ServerApp] 404 GET /api/contents/SpeedyOne/Clean/Ox1?1644234191973 (::1) 2.83ms referer=http://localhost:8884/lab?
+[I 2022-02-07 11:43:13.612 ServerApp] Creating new notebook in 
+[I 2022-02-07 11:43:14.418 ServerApp] Kernel started: 98419025-4234-4001-9fba-905e31603ff6
+[I 2022-02-07 11:43:50.582 ServerApp] Creating new file in 
+[I 2022-02-07 11:44:02.944 ServerApp] Saving file at /Untitled.ipynb
+[I 2022-02-07 11:44:08.582 ServerApp] Saving file at /scripts.py
+[I 2022-02-07 11:44:08.775 ServerApp] Saving file at /scripts.py
+[I 2022-02-07 11:46:05.006 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-07 11:48:05.126 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-07 11:50:13.813 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-07 11:52:14.036 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-07 11:54:16.624 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-07 13:22:13.033 ServerApp] Starting buffering for 98419025-4234-4001-9fba-905e31603ff6:7930e843-49be-4566-ad36-8eb7c0e2f820
