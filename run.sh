@@ -27,8 +27,7 @@ executable=${UT}/source/imp.exe
 echo "Using restart namelist"
 namelist=${UT}/setup/speedy$5.nml
 # output=${UT}/setup/default_outputs.nml
-#output=${UT}/setup/daily_outputs.nml
-output=${UT}/setup/yearly_outputs.nml
+output=${UT}/setup/daily_outputs.nml
 #output=${UT}/setup/high_frequency_outputs.nml
 precisions=${UT}/setup/precisions/${4}sig11exp.nml
 
