@@ -249,7 +249,8 @@
 
 
 
-nohup time ./run.sh speedyone100yr_L2_23_RN_m6_rst 23_m6_rst 2 SRoff23 50year4CO2 > output/speedyone50yr_L2_23_RN_m6_rst.out &
+#nohup time ./run.sh speedyone100yr_L2_23_RN_m6_rst 23_m6_rst 2 SRoff23 50year4CO2 > output/speedyone50yr_L2_23_RN_m6_rst.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m6_rst 10_m6_rst 2 10 83year4CO2 > output/speedyone83yr_L2_10_SR_m6_rst.out &
 
 
 
