@@ -244,17 +244,15 @@
 #nohup time ./run.sh speedyone100yr_L2_23_RN_m6 016 2 SRoff23 100year4CO2 > output/speedyone100yr_L2_23_RN_m6.out &
 
 
-#Restart experiment
-
-
-
-
+#---Restart experiment
 #nohup time ./run.sh speedyone100yr_L2_23_RN_m6_rst 23_m6_rst 2 SRoff23 50year4CO2 > output/speedyone50yr_L2_23_RN_m6_rst.out &
-nohup time ./run.sh speedyone100yr_L2_10_SR_m6_rst 10_m6_rst 2 10 83year4CO2 > output/speedyone83yr_L2_10_SR_m6_rst.out &
+#nohup time ./run.sh speedyone100yr_L2_10_SR_m6_rst 10_m6_rst 2 10 83year4CO2 > output/speedyone83yr_L2_10_SR_m6_rst.out &
 
 
 
 
+#---BIG RUN---
+#---Failed due to memory issues
 
 #for i in {5..9}
 #do
@@ -271,5 +269,10 @@ nohup time ./run.sh speedyone100yr_L2_10_SR_m6_rst 10_m6_rst 2 10 83year4CO2 > o
 #done
 
 
+#---10 RN ensemble run
+for i in {7}
+do
+nohup time ./run.sh speedyone100yr_L2_10_RN_m$i 01$i 2 SRoff10 100year4CO2 > output/speedyone100yr_L2_10_RN_m$i.out &
+done
 
 
