@@ -239,9 +239,21 @@
 # done
 
 
-#Competitors
-nohup time ./run.sh speedyone100yr_L2_10_SR_m6 016 2 10      100year4CO2 > output/speedyone100yr_L2_10_SR_m6.out &
-nohup time ./run.sh speedyone100yr_L2_23_RN_m6 016 2 SRoff23 100year4CO2 > output/speedyone100yr_L2_23_RN_m6.out &
+#Competitors - 23/10
+#nohup time ./run.sh speedyone100yr_L2_10_SR_m6 016 2 10      100year4CO2 > output/speedyone100yr_L2_10_SR_m6.out &
+#nohup time ./run.sh speedyone100yr_L2_23_RN_m6 016 2 SRoff23 100year4CO2 > output/speedyone100yr_L2_23_RN_m6.out &
+
+
+#Restart experiment
+
+
+
+
+nohup time ./run.sh speedyone100yr_L2_23_RN_m6_rst 23_m6_rst 2 SRoff23 50year4CO2 > output/speedyone50yr_L2_23_RN_m6_rst.out &
+
+
+
+
 
 #for i in {5..9}
 #do
