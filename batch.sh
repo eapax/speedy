@@ -270,7 +270,7 @@
 
 
 #---10 RN ensemble run, just m7
-nohup time ./run.sh speedyone100yr_L2_10_RN_m7 017 2 SRoff10 100year4CO2 > output/speedyone100yr_L2_10_RN_m7.out &
+nohup time ./run.sh speedyone100yr_L2_10_RN_m9 019 2 SRoff10 100year4CO2 > output/speedyone100yr_L2_10_RN_m9.out &
 
 
 
