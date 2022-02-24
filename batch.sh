@@ -269,8 +269,17 @@
 #done
 
 
-#---10 RN ensemble run, just m7
-nohup time ./run.sh speedyone100yr_L2_10_RN_m9 019 2 SRoff10 100year4CO2 > output/speedyone100yr_L2_10_RN_m9.out &
+#---10 RN ensemble run, just m7, m9
+#nohup time ./run.sh speedyone100yr_L2_10_RN_m9 019 2 SRoff10 100year4CO2 > output/speedyone100yr_L2_10_RN_m9.out &
+
+
+
+
+#--10 RN ensemble run from restart files
+nohup time ./run.sh speedyone100yr_L2_10_RN_m5_rst rst_10RN_m5 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m5_rst.out &
+nohup time ./run.sh speedyone100yr_L2_10_RN_m6_rst rst_10RN_m6 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m6_rst.out &
+nohup time ./run.sh speedyone100yr_L2_10_RN_m8_rst rst_10RN_m8 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m8_rst.out &
+
 
 
 
