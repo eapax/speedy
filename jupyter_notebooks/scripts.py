@@ -101,7 +101,7 @@ def process_all_data(all_directories,weights,true_lat):
     
     #Empty arrays to hold data
     dfs = []
-    
+    print ('all dirs ', all_directories)
 
     for d in tqdm(all_directories): #for every directory
         df_LI = [] # df of solution level i
@@ -151,7 +151,8 @@ def process_node(node):
     
     
     #iterate over every directory
-    all_dirs = glob.glob(root+'speedyone*')     
+    all_dirs = glob.glob(root+'speedyone*')   
+    print (all_dirs)
     df = process_all_data(all_dirs,weights,true_lat)
     
      

@@ -37,3 +37,58 @@
 [I 2022-02-07 11:52:14.036 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
 [I 2022-02-07 11:54:16.624 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
 [I 2022-02-07 13:22:13.033 ServerApp] Starting buffering for 98419025-4234-4001-9fba-905e31603ff6:7930e843-49be-4566-ad36-8eb7c0e2f820
+[I 2022-02-09 05:30:15.299 ServerApp] 302 GET / (::1) 36.30ms
+[W 2022-02-09 05:30:21.611 ServerApp] 404 GET /api/contents/jupyter_notebooks/11.Sequential_NN.ipynb?content=0&1644384621606 (::1): No such file or directory: jupyter_notebooks/11.Sequential_NN.ipynb
+[W 2022-02-09 05:30:21.612 ServerApp] No such file or directory: jupyter_notebooks/11.Sequential_NN.ipynb
+[W 2022-02-09 05:30:21.612 ServerApp] 404 GET /api/contents/jupyter_notebooks/11.Sequential_NN.ipynb?content=0&1644384621606 (::1) 2.04ms referer=http://localhost:8884/lab?
+[W 2022-02-09 05:30:21.614 ServerApp] 404 GET /api/contents/jupyter_notebooks/09.%20Construct_ML_mapping.ipynb?content=0&1644384621606 (::1): No such file or directory: jupyter_notebooks/09. Construct_ML_mapping.ipynb
+[W 2022-02-09 05:30:21.614 ServerApp] No such file or directory: jupyter_notebooks/09. Construct_ML_mapping.ipynb
+[W 2022-02-09 05:30:21.615 ServerApp] 404 GET /api/contents/jupyter_notebooks/09.%20Construct_ML_mapping.ipynb?content=0&1644384621606 (::1) 1.84ms referer=http://localhost:8884/lab?
+[W 2022-02-09 05:30:21.616 ServerApp] 404 GET /api/contents/jupyter_notebooks/11.Sequential_NN-scratchspace.ipynb?content=0&1644384621606 (::1): No such file or directory: jupyter_notebooks/11.Sequential_NN-scratchspace.ipynb
+[W 2022-02-09 05:30:21.617 ServerApp] No such file or directory: jupyter_notebooks/11.Sequential_NN-scratchspace.ipynb
+[W 2022-02-09 05:30:21.617 ServerApp] 404 GET /api/contents/jupyter_notebooks/11.Sequential_NN-scratchspace.ipynb?content=0&1644384621606 (::1) 1.98ms referer=http://localhost:8884/lab?
+[W 2022-02-09 05:30:21.619 LabApp] Could not determine jupyterlab build status without nodejs
+[W 2022-02-09 05:30:22.278 ServerApp] 404 GET /api/contents/jupyter_notebooks?1644384622268 (::1): No such file or directory: jupyter_notebooks
+[W 2022-02-09 05:30:22.278 ServerApp] No such file or directory: jupyter_notebooks
+[W 2022-02-09 05:30:22.279 ServerApp] 404 GET /api/contents/jupyter_notebooks?1644384622268 (::1) 2.17ms referer=http://localhost:8884/lab?
+[W 2022-02-09 05:30:25.680 ServerApp] Notebook Fig1_temperature_timeseries.ipynb is not trusted
+[I 2022-02-09 05:32:26.074 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[W 2022-02-09 05:32:26.075 ServerApp] Notebook Fig1_temperature_timeseries.ipynb is not trusted
+[I 2022-02-09 05:32:38.478 ServerApp] Saving file at /scripts.py
+[I 2022-02-09 05:33:28.980 ServerApp] Saving file at /scripts.py
+[I 2022-02-09 05:34:26.273 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[W 2022-02-09 05:34:26.274 ServerApp] Notebook Fig1_temperature_timeseries.ipynb is not trusted
+[I 2022-02-09 05:36:26.514 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[W 2022-02-09 05:36:26.515 ServerApp] Notebook Fig1_temperature_timeseries.ipynb is not trusted
+[I 2022-02-09 05:38:26.727 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[W 2022-02-09 05:38:26.728 ServerApp] Notebook Fig1_temperature_timeseries.ipynb is not trusted
+[I 2022-02-09 05:40:26.851 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:42:27.203 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:44:27.437 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:46:27.681 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:48:27.953 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:50:28.250 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:54:28.538 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 05:58:28.838 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[I 2022-02-09 06:00:29.154 ServerApp] Saving file at /Fig1_temperature_timeseries.ipynb
+[W 2022-02-09 09:50:26.373 ServerApp] WebSocket ping timeout after 119879 ms.
+[I 2022-02-09 09:50:31.378 ServerApp] Starting buffering for 98419025-4234-4001-9fba-905e31603ff6:4f62da15-92fe-4891-ba43-901d8070d831
+[I 2022-02-10 09:56:00.832 ServerApp] 302 GET / (::1) 1.64ms
+[W 2022-02-10 09:56:04.618 LabApp] Could not determine jupyterlab build status without nodejs
+[I 2022-02-10 09:56:11.079 ServerApp] Creating new notebook in 
+[I 2022-02-10 09:56:11.593 ServerApp] Kernel started: 1b82d96c-48af-49d9-a267-0c7b9f894e87
+[I 2022-02-10 09:58:11.359 ServerApp] Saving file at /Untitled.ipynb
+[I 2022-02-10 10:00:11.481 ServerApp] Saving file at /Untitled.ipynb
+[W 2022-02-10 10:01:07.321 ServerApp] Notebook Fig1_temperature_timeseries.ipynb is not trusted
+[I 2022-02-10 10:02:11.596 ServerApp] Saving file at /Untitled.ipynb
+[I 2022-02-10 10:06:11.707 ServerApp] Saving file at /Untitled.ipynb
+[I 2022-02-10 10:08:11.828 ServerApp] Saving file at /Untitled.ipynb
+[I 2022-02-10 10:10:11.953 ServerApp] Saving file at /Untitled.ipynb
+[I 2022-02-10 13:18:09.515 ServerApp] Starting buffering for 98419025-4234-4001-9fba-905e31603ff6:39066419-a8a8-44ab-b315-751115db47ec
+[I 2022-02-10 13:18:09.550 ServerApp] Starting buffering for 1b82d96c-48af-49d9-a267-0c7b9f894e87:0eabbb92-bc7d-44bf-a1df-fff49484adf5
+[C 2022-02-11 17:01:04.079 ServerApp] received signal 15, stopping
+[I 2022-02-11 17:01:04.460 ServerApp] Shutting down 2 extensions
+[I 2022-02-11 17:01:04.533 ServerApp] Shutting down 2 kernels
+[I 2022-02-11 17:01:04.682 ServerApp] Kernel shutdown: 98419025-4234-4001-9fba-905e31603ff6
+[I 2022-02-11 17:01:04.755 ServerApp] Kernel shutdown: 1b82d96c-48af-49d9-a267-0c7b9f894e87
+[I 2022-02-11 17:01:04.772 ServerApp] Shutting down 0 terminals
