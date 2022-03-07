@@ -276,10 +276,13 @@
 
 
 #--10 RN ensemble run from restart files
-nohup time ./run.sh speedyone100yr_L2_10_RN_m5_rst rst_10RN_m5 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m5_rst.out &
-nohup time ./run.sh speedyone100yr_L2_10_RN_m6_rst rst_10RN_m6 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m6_rst.out &
-nohup time ./run.sh speedyone100yr_L2_10_RN_m8_rst rst_10RN_m8 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m8_rst.out &
+#nohup time ./run.sh speedyone100yr_L2_10_RN_m5_rst rst_10RN_m5 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m5_rst.out &
+#nohup time ./run.sh speedyone100yr_L2_10_RN_m6_rst rst_10RN_m6 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m6_rst.out &
+#nohup time ./run.sh speedyone100yr_L2_10_RN_m8_rst rst_10RN_m8 2 SRoff10 25year4CO2 > output/speedyone25yr_L2_10_RN_m8_rst.out &
 
+
+#---Explore large timestep simulations. Only for ensemble member m5
+nohup time ./run.sh speedyone10yr_L2_52_RN_m5_n1 015 2 SRoff52 10year4CO2 > output/speedyone10yr_L2_10_RN_m5_n1.out &
 
 
 

@@ -9,10 +9,10 @@ module mod_tsteps
     namelist /timestepping/ nsteps, nstdia, nmonrs, rob, wil
 
     ! No. of time steps in one day
-    integer :: nsteps = 36
+    integer :: nsteps = 1
 
     ! Period (no. of steps) for diagnostic print-out
-    integer :: nstdia = 9
+    integer :: nstdia = 30
 
     ! Period (no. of months) for restart file update
     integer :: nmonrs = 3
