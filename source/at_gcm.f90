@@ -20,6 +20,11 @@ program agcm_main
 
     ! 2. do loop over total no. of integration days
         do jday = 1, ndays
+
+
+        print *, 'DAY = ', jday, ndays
+
+
             ! 2.1 run atmospheric model for 1 day
             call set_precision('rp_agcm')
             call agcm_1day(jday)
@@ -61,6 +66,8 @@ subroutine agcm_1day(jday)
     if (iday==1) print *, ' start of year/month = ', iyear, imonth
 
     istep = 1 + (jday - 1) * nsteps
+
+    print *, 'ISTEP = ', istep, jday, nsteps
 
     ! 1. set forcing terms according to date
     call set_precision('rp_fordate')
