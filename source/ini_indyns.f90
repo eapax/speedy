@@ -21,7 +21,7 @@ subroutine indyns()
     real(dp) :: elap, elapn, hdifd, hdiff, hdifs, qexp, rad1, rgam, rlap, twn
 
     ! 1. Definition of constants
-    if (mod(nsteps,2)/=0) stop ' Invalid no. of time steps'
+    !if (mod(nsteps,2)/=0) stop ' Invalid no. of time steps'
 
     ! alph = 0 ---- forward step for gravity wave terms
     ! alph = 1 ---- backward implicit -----------------
