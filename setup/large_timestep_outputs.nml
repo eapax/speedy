@@ -6,9 +6,9 @@
     filename='model_output',
     spectral=.false.,
     plevs=.true.,
-    nstpinc=36,
-    nstpout=36,
-    nstpopen=13140,
+    nstpinc=18,
+    nstpout=18,
+    nstpopen=6570,
     nvars=14,
 /
 
