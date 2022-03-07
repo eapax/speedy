@@ -282,7 +282,7 @@
 
 
 #---Explore large timestep simulations. Only for ensemble member m5
-nohup time ./run.sh speedyone10yr_L2_52_RN_m5_n1 015n1 2 SRoff52 10year4CO2n1 > output/speedyone10yr_L2_10_RN_m5_n1.out &
+nohup time ./run.sh speedyone10yr_L2_52_RN_m5_n1 015 2 SRoff52 10year4CO2n1 > output/speedyone10yr_L2_10_RN_m5_n1.out &
 
 
 
