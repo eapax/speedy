@@ -113,6 +113,7 @@ module humidity
             if (imode>0) then
                 print *, 'Method 1'
                 rh=qa/qsat
+                print *, 'After division'
             else if (imode<0) then
                 print *, 'Method 2'
                 qa=rh*qsat
