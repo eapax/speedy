@@ -26,13 +26,13 @@ program agcm_main
 
 
             ! 2.1 run atmospheric model for 1 day
-            call set_precision('rp_agcm')
+            !call set_precision('rp_agcm')
             call agcm_1day(jday)
             
 
             
             ! 2.2 exchange data with coupler
-            call set_precision('rp_coupler')
+            !call set_precision('rp_coupler')
             call agcm_to_coupler(jday)            
             call coupler_to_agcm(jday)
 
@@ -70,21 +70,21 @@ subroutine agcm_1day(jday)
     !print *, 'ISTEP = ', istep, jday, nsteps
 
     ! 1. set forcing terms according to date
-    call set_precision('rp_fordate')
+    !call set_precision('rp_fordate')
     call fordate()
-    call set_precision('rp_agcm')
+    !call set_precision('rp_agcm')
 
     
     ! 2. set daily-average flux arrays to zero
-    call set_precision('rp_inifluxes')
+    !call set_precision('rp_inifluxes')
     call ini_fluxes()
-    call set_precision('rp_agcm')
+    !call set_precision('rp_agcm')
 
 
     ! 3. integrate the atmospheric model for 1 day
-    call set_precision('rp_stloop')
+    !call set_precision('rp_stloop')
     call stloop(istep)
-    call set_precision('rp_agcm')
+    !call set_precision('rp_agcm')
 
     
 
