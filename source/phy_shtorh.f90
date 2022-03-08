@@ -114,6 +114,7 @@ module humidity
                 print *, 'Method 1'
                 if ( ANY( qsat==0 ) ) then
                 print *, 'NOUGHT VALUES FOUND'
+                print *, qsat
                 endif
                 rh=qa/qsat
                 print *, 'After division'
