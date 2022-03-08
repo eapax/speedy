@@ -22,7 +22,7 @@ program agcm_main
         do jday = 1, ndays
 
 
-        print *, 'DAY = ', jday, ndays
+        !print *, 'DAY = ', jday, ndays
 
 
             ! 2.1 run atmospheric model for 1 day
@@ -67,7 +67,7 @@ subroutine agcm_1day(jday)
 
     istep = 1 + (jday - 1) * nsteps
 
-    print *, 'ISTEP = ', istep, jday, nsteps
+    !print *, 'ISTEP = ', istep, jday, nsteps
 
     ! 1. set forcing terms according to date
     call set_precision('rp_fordate')
