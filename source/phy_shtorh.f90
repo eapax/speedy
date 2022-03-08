@@ -109,10 +109,12 @@ module humidity
 
             ! 2. Compute rel.hum. RH=Q/Qsat (imode>0), or Q=RH*Qsat (imode<0)
             qsat = q_sat_celsius(ngp, ta, ps, sig)
-            print *, 'QSAT =', qsat
+            print *, 'Calculated Qsat'
             if (imode>0) then
+                print *, 'Method 1'
                 rh=qa/qsat
             else if (imode<0) then
+                print *, 'Method 2'
                 qa=rh*qsat
             end if
         end subroutine shtorh_celsius
