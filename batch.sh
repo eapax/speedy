@@ -287,4 +287,4 @@
 
 #---Run 23 RN from restart files m5,m8
 nohup time ./run.sh speedyone100yr_L2_23_RN_m5_rst 23_m5_rst 2 SRoff23 20year4CO2 > output/speedyone20yr_L2_23_RN_m5_rst.out &
-nohup time ./run.sh speedyone100yr_L2_23_RN_m8_rst 23_m8_rst 2 SRoff23 20year4CO2 > output/speedyone28yr_L2_23_RN_m8_rst.out &
+nohup time ./run.sh speedyone100yr_L2_23_RN_m8_rst 23_m8_rst 2 SRoff23 28year4CO2 > output/speedyone28yr_L2_23_RN_m8_rst.out &
