@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import time
 import glob
 import pandas as pd
-import seaborn as sns
+#import seaborn as sns
 import sys
 from collections import defaultdict
 from tqdm.notebook import tqdm
@@ -127,8 +127,8 @@ def process_all_data(all_directories,weights,true_lat):
 def get_global_weights():
     
      #Get the latitude weights from a special location
-    r1 = '/network/group/aopp/predict/TIP016_PAXTON_RPSPEEDY/speedyone/paper/Fig1_10year/'
-    f = r1 + 'speedyoneFIG1_L2_52_RN_10year/model_output00001.nc'
+    r1 = '/network/group/aopp/predict/TIP016_PAXTON_RPSPEEDY/speedyone/paper/Fig1_10year_Williams/'
+    f = r1 + 'speedyoneWILLIAMS_L2_52_RN_10y/model_output00001.nc'
     df = xr.open_dataset(f)
     
     temp_file = df.temperature

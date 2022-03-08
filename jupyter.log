@@ -1,0 +1,133 @@
+[I 10:29:13.870 LabApp] JupyterLab extension loaded from /home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyterlab
+[I 10:29:13.870 LabApp] JupyterLab application directory is /home/k/kimpson/bin/conda/envs/testenv_clone/share/jupyter/lab
+[I 10:29:13.881 LabApp] Serving notebooks from local directory: /network/aopp/chaos/pred/kimpson/speedy-1
+[I 10:29:13.881 LabApp] Jupyter Notebook 6.4.8 is running at:
+[I 10:29:13.881 LabApp] http://localhost:9170/?token=5cb94bdac59a9dbc3b62d973ccb729cfd2386bf71a5902cd
+[I 10:29:13.881 LabApp]  or http://127.0.0.1:9170/?token=5cb94bdac59a9dbc3b62d973ccb729cfd2386bf71a5902cd
+[I 10:29:13.881 LabApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 10:29:13.891 LabApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///home/k/kimpson/.local/share/jupyter/runtime/nbserver-20308-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:9170/?token=5cb94bdac59a9dbc3b62d973ccb729cfd2386bf71a5902cd
+     or http://127.0.0.1:9170/?token=5cb94bdac59a9dbc3b62d973ccb729cfd2386bf71a5902cd
+[I 10:29:51.890 LabApp] 302 GET / (::1) 1.410000ms
+[W 10:29:56.086 LabApp] Could not determine jupyterlab build status without nodejs
+[W 10:29:57.746 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries.ipynb is not trusted
+[I 10:29:58.115 LabApp] Kernel started: f01a8d28-b16a-40c5-bb90-5333e219efc4, name: python3
+[I 10:30:00.310 LabApp] Kernel started: 754ba357-1ee2-46ef-9368-6fcc2561afe1, name: python3
+[I 10:30:42.269 LabApp] Saving file at /jupyter_notebooks/scripts.py
+[I 10:31:58.003 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:07:24.756 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:08:27.193 LabApp] Saving file at /jupyter_notebooks/scripts.py
+[I 11:08:28.909 LabApp] Saving file at /jupyter_notebooks/scripts.py
+[I 11:08:42.377 LabApp] Kernel restarted: 754ba357-1ee2-46ef-9368-6fcc2561afe1
+[I 11:09:24.858 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:09:41.161 LabApp] Saving file at /jupyter_notebooks/scripts.py
+[I 11:09:49.701 LabApp] Kernel restarted: 754ba357-1ee2-46ef-9368-6fcc2561afe1
+[I 11:10:04.395 LabApp] Copying jupyter_notebooks/Fig1_temperature_timeseries.ipynb to /jupyter_notebooks
+[W 11:10:04.445 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries.ipynb is not trusted
+[W 11:10:04.485 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
+[W 11:10:05.652 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
+[I 11:10:06.899 LabApp] Kernel started: 5344ada3-fc93-4d75-8593-cfe05a6efe06, name: python3
+[I 11:11:24.960 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:12:06.121 LabApp] Saving file at /jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb
+[W 11:12:06.123 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
+[I 11:13:13.493 LabApp] Kernel restarted: 5344ada3-fc93-4d75-8593-cfe05a6efe06
+[I 11:14:06.512 LabApp] Saving file at /jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb
+[W 11:14:06.514 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
+[I 11:15:25.066 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:16:06.727 LabApp] Saving file at /jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb
+[W 11:16:06.728 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
+[I 11:25:48.204 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:25:55.023 LabApp] Kernel restarted: 754ba357-1ee2-46ef-9368-6fcc2561afe1
+[I 11:26:22.014 LabApp] Saving file at /jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb
+[W 11:26:22.016 LabApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
+[I 11:27:48.340 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:29:49.380 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:31:55.870 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[I 11:33:56.072 LabApp] Saving file at /jupyter_notebooks/Untitled.ipynb
+[W 11:35:08.762 LabApp] Notebook jupyter_notebooks/Fig1-Williams-Copy1.ipynb is not trusted
+[I 11:35:09.481 LabApp] Kernel started: 2e044b03-b5cd-44ac-9cf9-66cd014fa799, name: python3
+[I 11:37:09.178 LabApp] Saving file at /jupyter_notebooks/100year.ipynb
+[W 11:37:09.179 LabApp] Notebook jupyter_notebooks/100year.ipynb is not trusted
+[I 11:37:56.249 LabApp] Saving file at /jupyter_notebooks/SingleExample.ipynb
+[I 13:24:21.699 LabApp] 302 GET / (::1) 1.190000ms
+[I 13:24:22.395 LabApp] 301 GET /lab/workspaces/auto-D/?clone (::1) 1.400000ms
+[I 14:53:35.354 LabApp] 302 GET / (::1) 1.800000ms
+[E 14:53:35.556 LabApp] Uncaught exception in write_error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 1704, in _execute
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 2576, in get
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 848, in validate_absolute_path
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 2778, in validate_absolute_path
+    tornado.web.HTTPError: HTTP 404: Not Found
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 585, in write_error
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 515, in render_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 511, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: 404.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 1217, in send_error
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 587, in write_error
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 515, in render_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 511, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: error.html
+[W 14:53:35.559 LabApp] 404 GET /static/lab/main.3422632f2feaa921b99a.js (::1) 4.720000ms referer=http://localhost:8883/lab?
+[E 14:53:35.570 LabApp] Uncaught exception in write_error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 1704, in _execute
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 2576, in get
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 848, in validate_absolute_path
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 2778, in validate_absolute_path
+    tornado.web.HTTPError: HTTP 404: Not Found
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 585, in write_error
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 515, in render_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 511, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: 404.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/web.py", line 1217, in send_error
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 587, in write_error
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 515, in render_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/notebook/base/handlers.py", line 511, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: error.html
+[W 14:53:35.572 LabApp] 404 GET /static/lab/vendors~main.f392ea3b46b9d3f336a6.js (::1) 2.930000ms referer=http://localhost:8883/lab?
+[W 21:22:38.640 LabApp] WebSocket ping timeout after 119967 ms.
+[W 21:22:41.381 LabApp] WebSocket ping timeout after 119945 ms.
+[I 21:22:43.643 LabApp] Starting buffering for 5344ada3-fc93-4d75-8593-cfe05a6efe06:365b6631-879d-41ce-9a2b-c2fa17abde09
+[I 21:22:46.382 LabApp] Starting buffering for 2e044b03-b5cd-44ac-9cf9-66cd014fa799:cfea729b-c1de-4832-a7fa-47fb82b70abf
+[W 21:23:00.515 LabApp] WebSocket ping timeout after 119984 ms.
+[W 21:23:02.020 LabApp] WebSocket ping timeout after 119899 ms.
+[W 21:23:02.022 LabApp] WebSocket ping timeout after 119888 ms.
+[I 21:23:02.025 LabApp] Starting buffering for 754ba357-1ee2-46ef-9368-6fcc2561afe1:2c9a7b3a-b7b6-4edd-bb71-bf288199a542
+[I 21:23:02.026 LabApp] Starting buffering for f01a8d28-b16a-40c5-bb90-5333e219efc4:01b25075-0951-485d-a9cf-dacc19883024
