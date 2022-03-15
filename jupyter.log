@@ -131,3 +131,84 @@
 [W 21:23:02.022 LabApp] WebSocket ping timeout after 119888 ms.
 [I 21:23:02.025 LabApp] Starting buffering for 754ba357-1ee2-46ef-9368-6fcc2561afe1:2c9a7b3a-b7b6-4edd-bb71-bf288199a542
 [I 21:23:02.026 LabApp] Starting buffering for f01a8d28-b16a-40c5-bb90-5333e219efc4:01b25075-0951-485d-a9cf-dacc19883024
+[C 11:35:39.921 LabApp] received signal 15, stopping
+[I 11:35:41.362 LabApp] Shutting down 4 kernels
+[I 11:35:41.375 LabApp] Kernel shutdown: 2e044b03-b5cd-44ac-9cf9-66cd014fa799
+[I 11:35:41.376 LabApp] Kernel shutdown: f01a8d28-b16a-40c5-bb90-5333e219efc4
+[I 11:35:41.376 LabApp] Kernel shutdown: 754ba357-1ee2-46ef-9368-6fcc2561afe1
+[I 11:35:41.376 LabApp] Kernel shutdown: 5344ada3-fc93-4d75-8593-cfe05a6efe06
+[I 11:35:49.386 LabApp] KernelRestarter: restarting kernel (1/5), keep random ports
+[E 11:35:49.387 LabApp] Cannot interrupt kernel. No kernel is running!
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 71, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 479, in _async_shutdown_kernel
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 587, in _async_interrupt_kernel
+    RuntimeError: Cannot interrupt kernel. No kernel is running!
+[E 11:35:49.412 LabApp] Exception in callback <bound method KernelRestarter.poll of <jupyter_client.ioloop.restarter.IOLoopKernelRestarter object at 0x7f27b2d67990>>
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/ioloop.py", line 905, in _run
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/restarter.py", line 143, in poll
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 523, in _async_restart_kernel
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 79, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 71, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 479, in _async_shutdown_kernel
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 587, in _async_interrupt_kernel
+    RuntimeError: Cannot interrupt kernel. No kernel is running!
+[I 11:35:49.415 LabApp] KernelRestarter: restarting kernel (1/5), keep random ports
+[E 11:35:49.415 LabApp] Cannot interrupt kernel. No kernel is running!
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 71, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 479, in _async_shutdown_kernel
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 587, in _async_interrupt_kernel
+    RuntimeError: Cannot interrupt kernel. No kernel is running!
+[E 11:35:49.416 LabApp] Exception in callback <bound method KernelRestarter.poll of <jupyter_client.ioloop.restarter.IOLoopKernelRestarter object at 0x7f27b2d70190>>
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/tornado/ioloop.py", line 905, in _run
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/restarter.py", line 143, in poll
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 523, in _async_restart_kernel
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 79, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 71, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 479, in _async_shutdown_kernel
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 26, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/utils.py", line 23, in wrapped
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/nest_asyncio.py", line 81, in run_until_complete
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/futures.py", line 181, in result
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/asyncio/tasks.py", line 249, in __step
+      File "/home/k/kimpson/bin/conda/envs/testenv_clone/lib/python3.7/site-packages/jupyter_client/manager.py", line 587, in _async_interrupt_kernel
+    RuntimeError: Cannot interrupt kernel. No kernel is running!
+[I 11:35:49.419 LabApp] Shutting down 0 terminals
