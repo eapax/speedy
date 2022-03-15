@@ -302,8 +302,8 @@
 
 
 #--- Run 23 RN from rst for m5,m7,m8,m9
-nohup time ./run.sh speedyone100yr_L2_23_RN_m5_rst2 015 2 SRoff23      5year4CO2 >  output/speedyone100yr_L2_23_RN_m5_rst2.out &
-nohup time ./run.sh speedyone100yr_L2_23_RN_m7_rst2 017 2 SRoff23      86year4CO2 > output/speedyone100yr_L2_23_RN_m7_rst2.out &
-nohup time ./run.sh speedyone100yr_L2_23_RN_m8_rst2 018 2 SRoff23      13year4CO2 > output/speedyone100yr_L2_23_RN_m8_rst2.out &
-nohup time ./run.sh speedyone100yr_L2_23_RN_m9_rst2 019 2 SRoff23      85year4CO2 > output/speedyone100yr_L2_23_RN_m9_rst2.out &
+nohup time ./run.sh speedyone100yr_L2_23_RN_m5_rst2 23_m5_rst_2 2 SRoff23      5year4CO2 >  output/speedyone100yr_L2_23_RN_m5_rst2.out &
+nohup time ./run.sh speedyone100yr_L2_23_RN_m7_rst2 23_m7_rst_2 2 SRoff23      86year4CO2 > output/speedyone100yr_L2_23_RN_m7_rst2.out &
+nohup time ./run.sh speedyone100yr_L2_23_RN_m8_rst2 23_m8_rst_2 2 SRoff23      13year4CO2 > output/speedyone100yr_L2_23_RN_m8_rst2.out &
+nohup time ./run.sh speedyone100yr_L2_23_RN_m9_rst2 23_m9_rst_2 2 SRoff23      85year4CO2 > output/speedyone100yr_L2_23_RN_m9_rst2.out &
 
