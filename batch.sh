@@ -308,8 +308,8 @@
 # nohup time ./run.sh speedyone100yr_L2_23_RN_m9_rst2 23_m9_rst_2 2 SRoff23      85year4CO2 > output/speedyone100yr_L2_23_RN_m9_rst2.out &
 
 #---Run 10 SR for all after missing rst files
-nohup time ./run.sh Rspeedyone100yr_L2_10_SR_m5 015 2 10      100year4CO2 > output/Rspeedyone100yr_L2_10_SR_m5.out &
-nohup time ./run.sh Rspeedyone100yr_L2_10_SR_m5 016 2 10      100year4CO2 > output/Rspeedyone100yr_L2_10_SR_m6.out &
-nohup time ./run.sh Rspeedyone100yr_L2_10_SR_m7 017 2 10      100year4CO2 > output/Rspeedyone100yr_L2_10_SR_m7.out &
-nohup time ./run.sh Rspeedyone100yr_L2_10_SR_m8 018 2 10      100year4CO2 > output/Rspeedyone100yr_L2_10_SR_m8.out &
-nohup time ./run.sh Rspeedyone100yr_L2_10_SR_m9 019 2 10      100year4CO2 > output/Rspeedyone100yr_L2_10_SR_m9.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m5_rst 10_m5_rst   2 10      89year4CO2 > output/speedyone100yr_L2_10_SR_m5_rst1991.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m6_rst 10_m6_rst_2 2 10      50year4CO2 > output/speedyone100yr_L2_10_SR_m6_rst2030.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m7_rst 10_m7_rst   2 10      89year4CO2 > output/speedyone100yr_L2_10_SR_m7_rst1991.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m8_rst 10_m8_rst   2 10      89year4CO2 > output/speedyone100yr_L2_10_SR_m8_rst1991.out &
+nohup time ./run.sh speedyone100yr_L2_10_SR_m9_rst 10_m9_rst   2 10      89year4CO2 > output/speedyone100yr_L2_10_SR_m9_rst1991.out &
