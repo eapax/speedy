@@ -330,6 +330,10 @@
 # nohup time ./run.sh speedyone100yr_L2_10_SR_m9_rst 10SR_m9_rst2 2 10      78year4CO2 > output/speedyone100yr_L2_10_SR_m9_rst.out &
 
 #Miscellaneous batch
-nohup time ./run.sh speedyone100yr_L2_10_RN_m7 017 2 SRoff10      100year4CO2 > output/speedyone100yr_L2_10_RN_m7.out &
-nohup time ./run.sh speedyone100yr_L2_10_RN_m9 019 2 SRoff10      100year4CO2 > output/speedyone100yr_L2_10_RN_m9.out &
-nohup time ./run.sh speedyone100yr_L2_23_RN_m9 017 2 SRoff23      100year4CO2 > output/speedyone100yr_L2_23_RN_m7.out &
+# nohup time ./run.sh speedyone100yr_L2_10_RN_m7 017 2 SRoff10      100year4CO2 > output/speedyone100yr_L2_10_RN_m7.out &
+# nohup time ./run.sh speedyone100yr_L2_10_RN_m9 019 2 SRoff10      100year4CO2 > output/speedyone100yr_L2_10_RN_m9.out &
+# nohup time ./run.sh speedyone100yr_L2_23_RN_m9 017 2 SRoff23      100year4CO2 > output/speedyone100yr_L2_23_RN_m7.out &
+
+nohup time ./run.sh speedyone100yr_L2_10_RN_m7_rst1 017_10RN_rst 2 SRoff10      87year4CO2 > output/speedyone100yr_L2_10_RN_m7_rst1.out &
+nohup time ./run.sh speedyone100yr_L2_10_RN_m9_rst1 019_10RN_rst 2 SRoff10      87year4CO2 > output/speedyone100yr_L2_10_RN_m9_rst1.out &
+nohup time ./run.sh speedyone100yr_L2_23_RN_m7_rst1 017_23RN_rst 2 SRoff23      86year4CO2 > output/speedyone100yr_L2_23_RN_m7_rst1.out &
