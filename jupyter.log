@@ -506,3 +506,592 @@
 [I 2022-05-16 13:40:30.022 ServerApp] Kernel interrupted: 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7
 [I 2022-05-16 13:41:30.020 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
 [I 2022-05-16 13:43:31.989 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:45:34.040 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:47:36.085 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:49:38.150 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:51:40.693 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:53:43.116 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:55:45.309 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:57:05.356 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:59:07.819 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:11:10.327 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:14:08.173 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 14:15:46.982 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:15:49.097 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 14:16:10.305 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 14:17:49.155 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:17:50.324 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 14:19:51.298 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:19:52.032 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 14:21:53.631 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:23:55.989 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:25:58.158 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:28:00.328 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:30:02.503 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:32:04.962 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:34:07.239 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:41:29.795 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:42:09.418 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:43:32.305 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:43:33.873 ServerApp] Copying jupyter_notebooks/1.Timeseries_100years_m5.ipynb to /jupyter_notebooks
+[I 2022-05-16 14:43:37.243 ServerApp] Kernel started: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[I 2022-05-16 14:44:11.569 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:45:09.372 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:e4ca8bdf-41e5-42a9-9523-c50efd1284ad
+[I 2022-05-16 14:45:15.129 ServerApp] Kernel shutdown: e56dcc15-0af5-4388-9aa4-44fdaaaa26ae
+[W 2022-05-16 14:45:16.123 ServerApp] delete /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-16 14:45:16.124 ServerApp] Skipping trash for /network/aopp/chaos/pred/kimpson/speedy-1/jupyter_notebooks/1.Timeseries_100years_m6.ipynb, on different device to home directory
+[I 2022-05-16 14:45:34.799 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:45:38.742 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:45:40.961 ServerApp] Kernel restarted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 14:45:41.027 ServerApp] Starting buffering for d031e884-8e99-4391-acdb-4145cbd2b8f4:baf26395-5921-46fe-9e00-cb21885e31d3
+[I 2022-05-16 14:45:41.045 ServerApp] Restoring connection for d031e884-8e99-4391-acdb-4145cbd2b8f4:baf26395-5921-46fe-9e00-cb21885e31d3
+[I 2022-05-16 14:47:21.213 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:47:23.331 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 14:47:35.661 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:47:44.624 ServerApp] Starting buffering for 7d80b026-d1e1-4f15-a4a2-b087fc3b516a:36c4e9cb-ecbb-4791-90aa-ae41ec66150b
+[I 2022-05-16 14:47:45.682 ServerApp] Starting buffering for 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7:66810ef2-69c7-42ea-a2af-c4281275c41a
+[I 2022-05-16 14:48:43.294 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:52:44.548 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:54:45.409 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:56:23.861 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 14:58:24.257 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 15:00:24.651 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[W 2022-05-16 15:01:22.868 ServerApp] Notebook jupyter_notebooks/100year.ipynb is not trusted
+[I 2022-05-16 15:01:23.639 ServerApp] Kernel started: 360ceda4-7b15-4f78-a437-60dcb1f72e45
+[I 2022-05-16 15:01:31.285 ServerApp] Starting buffering for 360ceda4-7b15-4f78-a437-60dcb1f72e45:7a6262fa-e021-4bd7-8409-f56c4594e1c6
+[I 2022-05-16 15:02:24.799 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 15:03:41.829 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:04:25.177 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 15:06:26.004 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 15:07:46.513 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:09:51.201 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:11:51.531 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:11:56.158 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:14:00.983 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:16:05.924 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:18:12.145 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:20:17.864 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:22:23.621 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 15:23:51.689 ServerApp] Notebook jupyter_notebooks/Fig2.ipynb is not trusted
+[I 2022-05-16 15:24:29.353 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:26:35.644 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:28:41.763 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:32:48.059 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:34:54.127 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:35:11.900 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:37:18.178 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:39:24.485 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:41:30.545 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:43:36.988 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:45:43.492 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:47:20.757 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 15:47:49.615 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:47:55.477 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 15:49:46.965 ServerApp] Kernel interrupted: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[I 2022-05-16 15:49:47.144 ServerApp] Kernel interrupted: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[I 2022-05-16 15:49:47.405 ServerApp] Kernel interrupted: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[I 2022-05-16 15:49:47.602 ServerApp] Kernel interrupted: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[I 2022-05-16 15:49:47.783 ServerApp] Kernel interrupted: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[IPKernelApp] ERROR | KeyboardInterrupt caught in kernel.
+[I 2022-05-16 15:49:48.016 ServerApp] Kernel interrupted: 7d80b026-d1e1-4f15-a4a2-b087fc3b516a
+[I 2022-05-16 15:49:55.673 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:49:58.114 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 15:52:02.314 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:52:04.115 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 15:54:08.506 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:54:10.299 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-16 15:56:14.817 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:56:16.623 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 15:58:21.446 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 15:58:23.246 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 15:59:45.504 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:00:25.341 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:01:13.301 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:02:28.595 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:03:19.591 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:04:26.957 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 16:04:31.833 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:05:25.713 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:06:35.210 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:07:31.911 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:08:38.688 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:09:38.020 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:10:42.036 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:11:44.200 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:12:45.471 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:14:48.692 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:20:51.950 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:22:55.582 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:24:58.763 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:27:02.065 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:29:05.870 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:35:09.635 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:35:36.911 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:35:40.383 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_individual.ipynb
+[I 2022-05-16 16:36:24.290 ServerApp] Starting buffering for 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7:b7976312-2e53-4291-bcd2-56fffdf86393
+[I 2022-05-16 16:36:31.624 ServerApp] Kernel shutdown: 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7
+[W 2022-05-16 16:36:32.815 ServerApp] delete /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[W 2022-05-16 16:36:32.815 ServerApp] Skipping trash for /network/aopp/chaos/pred/kimpson/speedy-1/jupyter_notebooks/1.Timeseries_100years_m7.ipynb, on different device to home directory
+[I 2022-05-16 16:36:35.790 ServerApp] Kernel shutdown: 19cb0665-58e5-426f-9cd0-ed42e2aa0913
+[W 2022-05-16 16:36:36.486 ServerApp] delete /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[W 2022-05-16 16:36:36.487 ServerApp] Skipping trash for /network/aopp/chaos/pred/kimpson/speedy-1/jupyter_notebooks/1.Timeseries_100years_m5.ipynb, on different device to home directory
+[I 2022-05-16 16:43:50.399 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:47:13.177 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:49:02.701 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:49:44.743 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 16:51:09.124 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:52:32.819 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 16:53:15.457 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:55:21.651 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:57:27.715 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:57:43.282 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:57:52.632 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:57:59.197 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:57:59.985 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:58:24.258 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:58:29.953 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 16:58:45.573 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 16:58:45.872 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 16:58:45.903 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 16:59:17.804 ServerApp] Starting buffering for 7d80b026-d1e1-4f15-a4a2-b087fc3b516a:26f424dc-3ea4-4f03-8cd9-17a078597c62
+[I 2022-05-16 16:59:23.570 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 17:00:04.180 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:01:51.072 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 17:01:51.255 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 17:02:10.742 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:04:16.794 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:05:50.684 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:07:57.315 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:08:18.701 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-16 17:10:03.752 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:10:09.782 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:10:15.398 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:10:30.932 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:10:39.991 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:11:06.709 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:11:11.005 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:13:17.348 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:14:28.821 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:16:28.978 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:18:29.236 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:19:08.751 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:19:09.082 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:19:09.240 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[IPKernelApp] ERROR | Exception in message handler:
+Traceback (most recent call last):
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/events.py", line 89, in trigger
+    func(*args, **kwargs)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib_inline/backend_inline.py", line 121, in flush_figures
+    return show(True)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib_inline/backend_inline.py", line 43, in show
+    metadata=_fetch_figure_metadata(figure_manager.canvas.figure)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/display.py", line 320, in display
+    format_dict, md_dict = format(obj, include=include, exclude=exclude)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/formatters.py", line 180, in format
+    data = formatter(obj)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/formatters.py", line 224, in catch_format_error
+    r = method(self, *args, **kwargs)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/formatters.py", line 341, in __call__
+    return printer(obj)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/pylabtools.py", line 151, in print_figure
+    fig.canvas.print_figure(bytes_io, **kw)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/backend_bases.py", line 2300, in print_figure
+    renderer, bbox_extra_artists=bbox_extra_artists)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/figure.py", line 1642, in get_tightbbox
+    renderer, bbox_extra_artists=bbox_extra_artists)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/axes/_base.py", line 4620, in get_tightbbox
+    renderer, for_layout_only=for_layout_only)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/axis.py", line 1105, in get_tightbbox
+    self._update_label_position(renderer)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/axis.py", line 2083, in _update_label_position
+    bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/axis.py", line 1880, in _get_tick_boxes_siblings
+    ticks_to_draw = axis._update_ticks()
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/axis.py", line 1045, in _update_ticks
+    major_locs = self.get_majorticklocs()
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/axis.py", line 1277, in get_majorticklocs
+    return self.major.locator()
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/ticker.py", line 2114, in __call__
+    return self.tick_values(vmin, vmax)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/ticker.py", line 2122, in tick_values
+    locs = self._raw_ticks(vmin, vmax)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/ticker.py", line 2103, in _raw_ticks
+    low = edge.le(_vmin - best_vmin)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/ticker.py", line 1921, in le
+    if self.closeto(m / self.step, 1):
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/matplotlib/ticker.py", line 1916, in closeto
+    return abs(ms - edge) < tol
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 2077, in showtraceback
+    stb = value._render_traceback_()
+AttributeError: 'KeyboardInterrupt' object has no attribute '_render_traceback_'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/ipykernel/kernelbase.py", line 367, in dispatch_shell
+    await result
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/ipykernel/kernelbase.py", line 662, in execute_request
+    reply_content = await reply_content
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/ipykernel/ipkernel.py", line 360, in do_execute
+    res = shell.run_cell(code, store_history=store_history, silent=silent)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/ipykernel/zmqshell.py", line 532, in run_cell
+    return super().run_cell(*args, **kwargs)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 2917, in run_cell
+    self.events.trigger('post_execute')
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/events.py", line 92, in trigger
+    self.shell.showtraceback()
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/interactiveshell.py", line 2080, in showtraceback
+    value, tb, tb_offset=tb_offset)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/ultratb.py", line 1368, in structured_traceback
+    self, etype, value, tb, tb_offset, number_of_lines_of_context)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/ultratb.py", line 1268, in structured_traceback
+    self, etype, value, tb, tb_offset, number_of_lines_of_context
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/ultratb.py", line 1125, in structured_traceback
+    tb_offset)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/ultratb.py", line 1082, in format_exception_as_a_whole
+    last_unique, recursion_repeat = find_recursion(orig_etype, evalue, records)
+  File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/IPython/core/ultratb.py", line 382, in find_recursion
+    return len(records), 0
+TypeError: object of type 'NoneType' has no len()
+[I 2022-05-16 17:19:09.511 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:19:09.673 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:19:09.851 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:20:29.391 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:21:23.600 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:26:29.570 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:28:29.731 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:30:29.886 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:34:50.925 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:34:51.146 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:34:51.326 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:34:51.474 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:34:51.610 ServerApp] Kernel interrupted: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 17:36:30.147 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:37:03.533 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:37:29.728 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:39:03.761 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:41:03.960 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:41:36.329 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 17:43:04.170 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 17:45:04.378 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 18:47:04.761 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[E 2022-05-16 18:47:04.767 ServerApp] Error while saving file: jupyter_notebooks/1.Timeseries_ensemble.ipynb disk I/O error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/filemanager.py", line 427, in save
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/manager.py", line 644, in check_and_sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 482, in sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 224, in store_signature
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 255, in check_signature
+    sqlite3.OperationalError: disk I/O error
+[W 2022-05-16 18:47:04.820 ServerApp] 500 PUT /api/contents/jupyter_notebooks/1.Timeseries_ensemble.ipynb?1652723224589 (::1): Unexpected error while saving file: jupyter_notebooks/1.Timeseries_ensemble.ipynb disk I/O error
+[W 2022-05-16 18:47:04.821 ServerApp] Unexpected error while saving file: jupyter_notebooks/1.Timeseries_ensemble.ipynb disk I/O error
+[E 2022-05-16 18:47:04.822 ServerApp] {
+      "Host": "localhost:8885",
+      "Accept": "*/*",
+      "Referer": "http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-16 18:47:04.822 ServerApp] 500 PUT /api/contents/jupyter_notebooks/1.Timeseries_ensemble.ipynb?1652723224589 (::1) 119.78ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[W 2022-05-16 18:47:12.285 ServerApp] 500 PUT /lab/api/workspaces/default?1652723232199 (::1): [Errno 127] Key has expired: '/home/k/kimpson/.jupyter/lab/workspaces'
+[W 2022-05-16 18:47:12.286 LabApp] [Errno 127] Key has expired: '/home/k/kimpson/.jupyter/lab/workspaces'
+[E 2022-05-16 18:47:12.286 LabApp] {
+      "Host": "localhost:8885",
+      "Accept": "*/*",
+      "Referer": "http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-16 18:47:12.287 LabApp] 500 PUT /lab/api/workspaces/default?1652723232199 (::1) 8.49ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 18:47:25.469 ServerApp] 500 PUT /lab/api/workspaces/default?1652723245376 (::1): [Errno 127] Key has expired: '/home/k/kimpson/.jupyter/lab/workspaces'
+[W 2022-05-16 18:47:25.469 LabApp] [Errno 127] Key has expired: '/home/k/kimpson/.jupyter/lab/workspaces'
+[E 2022-05-16 18:47:25.470 LabApp] {
+      "Host": "localhost:8885",
+      "Accept": "*/*",
+      "Referer": "http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-16 18:47:25.470 LabApp] 500 PUT /lab/api/workspaces/default?1652723245376 (::1) 8.24ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 18:47:25.997 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[E 2022-05-16 18:47:26.002 ServerApp] Error while saving file: jupyter_notebooks/1.Timeseries_ensemble.ipynb disk I/O error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/filemanager.py", line 427, in save
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/manager.py", line 644, in check_and_sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 482, in sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 224, in store_signature
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 255, in check_signature
+    sqlite3.OperationalError: disk I/O error
+[W 2022-05-16 18:47:26.054 ServerApp] 500 PUT /api/contents/jupyter_notebooks/1.Timeseries_ensemble.ipynb?1652723245828 (::1): Unexpected error while saving file: jupyter_notebooks/1.Timeseries_ensemble.ipynb disk I/O error
+[W 2022-05-16 18:47:26.055 ServerApp] Unexpected error while saving file: jupyter_notebooks/1.Timeseries_ensemble.ipynb disk I/O error
+[E 2022-05-16 18:47:26.055 ServerApp] {
+      "Host": "localhost:8885",
+      "Accept": "*/*",
+      "Referer": "http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-16 18:47:26.056 ServerApp] 500 PUT /api/contents/jupyter_notebooks/1.Timeseries_ensemble.ipynb?1652723245828 (::1) 115.72ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[E 2022-05-16 18:47:30.691 ServerApp] Uncaught exception GET /lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb (::1)
+    HTTPServerRequest(protocol='http', host='localhost:8885', method='GET', uri='/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb', version='HTTP/1.1', remote_ip='::1')
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1702, in _execute
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 3173, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1878, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyterlab_server/handlers.py", line 158, in get
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+[E 2022-05-16 18:47:30.881 ServerApp] Uncaught exception in write_error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1702, in _execute
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 3173, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1878, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyterlab_server/handlers.py", line 158, in get
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: 500.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 595, in write_error
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: 500.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: error.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1217, in send_error
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 597, in write_error
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: error.html
+[E 2022-05-16 18:47:31.313 LabApp] {
+      "Host": "localhost:8885",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "Referer": "http://localhost:8885/login?next=%2Flab%2Ftree%2Fjupyter_notebooks%2F2.GlobalMap.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-16 18:47:31.314 LabApp] 500 GET /lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb (::1) 729.10ms referer=http://localhost:8885/login?next=%2Flab%2Ftree%2Fjupyter_notebooks%2F2.GlobalMap.ipynb
+[I 2022-05-16 18:47:31.351 ServerApp] Starting buffering for d031e884-8e99-4391-acdb-4145cbd2b8f4:baf26395-5921-46fe-9e00-cb21885e31d3
+[I 2022-05-16 18:47:31.353 ServerApp] Starting buffering for 099b63f7-2714-40f5-9196-b23a986c954d:b639d719-657e-42da-97e2-48c80a7509bd
+[I 2022-05-16 18:47:31.354 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:b2fbd296-d58a-40d3-a16e-c6fdd983dc23
+[I 2022-05-16 18:47:31.355 ServerApp] Starting buffering for 7d80b026-d1e1-4f15-a4a2-b087fc3b516a:0fc4789e-8c68-4c7b-bd46-d5dd9188c36e
+[E 2022-05-16 18:48:51.580 ServerApp] Uncaught exception GET /lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb (::1)
+    HTTPServerRequest(protocol='http', host='localhost:8885', method='GET', uri='/lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb', version='HTTP/1.1', remote_ip='::1')
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1702, in _execute
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 3173, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1878, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyterlab_server/handlers.py", line 158, in get
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+[E 2022-05-16 18:48:51.773 ServerApp] Uncaught exception in write_error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1702, in _execute
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 3173, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1878, in wrapper
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyterlab_server/handlers.py", line 158, in get
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: index.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: 500.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 595, in write_error
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: 500.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 15, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: error.html
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/tornado/web.py", line 1217, in send_error
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 597, in write_error
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 525, in render_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/extension/handler.py", line 17, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/base/handlers.py", line 521, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 997, in get_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/environment.py", line 958, in _load_template
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 125, in load
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jinja2/loaders.py", line 214, in get_source
+    jinja2.exceptions.TemplateNotFound: error.html
+[E 2022-05-16 18:48:52.206 LabApp] {
+      "Host": "localhost:8885",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "Referer": "http://localhost:8885/login?next=%2Flab%2Ftree%2Fjupyter_notebooks%2F2.GlobalMap.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-16 18:48:52.206 LabApp] 500 GET /lab/tree/jupyter_notebooks/1.Timeseries_ensemble.ipynb (::1) 731.63ms referer=http://localhost:8885/login?next=%2Flab%2Ftree%2Fjupyter_notebooks%2F2.GlobalMap.ipynb
+[I 2022-05-16 18:49:25.358 LabApp] Build is up to date
+[W 2022-05-16 18:49:25.504 ServerApp] Notebook jupyter_notebooks/Fig2.ipynb is not trusted
+[I 2022-05-16 18:51:26.085 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 18:53:26.310 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 18:55:26.552 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 18:57:26.766 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 18:59:26.978 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:01:27.174 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:03:27.456 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:04:32.052 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:04:42.810 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:06:43.722 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:08:43.859 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:09:44.945 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:11:45.292 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:12:09.398 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:14:15.698 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:16:22.729 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:17:45.635 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:18:29.482 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:19:45.824 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:20:38.472 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:21:46.183 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:22:44.580 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:23:46.523 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:24:50.920 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:26:57.105 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:31:03.237 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:33:09.268 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 19:33:46.889 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:35:47.011 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:37:46.761 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:39:47.217 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:40:22.233 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:42:22.686 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:42:39.803 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:42:45.649 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:43:02.496 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:43:09.860 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:43:18.436 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:43:18.864 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:45:19.330 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 19:49:15.529 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:03:21.742 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:05:28.462 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:07:35.464 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:13:44.045 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:15:52.634 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:16:16.124 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 21:17:11.679 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
