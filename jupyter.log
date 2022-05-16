@@ -1,104 +1,508 @@
-[I 2022-04-26 13:40:37.034 ServerApp] jupyterlab | extension was successfully linked.
-[I 2022-04-26 13:40:37.043 ServerApp] nbclassic | extension was successfully linked.
-[I 2022-04-26 13:40:42.205 ServerApp] notebook_shim | extension was successfully linked.
-[I 2022-04-26 13:40:42.520 ServerApp] notebook_shim | extension was successfully loaded.
-[I 2022-04-26 13:40:42.522 LabApp] JupyterLab extension loaded from /home/k/kimpson/bin/conda/envs/GPU/lib/python3.7/site-packages/jupyterlab
-[I 2022-04-26 13:40:42.522 LabApp] JupyterLab application directory is /home/k/kimpson/bin/conda/envs/GPU/share/jupyter/lab
-[I 2022-04-26 13:40:42.546 ServerApp] jupyterlab | extension was successfully loaded.
-[I 2022-04-26 13:40:42.643 ServerApp] nbclassic | extension was successfully loaded.
-[I 2022-04-26 13:40:42.644 ServerApp] Serving notebooks from local directory: /network/aopp/chaos/pred/kimpson/speedy-1
-[I 2022-04-26 13:40:42.644 ServerApp] Jupyter Server 1.13.5 is running at:
-[I 2022-04-26 13:40:42.644 ServerApp] http://localhost:9172/lab
-[I 2022-04-26 13:40:42.644 ServerApp]  or http://127.0.0.1:9172/lab
-[I 2022-04-26 13:40:42.644 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[I 2022-04-26 13:44:04.914 ServerApp] 302 GET / (::1) 1.15ms
-[I 2022-04-26 13:44:04.935 LabApp] 302 GET /lab? (::1) 4.60ms
-[W 2022-04-26 13:44:09.649 ServerApp] 401 POST /login?next=%2Flab%3F (::1) 2.63ms referer=http://localhost:8886/login?next=%2Flab%3F
-[I 2022-04-26 13:44:12.573 ServerApp] 302 POST /login?next=%2Flab%3F (::1) 2.20ms
-[W 2022-04-26 13:44:29.659 LabApp] Could not determine jupyterlab build status without nodejs
-[W 2022-04-26 13:44:33.839 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields-Copy1.ipynb?content=0&1650977069585 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields-Copy1.ipynb
-[W 2022-04-26 13:44:33.840 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields-Copy1.ipynb
-[W 2022-04-26 13:44:33.841 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields-Copy1.ipynb?content=0&1650977069585 (::1) 6.38ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:44:33.841 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/1.%20Lakes.ipynb?content=0&1650977069586 (::1): No such file or directory: reproducible_workflow/experiments/1. Lakes.ipynb
-[W 2022-04-26 13:44:33.842 ServerApp] No such file or directory: reproducible_workflow/experiments/1. Lakes.ipynb
-[W 2022-04-26 13:44:33.843 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/1.%20Lakes.ipynb?content=0&1650977069586 (::1) 6.88ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:44:33.843 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1650977069585 (::1): No such file or directory: reproducible_workflow/00. Workflow.ipynb
-[W 2022-04-26 13:44:33.844 ServerApp] No such file or directory: reproducible_workflow/00. Workflow.ipynb
-[W 2022-04-26 13:44:33.846 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1650977069585 (::1) 8.86ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:44:33.854 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A1.V20_vs_V15.ipynb?content=0&1650977069586 (::1): No such file or directory: reproducible_workflow/experiments/A1.V20_vs_V15.ipynb
-[W 2022-04-26 13:44:33.860 ServerApp] No such file or directory: reproducible_workflow/experiments/A1.V20_vs_V15.ipynb
-[W 2022-04-26 13:44:33.862 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A1.V20_vs_V15.ipynb?content=0&1650977069586 (::1) 8.97ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:44:33.864 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/train_and_predict.py?content=0&1650977069587 (::1): No such file or directory: reproducible_workflow/scripts/train_and_predict.py
-[W 2022-04-26 13:44:33.864 ServerApp] No such file or directory: reproducible_workflow/scripts/train_and_predict.py
-[W 2022-04-26 13:44:33.865 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/train_and_predict.py?content=0&1650977069587 (::1) 2.11ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:44:33.877 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/join_MODIS_with_ERA.py?content=0&1650977069587 (::1): No such file or directory: reproducible_workflow/scripts/join_MODIS_with_ERA.py
-[W 2022-04-26 13:44:33.878 ServerApp] No such file or directory: reproducible_workflow/scripts/join_MODIS_with_ERA.py
-[W 2022-04-26 13:44:33.879 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/join_MODIS_with_ERA.py?content=0&1650977069587 (::1) 3.47ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:44:34.504 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments?1650977074419 (::1): No such file or directory: reproducible_workflow/experiments
-[W 2022-04-26 13:44:34.505 ServerApp] No such file or directory: reproducible_workflow/experiments
-[W 2022-04-26 13:44:34.505 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments?1650977074419 (::1) 2.87ms referer=http://localhost:8886/lab?
-[W 2022-04-26 13:45:13.093 ServerApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries.ipynb is not trusted
-[I 2022-04-26 13:45:14.715 ServerApp] Kernel started: af773ec3-d5b5-4e97-a7d9-eb1c7a204802
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: ede9c680-4f0c-4646-8e77-e8815df7cd19
-[I 2022-04-26 13:46:00.625 ServerApp] Copying jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb to /jupyter_notebooks
-[W 2022-04-26 13:46:00.763 ServerApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy1.ipynb is not trusted
-[W 2022-04-26 13:46:00.781 ServerApp] Notebook jupyter_notebooks/Fig1_temperature_timeseries-Copy2.ipynb is not trusted
-[W 2022-04-26 13:46:02.240 ServerApp] Notebook jupyter_notebooks/100year.ipynb is not trusted
-[I 2022-04-26 13:46:02.881 ServerApp] Kernel started: 78f7d50a-48ac-49d2-80ed-337936265ed5
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: 9735de02-adc5-4f95-8a7b-a6c416081195
-[I 2022-04-26 13:57:41.641 ServerApp] Creating new notebook in /jupyter_notebooks
-[I 2022-04-26 13:57:42.241 ServerApp] Kernel started: 2dcc3a72-e834-4c19-99b5-8191139147ab
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: de02c62d-db0f-41eb-b296-4ba2d53df918
-[I 2022-04-26 13:59:42.239 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:01:42.337 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:03:42.446 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:05:43.257 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:07:43.356 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:09:43.496 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:09:43.590 ServerApp] Kernel interrupted: 2dcc3a72-e834-4c19-99b5-8191139147ab
-[I 2022-04-26 14:09:44.068 ServerApp] Kernel interrupted: 2dcc3a72-e834-4c19-99b5-8191139147ab
-[I 2022-04-26 14:11:44.265 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:13:44.401 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:17:44.562 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:19:44.737 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:29:46.341 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:31:46.538 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:33:46.724 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:35:47.347 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:37:48.633 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:39:48.822 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 14:41:49.071 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:13:49.376 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:15:49.619 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:17:49.864 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:19:50.107 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:21:50.348 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:23:50.599 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:37:50.968 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 15:39:51.309 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
-[I 2022-04-26 19:40:35.420 ServerApp] Starting buffering for 2dcc3a72-e834-4c19-99b5-8191139147ab:57deb11b-8a0c-4d27-b914-c9b47d3b2fbc
-[I 2022-04-26 19:40:35.421 ServerApp] Starting buffering for af773ec3-d5b5-4e97-a7d9-eb1c7a204802:dd8ddd85-646c-43da-962d-95cda5f95033
-[I 2022-04-26 19:40:35.421 ServerApp] Starting buffering for 78f7d50a-48ac-49d2-80ed-337936265ed5:c119a5f5-cd9c-4acd-b471-cb26c2f9516b
-[I 2022-04-26 19:40:35.615 ServerApp] Restoring connection for 2dcc3a72-e834-4c19-99b5-8191139147ab:57deb11b-8a0c-4d27-b914-c9b47d3b2fbc
-[I 2022-04-26 19:40:35.710 ServerApp] Restoring connection for 78f7d50a-48ac-49d2-80ed-337936265ed5:c119a5f5-cd9c-4acd-b471-cb26c2f9516b
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: e410fb1d-9523-4a2a-ae07-65fdbd1008f6
-[I 2022-04-26 19:40:35.788 ServerApp] Restoring connection for af773ec3-d5b5-4e97-a7d9-eb1c7a204802:dd8ddd85-646c-43da-962d-95cda5f95033
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: 4059cc3d-8c86-4e56-8850-3bf87fca7b9b
-[I 2022-04-26 21:30:13.768 ServerApp] Starting buffering for 2dcc3a72-e834-4c19-99b5-8191139147ab:57deb11b-8a0c-4d27-b914-c9b47d3b2fbc
-[I 2022-04-26 21:30:13.769 ServerApp] Starting buffering for 78f7d50a-48ac-49d2-80ed-337936265ed5:c119a5f5-cd9c-4acd-b471-cb26c2f9516b
-[I 2022-04-26 21:30:13.770 ServerApp] Starting buffering for af773ec3-d5b5-4e97-a7d9-eb1c7a204802:0d7b64aa-2871-4755-9498-aae7c2e8d762
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: 50c4bcfa-e23b-45f0-90be-a8e532690433
-[I 2022-04-26 21:30:13.908 ServerApp] Restoring connection for 2dcc3a72-e834-4c19-99b5-8191139147ab:57deb11b-8a0c-4d27-b914-c9b47d3b2fbc
-[I 2022-04-26 21:30:13.982 ServerApp] Restoring connection for 78f7d50a-48ac-49d2-80ed-337936265ed5:c119a5f5-cd9c-4acd-b471-cb26c2f9516b
-[IPKernelApp] ERROR | No such comm target registered: jupyter.widget.control
-[IPKernelApp] WARNING | No such comm: 7149d23a-6a78-48f0-8e13-4f1beac44308
-[W 2022-04-26 21:33:13.843 ServerApp] WebSocket ping timeout after 119960 ms.
-[I 2022-04-26 21:33:13.847 ServerApp] Starting buffering for 78f7d50a-48ac-49d2-80ed-337936265ed5:c119a5f5-cd9c-4acd-b471-cb26c2f9516b
-[I 2022-04-26 21:33:13.848 ServerApp] Starting buffering for 2dcc3a72-e834-4c19-99b5-8191139147ab:57deb11b-8a0c-4d27-b914-c9b47d3b2fbc
-[I 2022-04-26 21:33:13.848 ServerApp] Starting buffering for af773ec3-d5b5-4e97-a7d9-eb1c7a204802:dd8ddd85-646c-43da-962d-95cda5f95033
+[I 2022-05-06 14:15:32.522 ServerApp] jupyterlab | extension was successfully linked.
+[I 2022-05-06 14:15:32.540 ServerApp] nbclassic | extension was successfully linked.
+[I 2022-05-06 14:15:33.332 ServerApp] notebook_shim | extension was successfully linked.
+[I 2022-05-06 14:15:33.333 ServerApp] panel.io.jupyter_server_extension | extension was successfully linked.
+[I 2022-05-06 14:15:33.475 ServerApp] notebook_shim | extension was successfully loaded.
+[I 2022-05-06 14:15:33.478 LabApp] JupyterLab extension loaded from /home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyterlab
+[I 2022-05-06 14:15:33.478 LabApp] JupyterLab application directory is /home/k/kimpson/bin/conda/envs/workhorse/share/jupyter/lab
+[I 2022-05-06 14:15:33.490 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2022-05-06 14:15:33.565 ServerApp] nbclassic | extension was successfully loaded.
+[I 2022-05-06 14:15:33.570 ServerApp] panel.io.jupyter_server_extension | extension was successfully loaded.
+[I 2022-05-06 14:15:33.571 ServerApp] Serving notebooks from local directory: /network/aopp/chaos/pred/kimpson/speedy-1
+[I 2022-05-06 14:15:33.571 ServerApp] Jupyter Server 1.15.6 is running at:
+[I 2022-05-06 14:15:33.571 ServerApp] http://localhost:9168/lab
+[I 2022-05-06 14:15:33.571 ServerApp]  or http://127.0.0.1:9168/lab
+[I 2022-05-06 14:15:33.571 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 2022-05-06 14:18:17.785 ServerApp] 302 GET / (::1) 1.18ms
+[I 2022-05-06 14:18:23.890 LabApp] Build is up to date
+[W 2022-05-06 14:18:24.610 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1651843104412 (::1): No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-06 14:18:24.611 ServerApp] No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-06 14:18:24.612 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1651843104412 (::1) 22.83ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:24.617 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1651843104413 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-06 14:18:24.617 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-06 14:18:24.618 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1651843104413 (::1) 4.55ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:24.619 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/3.%20Lakes_with_monthly_variation.ipynb?content=0&1651843104413 (::1): No such file or directory: reproducible_workflow/experiments/3. Lakes_with_monthly_variation.ipynb
+[W 2022-05-06 14:18:24.619 ServerApp] No such file or directory: reproducible_workflow/experiments/3. Lakes_with_monthly_variation.ipynb
+[W 2022-05-06 14:18:24.619 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/3.%20Lakes_with_monthly_variation.ipynb?content=0&1651843104413 (::1) 3.85ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:24.628 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/dev/Untitled.ipynb?content=0&1651843104414 (::1): No such file or directory: reproducible_workflow/scripts/dev/Untitled.ipynb
+[W 2022-05-06 14:18:24.628 ServerApp] No such file or directory: reproducible_workflow/scripts/dev/Untitled.ipynb
+[W 2022-05-06 14:18:24.629 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/dev/Untitled.ipynb?content=0&1651843104414 (::1) 2.25ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:24.659 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/join_MODIS_with_ERA.py?content=0&1651843104414 (::1): No such file or directory: reproducible_workflow/scripts/join_MODIS_with_ERA.py
+[W 2022-05-06 14:18:24.660 ServerApp] No such file or directory: reproducible_workflow/scripts/join_MODIS_with_ERA.py
+[W 2022-05-06 14:18:24.660 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/join_MODIS_with_ERA.py?content=0&1651843104414 (::1) 2.59ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:24.675 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/train_model.py?content=0&1651843104415 (::1): No such file or directory: reproducible_workflow/scripts/train_model.py
+[W 2022-05-06 14:18:24.675 ServerApp] No such file or directory: reproducible_workflow/scripts/train_model.py
+[W 2022-05-06 14:18:24.676 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/train_model.py?content=0&1651843104415 (::1) 2.60ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:25.599 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/dev?1651843105494 (::1): No such file or directory: reproducible_workflow/scripts/dev
+[W 2022-05-06 14:18:25.599 ServerApp] No such file or directory: reproducible_workflow/scripts/dev
+[W 2022-05-06 14:18:25.600 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/dev?1651843105494 (::1) 2.60ms referer=http://localhost:8885/lab?
+[W 2022-05-06 14:18:33.009 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 14:21:35.520 ServerApp] Kernel started: e56dcc15-0af5-4388-9aa4-44fdaaaa26ae
+[I 2022-05-06 16:14:20.090 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:14:20.091 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:16:20.348 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:16:20.350 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:18:20.460 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:18:20.461 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:20:20.556 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:20:20.557 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:22:20.659 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:22:20.660 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:24:21.103 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:24:21.104 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:26:22.255 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:26:22.256 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:28:23.386 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:28:23.387 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:30:24.186 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:30:24.187 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:32:24.349 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:32:24.350 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:34:27.315 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-06 16:34:27.316 ServerApp] Notebook jupyter_notebooks/1.Timeseries_100years_m6.ipynb is not trusted
+[I 2022-05-06 16:49:31.013 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 16:51:31.655 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 16:53:32.124 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 16:55:32.543 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 16:57:32.896 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 16:58:11.064 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 16:59:25.971 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:01:26.388 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:03:26.837 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:03:30.761 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:05:31.172 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:05:44.244 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:05:48.268 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:07:46.489 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:09:47.029 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:11:05.322 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:11:22.982 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:13:23.861 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:21:24.469 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 17:23:25.141 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-06 22:15:05.308 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:5f6d3388-be14-452d-aea3-393f998b65f5
+[W 2022-05-06 22:16:35.359 ServerApp] WebSocket ping timeout after 90003 ms.
+[W 2022-05-06 22:16:35.401 ServerApp] WebSocket ping timeout after 90001 ms.
+[I 2022-05-06 22:16:40.402 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:5f6d3388-be14-452d-aea3-393f998b65f5
+[I 2022-05-10 15:42:32.279 ServerApp] 302 GET / (::1) 1.87ms
+[W 2022-05-10 15:42:36.202 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1652193756031 (::1): No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-10 15:42:36.203 ServerApp] No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-10 15:42:36.204 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1652193756031 (::1) 4.13ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.206 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1652193756032 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-10 15:42:36.206 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-10 15:42:36.208 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1652193756032 (::1) 3.22ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.216 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/1.%20Lakes.ipynb?content=0&1652193756032 (::1): No such file or directory: reproducible_workflow/experiments/1. Lakes.ipynb
+[W 2022-05-10 15:42:36.217 ServerApp] No such file or directory: reproducible_workflow/experiments/1. Lakes.ipynb
+[W 2022-05-10 15:42:36.217 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/1.%20Lakes.ipynb?content=0&1652193756032 (::1) 2.05ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.230 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A1.V20_vs_V15.ipynb?content=0&1652193756033 (::1): No such file or directory: reproducible_workflow/experiments/A1.V20_vs_V15.ipynb
+[W 2022-05-10 15:42:36.230 ServerApp] No such file or directory: reproducible_workflow/experiments/A1.V20_vs_V15.ipynb
+[W 2022-05-10 15:42:36.232 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A1.V20_vs_V15.ipynb?content=0&1652193756033 (::1) 3.18ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.244 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/create_TFR_training_data.py?content=0&1652193756033 (::1): No such file or directory: reproducible_workflow/scripts/create_TFR_training_data.py
+[W 2022-05-10 15:42:36.244 ServerApp] No such file or directory: reproducible_workflow/scripts/create_TFR_training_data.py
+[W 2022-05-10 15:42:36.247 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/create_TFR_training_data.py?content=0&1652193756033 (::1) 4.21ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.255 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/run.sh?content=0&1652193756034 (::1): No such file or directory: reproducible_workflow/scripts/run.sh
+[W 2022-05-10 15:42:36.255 ServerApp] No such file or directory: reproducible_workflow/scripts/run.sh
+[W 2022-05-10 15:42:36.258 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/run.sh?content=0&1652193756034 (::1) 4.15ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.269 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/main.py?content=0&1652193756035 (::1): No such file or directory: reproducible_workflow/pipeline/main.py
+[W 2022-05-10 15:42:36.269 ServerApp] No such file or directory: reproducible_workflow/pipeline/main.py
+[W 2022-05-10 15:42:36.271 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/main.py?content=0&1652193756035 (::1) 2.92ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.282 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/configs/config.py?content=0&1652193756035 (::1): No such file or directory: reproducible_workflow/pipeline/configs/config.py
+[W 2022-05-10 15:42:36.282 ServerApp] No such file or directory: reproducible_workflow/pipeline/configs/config.py
+[W 2022-05-10 15:42:36.285 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/configs/config.py?content=0&1652193756035 (::1) 5.03ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.296 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/raw_data_processor/raw_data_processor.py?content=0&1652193756036 (::1): No such file or directory: reproducible_workflow/pipeline/raw_data_processor/raw_data_processor.py
+[W 2022-05-10 15:42:36.296 ServerApp] No such file or directory: reproducible_workflow/pipeline/raw_data_processor/raw_data_processor.py
+[W 2022-05-10 15:42:36.298 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/raw_data_processor/raw_data_processor.py?content=0&1652193756036 (::1) 3.61ms referer=http://localhost:8885/lab?
+[W 2022-05-10 15:42:36.309 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/utils/config.py?content=0&1652193756036 (::1): No such file or directory: reproducible_workflow/pipeline/utils/config.py
+[W 2022-05-10 15:42:36.309 ServerApp] No such file or directory: reproducible_workflow/pipeline/utils/config.py
+[W 2022-05-10 15:42:36.309 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/utils/config.py?content=0&1652193756036 (::1) 2.23ms referer=http://localhost:8885/lab?
+[I 2022-05-10 15:42:36.911 LabApp] Build is up to date
+[W 2022-05-10 15:42:37.024 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts?1652193756991 (::1): No such file or directory: reproducible_workflow/scripts
+[W 2022-05-10 15:42:37.033 ServerApp] No such file or directory: reproducible_workflow/scripts
+[W 2022-05-10 15:42:37.034 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts?1652193756991 (::1) 11.01ms referer=http://localhost:8885/lab?
+[I 2022-05-10 15:44:46.182 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 15:50:32.805 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 15:50:50.300 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 15:51:38.890 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 15:52:08.144 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 15:54:08.777 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 15:56:09.388 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 16:10:10.544 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 16:12:11.511 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-10 22:07:09.239 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:c768825c-3263-4337-affe-c0ffee34a48e
+[I 2022-05-10 22:07:09.295 ServerApp] Restoring connection for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:c768825c-3263-4337-affe-c0ffee34a48e
+[W 2022-05-10 22:08:39.297 ServerApp] WebSocket ping timeout after 90001 ms.
+[I 2022-05-10 22:08:44.301 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:c768825c-3263-4337-affe-c0ffee34a48e
+[W 2022-05-11 17:28:24.224 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1652286504101 (::1): No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-11 17:28:24.225 ServerApp] No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-11 17:28:24.226 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1652286504101 (::1) 15.99ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-11 17:28:24.245 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields-Copy1.ipynb?content=0&1652286504102 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields-Copy1.ipynb
+[W 2022-05-11 17:28:24.245 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields-Copy1.ipynb
+[W 2022-05-11 17:28:24.246 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields-Copy1.ipynb?content=0&1652286504102 (::1) 2.23ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-11 17:28:24.248 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1652286504102 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-11 17:28:24.249 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-11 17:28:24.249 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1652286504102 (::1) 1.99ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[W 2022-05-11 17:28:24.259 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/raw_data_processor/join_ERA_with_MODIS.py?content=0&1652286504103 (::1): No such file or directory: reproducible_workflow/pipeline/raw_data_processor/join_ERA_with_MODIS.py
+[W 2022-05-11 17:28:24.259 ServerApp] No such file or directory: reproducible_workflow/pipeline/raw_data_processor/join_ERA_with_MODIS.py
+[W 2022-05-11 17:28:24.260 ServerApp] 404 GET /api/contents/reproducible_workflow/pipeline/raw_data_processor/join_ERA_with_MODIS.py?content=0&1652286504103 (::1) 2.15ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-11 17:28:25.158 LabApp] Build is up to date
+[W 2022-05-11 17:30:20.181 ServerApp] Notebook jupyter_notebooks/Fig2.ipynb is not trusted
+[I 2022-05-11 17:30:21.686 ServerApp] Kernel started: 099b63f7-2714-40f5-9196-b23a986c954d
+[I 2022-05-11 17:31:41.668 ServerApp] Creating new notebook in /jupyter_notebooks
+[I 2022-05-11 17:31:42.294 ServerApp] Kernel started: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:32:21.862 ServerApp] Saving file at /jupyter_notebooks/Fig2.ipynb
+[W 2022-05-11 17:32:21.863 ServerApp] Notebook jupyter_notebooks/Fig2.ipynb is not trusted
+[I 2022-05-11 17:33:42.156 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:35:42.256 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:35:46.129 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:35:46.460 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:35:46.643 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:35:46.795 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:37:27.640 ServerApp] Kernel interrupted: e56dcc15-0af5-4388-9aa4-44fdaaaa26ae
+[I 2022-05-11 17:37:28.128 ServerApp] Kernel interrupted: e56dcc15-0af5-4388-9aa4-44fdaaaa26ae
+[I 2022-05-11 17:37:42.393 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:37:48.693 ServerApp] Kernel restarted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:37:48.763 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:cad9c8ee-4279-4f73-ab09-fcaa0803a5bb
+[I 2022-05-11 17:37:48.805 ServerApp] Restoring connection for aa778d73-8b79-467b-be44-903acfa1e0e4:cad9c8ee-4279-4f73-ab09-fcaa0803a5bb
+[I 2022-05-11 17:38:28.163 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m6.ipynb
+[I 2022-05-11 17:38:52.138 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:38:52.797 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:39:27.845 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:41:06.218 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:42:15.131 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:42:20.588 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:42:47.556 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:44:47.688 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:47:44.063 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:47:50.938 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:47:54.148 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:49:09.157 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:50:11.307 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:51:31.726 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:51:39.436 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:40.421 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:40.566 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:40.799 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:40.934 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:41.050 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:41.189 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:41.300 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:51:41.457 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 17:53:14.611 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:55:14.722 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:55:39.141 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:55:39.809 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 17:58:37.934 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:00:07.876 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:02:08.010 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:04:08.123 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:06:08.286 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:08:08.390 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:10:08.512 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:10:41.312 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:10:41.486 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:10:41.636 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:10:41.819 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:11:42.853 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:12:08.629 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:13:30.952 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:15:31.069 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:17:13.705 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:17:14.036 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-11 18:17:18.579 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:19:18.674 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:20:31.744 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:20:35.862 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:22:38.198 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:24:40.786 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:24:52.932 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:25:12.818 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:29:17.119 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:31:20.107 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:33:22.576 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:35:25.036 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:37:27.520 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:39:31.025 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:41:00.280 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:43:02.797 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:45:05.280 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:45:29.712 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:47:32.194 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:49:35.778 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:51:38.658 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:51:41.546 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:53:45.385 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:54:01.037 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:56:04.353 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[E 2022-05-11 18:56:04.367 ServerApp] Error while saving file: jupyter_notebooks/2.GlobalMap.ipynb disk I/O error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/filemanager.py", line 427, in save
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/manager.py", line 644, in check_and_sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 482, in sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 224, in store_signature
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 255, in check_signature
+    sqlite3.OperationalError: disk I/O error
+[W 2022-05-11 18:56:04.418 ServerApp] 500 PUT /api/contents/jupyter_notebooks/2.GlobalMap.ipynb?1652291761876 (::1): Unexpected error while saving file: jupyter_notebooks/2.GlobalMap.ipynb disk I/O error
+[W 2022-05-11 18:56:04.419 ServerApp] Unexpected error while saving file: jupyter_notebooks/2.GlobalMap.ipynb disk I/O error
+[E 2022-05-11 18:56:04.420 ServerApp] {
+      "Host": "localhost:8885",
+      "Accept": "*/*",
+      "Referer": "http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-11 18:56:04.420 ServerApp] 500 PUT /api/contents/jupyter_notebooks/2.GlobalMap.ipynb?1652291761876 (::1) 2430.14ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:57:13.625 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[E 2022-05-11 18:57:13.638 ServerApp] Error while saving file: jupyter_notebooks/2.GlobalMap.ipynb disk I/O error
+    Traceback (most recent call last):
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/filemanager.py", line 427, in save
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/jupyter_server/services/contents/manager.py", line 644, in check_and_sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 482, in sign
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 224, in store_signature
+      File "/home/k/kimpson/bin/conda/envs/workhorse/lib/python3.7/site-packages/nbformat/sign.py", line 255, in check_signature
+    sqlite3.OperationalError: disk I/O error
+[W 2022-05-11 18:57:13.691 ServerApp] 500 PUT /api/contents/jupyter_notebooks/2.GlobalMap.ipynb?1652291831156 (::1): Unexpected error while saving file: jupyter_notebooks/2.GlobalMap.ipynb disk I/O error
+[W 2022-05-11 18:57:13.692 ServerApp] Unexpected error while saving file: jupyter_notebooks/2.GlobalMap.ipynb disk I/O error
+[E 2022-05-11 18:57:13.693 ServerApp] {
+      "Host": "localhost:8885",
+      "Accept": "*/*",
+      "Referer": "http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb",
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36"
+    }
+[E 2022-05-11 18:57:13.693 ServerApp] 500 PUT /api/contents/jupyter_notebooks/2.GlobalMap.ipynb?1652291831156 (::1) 2428.16ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 18:57:26.109 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:6e64def5-00f7-4991-ad8b-0585eff887a5
+[I 2022-05-11 18:57:26.111 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:cad9c8ee-4279-4f73-ab09-fcaa0803a5bb
+[I 2022-05-11 18:57:26.112 ServerApp] Starting buffering for 099b63f7-2714-40f5-9196-b23a986c954d:d56bd53c-92a8-4261-b07f-8b311cf60165
+[I 2022-05-11 18:59:05.728 ServerApp] 302 GET / (::1) 1.34ms
+[I 2022-05-11 18:59:09.518 LabApp] Build is up to date
+[W 2022-05-11 18:59:24.306 ServerApp] Notebook jupyter_notebooks/Fig2.ipynb is not trusted
+[I 2022-05-11 18:59:40.812 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 19:05:44.522 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-11 22:07:56.227 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:d9f956e9-d040-44c6-bae4-576616367046
+[I 2022-05-11 22:07:56.229 ServerApp] Starting buffering for 099b63f7-2714-40f5-9196-b23a986c954d:60cd2751-1983-4761-adcc-8cc9215dc4e8
+[I 2022-05-11 22:07:56.257 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:1ebcd4ca-f6b2-4ffb-a68b-69e4ba80aa4c
+[I 2022-05-11 22:07:56.358 ServerApp] Restoring connection for 099b63f7-2714-40f5-9196-b23a986c954d:60cd2751-1983-4761-adcc-8cc9215dc4e8
+[I 2022-05-11 22:07:56.421 ServerApp] Restoring connection for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:d9f956e9-d040-44c6-bae4-576616367046
+[I 2022-05-11 22:07:56.496 ServerApp] Restoring connection for aa778d73-8b79-467b-be44-903acfa1e0e4:1ebcd4ca-f6b2-4ffb-a68b-69e4ba80aa4c
+[W 2022-05-11 22:09:26.361 ServerApp] WebSocket ping timeout after 90002 ms.
+[W 2022-05-11 22:09:26.422 ServerApp] WebSocket ping timeout after 90000 ms.
+[W 2022-05-11 22:09:26.496 ServerApp] WebSocket ping timeout after 90000 ms.
+[I 2022-05-11 22:09:31.363 ServerApp] Starting buffering for 099b63f7-2714-40f5-9196-b23a986c954d:60cd2751-1983-4761-adcc-8cc9215dc4e8
+[I 2022-05-11 22:09:31.424 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:d9f956e9-d040-44c6-bae4-576616367046
+[I 2022-05-11 22:09:31.498 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:1ebcd4ca-f6b2-4ffb-a68b-69e4ba80aa4c
+[I 2022-05-12 08:48:20.331 LabApp] Build is up to date
+[W 2022-05-12 08:48:20.466 ServerApp] Notebook jupyter_notebooks/Fig2.ipynb is not trusted
+[I 2022-05-12 08:54:24.724 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 08:56:27.281 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 08:58:30.380 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:00:33.009 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:02:35.839 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:13:56.119 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:15:59.616 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:18:02.152 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:20:05.653 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:22:08.630 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:26:11.625 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:30:14.598 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:32:20.084 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:36:24.014 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:38:27.237 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:40:30.870 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:42:33.883 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:44:36.854 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:46:40.740 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:48:44.050 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:50:47.283 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:52:50.468 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:54:53.960 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:56:57.083 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 09:59:00.222 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:01:03.637 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:03:07.380 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:05:10.826 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:07:14.731 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:08:01.799 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:10:04.801 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:12:08.273 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:14:11.412 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:16:14.757 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:21:37.301 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:22:54.952 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:24:58.337 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:27:01.942 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:29:05.943 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:31:09.373 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:33:12.757 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:34:00.852 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 10:34:01.017 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 10:34:01.408 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 10:35:16.163 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:37:19.576 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:39:23.441 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:41:27.792 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:47:32.839 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:49:36.245 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:49:54.085 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 10:51:58.083 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:35:46.783 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:36:34.399 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:38:38.140 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:42:41.525 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:44:45.224 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:45:23.064 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 12:45:43.550 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 12:46:48.615 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:48:12.758 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 12:48:13.216 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 12:48:52.020 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:50:55.423 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 12:52:58.810 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:17:46.366 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:19:49.775 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:21:53.192 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:23:58.770 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:26:02.416 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:28:06.039 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:28:12.972 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:30:16.829 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:32:20.737 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:34:24.654 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:36:03.465 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:03.628 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:03.769 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:03.879 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:04.012 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:04.116 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:04.286 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:04.680 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:04.887 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:05.069 ServerApp] Kernel interrupted: aa778d73-8b79-467b-be44-903acfa1e0e4
+[I 2022-05-12 13:36:28.861 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:38:33.156 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:40:38.335 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:42:42.956 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:44:48.872 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:46:55.973 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:46:59.380 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:49:04.063 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:51:09.790 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:53:17.199 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 13:54:41.142 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-12 23:19:49.245 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:357d84fe-5e9e-47b3-a85b-188dad552fe9
+[I 2022-05-12 23:19:49.247 ServerApp] Starting buffering for 099b63f7-2714-40f5-9196-b23a986c954d:f2dc0ba7-c5b3-4003-8c28-20b22c3f2671
+[I 2022-05-12 23:19:49.248 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:2932e62a-24bf-4855-b03a-c9088287091f
+[I 2022-05-12 23:19:49.308 ServerApp] Restoring connection for aa778d73-8b79-467b-be44-903acfa1e0e4:2932e62a-24bf-4855-b03a-c9088287091f
+[I 2022-05-12 23:19:49.370 ServerApp] Restoring connection for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:357d84fe-5e9e-47b3-a85b-188dad552fe9
+[I 2022-05-12 23:19:49.426 ServerApp] Restoring connection for 099b63f7-2714-40f5-9196-b23a986c954d:f2dc0ba7-c5b3-4003-8c28-20b22c3f2671
+[W 2022-05-12 23:21:19.310 ServerApp] WebSocket ping timeout after 90001 ms.
+[W 2022-05-12 23:21:19.371 ServerApp] WebSocket ping timeout after 90000 ms.
+[W 2022-05-12 23:21:19.427 ServerApp] WebSocket ping timeout after 90000 ms.
+[I 2022-05-12 23:21:24.312 ServerApp] Starting buffering for aa778d73-8b79-467b-be44-903acfa1e0e4:2932e62a-24bf-4855-b03a-c9088287091f
+[I 2022-05-12 23:21:24.374 ServerApp] Starting buffering for e56dcc15-0af5-4388-9aa4-44fdaaaa26ae:357d84fe-5e9e-47b3-a85b-188dad552fe9
+[I 2022-05-12 23:21:24.429 ServerApp] Starting buffering for 099b63f7-2714-40f5-9196-b23a986c954d:f2dc0ba7-c5b3-4003-8c28-20b22c3f2671
+[W 2022-05-16 12:35:12.603 ServerApp] Forbidden
+[W 2022-05-16 12:35:12.604 ServerApp] 403 GET /api/kernels/aa778d73-8b79-467b-be44-903acfa1e0e4?1652700912526 (::1) 4.32ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:12.640 ServerApp] Forbidden
+[W 2022-05-16 12:35:12.640 ServerApp] 403 GET /api/kernels?1652700912586 (::1) 1.66ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 12:35:13.776 LabApp] 302 GET /lab/tree/jupyter_notebooks/2.GlobalMap.ipynb (::1) 2.19ms
+[I 2022-05-16 12:35:18.469 ServerApp] 302 POST /login?next=%2Flab%2Ftree%2Fjupyter_notebooks%2F2.GlobalMap.ipynb (::1) 3.73ms
+[W 2022-05-16 12:35:22.351 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields-Copy1.ipynb?content=0&1652700922296 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields-Copy1.ipynb
+[W 2022-05-16 12:35:22.352 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields-Copy1.ipynb
+[W 2022-05-16 12:35:22.353 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields-Copy1.ipynb?content=0&1652700922296 (::1) 3.72ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.356 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1652700922296 (::1): No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-16 12:35:22.356 ServerApp] No such file or directory: reproducible_workflow/00. Workflow.ipynb
+[W 2022-05-16 12:35:22.357 ServerApp] 404 GET /api/contents/reproducible_workflow/00.%20Workflow.ipynb?content=0&1652700922296 (::1) 2.34ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.358 ServerApp] 404 GET /api/contents/jupyter_notebooks/legacy/Explore_raw_MODIS_data.ipynb?content=0&1652700922297 (::1): No such file or directory: jupyter_notebooks/legacy/Explore_raw_MODIS_data.ipynb
+[W 2022-05-16 12:35:22.358 ServerApp] No such file or directory: jupyter_notebooks/legacy/Explore_raw_MODIS_data.ipynb
+[W 2022-05-16 12:35:22.359 ServerApp] 404 GET /api/contents/jupyter_notebooks/legacy/Explore_raw_MODIS_data.ipynb?content=0&1652700922297 (::1) 2.39ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.374 ServerApp] 404 GET /api/contents/jupyter_notebooks/legacy/ECMWF_data-MODIS.ipynb?content=0&1652700922297 (::1): No such file or directory: jupyter_notebooks/legacy/ECMWF_data-MODIS.ipynb
+[W 2022-05-16 12:35:22.374 ServerApp] No such file or directory: jupyter_notebooks/legacy/ECMWF_data-MODIS.ipynb
+[W 2022-05-16 12:35:22.375 ServerApp] 404 GET /api/contents/jupyter_notebooks/legacy/ECMWF_data-MODIS.ipynb?content=0&1652700922297 (::1) 2.26ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.389 ServerApp] 404 GET /api/contents/jupyter_notebooks/legacy/06.DeepDive_into_ERA_bias.ipynb?content=0&1652700922298 (::1): No such file or directory: jupyter_notebooks/legacy/06.DeepDive_into_ERA_bias.ipynb
+[W 2022-05-16 12:35:22.390 ServerApp] No such file or directory: jupyter_notebooks/legacy/06.DeepDive_into_ERA_bias.ipynb
+[W 2022-05-16 12:35:22.391 ServerApp] 404 GET /api/contents/jupyter_notebooks/legacy/06.DeepDive_into_ERA_bias.ipynb?content=0&1652700922298 (::1) 3.55ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.408 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A4.MODIS_data_quality.ipynb?content=0&1652700922299 (::1): No such file or directory: reproducible_workflow/experiments/A4.MODIS_data_quality.ipynb
+[W 2022-05-16 12:35:22.408 ServerApp] No such file or directory: reproducible_workflow/experiments/A4.MODIS_data_quality.ipynb
+[W 2022-05-16 12:35:22.419 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A4.MODIS_data_quality.ipynb?content=0&1652700922299 (::1) 13.11ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.422 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1652700922300 (::1): No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-16 12:35:22.422 ServerApp] No such file or directory: reproducible_workflow/experiments/2. Lakes_with_extra_fields.ipynb
+[W 2022-05-16 12:35:22.430 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/2.%20Lakes_with_extra_fields.ipynb?content=0&1652700922300 (::1) 9.09ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.432 ServerApp] 404 GET /api/contents/reproducible_workflow/PlotsForREADME.ipynb?content=0&1652700922300 (::1): No such file or directory: reproducible_workflow/PlotsForREADME.ipynb
+[W 2022-05-16 12:35:22.432 ServerApp] No such file or directory: reproducible_workflow/PlotsForREADME.ipynb
+[W 2022-05-16 12:35:22.433 ServerApp] 404 GET /api/contents/reproducible_workflow/PlotsForREADME.ipynb?content=0&1652700922300 (::1) 2.09ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.450 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A5_Haver_vs_L2.ipynb?content=0&1652700922301 (::1): No such file or directory: reproducible_workflow/experiments/A5_Haver_vs_L2.ipynb
+[W 2022-05-16 12:35:22.450 ServerApp] No such file or directory: reproducible_workflow/experiments/A5_Haver_vs_L2.ipynb
+[W 2022-05-16 12:35:22.451 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A5_Haver_vs_L2.ipynb?content=0&1652700922301 (::1) 2.29ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.462 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A5.PyNN_NearestNeighbour.ipynb?content=0&1652700922301 (::1): No such file or directory: reproducible_workflow/experiments/A5.PyNN_NearestNeighbour.ipynb
+[W 2022-05-16 12:35:22.463 ServerApp] No such file or directory: reproducible_workflow/experiments/A5.PyNN_NearestNeighbour.ipynb
+[W 2022-05-16 12:35:22.478 ServerApp] 404 GET /api/contents/reproducible_workflow/experiments/A5.PyNN_NearestNeighbour.ipynb?content=0&1652700922301 (::1) 17.60ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.481 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/train_and_predict.py?content=0&1652700922302 (::1): No such file or directory: reproducible_workflow/scripts/train_and_predict.py
+[W 2022-05-16 12:35:22.481 ServerApp] No such file or directory: reproducible_workflow/scripts/train_and_predict.py
+[W 2022-05-16 12:35:22.482 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/train_and_predict.py?content=0&1652700922302 (::1) 2.79ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.493 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/preprocess_ML_data.py?content=0&1652700922303 (::1): No such file or directory: reproducible_workflow/scripts/preprocess_ML_data.py
+[W 2022-05-16 12:35:22.493 ServerApp] No such file or directory: reproducible_workflow/scripts/preprocess_ML_data.py
+[W 2022-05-16 12:35:22.494 ServerApp] 404 GET /api/contents/reproducible_workflow/scripts/preprocess_ML_data.py?content=0&1652700922303 (::1) 2.08ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.511 ServerApp] 404 GET /api/contents/scripts/join_MODIS_with_ERA.py?content=0&1652700922303 (::1): No such file or directory: scripts/join_MODIS_with_ERA.py
+[W 2022-05-16 12:35:22.511 ServerApp] No such file or directory: scripts/join_MODIS_with_ERA.py
+[W 2022-05-16 12:35:22.512 ServerApp] 404 GET /api/contents/scripts/join_MODIS_with_ERA.py?content=0&1652700922303 (::1) 8.23ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[W 2022-05-16 12:35:22.520 ServerApp] 404 GET /api/contents/pipeline/join_2017_onwards.out?content=0&1652700922304 (::1): No such file or directory: pipeline/join_2017_onwards.out
+[W 2022-05-16 12:35:22.521 ServerApp] No such file or directory: pipeline/join_2017_onwards.out
+[W 2022-05-16 12:35:22.521 ServerApp] 404 GET /api/contents/pipeline/join_2017_onwards.out?content=0&1652700922304 (::1) 2.42ms referer=http://localhost:8885/lab/tree/jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 12:35:23.274 LabApp] Build is up to date
+[I 2022-05-16 12:35:29.322 ServerApp] Copying jupyter_notebooks/1.Timeseries_100years_m6.ipynb to /jupyter_notebooks
+[I 2022-05-16 12:35:40.066 ServerApp] Kernel started: 19cb0665-58e5-426f-9cd0-ed42e2aa0913
+[I 2022-05-16 12:37:41.483 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:39:43.613 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:41:45.736 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:43:47.889 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:45:50.289 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:47:30.056 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 12:47:52.430 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:49:34.844 ServerApp] Saving file at /jupyter_notebooks/2.GlobalMap.ipynb
+[I 2022-05-16 12:49:54.568 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:51:56.810 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:53:58.993 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:55:35.730 ServerApp] Copying jupyter_notebooks/1.Timeseries_100years_m5.ipynb to /jupyter_notebooks
+[I 2022-05-16 12:55:46.830 ServerApp] Kernel started: 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7
+[I 2022-05-16 12:56:01.174 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:57:48.274 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 12:58:03.333 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 12:59:50.458 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:05.473 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m5.ipynb
+[I 2022-05-16 13:00:10.941 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:13.582 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:15.388 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:23.518 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:25.696 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:27.603 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:00:34.370 ServerApp] Copying jupyter_notebooks/1.Timeseries_100years_m5.ipynb to /jupyter_notebooks
+[I 2022-05-16 13:00:46.569 ServerApp] Kernel started: d031e884-8e99-4391-acdb-4145cbd2b8f4
+[I 2022-05-16 13:02:29.729 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:02:47.976 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:04:31.865 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:04:50.077 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:06:33.993 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:06:52.750 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:08:37.021 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:10:39.880 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:12:42.902 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:14:45.429 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:14:55.697 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:16:47.581 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:18:49.742 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:18:57.963 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:20:26.703 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:20:28.346 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:20:30.229 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:20:32.266 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:21:00.042 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:22:34.208 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:23:03.214 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_ensemble.ipynb
+[I 2022-05-16 13:32:36.197 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:34:38.244 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:36:40.304 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:37:23.991 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:37:26.013 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:39:28.061 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:40:29.874 ServerApp] Kernel interrupted: 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7
+[I 2022-05-16 13:40:30.022 ServerApp] Kernel interrupted: 4f59ec71-2ca4-4ec8-a217-fc0ad47ca2b7
+[I 2022-05-16 13:41:30.020 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
+[I 2022-05-16 13:43:31.989 ServerApp] Saving file at /jupyter_notebooks/1.Timeseries_100years_m7.ipynb
