@@ -347,4 +347,4 @@
 
 
 #Wasserstein runs
-nohup time ./run.sh speedyone10yr_L2_52_RN_m0_WD RST/expm0 0 SRoff52      10year4CO2 > output/speedyone10yr_L2_52_RN_m0_WD.out &
+nohup time ./run.sh speedyone10yr_L2_52_RN_m0_WD WDm0 0 SRoff52      10year4CO2 > output/speedyone10yr_L2_52_RN_m0_WD.out &
